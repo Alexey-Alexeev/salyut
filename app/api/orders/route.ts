@@ -53,20 +53,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Отправляем уведомление в Telegram
-    await sendTelegramNotification({
-      orderId: order.id,
-      customerName: validatedData.customer_name,
-      customerPhone: validatedData.customer_phone,
-      totalAmount: validatedData.total_amount,
-      items: validatedData.items.map(item => ({
-        name: 'Товар', // Здесь нужно получить название товара из базы
-        quantity: item.quantity,
-        price: item.price_at_time
-      })),
-      comment: validatedData.comment,
-      contactMethod: validatedData.contact_method,
-      customerContact: validatedData.customer_contact
-    })
+    // await sendTelegramNotification({
+    //   orderId: order.id,
+    //   customerName: validatedData.customer_name,
+    //   customerPhone: validatedData.customer_phone,
+    //   totalAmount: validatedData.total_amount,
+    //   items: validatedData.items.map(item => ({
+    //     name: 'Товар', // Здесь нужно получить название товара из базы
+    //     quantity: item.quantity,
+    //     price: item.price_at_time
+    //   })),
+    //   comment: validatedData.comment,
+    //   contactMethod: validatedData.contact_method,
+    //   customerContact: validatedData.customer_contact
+    // })
 
     return NextResponse.json({ 
       success: true, 
