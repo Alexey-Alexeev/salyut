@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
+import { MessageCircle, Phone } from 'lucide-react'
 
 interface ConsultationDialogProps {
     open: boolean
@@ -61,6 +62,14 @@ export function ConsultationDialog({ open, onOpenChange }: ConsultationDialogPro
             toast.error('Произошла ошибка при отправке заявки')
         } finally {
             setLoading(false)
+        }
+    }
+
+    const handleDirectContact = (type: 'telegram' | 'whatsapp') => {
+        if (type === 'telegram') {
+            window.open('https://t.me/artem_sk_red', '_blank')
+        } else {
+            window.open('https://wa.me/79773602008', '_blank')
         }
     }
 
@@ -153,6 +162,38 @@ export function ConsultationDialog({ open, onOpenChange }: ConsultationDialogPro
                         {loading ? 'Отправка...' : 'Отправить заявку'}
                     </Button>
                 </form>
+
+                {/* Секция прямых контактов */}
+                <div className="border-t pt-4 mt-4">
+                    <p className="text-sm text-muted-foreground text-center mb-3">
+                        Или можете связаться с нами напрямую
+                    </p>
+                    <div className="flex gap-3 justify-center">
+                        {/* Telegram */}
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-2 flex-1"
+                            onClick={() => handleDirectContact('telegram')}
+                        >
+                            <MessageCircle className="h-4 w-4" />
+                            Telegram
+                        </Button>
+
+                        {/* WhatsApp */}
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-2 flex-1"
+                            onClick={() => handleDirectContact('whatsapp')}
+                        >
+                            <Phone className="h-4 w-4" />
+                            WhatsApp
+                        </Button>
+                    </div>
+                </div>
             </DialogContent>
         </Dialog>
     )

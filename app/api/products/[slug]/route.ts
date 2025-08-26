@@ -8,64 +8,58 @@ export async function GET(
   { params }: { params: { slug: string } }
 ) {
   try {
-    const { slug } = params
+    const decodedSlug = decodeURIComponent(params.slug)
+    console.log('Searching for product with slug:', decodedSlug)
 
+    // Сначала проверим, есть ли товары вообще
+    const allProducts = await db.select({ slug: products.slug, name: products.name }).from(products)
+    console.log('Available products:', allProducts.map(p => ({ slug: p.slug, name: p.name })))
+
+    // Ищем товар по slug
     const product = await db
-      .select({
-        id: products.id,
-        name: products.name,
-        slug: products.slug,
-        price: products.price,
-        images: products.images,
-        description: products.description,
-        characteristics: products.characteristics,
-        is_popular: products.is_popular,
-        is_active: products.is_active,
-        stock_quantity: products.stock_quantity,
-        created_at: products.created_at,
-        category: {
-          id: categories.id,
-          name: categories.name,
-          slug: categories.slug,
-        },
-        manufacturer: {
-          id: manufacturers.id,
-          name: manufacturers.name,
-          country: manufacturers.country,
-        }
-      })
+      .select()
       .from(products)
-      .leftJoin(categories, eq(products.category_id, categories.id))
-      .leftJoin(manufacturers, eq(products.manufacturer_id, manufacturers.id))
-      .where(eq(products.slug, slug))
-      .single()
+      .where(eq(products.slug, decodedSlug))
+      .limit(1)
 
-    if (!product) {
-      return NextResponse.json({ 
-        error: 'Product not found' 
-      }, { status: 404 })
+    if (!product[0]) {
+      console.log('Product not found for slug:', decodedSlug)
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 })
     }
 
-    if (!product.is_active) {
-      return NextResponse.json({ 
-        error: 'Product is not available' 
-      }, { status: 404 })
+    const productData = product[0]
+    console.log('Found product:', { id: productData.id, name: productData.name, slug: productData.slug })
+
+    // Загружаем связанные данные
+    let categoryData = null
+    let manufacturerData = null
+
+    if (productData.category_id) {
+      try {
+        const category = await db.select().from(categories).where(eq(categories.id, productData.category_id)).limit(1)
+        categoryData = category[0] || null
+      } catch (error) {
+        console.error('Error loading category:', error)
+      }
     }
 
-    // Форматируем данные для фронтенда
-    const formattedProduct = {
-      ...product,
-      price: product.price / 100, // Конвертируем из копеек в рубли
-      formattedPrice: (product.price / 100).toLocaleString('ru-RU'),
-      mainImage: product.images?.[0] || null,
+    if (productData.manufacturer_id) {
+      try {
+        const manufacturer = await db.select().from(manufacturers).where(eq(manufacturers.id, productData.manufacturer_id)).limit(1)
+        manufacturerData = manufacturer[0] || null
+      } catch (error) {
+        console.error('Error loading manufacturer:', error)
+      }
     }
 
-    return NextResponse.json(formattedProduct)
+    return NextResponse.json({
+      product: productData,
+      category: categoryData,
+      manufacturer: manufacturerData
+    })
 
   } catch (error) {
     console.error('Error fetching product:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error' 
-    }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch product' }, { status: 500 })
   }
 }

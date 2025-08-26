@@ -39,6 +39,11 @@ const orderSchema = z.object({
 
 type OrderForm = z.infer<typeof orderSchema>
 
+// Функция округления скидки до целых рублей
+function roundDiscount(amount: number): number {
+  return Math.round(amount);
+}
+
 const DELIVERY_COST = 500
 const DISCOUNT_THRESHOLD_1 = 7000 // 5% discount
 const DISCOUNT_THRESHOLD_2 = 15000 // 10% discount
@@ -62,7 +67,7 @@ export default function CartPage() {
 
   const subtotal = getTotalPrice()
   const discount = subtotal >= DISCOUNT_THRESHOLD_2 ? 0.1 : subtotal >= DISCOUNT_THRESHOLD_1 ? 0.05 : 0
-  const discountAmount = subtotal * discount
+  const discountAmount = roundDiscount(subtotal * discount) // Округляем скидку
   const total = subtotal - discountAmount + (items.length > 0 ? DELIVERY_COST : 0)
 
   const onSubmit = async (data: OrderForm) => {
@@ -118,12 +123,13 @@ export default function CartPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Breadcrumb
-        items={[
-          { label: 'Корзина' }
-        ]}
-        className="mb-8"
-      />
+      <div className="mb-8">
+        <Breadcrumb
+          items={[
+            { label: 'Корзина' }
+          ]}
+        />
+      </div>
 
       <h1 className="text-3xl font-bold mb-8">Корзина</h1>
 
@@ -141,55 +147,61 @@ export default function CartPage() {
             {items.map((item) => (
               <Card key={item.id}>
                 <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <div className="relative w-20 h-20 rounded-lg overflow-hidden">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    
-                    <div className="flex-1">
-                      <h3 className="font-medium line-clamp-2">{item.name}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {item.price.toLocaleString('ru-RU')} ₽
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center border rounded-md">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          disabled={item.quantity <= 1}
-                        >
-                          <Minus className="h-4 w-4" />
-                        </Button>
-                        <span className="px-3 py-2">{item.quantity}</span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        >
-                          <Plus className="h-4 w-4" />
-                        </Button>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="relative w-16 h-16 rounded-lg overflow-hidden">
+                        <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            className="object-cover"
+                        />
                       </div>
 
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeItem(item.id)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium line-clamp-2 text-sm">{item.name}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {item.price.toLocaleString('ru-RU')} ₽ / шт.
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center border rounded-md">
+                          <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0"
+                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              disabled={item.quantity <= 1}
+                          >
+                            <Minus className="h-3 w-3"/>
+                          </Button>
+                          <span className="px-2 py-1 text-sm min-w-[2rem] text-center">{item.quantity}</span>
+                          <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0"
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          >
+                            <Plus className="h-3 w-3"/>
+                          </Button>
+                        </div>
+
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                            onClick={() => removeItem(item.id)}
+                        >
+                          <Trash2 className="h-4 w-4"/>
+                        </Button>
+                      </div>
                     </div>
 
-                    <div className="text-right">
-                      <p className="font-medium">
+                    {/* Цена на отдельной строке */}
+                    <div className="flex justify-between items-center border-t pt-2">
+                      <span className="text-sm text-muted-foreground">Сумма:</span>
+                      <p className="font-medium text-lg whitespace-nowrap">
                         {(item.price * item.quantity).toLocaleString('ru-RU')} ₽
                       </p>
                     </div>
@@ -211,35 +223,35 @@ export default function CartPage() {
                   <span>Товары:</span>
                   <span>{subtotal.toLocaleString('ru-RU')} ₽</span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span>Доставка:</span>
                   <span>{DELIVERY_COST.toLocaleString('ru-RU')} ₽</span>
                 </div>
 
                 {discount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Скидка ({Math.round(discount * 100)}%):</span>
-                    <span>-{discountAmount.toLocaleString('ru-RU')} ₽</span>
-                  </div>
+                    <div className="flex justify-between text-green-600">
+                      <span>Скидка ({Math.round(discount * 100)}%):</span>
+                      <span>-{discountAmount.toLocaleString('ru-RU')} ₽</span>
+                    </div>
                 )}
 
-                <Separator />
-                
+                <Separator/>
+
                 <div className="flex justify-between text-lg font-bold">
                   <span>К оплате:</span>
                   <span>{total.toLocaleString('ru-RU')} ₽</span>
                 </div>
 
                 {subtotal < DISCOUNT_THRESHOLD_1 && (
-                  <p className="text-sm text-muted-foreground">
-                    До скидки 5% осталось {(DISCOUNT_THRESHOLD_1 - subtotal).toLocaleString('ru-RU')} ₽
-                  </p>
+                    <p className="text-sm text-muted-foreground">
+                      До скидки 5% осталось {(DISCOUNT_THRESHOLD_1 - subtotal).toLocaleString('ru-RU')} ₽
+                    </p>
                 )}
-                
+
                 {subtotal >= DISCOUNT_THRESHOLD_1 && subtotal < DISCOUNT_THRESHOLD_2 && (
-                  <p className="text-sm text-muted-foreground">
-                    До скидки 10% осталось {(DISCOUNT_THRESHOLD_2 - subtotal).toLocaleString('ru-RU')} ₽
+                    <p className="text-sm text-muted-foreground">
+                      До скидки 10% осталось {(DISCOUNT_THRESHOLD_2 - subtotal).toLocaleString('ru-RU')} ₽
                   </p>
                 )}
               </CardContent>

@@ -11,7 +11,7 @@ export function Footer() {
               <div className="h-8 w-8 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
                 <span className="text-white font-bold text-sm">🎆</span>
               </div>
-              <span className="font-bold text-xl text-primary">FireWorks</span>
+              <span className="font-bold text-xl text-primary">КупитьСалюты</span>
             </Link>
             <p className="text-sm text-muted-foreground">
               Качественные фейерверки для незабываемых праздников
@@ -44,15 +44,11 @@ export function Footer() {
             <div className="space-y-2 text-sm">
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
-                <span>+7 (999) 123-45-67</span>
+                <span>+7 (977) 360-20-08</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4" />
                 <span>info@fireworks.ru</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4" />
-                <span>Москва, ул. Праздничная, 1</span>
               </div>
             </div>
           </div>
@@ -60,7 +56,7 @@ export function Footer() {
 
         <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
-            © 2024 FireWorks. Все права защищены.
+            ©КупитьСалюты. Все права защищены.
           </p>
           <div className="flex items-center space-x-4 mt-4 md:mt-0">
             <Link href="/privacy" className="text-sm text-muted-foreground hover:text-primary">

@@ -187,7 +187,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {(stats.totalRevenue / 100).toLocaleString('ru-RU')} ₽
+                {stats.totalRevenue.toLocaleString('ru-RU')} ₽
               </div>
               <p className="text-xs text-muted-foreground">
                 Общая выручка
@@ -243,7 +243,7 @@ export default function AdminDashboard() {
                   <div>
                     <p className="font-medium">{order.customer_name}</p>
                     <p className="text-sm text-muted-foreground">
-                      {(order.total_amount / 100).toLocaleString('ru-RU')} ₽
+                      {order.total_amount.toLocaleString('ru-RU')} ₽
                     </p>
                   </div>
                   <div className="flex items-center gap-2">

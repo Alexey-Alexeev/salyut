@@ -293,10 +293,10 @@ export default function OrderDetailPage() {
                       
                       <div className="text-right">
                         <p className="font-medium">
-                          {(item.price_at_time / 100).toLocaleString('ru-RU')} ₽
+                          {(item.price_at_time).toLocaleString('ru-RU')} ₽
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          Итого: {((item.price_at_time * item.quantity) / 100).toLocaleString('ru-RU')} ₽
+                          Итого: {(item.price_at_time * item.quantity).toLocaleString('ru-RU')} ₽
                         </p>
                       </div>
                     </div>
@@ -347,18 +347,18 @@ export default function OrderDetailPage() {
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
                   <span>Товары:</span>
-                  <span>{(order.total_amount / 100).toLocaleString('ru-RU')} ₽</span>
+                  <span>{(order.total_amount).toLocaleString('ru-RU')} ₽</span>
                 </div>
                 
                 <div className="flex justify-between">
                   <span>Доставка:</span>
-                  <span>{(order.delivery_cost / 100).toLocaleString('ru-RU')} ₽</span>
+                  <span>{(order.delivery_cost).toLocaleString('ru-RU')} ₽</span>
                 </div>
 
                 {order.discount_amount > 0 && (
                   <div className="flex justify-between text-green-600">
                     <span>Скидка:</span>
-                    <span>-{(order.discount_amount / 100).toLocaleString('ru-RU')} ₽</span>
+                    <span>-{(order.discount_amount).toLocaleString('ru-RU')} ₽</span>
                   </div>
                 )}
 
@@ -367,7 +367,7 @@ export default function OrderDetailPage() {
                 <div className="flex justify-between text-lg font-bold">
                   <span>К оплате:</span>
                   <span>
-                    {((order.total_amount + order.delivery_cost - order.discount_amount) / 100).toLocaleString('ru-RU')} ₽
+                    {(order.total_amount + order.delivery_cost - order.discount_amount).toLocaleString('ru-RU')} ₽
                   </span>
                 </div>
               </CardContent>

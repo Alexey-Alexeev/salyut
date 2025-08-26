@@ -32,7 +32,7 @@ export function Header() {
                   <div className="h-8 w-8 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
                     <span className="text-white font-bold text-sm">🎆</span>
                   </div>
-                  <span className="font-bold text-xl text-primary">FireWorks</span>
+                  <span className="font-bold text-xl text-primary">КупитьСалюты</span>
                 </Link>
 
                 <nav className="hidden md:flex items-center space-x-6">

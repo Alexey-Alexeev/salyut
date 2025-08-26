@@ -279,11 +279,11 @@ export default function AdminOrdersPage() {
                     <TableCell>
                       <div className="space-y-1">
                         <div className="font-medium">
-                          {((order.total_amount - order.discount_amount) / 100).toLocaleString('ru-RU')} ₽
+                          {(order.total_amount - order.discount_amount).toLocaleString('ru-RU')} ₽
                         </div>
                         {order.discount_amount > 0 && (
                           <div className="text-sm text-green-600">
-                            Скидка: {(order.discount_amount / 100).toLocaleString('ru-RU')} ₽
+                            Скидка: {order.discount_amount.toLocaleString('ru-RU')} ₽
                           </div>
                         )}
                       </div>

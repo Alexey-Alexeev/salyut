@@ -25,7 +25,27 @@ type Product = {
   category_id?: string | null
 }
 
-export default function ProductClient({ product }: { product: Product }) {
+type Category = {
+  id: string
+  name: string
+  slug: string
+  description?: string | null
+}
+
+type Manufacturer = {
+  id: string
+  name: string
+  country?: string | null
+  description?: string | null
+}
+
+interface ProductClientProps {
+  product: Product
+  category?: Category | null
+  manufacturer?: Manufacturer | null
+}
+
+export default function ProductClient({ product, category, manufacturer }: ProductClientProps) {
   const [quantity, setQuantity] = useState(1)
   const [selectedImage, setSelectedImage] = useState(0)
   const addItem = useCartStore((state) => state.addItem)
@@ -47,13 +67,15 @@ export default function ProductClient({ product }: { product: Product }) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Breadcrumb
-        items={[
-          { href: '/catalog', label: 'Каталог' },
-          { label: product.name }
-        ]}
-        className="mb-8"
-      />
+      <div className="mb-8">
+        <Breadcrumb
+            items={[
+              { href: '/catalog', label: 'Каталог' },
+              { label: product.name }
+            ]}
+        />
+      </div>
+
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         <div className="space-y-4">
@@ -103,7 +125,7 @@ export default function ProductClient({ product }: { product: Product }) {
             <h1 className="text-2xl lg:text-3xl font-bold mb-4">{product.name}</h1>
 
             <div className="text-3xl font-bold text-primary mb-6">
-              {(product.price / 100).toLocaleString('ru-RU')} ₽
+              {(product.price).toLocaleString('ru-RU')} ₽
             </div>
           </div>
 
@@ -136,14 +158,31 @@ export default function ProductClient({ product }: { product: Product }) {
               className="w-full"
             >
               <ShoppingCart className="h-5 w-5 mr-2" />
-              Добавить в корзину • {((product.price * quantity) / 100).toLocaleString('ru-RU')} ₽
+              Добавить в корзину • {(product.price * quantity).toLocaleString('ru-RU')} ₽
             </Button>
 
-            {product.description && (
+            {product.short_description && (
               <div className="text-sm text-muted-foreground">
-                {product.description}
+                {product.short_description}
               </div>
             )}
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              {manufacturer && (
+                <div>
+                  <span className="text-muted-foreground">Производитель:</span>
+                  <br />
+                  <span className="font-medium">{manufacturer.name}</span>
+                </div>
+              )}
+              {category && (
+                <div>
+                  <span className="text-muted-foreground">Категория:</span>
+                  <br />
+                  <span className="font-medium">{category.name}</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -159,7 +198,7 @@ export default function ProductClient({ product }: { product: Product }) {
             <Card>
               <CardContent className="pt-6">
                 <p className="text-muted-foreground leading-relaxed">
-                  {product.description}
+                  {product.description || 'Описание товара отсутствует.'}
                 </p>
               </CardContent>
             </Card>
@@ -168,14 +207,18 @@ export default function ProductClient({ product }: { product: Product }) {
           <TabsContent value="characteristics" className="mt-6">
             <Card>
               <CardContent className="pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {product.characteristics && Object.entries(product.characteristics).map(([key, value]) => (
-                    <div key={key} className="flex justify-between py-2 border-b border-border/50">
-                      <span className="font-medium">{key}:</span>
-                      <span className="text-muted-foreground">{String(value)}</span>
-                    </div>
-                  ))}
-                </div>
+                {product.characteristics && Object.keys(product.characteristics).length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.entries(product.characteristics).map(([key, value]) => (
+                      <div key={key} className="flex justify-between py-2 border-b border-border/50">
+                        <span className="font-medium">{key}:</span>
+                        <span className="text-muted-foreground">{String(value)}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground">Характеристики товара отсутствуют.</p>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

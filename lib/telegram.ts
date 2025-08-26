@@ -23,7 +23,7 @@ export async function sendTelegramNotification(order: TelegramNotification) {
   }
 
   const itemsText = order.items
-    .map(item => `• ${item.name} - ${item.quantity} шт. × ${(item.price / 100).toLocaleString('ru-RU')} ₽`)
+    .map(item => `• ${item.name} - ${item.quantity} шт. × ${item.price.toLocaleString('ru-RU')} ₽`)
     .join('\n')
 
   const contactInfo = order.contactMethod && order.customerContact
@@ -42,7 +42,7 @@ export async function sendTelegramNotification(order: TelegramNotification) {
 🛒 *Товары:*
 ${itemsText}
 
-💰 *Итого: ${(order.totalAmount / 100).toLocaleString('ru-RU')} ₽*${commentText}
+💰 *Итого: ${order.totalAmount.toLocaleString('ru-RU')} ₽*${commentText}
 
 ⏰ Время: ${new Date().toLocaleString('ru-RU')}
   `.trim()

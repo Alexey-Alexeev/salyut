@@ -1,45 +1,124 @@
 import { Metadata } from 'next'
 import { db } from '@/lib/db'
-import { products } from '@/db/schema'
+import { products, categories, manufacturers } from '@/db/schema'
 import { eq } from 'drizzle-orm'
 import ProductClient from '@/app/product/[slug]/product-client'
+import slugify from "slugify";
 
 type PageProps = { params: { slug: string } }
 
+const getCleanSlug = (originalSlug: string): string => {
+  // Если slug содержит пробелы или спецсимволы
+  if (originalSlug.includes(' ') || originalSlug.includes('+')) {
+    return slugify(originalSlug, { lower: true, strict: true, trim: true })
+  }
+  return originalSlug
+}
+
+
 export async function generateStaticParams() {
-  const rows = await db.select({ slug: products.slug }).from(products)
-  return rows.map((r) => ({ slug: r.slug }))
+  try {
+    const rows = await db.select({ slug: products.slug }).from(products)
+    console.log('Available slugs for static generation:', rows.map(r => r.slug))
+    return rows.map((r) => ({ slug: r.slug })) // ✅ просто slug
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
 }
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const product = await db.query.products.findFirst({
-    where: eq(products.slug, params.slug),
-  })
+  try {
+    const cleanSlug = getCleanSlug(params.slug)
+    console.log('Generating metadata for clean slug:', cleanSlug)
+    const product = await db.select().from(products).where(eq(products.slug, cleanSlug)).limit(1)
 
-  if (!product) return {}
+    if (!product[0]) {
+      console.log('Product not found for metadata generation:', cleanSlug)
+      return {}
+    }
 
-  return {
-    title: product.seo_title || product.name,
-    description: product.seo_description || product.short_description || undefined,
-    openGraph: {
-      title: product.seo_title || product.name,
-      description: product.seo_description || product.short_description || undefined,
-      images: product.images?.[0]
-        ? [{ url: product.images[0] as string }]
-        : undefined,
-    },
-    alternates: { canonical: `/product/${product.slug}` },
+    const productData = product[0]
+
+    return {
+      title: productData.seo_title || productData.name,
+      description: productData.seo_description || productData.short_description || undefined,
+      openGraph: {
+        title: productData.seo_title || productData.name,
+        description: productData.seo_description || productData.short_description || undefined,
+        images: productData.images?.[0]
+            ? [{ url: productData.images[0] as string }]
+            : undefined,
+      },
+      alternates: { canonical: `/product/${productData.slug}` },
+    }
+  } catch (error) {
+    console.error('Error generating metadata:', error)
+    return {}
   }
 }
-
 export default async function ProductPage({ params }: PageProps) {
-  const product = await db.query.products.findFirst({
-    where: eq(products.slug, params.slug),
-  })
+  try {
+    console.log('Loading product page for slug:', params.slug)
 
-  if (!product) {
-    return null
+    // ✅ Используем clean slug для поиска
+    const cleanSlug = getCleanSlug(params.slug)
+    console.log('Searching for clean slug:', cleanSlug)
+
+    const product = await db.select().from(products).where(eq(products.slug, cleanSlug)).limit(1)
+
+    if (!product[0]) {
+      console.log('Product not found for clean slug:', cleanSlug)
+      return (
+          <div className="container mx-auto px-4 py-8">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold mb-4">Товар не найден</h1>
+              <p className="text-muted-foreground mb-4">Запрашиваемый товар не существует или был удален.</p>
+              <p className="text-sm text-muted-foreground">Запрошенный slug: {params.slug}</p>
+              <p className="text-sm text-muted-foreground">Искомый slug: {cleanSlug}</p>
+            </div>
+          </div>
+      )
+    }
+
+
+    const productData = product[0]
+    console.log('Found product:', { id: productData.id, name: productData.name, slug: productData.slug })
+
+    // Загружаем связанные данные
+    let categoryData = null
+    let manufacturerData = null
+
+    if (productData.category_id) {
+      try {
+        const category = await db.select().from(categories).where(eq(categories.id, productData.category_id)).limit(1)
+        categoryData = category[0] || null
+        console.log('Loaded category:', categoryData?.name)
+      } catch (error) {
+        console.error('Error loading category:', error)
+      }
+    }
+
+    if (productData.manufacturer_id) {
+      try {
+        const manufacturer = await db.select().from(manufacturers).where(eq(manufacturers.id, productData.manufacturer_id)).limit(1)
+        manufacturerData = manufacturer[0] || null
+        console.log('Loaded manufacturer:', manufacturerData?.name)
+      } catch (error) {
+        console.error('Error loading manufacturer:', error)
+      }
+    }
+
+    return <ProductClient product={productData} category={categoryData} manufacturer={manufacturerData} />
+  } catch (error) {
+    console.error('Error loading product:', error)
+    return (
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Ошибка загрузки</h1>
+            <p className="text-muted-foreground">Произошла ошибка при загрузке товара.</p>
+            <p className="text-sm text-muted-foreground mt-2">Ошибка: {error instanceof Error ? error.message : 'Неизвестная ошибка'}</p>
+          </div>
+        </div>
+    )
   }
-
-  return <ProductClient product={product} />
 }

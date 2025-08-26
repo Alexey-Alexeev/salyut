@@ -94,8 +94,13 @@ export const profiles = pgTable('profiles', {
 export const reviews = pgTable('reviews', {
   id: uuid('id').defaultRandom().primaryKey(),
   customer_name: text('customer_name').notNull(),
-  video_id: text('video_id').notNull(), // Cloudflare Stream video ID
-  video_url: text('video_url'),
+
+  // Основная ссылка для встраивания или воспроизведения
+  video_url: text('video_url').notNull(),
+
+  // Прямая ссылка на превью-картинку (для красивого отображения до воспроизведения)
+  thumbnail_url: text('thumbnail_url'),
+
   product_id: uuid('product_id').references(() => products.id, { onDelete: 'set null' }),
   is_approved: boolean('is_approved').default(false),
   sort_order: integer('sort_order').default(0),

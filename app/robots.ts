@@ -12,6 +12,6 @@ export default function robots(): MetadataRoute.Robots {
         '/private/'
       ]
     },
-    sitemap: 'https://fireworks.ru/sitemap.xml',
+    sitemap: 'https://купитьсалюты.рф/sitemap.xml',
   }
 }

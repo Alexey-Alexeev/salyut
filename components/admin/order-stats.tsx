@@ -63,7 +63,7 @@ export function OrderStats({ stats }: OrderStatsProps) {
     },
     {
       title: 'Общая выручка',
-      value: `${(stats.totalRevenue / 100).toLocaleString('ru-RU')} ₽`,
+      value: `${stats.totalRevenue.toLocaleString('ru-RU')} ₽`,
       icon: DollarSign,
       description: 'За все время',
       color: 'text-green-600'

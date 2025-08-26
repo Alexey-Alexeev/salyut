@@ -9,9 +9,9 @@ import { Toaster } from '@/components/ui/sonner'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'FireWorks - Фейерверки и салюты',
+  title: 'КупитьСалюты - Фейерверки и салюты',
   description: 'Качественные фейерверки, петарды, салюты и пиротехника для незабываемых праздников. Быстрая доставка по всей России.',
-  keywords: 'фейерверки, салюты, петарды, пиротехника, праздник, новый год',
+  keywords: 'фейерверки, салюты, петарды, пиротехника, праздник, новый год, купить',
   robots: 'index, follow',
   viewport: 'width=device-width, initial-scale=1',
 }
@@ -25,8 +25,8 @@ export default function RootLayout({
     <html lang="ru">
       <head>
         <link rel="icon" href="/favicon.ico" />
-        <link rel="canonical" href="https://fireworks.ru" />
-        <meta property="og:site_name" content="FireWorks" />
+        <link rel="canonical" href="https://купитьсалюты.рф" />
+        <meta property="og:site_name" content="КупитьСалюты" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
       </head>
