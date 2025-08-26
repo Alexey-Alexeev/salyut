@@ -95,7 +95,7 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   }
 
-  const handleInputBlur = () => {
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const numValue = parseInt(inputValue) || 0
 
     if (numValue === 0) {
@@ -107,9 +107,12 @@ export function ProductCard({ product }: ProductCardProps) {
           id: product.id,
           name: product.name,
           price: product.price,
-          image: product.images?.[0] || '/placeholder-product.jpg',
-          quantity: numValue
+          image: product.images?.[0] || '/placeholder-product.jpg'
+          // quantity не нужен, т.к. addItem по умолчанию добавляет 1 штуку
         })
+        // Но нам нужно установить нужное количество
+        // Поэтому после добавления обновляем количество
+        updateQuantity(product.id, numValue)
       } else {
         // Обновляем количество существующего товара
         updateQuantity(product.id, numValue)
@@ -122,7 +125,7 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   }
 
-  const handleInputKeyPress = (e: React.KeyboardEvent) => {
+  const handleInputKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.currentTarget.blur()
     }
