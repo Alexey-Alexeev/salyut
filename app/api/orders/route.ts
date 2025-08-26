@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ 
         error: 'Validation error', 
-        details: error.errors 
+        // details: error.errors
       }, { status: 400 })
     }
 
@@ -89,39 +89,39 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url)
-    const status = searchParams.get('status')
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
-    const offset = (page - 1) * limit
-
-    let query = db.select().from(orders)
-
-    if (status) {
-      query = query.where(eq(orders.status, status))
-    }
-
-    const [ordersData, totalCount] = await Promise.all([
-      query.limit(limit).offset(offset).orderBy(desc(orders.created_at)),
-      db.select({ count: sql`count(*)` }).from(orders)
-    ])
-
-    return NextResponse.json({
-      orders: ordersData,
-      pagination: {
-        page,
-        limit,
-        total: totalCount[0].count,
-        totalPages: Math.ceil(totalCount[0].count / limit)
-      }
-    })
-
-  } catch (error) {
-    console.error('Error fetching orders:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error' 
-    }, { status: 500 })
-  }
-}
+// export async function GET(request: NextRequest) {
+//   try {
+//     const { searchParams } = new URL(request.url)
+//     const status = searchParams.get('status')
+//     const page = parseInt(searchParams.get('page') || '1')
+//     const limit = parseInt(searchParams.get('limit') || '10')
+//     const offset = (page - 1) * limit
+//
+//     let query = db.select().from(orders)
+//
+//     if (status) {
+//       query = query.where(eq(orders.status, status))
+//     }
+//
+//     const [ordersData, totalCount] = await Promise.all([
+//       query.limit(limit).offset(offset).orderBy(desc(orders.created_at)),
+//       db.select({ count: sql`count(*)` }).from(orders)
+//     ])
+//
+//     return NextResponse.json({
+//       orders: ordersData,
+//       pagination: {
+//         page,
+//         limit,
+//         total: totalCount[0].count,
+//         totalPages: Math.ceil(totalCount[0].count / limit)
+//       }
+//     })
+//
+//   } catch (error) {
+//     console.error('Error fetching orders:', error)
+//     return NextResponse.json({
+//       error: 'Internal server error'
+//     }, { status: 500 })
+//   }
+// }
