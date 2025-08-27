@@ -65,6 +65,36 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* Discount Promotion Section */}
+        <section className="w-full">
+          <Card className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-none">
+            <CardContent className="container mx-auto px-4 py-6 md:py-12 text-center space-y-6">
+              <h2 className="text-2xl md:text-4xl font-bold">
+                🎉 Выгодные скидки при покупке!
+              </h2>
+              <p className="text-base md:text-lg text-white/90 max-w-2xl mx-auto">
+                Чем больше заказ, тем больше экономия — скидки применяются автоматически
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <Card className="bg-white/10 backdrop-blur border-white/20">
+                  <CardContent className="p-6 text-center">
+                    <div className="text-4xl font-bold text-yellow-300 mb-2">5%</div>
+                    <div className="text-lg font-semibold mb-1">скидка</div>
+                    <div className="text-sm text-white/80">при заказе от 7 000 ₽</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white/10 backdrop-blur border-white/20">
+                  <CardContent className="p-6 text-center">
+                    <div className="text-4xl font-bold text-yellow-300 mb-2">10%</div>
+                    <div className="text-lg font-semibold mb-1">скидка</div>
+                    <div className="text-sm text-white/80">при заказе от 15 000 ₽</div>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
         {/* Categories Section */}
         <section className="container mx-auto px-4">
           <div className="text-center space-y-4 mb-12">
