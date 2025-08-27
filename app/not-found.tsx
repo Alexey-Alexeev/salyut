@@ -45,10 +45,7 @@ export default function NotFound() {
 
         <div className="pt-8">
           <p className="text-sm text-muted-foreground">
-            Если вы считаете, что это ошибка, пожалуйста,{' '}
-            <Link href="/contacts" className="text-primary hover:underline">
-              свяжитесь с нами
-            </Link>
+            Если вы считаете, что это ошибка, используйте форму консультации на сайте
           </p>
         </div>
       </div>

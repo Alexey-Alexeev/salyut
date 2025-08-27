@@ -61,7 +61,6 @@ export async function Footer() {
               <li><Link href="/about" className="text-muted-foreground hover:text-primary">О компании</Link></li>
               <li><Link href="/delivery" className="text-muted-foreground hover:text-primary">Доставка</Link></li>
               <li><Link href="/safety" className="text-muted-foreground hover:text-primary">Безопасность</Link></li>
-              <li><Link href="/contacts" className="text-muted-foreground hover:text-primary">Контакты</Link></li>
             </ul>
           </div>
 

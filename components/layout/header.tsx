@@ -19,7 +19,6 @@ export function Header() {
     { href: '/', label: 'Главная' },
     { href: '/catalog', label: 'Каталог' },
     { href: '/about', label: 'О нас' },
-    { href: '/contacts', label: 'Контакты' },
   ]
 
   return (
