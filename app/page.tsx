@@ -169,7 +169,7 @@ export default async function HomePage() {
         </section>
 
         {/* CTA Section с диалогом */}
-        <ConsultationCTA />
+        <ConsultationCTA className="pb-8 md:pb-16" />
       </div>
   );
 }

@@ -158,12 +158,15 @@ export function ProductCard({ product }: ProductCardProps) {
       <Card className="group overflow-hidden transition-all duration-200 hover:shadow-lg">
         <div className="relative">
           <Link href={`/product/${product.slug}`}>
-            <div className="aspect-square relative overflow-hidden">
+            <div className="aspect-square relative overflow-hidden bg-gray-100">
               <Image
                   src={product.images?.[0] || '/placeholder-product.jpg'}
                   alt={product.name}
                   fill
                   className="object-cover transition-transform duration-200 group-hover:scale-105"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                  placeholder="blur"
+                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmM2Y0ZjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU3ZWIiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFkKSIvPjwvc3ZnPg=="
               />
             </div>
           </Link>
