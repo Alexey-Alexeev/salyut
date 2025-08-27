@@ -78,25 +78,51 @@ export default function CartPage() {
 
     setIsSubmitting(true)
     
-    // Simulate API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      // Here you would normally send the order to your API
-      console.log('Order data:', {
-        ...data,
-        items,
-        subtotal,
-        discountAmount,
-        deliveryCost: DELIVERY_COST,
-        total
+      // Подготавливаем данные для API
+      const orderData = {
+        customer_name: data.name,
+        customer_phone: data.phone,
+        customer_contact: data.contact || null,
+        contact_method: data.contactMethod || null,
+        comment: data.comment || null,
+        total_amount: Math.round(total), // округляем до целого числа рублей
+        delivery_cost: DELIVERY_COST, // в рублях
+        discount_amount: Math.round(discountAmount), // округляем скидку до целого числа рублей
+        age_confirmed: data.ageConfirmed,
+        items: items.map(item => ({
+          product_id: item.id,
+          quantity: item.quantity,
+          price_at_time: Math.round(item.price) // округляем цену до целого числа рублей
+        }))
+      }
+
+      console.log('Отправляем заказ:', orderData)
+
+      // Отправляем заказ в API
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
       })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Ошибка при создании заказа')
+      }
+
+      const result = await response.json()
+      console.log('Заказ создан:', result)
       
       clearCart()
       setOrderComplete(true)
-      toast.success('Заказ успешно оформлен!')
+      toast.success('Заказ успешно оформлен! Мы свяжемся с вами в ближайшее время.')
+      
     } catch (error) {
-      toast.error('Ошибка при оформлении заказа')
+      console.error('Ошибка при оформлении заказа:', error)
+      toast.error(error instanceof Error ? error.message : 'Ошибка при оформлении заказа')
     } finally {
       setIsSubmitting(false)
     }

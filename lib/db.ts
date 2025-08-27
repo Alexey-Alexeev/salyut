@@ -12,13 +12,19 @@ if (!connectionString) {
 // Для Supabase обычно требуется SSL. Разрешим принудительно включать его через переменные,
 // но по умолчанию включим безопасные настройки для продакшена.
 const commonOptions = {
-  ssl: process.env.PGSSLMODE === 'disable' ? undefined : { rejectUnauthorized: false } as unknown as boolean,
+  ssl: process.env.PGSSLMODE === 'disable' ? undefined : { rejectUnauthorized: false },
+  max: 1, // Ограничиваем количество соединений для Edge Runtime
+  idle_timeout: 20,
+  connect_timeout: 10,
 }
 
-const migrationClient = postgres(connectionString, { max: 1, ...commonOptions })
+const migrationClient = postgres(connectionString, { ...commonOptions })
 
 // Создаем клиент для запросов
-const queryClient = postgres(connectionString, { ...commonOptions })
+const queryClient = postgres(connectionString, { 
+  ...commonOptions,
+  max: 5 // Больше соединений для обычных запросов
+})
 
 export const db = drizzle(queryClient, { schema })
 

@@ -42,7 +42,7 @@ async function seed() {
       {
         name: 'Салют "Золотая россыпь" 36 залпов',
         slug: 'golden-shower-36',
-        price: 250000, // 2500 рублей в копейках
+        price: 2500, // 2500 рублей
         category_id: categoriesList.find(c => c.slug === 'rockets')?.id,
         manufacturer_id: manufacturersList.find(m => m.name === 'Русский фейерверк')?.id,
         images: [
@@ -63,7 +63,7 @@ async function seed() {
       {
         name: 'Петарды "Корсар-1" упаковка 50 шт',
         slug: 'korsar-1-50',
-        price: 89000, // 890 рублей в копейках
+        price: 890, // 890 рублей
         category_id: categoriesList.find(c => c.slug === 'firecrackers')?.id,
         manufacturer_id: manufacturersList.find(m => m.name === 'Пиротехника-М')?.id,
         images: [
@@ -82,7 +82,7 @@ async function seed() {
       {
         name: 'Фонтан "Вулкан" 30 секунд',
         slug: 'volcano-fountain',
-        price: 120000, // 1200 рублей в копейках
+        price: 1200, // 1200 рублей
         category_id: categoriesList.find(c => c.slug === 'fountains')?.id,
         manufacturer_id: manufacturersList.find(m => m.name === 'Фейерверк-Люкс')?.id,
         images: [
@@ -101,7 +101,7 @@ async function seed() {
       {
         name: 'Ракета "Комета" набор 12 шт',
         slug: 'comet-rockets-12',
-        price: 185000, // 1850 рублей в копейках
+        price: 1850, // 1850 рублей
         category_id: categoriesList.find(c => c.slug === 'rockets')?.id,
         manufacturer_id: manufacturersList.find(m => m.name === 'Праздник-Пиро')?.id,
         images: [
@@ -120,7 +120,7 @@ async function seed() {
       {
         name: 'Бенгальские огни "Звездочки" 10 шт',
         slug: 'sparklers-stars-10',
-        price: 35000, // 350 рублей в копейках
+        price: 350, // 350 рублей
         category_id: categoriesList.find(c => c.slug === 'sparklers')?.id,
         manufacturer_id: manufacturersList.find(m => m.name === 'Русский фейерверк')?.id,
         images: [
@@ -139,7 +139,7 @@ async function seed() {
       {
         name: 'Римская свеча "Огненный дождь" 8 выстрелов',
         slug: 'fire-rain-roman-candle',
-        price: 75000, // 750 рублей в копейках
+        price: 750, // 750 рублей
         category_id: categoriesList.find(c => c.slug === 'roman-candles')?.id,
         manufacturer_id: manufacturersList.find(m => m.name === 'Пиротехника-М')?.id,
         images: [
@@ -158,7 +158,7 @@ async function seed() {
       {
         name: 'Салют "Небесный фейерверк" 50 залпов',
         slug: 'sky-fireworks-50',
-        price: 350000, // 3500 рублей в копейках
+        price: 3500, // 3500 рублей
         category_id: categoriesList.find(c => c.slug === 'rockets')?.id,
         manufacturer_id: manufacturersList.find(m => m.name === 'Фейерверк-Люкс')?.id,
         images: [
@@ -178,7 +178,7 @@ async function seed() {
       {
         name: 'Петарды "Гром" упаковка 100 шт',
         slug: 'thunder-firecrackers-100',
-        price: 150000, // 1500 рублей в копейках
+        price: 1500, // 1500 рублей
         category_id: categoriesList.find(c => c.slug === 'firecrackers')?.id,
         manufacturer_id: manufacturersList.find(m => m.name === 'Праздник-Пиро')?.id,
         images: [

@@ -35,7 +35,7 @@ export const products = pgTable('products', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
-  price: integer('price').notNull(), // цена в копейках
+  price: integer('price').notNull(), // цена в рублях
   category_id: uuid('category_id').references(() => categories.id, { onDelete: 'set null' }),
   manufacturer_id: uuid('manufacturer_id').references(() => manufacturers.id, { onDelete: 'set null' }),
   images: jsonb('images').$type<string[]>(),
@@ -61,7 +61,7 @@ export const orders = pgTable('orders', {
   customer_contact: text('customer_contact'), // Telegram/WhatsApp username
   contact_method: text('contact_method', { enum: contactMethodEnum }),
   comment: text('comment'),
-  total_amount: integer('total_amount').notNull(), // сумма в копейках
+  total_amount: integer('total_amount').notNull(), // сумма в рублях
   delivery_cost: integer('delivery_cost').notNull().default(0),
   discount_amount: integer('discount_amount').default(0),
   age_confirmed: boolean('age_confirmed').notNull().default(false),
@@ -75,7 +75,7 @@ export const orderItems = pgTable('order_items', {
   order_id: uuid('order_id').references(() => orders.id, { onDelete: 'cascade' }).notNull(),
   product_id: uuid('product_id').references(() => products.id, { onDelete: 'set null' }),
   quantity: integer('quantity').notNull(),
-  price_at_time: integer('price_at_time').notNull(), // цена в копейках на момент заказа
+  price_at_time: integer('price_at_time').notNull(), // цена в рублях на момент заказа
   created_at: timestamp('created_at').defaultNow(),
 })
 

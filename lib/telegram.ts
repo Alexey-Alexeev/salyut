@@ -60,13 +60,24 @@ ${itemsText}
       }),
     })
 
+    const result = await response.json()
+    
     if (!response.ok) {
-      throw new Error(`Telegram API error: ${response.status}`)
+      console.error('Telegram API error details:', {
+        status: response.status,
+        error_code: result.error_code,
+        description: result.description,
+        chat_id: chatId,
+        bot_token_length: botToken.length
+      })
+      throw new Error(`Telegram API error: ${response.status} - ${result.description}`)
     }
 
     console.log('Telegram notification sent successfully')
   } catch (error) {
     console.error('Failed to send Telegram notification:', error)
+    // Не прерываем процесс создания заказа из-за ошибки Telegram
+    // Заказ должен быть создан даже если уведомление не отправилось
   }
 }
 

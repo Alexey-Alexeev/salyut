@@ -63,6 +63,7 @@ DATABASE_URL=your_database_connection_string
 # Telegram Bot Configuration (для уведомлений о заказах)
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 TELEGRAM_CHAT_ID=your_telegram_chat_id
+TELEGRAM_ADMIN_USER_ID=your_telegram_user_id
 
 # Cloudflare Stream Configuration (для видеоотзывов)
 CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
