@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { MessageCircle, Phone } from 'lucide-react'
+import { Send, Phone } from 'lucide-react'
 
 interface ConsultationDialogProps {
     open: boolean
@@ -177,7 +177,7 @@ export function ConsultationDialog({ open, onOpenChange }: ConsultationDialogPro
                             className="flex items-center gap-2 flex-1"
                             onClick={() => handleDirectContact('telegram')}
                         >
-                            <MessageCircle className="h-4 w-4" />
+                            <Send className="h-4 w-4" />
                             Telegram
                         </Button>
 
