@@ -1,3 +1,11 @@
+interface TelegramConsultationNotification {
+  consultationId: string
+  name: string
+  contactMethod: 'telegram' | 'whatsapp' | 'phone'
+  contactInfo: string
+  message?: string
+}
+
 interface TelegramNotification {
   orderId: string
   customerName: string
@@ -12,6 +20,68 @@ interface TelegramNotification {
   contactMethod?: 'telegram' | 'whatsapp'
   customerContact?: string
   professionalLaunchRequested?: boolean
+}
+
+export async function sendConsultationNotification(consultation: TelegramConsultationNotification) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN
+  const chatId = process.env.TELEGRAM_CHAT_ID
+
+  if (!botToken || !chatId) {
+    console.warn('Telegram bot token or chat ID not configured')
+    return
+  }
+
+  const contactMethodText = {
+    'phone': '📞 Телефон',
+    'telegram': '📱 Telegram',
+    'whatsapp': '📱 WhatsApp'
+  }[consultation.contactMethod]
+
+  const messageText = consultation.message
+    ? `\n\n💬 Комментарий: ${consultation.message}`
+    : ''
+
+  const message = `
+🎆 *Новая заявка на консультацию!*
+
+🆔 ID: #${consultation.consultationId.slice(0, 8)}
+👤 Имя: ${consultation.name}
+${contactMethodText}: ${consultation.contactInfo}${messageText}
+
+⏰ Время: ${new Date().toLocaleString('ru-RU')}
+  `.trim()
+
+  try {
+    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message,
+        parse_mode: 'Markdown',
+      }),
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      console.error('Telegram API error details:', {
+        status: response.status,
+        error_code: result.error_code,
+        description: result.description,
+        chat_id: chatId,
+        bot_token_length: botToken.length
+      })
+      throw new Error(`Telegram API error: ${response.status} - ${result.description}`)
+    }
+
+    console.log('Consultation notification sent successfully')
+  } catch (error) {
+    console.error('Failed to send consultation notification:', error)
+    // Не прерываем процесс создания заявки из-за ошибки Telegram
+  }
 }
 
 export async function sendTelegramNotification(order: TelegramNotification) {
@@ -32,8 +102,8 @@ export async function sendTelegramNotification(order: TelegramNotification) {
     : ''
 
   const commentText = order.comment ? `\n💬 Комментарий: ${order.comment}` : ''
-  
-  const professionalLaunchText = order.professionalLaunchRequested 
+
+  const professionalLaunchText = order.professionalLaunchRequested
     ? '\n🎆 *ЗАПРОШЕН ПРОФЕССИОНАЛЬНЫЙ ЗАПУСК САЛЮТОВ* 🎆\n⚠️ Менеджер должен обсудить детали и стоимость с клиентом'
     : ''
 
@@ -66,7 +136,7 @@ ${itemsText}
     })
 
     const result = await response.json()
-    
+
     if (!response.ok) {
       console.error('Telegram API error details:', {
         status: response.status,

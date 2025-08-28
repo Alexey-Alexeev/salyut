@@ -54,12 +54,35 @@ export function ConsultationDialog({ open, onOpenChange }: ConsultationDialogPro
         }
 
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            const response = await fetch('/api/consultations', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: formData.name,
+                    contactMethod: formData.contactMethod,
+                    contactInfo: formData.contactInfo,
+                    message: formData.message,
+                }),
+            })
+
+            const result = await response.json()
+
+            if (!response.ok) {
+                throw new Error(result.details || result.error || 'Ошибка сервера')
+            }
+
             toast.success('Заявка отправлена! Мы свяжемся с вами в ближайшее время.')
             onOpenChange(false)
             setFormData({ name: '', contactMethod: '', contactInfo: '', message: '' })
         } catch (error) {
-            toast.error('Произошла ошибка при отправке заявки')
+            console.error('Error submitting consultation:', error)
+            toast.error(
+                error instanceof Error
+                    ? error.message
+                    : 'Произошла ошибка при отправке заявки'
+            )
         } finally {
             setLoading(false)
         }
@@ -148,7 +171,7 @@ export function ConsultationDialog({ open, onOpenChange }: ConsultationDialogPro
                     )}
 
                     <div className="space-y-2">
-                        <Label htmlFor="message">Сообщение</Label>
+                        <Label htmlFor="message">Комментарий</Label>
                         <Textarea
                             id="message"
                             value={formData.message}

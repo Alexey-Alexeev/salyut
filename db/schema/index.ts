@@ -6,7 +6,10 @@ import { relations } from 'drizzle-orm'
 export const orderStatusEnum = ['created', 'in_progress', 'completed', 'cancelled'] as const;
 
 // Enum для способов связи
-export const contactMethodEnum = ['telegram', 'whatsapp'] as const;
+export const contactMethodEnum = ['telegram', 'whatsapp', 'phone'] as const;
+
+// Enum для статусов консультаций
+export const consultationStatusEnum = ['new', 'contacted', 'completed'] as const;
 
 // Enum для ролей пользователей
 export const userRoleEnum = ['admin', 'user'] as const;
@@ -52,6 +55,18 @@ export const products = pgTable('products', {
   updated_at: timestamp('updated_at').defaultNow(),
 })
 
+// Таблица консультаций
+export const consultations = pgTable('consultations', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull(),
+  contact_method: text('contact_method', { enum: contactMethodEnum }).notNull(),
+  contact_info: text('contact_info').notNull(),
+  message: text('message'),
+  status: text('status', { enum: consultationStatusEnum }).default('new'),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow(),
+})
+
 // Таблица заказов
 export const orders = pgTable('orders', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -65,10 +80,10 @@ export const orders = pgTable('orders', {
   delivery_cost: integer('delivery_cost').notNull().default(0),
   discount_amount: integer('discount_amount').default(0),
   age_confirmed: boolean('age_confirmed').notNull().default(false),
-  
+
   // Поле для услуги профессионального запуска салютов
   professional_launch_requested: boolean('professional_launch_requested').default(false),
-  
+
   created_at: timestamp('created_at').defaultNow(),
   updated_at: timestamp('updated_at').defaultNow(),
 })
