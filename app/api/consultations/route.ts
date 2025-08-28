@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { consultations } from '@/db/schema'
+import { consultations, consultationStatusEnum } from '@/db/schema'
 import { sendConsultationNotification } from '@/lib/telegram'
 import { z } from 'zod'
-import { eq, desc } from 'drizzle-orm'
+import { eq, desc, sql } from 'drizzle-orm'
 
 // Схема валидации для заявки на консультацию
 const consultationSchema = z.object({
     name: z.string().min(1, 'Имя обязательно').trim(),
-    contactMethod: z.enum(['phone', 'telegram', 'whatsapp'], {
-        required_error: 'Выберите способ связи'
+    contactMethod: z.enum(['phone', 'telegram', 'whatsapp']).refine((val) => val, {
+        message: 'Выберите способ связи'
     }),
     contactInfo: z.string().min(1, 'Контактная информация обязательна').trim(),
     message: z.string().optional(),
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
                 {
                     success: false,
                     error: 'Validation error',
-                    details: error.errors.map(err => err.message).join(', ')
+                    details: error.issues.map((err: any) => err.message).join(', ')
                 },
                 { status: 400 }
             )
@@ -84,16 +84,38 @@ export async function GET(request: NextRequest) {
         const limit = parseInt(searchParams.get('limit') || '10')
         const offset = parseInt(searchParams.get('offset') || '0')
 
-        let query = db.select().from(consultations)
+        let results, countResult
 
-        if (status && ['new', 'contacted', 'completed'].includes(status)) {
-            query = query.where(eq(consultations.status, status as any))
+        if (status && consultationStatusEnum.includes(status as (typeof consultationStatusEnum)[number])) {
+            const typedStatus = status as (typeof consultationStatusEnum)[number]
+            const whereCondition = eq(consultations.status, typedStatus)
+
+            const [consultationsResult, countQueryResult] = await Promise.all([
+                db.select().from(consultations)
+                    .where(whereCondition)
+                    .orderBy(desc(consultations.created_at))
+                    .limit(limit)
+                    .offset(offset),
+                db.select({ count: sql<number>`count(*)` }).from(consultations)
+                    .where(whereCondition)
+            ])
+
+            results = consultationsResult
+            countResult = countQueryResult
+        } else {
+            const [consultationsResult, countQueryResult] = await Promise.all([
+                db.select().from(consultations)
+                    .orderBy(desc(consultations.created_at))
+                    .limit(limit)
+                    .offset(offset),
+                db.select({ count: sql<number>`count(*)` }).from(consultations)
+            ])
+
+            results = consultationsResult
+            countResult = countQueryResult
         }
 
-        const results = await query
-            .orderBy(desc(consultations.created_at))
-            .limit(limit)
-            .offset(offset)
+        const count = countResult[0]?.count || 0
 
         return NextResponse.json({
             success: true,
@@ -101,7 +123,7 @@ export async function GET(request: NextRequest) {
             pagination: {
                 limit,
                 offset,
-                total: results.length
+                total: count
             }
         })
 
