@@ -9,17 +9,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
-import { 
-  ArrowLeft, 
-  User, 
-  Phone, 
-  Calendar, 
+import {
+  ArrowLeft,
+  User,
+  Phone,
+  Calendar,
   Package,
   DollarSign,
   MessageCircle,
   CheckCircle,
   Clock,
-  XCircle
+  XCircle,
+  Truck,
+  Store,
+  MapPin
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -46,6 +49,8 @@ interface Order {
   discount_amount: number
   status: 'created' | 'in_progress' | 'completed' | 'cancelled'
   comment: string | null
+  delivery_method: 'delivery' | 'pickup'
+  delivery_address: string | null
   age_confirmed: boolean
   created_at: string
   items: OrderItem[]
@@ -68,7 +73,7 @@ export default function OrderDetailPage() {
       if (!response.ok) {
         throw new Error('Failed to load order')
       }
-      
+
       const orderData = await response.json()
       setOrder(orderData)
     } catch (error) {
@@ -128,7 +133,7 @@ export default function OrderDetailPage() {
       completed: { label: 'Завершен', variant: 'default' as const },
       cancelled: { label: 'Отменен', variant: 'destructive' as const }
     }
-    
+
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.created
     return <Badge variant={config.variant}>{config.label}</Badge>
   }
@@ -216,7 +221,7 @@ export default function OrderDetailPage() {
                     </p>
                   </div>
                 </div>
-                
+
                 {order.customer_contact && (
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">
@@ -283,14 +288,14 @@ export default function OrderDetailPage() {
                           className="object-cover"
                         />
                       </div>
-                      
+
                       <div className="flex-1">
                         <h4 className="font-medium">{item.product.name}</h4>
                         <p className="text-sm text-muted-foreground">
                           Количество: {item.quantity} шт.
                         </p>
                       </div>
-                      
+
                       <div className="text-right">
                         <p className="font-medium">
                           {(item.price_at_time).toLocaleString('ru-RU')} ₽
@@ -301,6 +306,59 @@ export default function OrderDetailPage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Информация о доставке */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  {order.delivery_method === 'delivery' ? (
+                    <Truck className="h-5 w-5 text-blue-600" />
+                  ) : (
+                    <Store className="h-5 w-5 text-green-600" />
+                  )}
+                  Информация о доставке
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Способ получения</label>
+                  <p className="font-medium flex items-center gap-2">
+                    {order.delivery_method === 'delivery' ? (
+                      <>
+                        <Truck className="h-4 w-4 text-blue-600" />
+                        🚚 Доставка
+                      </>
+                    ) : (
+                      <>
+                        <Store className="h-4 w-4 text-green-600" />
+                        🏬 Самовывоз
+                      </>
+                    )}
+                  </p>
+                </div>
+
+                {order.delivery_method === 'delivery' && order.delivery_address && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Адрес доставки</label>
+                    <p className="font-medium flex items-start gap-2">
+                      <MapPin className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                      {order.delivery_address}
+                    </p>
+                  </div>
+                )}
+
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Стоимость доставки</label>
+                  <p className="font-medium">
+                    {order.delivery_cost === 0 ? (
+                      <span className="text-green-600">Бесплатно</span>
+                    ) : (
+                      `${order.delivery_cost.toLocaleString('ru-RU')} ₽`
+                    )}
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -329,7 +387,7 @@ export default function OrderDetailPage() {
                     <SelectItem value="cancelled">Отменен</SelectItem>
                   </SelectContent>
                 </Select>
-                
+
                 {updating && (
                   <p className="text-sm text-muted-foreground">Обновление...</p>
                 )}
@@ -349,7 +407,7 @@ export default function OrderDetailPage() {
                   <span>Товары:</span>
                   <span>{(order.total_amount).toLocaleString('ru-RU')} ₽</span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span>Доставка:</span>
                   <span>{(order.delivery_cost).toLocaleString('ru-RU')} ₽</span>
@@ -363,7 +421,7 @@ export default function OrderDetailPage() {
                 )}
 
                 <Separator />
-                
+
                 <div className="flex justify-between text-lg font-bold">
                   <span>К оплате:</span>
                   <span>

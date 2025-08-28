@@ -20,6 +20,8 @@ const orderSchema = z.object({
   discount_amount: z.number().min(0),
   age_confirmed: z.boolean(),
   professional_launch_requested: z.boolean().optional(),
+  delivery_method: z.enum(['delivery', 'pickup']),
+  delivery_address: z.string().optional().nullable(),
   items: z.array(z.object({
     product_id: z.string(),
     quantity: z.number().positive(),
@@ -30,16 +32,16 @@ const orderSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     console.log('=== Начало создания заказа ===')
-    
+
     const body = await request.json()
     console.log('Полученные данные:', JSON.stringify(body, null, 2))
-    
+
     const validatedData = orderSchema.parse(body)
     console.log('Данные прошли валидацию:', validatedData)
 
     // Создаем заказ
     console.log('Создаем заказ в базе данных...')
-    
+
     const orderData = {
       customer_name: validatedData.customer_name,
       customer_phone: validatedData.customer_phone,
@@ -51,10 +53,12 @@ export async function POST(request: NextRequest) {
       discount_amount: Math.round(validatedData.discount_amount),
       age_confirmed: validatedData.age_confirmed,
       professional_launch_requested: validatedData.professional_launch_requested || false,
+      delivery_method: validatedData.delivery_method,
+      delivery_address: validatedData.delivery_address || null,
     }
-    
+
     console.log('Данные для вставки:', orderData)
-    
+
     let order
     try {
       // Use raw SQL to avoid parameter concatenation issues
@@ -62,14 +66,16 @@ export async function POST(request: NextRequest) {
         INSERT INTO orders (
           customer_name, customer_phone, customer_contact, 
           contact_method, comment, total_amount, 
-          delivery_cost, discount_amount, age_confirmed, professional_launch_requested
+          delivery_cost, discount_amount, age_confirmed, professional_launch_requested,
+          delivery_method, delivery_address
         ) VALUES (
           ${orderData.customer_name}, ${orderData.customer_phone}, ${orderData.customer_contact},
           ${orderData.contact_method}, ${orderData.comment}, ${orderData.total_amount},
-          ${orderData.delivery_cost}, ${orderData.discount_amount}, ${orderData.age_confirmed}, ${orderData.professional_launch_requested}
+          ${orderData.delivery_cost}, ${orderData.discount_amount}, ${orderData.age_confirmed}, ${orderData.professional_launch_requested},
+          ${orderData.delivery_method}, ${orderData.delivery_address}
         ) RETURNING *
       `)
-      
+
       order = result[0] as any
       console.log('✅ Заказ создан успешно!', order)
     } catch (insertError) {
@@ -82,7 +88,7 @@ export async function POST(request: NextRequest) {
     // Создаем элементы заказа
     if (order && validatedData.items.length > 0) {
       console.log(`Создаем ${validatedData.items.length} элементов заказа...`)
-      
+
       // Use raw SQL for order items as well
       for (const item of validatedData.items) {
         await db.execute(sql`
@@ -90,7 +96,7 @@ export async function POST(request: NextRequest) {
           VALUES (${order.id}, ${item.product_id}, ${Math.round(item.quantity)}, ${Math.round(item.price_at_time)})
         `)
       }
-      
+
       console.log('Элементы заказа созданы')
     }
 
@@ -102,7 +108,7 @@ export async function POST(request: NextRequest) {
           const result = await db.execute(sql`
             SELECT name FROM products WHERE id = ${item.product_id} LIMIT 1
           `)
-          
+
           return {
             name: (result[0] as any)?.name || 'Товар',
             quantity: item.quantity,
@@ -118,7 +124,7 @@ export async function POST(request: NextRequest) {
         }
       })
     )
-    
+
     console.log('Информация о товарах получена:', orderItemsWithProducts)
 
     // Отправляем уведомление в Telegram
@@ -133,7 +139,10 @@ export async function POST(request: NextRequest) {
         comment: validatedData.comment || undefined,
         contactMethod: validatedData.contact_method || undefined,
         customerContact: validatedData.customer_contact || undefined,
-        professionalLaunchRequested: validatedData.professional_launch_requested || false
+        professionalLaunchRequested: validatedData.professional_launch_requested || false,
+        deliveryMethod: validatedData.delivery_method,
+        deliveryAddress: validatedData.delivery_address || undefined,
+        deliveryCost: validatedData.delivery_cost
       })
       console.log('Уведомление в Telegram отправлено')
     } catch (telegramError) {
@@ -144,22 +153,22 @@ export async function POST(request: NextRequest) {
 
     console.log('Заказ успешно создан!')
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       order_id: order.id as string
     }, { status: 201 })
 
   } catch (error) {
     console.error('=== Ошибка при создании заказа ===', error)
-    
+
     if (error instanceof z.ZodError) {
       console.error('Ошибки валидации:', error.issues)
-      return NextResponse.json({ 
-        error: 'Validation error', 
+      return NextResponse.json({
+        error: 'Validation error',
         details: error.issues
       }, { status: 400 })
     }
-    
+
     // Проверяем, что это ошибка базы данных
     if (error && typeof error === 'object' && 'code' in error) {
       console.error('Ошибка базы данных:', {
@@ -169,7 +178,7 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })

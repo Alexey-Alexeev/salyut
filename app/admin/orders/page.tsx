@@ -11,13 +11,15 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { OrderStats } from '@/components/admin/order-stats'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
-import { 
-  Search, 
-  Eye, 
-  Edit, 
+import {
+  Search,
+  Eye,
+  Edit,
   Calendar,
   Phone,
-  User
+  User,
+  Truck,
+  Store
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -32,6 +34,8 @@ interface Order {
   discount_amount: number
   status: 'created' | 'in_progress' | 'completed' | 'cancelled'
   comment: string | null
+  delivery_method: 'delivery' | 'pickup'
+  delivery_address: string | null
   created_at: string
 }
 
@@ -69,7 +73,7 @@ export default function AdminOrdersPage() {
     try {
       let query = supabase
         .from('orders')
-        .select('*')
+        .select('id, customer_name, customer_phone, customer_contact, contact_method, total_amount, delivery_cost, discount_amount, status, comment, delivery_method, delivery_address, created_at')
         .order('created_at', { ascending: false })
 
       if (statusFilter !== 'all') {
@@ -86,7 +90,7 @@ export default function AdminOrdersPage() {
       if (error) throw error
 
       setOrders(data || [])
-      
+
       // Получаем общее количество для пагинации
       const { count } = await supabase
         .from('orders')
@@ -147,7 +151,7 @@ export default function AdminOrdersPage() {
       completed: { label: 'Завершен', variant: 'default' as const, color: 'bg-green-100 text-green-800' },
       cancelled: { label: 'Отменен', variant: 'destructive' as const, color: 'bg-red-100 text-red-800' }
     }
-    
+
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.created
     return <Badge variant={config.variant}>{config.label}</Badge>
   }
@@ -208,7 +212,7 @@ export default function AdminOrdersPage() {
                   className="pl-10"
                 />
               </div>
-              
+
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-48">
                   <SelectValue placeholder="Статус заказа" />
@@ -245,6 +249,7 @@ export default function AdminOrdersPage() {
                   <TableHead>Заказ</TableHead>
                   <TableHead>Клиент</TableHead>
                   <TableHead>Контакты</TableHead>
+                  <TableHead>Доставка</TableHead>
                   <TableHead>Сумма</TableHead>
                   <TableHead>Статус</TableHead>
                   <TableHead>Дата</TableHead>
@@ -273,6 +278,28 @@ export default function AdminOrdersPage() {
                           <div className="text-sm text-muted-foreground">
                             {order.contact_method === 'telegram' ? '📱' : '📞'} {order.customer_contact}
                           </div>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        {order.delivery_method === 'delivery' ? (
+                          <>
+                            <Truck className="h-4 w-4 text-blue-600" />
+                            <div>
+                              <div className="font-medium">🚚 Доставка</div>
+                              {order.delivery_address && (
+                                <div className="text-sm text-muted-foreground truncate max-w-32">
+                                  {order.delivery_address}
+                                </div>
+                              )}
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <Store className="h-4 w-4 text-green-600" />
+                            <div className="font-medium">🏬 Самовывоз</div>
+                          </>
                         )}
                       </div>
                     </TableCell>
@@ -338,12 +365,12 @@ export default function AdminOrdersPage() {
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious 
+                  <PaginationPrevious
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                     className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                   />
                 </PaginationItem>
-                
+
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                   <PaginationItem key={page}>
                     <PaginationLink
@@ -355,9 +382,9 @@ export default function AdminOrdersPage() {
                     </PaginationLink>
                   </PaginationItem>
                 ))}
-                
+
                 <PaginationItem>
-                  <PaginationNext 
+                  <PaginationNext
                     onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                     className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                   />

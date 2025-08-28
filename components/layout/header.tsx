@@ -19,6 +19,7 @@ export function Header() {
     { href: '/', label: 'Главная' },
     { href: '/catalog', label: 'Каталог' },
     { href: '/services/launching', label: 'Услуги' },
+    { href: '/delivery', label: 'Доставка / Самовывоз' },
     { href: '/about', label: 'О нас' },
   ]
 

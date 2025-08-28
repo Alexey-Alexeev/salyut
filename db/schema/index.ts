@@ -14,6 +14,9 @@ export const consultationStatusEnum = ['new', 'contacted', 'completed'] as const
 // Enum для ролей пользователей
 export const userRoleEnum = ['admin', 'user'] as const;
 
+// Enum для способов получения заказа
+export const deliveryMethodEnum = ['delivery', 'pickup'] as const;
+
 // Таблица категорий
 export const categories = pgTable('categories', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -80,6 +83,10 @@ export const orders = pgTable('orders', {
   delivery_cost: integer('delivery_cost').notNull().default(0),
   discount_amount: integer('discount_amount').default(0),
   age_confirmed: boolean('age_confirmed').notNull().default(false),
+
+  // Поля для способа получения заказа
+  delivery_method: text('delivery_method', { enum: deliveryMethodEnum }).notNull(),
+  delivery_address: text('delivery_address'), // адрес доставки (если выбрана доставка)
 
   // Поле для услуги профессионального запуска салютов
   professional_launch_requested: boolean('professional_launch_requested').default(false),

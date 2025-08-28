@@ -20,6 +20,9 @@ interface TelegramNotification {
   contactMethod?: 'telegram' | 'whatsapp'
   customerContact?: string
   professionalLaunchRequested?: boolean
+  deliveryMethod: 'delivery' | 'pickup'
+  deliveryAddress?: string
+  deliveryCost: number
 }
 
 export async function sendConsultationNotification(consultation: TelegramConsultationNotification) {
@@ -107,6 +110,10 @@ export async function sendTelegramNotification(order: TelegramNotification) {
     ? '\n🎆 *ЗАПРОШЕН ПРОФЕССИОНАЛЬНЫЙ ЗАПУСК САЛЮТОВ* 🎆\n⚠️ Менеджер должен обсудить детали и стоимость с клиентом'
     : ''
 
+  const deliveryText = order.deliveryMethod === 'pickup'
+    ? '\n🏬 **Самовывоз** (бесплатно)\n📍 Рассветная ул., 1, д. Чёрное, Балашиха'
+    : `\n🚚 **Доставка** - ${order.deliveryCost.toLocaleString('ru-RU')} ₽${order.deliveryAddress ? `\n📍 ${order.deliveryAddress}` : '\n📍 _Адрес уточнит менеджер_'}`
+
   const message = `
 🎆 *Новый заказ!*
 
@@ -117,7 +124,7 @@ export async function sendTelegramNotification(order: TelegramNotification) {
 🛒 *Товары:*
 ${itemsText}
 
-💰 *Итого: ${order.totalAmount.toLocaleString('ru-RU')} ₽*${commentText}${professionalLaunchText}
+💰 *Итого: ${order.totalAmount.toLocaleString('ru-RU')} ₽*${deliveryText}${commentText}${professionalLaunchText}
 
 ⏰ Время: ${new Date().toLocaleString('ru-RU')}
   `.trim()

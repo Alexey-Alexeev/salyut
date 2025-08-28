@@ -6,7 +6,7 @@ import { categories } from '@/db/schema'
 export async function Footer() {
   // Загружаем категории из БД с обработкой ошибок
   let categoriesData: any[] = [];
-  
+
   try {
     categoriesData = await db.select().from(categories).limit(5);
   } catch (error) {
@@ -34,8 +34,8 @@ export async function Footer() {
               {categoriesData.length > 0 ? (
                 categoriesData.map((category) => (
                   <li key={category.id}>
-                    <Link 
-                      href={`/catalog?category=${category.slug}`} 
+                    <Link
+                      href={`/catalog?category=${category.slug}`}
                       className="text-muted-foreground hover:text-primary"
                     >
                       {category.name}
@@ -70,10 +70,6 @@ export async function Footer() {
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
                 <span>+7 (977) 360-20-08</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4" />
-                <span>info@fireworks.ru</span>
               </div>
             </div>
           </div>

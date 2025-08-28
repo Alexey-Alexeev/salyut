@@ -1,5 +1,7 @@
 'use client'
 
+import { DeliverySelection } from '@/components/delivery-selection'
+import { type DeliveryCalculationResult } from '@/lib/delivery-utils'
 import { useState } from 'react'
 import Image from 'next/image'
 import { Minus, Plus, Trash2, Check } from 'lucide-react'
@@ -25,6 +27,10 @@ const orderSchema = z.object({
   contact: z.string().optional(),
   comment: z.string().optional(),
   professionalLaunch: z.boolean().optional(),
+  deliveryMethod: z.enum(['delivery', 'pickup']).refine(val => val, {
+    message: 'Выберите способ получения заказа'
+  }),
+  deliveryAddress: z.string().optional(),
   ageConfirmed: z.boolean().refine(val => val === true, {
     message: 'Необходимо подтвердить возраст'
   })
@@ -53,6 +59,7 @@ export default function CartPage() {
   const { items, updateQuantity, removeItem, clearCart, getTotalPrice } = useCartStore()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [orderComplete, setOrderComplete] = useState(false)
+  const [deliveryResult, setDeliveryResult] = useState<DeliveryCalculationResult | null>(null)
 
   const {
     register,
@@ -69,7 +76,8 @@ export default function CartPage() {
   const subtotal = getTotalPrice()
   const discount = subtotal >= DISCOUNT_THRESHOLD_2 ? 0.1 : subtotal >= DISCOUNT_THRESHOLD_1 ? 0.05 : 0
   const discountAmount = roundDiscount(subtotal * discount) // Округляем скидку
-  const total = subtotal - discountAmount + (items.length > 0 ? DELIVERY_COST : 0)
+  const deliveryCost = deliveryResult?.cost || DELIVERY_COST
+  const total = subtotal - discountAmount + (items.length > 0 ? deliveryCost : 0)
 
   const onSubmit = async (data: OrderForm) => {
     if (items.length === 0) {
@@ -77,8 +85,13 @@ export default function CartPage() {
       return
     }
 
+    if (!deliveryResult) {
+      toast.error('Выберите способ получения заказа')
+      return
+    }
+
     setIsSubmitting(true)
-    
+
     try {
       // Подготавливаем данные для API
       const orderData = {
@@ -87,15 +100,17 @@ export default function CartPage() {
         customer_contact: data.contact || null,
         contact_method: data.contactMethod || null,
         comment: data.comment || null,
-        total_amount: Math.round(total), // округляем до целого числа рублей
-        delivery_cost: DELIVERY_COST, // в рублях
-        discount_amount: Math.round(discountAmount), // округляем скидку до целого числа рублей
+        total_amount: Math.round(total),
+        delivery_cost: Math.round(deliveryCost),
+        discount_amount: Math.round(discountAmount),
         age_confirmed: data.ageConfirmed,
         professional_launch_requested: data.professionalLaunch || false,
+        delivery_method: deliveryResult.method,
+        delivery_address: deliveryResult.address || null,
         items: items.map(item => ({
           product_id: item.id,
           quantity: item.quantity,
-          price_at_time: Math.round(item.price) // округляем цену до целого числа рублей
+          price_at_time: Math.round(item.price)
         }))
       }
 
@@ -117,11 +132,11 @@ export default function CartPage() {
 
       const result = await response.json()
       console.log('Заказ создан:', result)
-      
+
       clearCart()
       setOrderComplete(true)
       toast.success('Заказ успешно оформлен! Мы свяжемся с вами в ближайшее время.')
-      
+
     } catch (error) {
       console.error('Ошибка при оформлении заказа:', error)
       toast.error(error instanceof Error ? error.message : 'Ошибка при оформлении заказа')
@@ -179,10 +194,10 @@ export default function CartPage() {
                     <div className="flex items-center gap-4">
                       <div className="relative w-16 h-16 rounded-lg overflow-hidden">
                         <Image
-                            src={item.image}
-                            alt={item.name}
-                            fill
-                            className="object-cover"
+                          src={item.image}
+                          alt={item.name}
+                          fill
+                          className="object-cover"
                         />
                       </div>
 
@@ -196,32 +211,32 @@ export default function CartPage() {
                       <div className="flex items-center gap-2">
                         <div className="flex items-center border rounded-md">
                           <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0"
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              disabled={item.quantity <= 1}
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            disabled={item.quantity <= 1}
                           >
-                            <Minus className="h-3 w-3"/>
+                            <Minus className="h-3 w-3" />
                           </Button>
                           <span className="px-2 py-1 text-sm min-w-[2rem] text-center">{item.quantity}</span>
                           <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0"
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           >
-                            <Plus className="h-3 w-3"/>
+                            <Plus className="h-3 w-3" />
                           </Button>
                         </div>
 
                         <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                            onClick={() => removeItem(item.id)}
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                          onClick={() => removeItem(item.id)}
                         >
-                          <Trash2 className="h-4 w-4"/>
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
@@ -254,17 +269,17 @@ export default function CartPage() {
 
                 <div className="flex justify-between">
                   <span>Доставка:</span>
-                  <span>{DELIVERY_COST.toLocaleString('ru-RU')} ₽</span>
+                  <span>{deliveryCost.toLocaleString('ru-RU')} ₽</span>
                 </div>
 
                 {discount > 0 && (
-                    <div className="flex justify-between text-green-600">
-                      <span>Скидка ({Math.round(discount * 100)}%):</span>
-                      <span>-{discountAmount.toLocaleString('ru-RU')} ₽</span>
-                    </div>
+                  <div className="flex justify-between text-green-600">
+                    <span>Скидка ({Math.round(discount * 100)}%):</span>
+                    <span>-{discountAmount.toLocaleString('ru-RU')} ₽</span>
+                  </div>
                 )}
 
-                <Separator/>
+                <Separator />
 
                 <div className="flex justify-between text-lg font-bold">
                   <span>К оплате:</span>
@@ -272,18 +287,25 @@ export default function CartPage() {
                 </div>
 
                 {subtotal < DISCOUNT_THRESHOLD_1 && (
-                    <p className="text-sm text-muted-foreground">
-                      До скидки 5% осталось {(DISCOUNT_THRESHOLD_1 - subtotal).toLocaleString('ru-RU')} ₽
-                    </p>
+                  <p className="text-sm text-muted-foreground">
+                    До скидки 5% осталось {(DISCOUNT_THRESHOLD_1 - subtotal).toLocaleString('ru-RU')} ₽
+                  </p>
                 )}
 
                 {subtotal >= DISCOUNT_THRESHOLD_1 && subtotal < DISCOUNT_THRESHOLD_2 && (
-                    <p className="text-sm text-muted-foreground">
-                      До скидки 10% осталось {(DISCOUNT_THRESHOLD_2 - subtotal).toLocaleString('ru-RU')} ₽
+                  <p className="text-sm text-muted-foreground">
+                    До скидки 10% осталось {(DISCOUNT_THRESHOLD_2 - subtotal).toLocaleString('ru-RU')} ₽
                   </p>
                 )}
               </CardContent>
             </Card>
+
+            {/* Delivery Selection */}
+            <DeliverySelection
+              onDeliveryChange={setDeliveryResult}
+              selectedMethod={deliveryResult?.method || 'delivery'}
+              className="mb-6"
+            />
 
             {/* Order Form */}
             <Card>
@@ -373,8 +395,8 @@ export default function CartPage() {
                         <p className="text-xs text-muted-foreground mt-1">
                           Безопасно, качественно, с соблюдением всех норм. Стоимость рассчитывается индивидуально.
                         </p>
-                        <a 
-                          href="/services/launching" 
+                        <a
+                          href="/services/launching"
                           target="_blank"
                           className="text-xs text-orange-600 hover:text-orange-700 underline"
                         >
@@ -400,9 +422,9 @@ export default function CartPage() {
                     <p className="text-sm text-destructive">{errors.ageConfirmed.message}</p>
                   )}
 
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
+                  <Button
+                    type="submit"
+                    className="w-full"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? 'Оформляется...' : 'Оформить заказ'}
