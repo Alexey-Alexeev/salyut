@@ -247,7 +247,7 @@ export function extractCityFromAddress(address: string): string {
     const municipalMatch = address.match(/муниципальный\s+округ\s+([а-яё\-]+)/i)
     if (municipalMatch && municipalMatch[1]) {
         const candidate = municipalMatch[1].toLowerCase()
-        if (MOSCOW_OBLAST_CITIES.includes(candidate)) {
+        if (MOSCOW_OBLAST_CITIES.includes(candidate as any)) {
             return candidate
         }
     }
