@@ -19,6 +19,7 @@ const orderSchema = z.object({
   delivery_cost: z.number().min(0),
   discount_amount: z.number().min(0),
   age_confirmed: z.boolean(),
+  professional_launch_requested: z.boolean().optional(),
   items: z.array(z.object({
     product_id: z.string(),
     quantity: z.number().positive(),
@@ -49,6 +50,7 @@ export async function POST(request: NextRequest) {
       delivery_cost: Math.round(validatedData.delivery_cost),
       discount_amount: Math.round(validatedData.discount_amount),
       age_confirmed: validatedData.age_confirmed,
+      professional_launch_requested: validatedData.professional_launch_requested || false,
     }
     
     console.log('Данные для вставки:', orderData)
@@ -60,11 +62,11 @@ export async function POST(request: NextRequest) {
         INSERT INTO orders (
           customer_name, customer_phone, customer_contact, 
           contact_method, comment, total_amount, 
-          delivery_cost, discount_amount, age_confirmed
+          delivery_cost, discount_amount, age_confirmed, professional_launch_requested
         ) VALUES (
           ${orderData.customer_name}, ${orderData.customer_phone}, ${orderData.customer_contact},
           ${orderData.contact_method}, ${orderData.comment}, ${orderData.total_amount},
-          ${orderData.delivery_cost}, ${orderData.discount_amount}, ${orderData.age_confirmed}
+          ${orderData.delivery_cost}, ${orderData.discount_amount}, ${orderData.age_confirmed}, ${orderData.professional_launch_requested}
         ) RETURNING *
       `)
       
@@ -130,7 +132,8 @@ export async function POST(request: NextRequest) {
         items: orderItemsWithProducts,
         comment: validatedData.comment || undefined,
         contactMethod: validatedData.contact_method || undefined,
-        customerContact: validatedData.customer_contact || undefined
+        customerContact: validatedData.customer_contact || undefined,
+        professionalLaunchRequested: validatedData.professional_launch_requested || false
       })
       console.log('Уведомление в Telegram отправлено')
     } catch (telegramError) {

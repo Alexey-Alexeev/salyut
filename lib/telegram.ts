@@ -11,6 +11,7 @@ interface TelegramNotification {
   comment?: string
   contactMethod?: 'telegram' | 'whatsapp'
   customerContact?: string
+  professionalLaunchRequested?: boolean
 }
 
 export async function sendTelegramNotification(order: TelegramNotification) {
@@ -31,6 +32,10 @@ export async function sendTelegramNotification(order: TelegramNotification) {
     : ''
 
   const commentText = order.comment ? `\n💬 Комментарий: ${order.comment}` : ''
+  
+  const professionalLaunchText = order.professionalLaunchRequested 
+    ? '\n🎆 *ЗАПРОШЕН ПРОФЕССИОНАЛЬНЫЙ ЗАПУСК САЛЮТОВ* 🎆\n⚠️ Менеджер должен обсудить детали и стоимость с клиентом'
+    : ''
 
   const message = `
 🎆 *Новый заказ!*
@@ -42,7 +47,7 @@ export async function sendTelegramNotification(order: TelegramNotification) {
 🛒 *Товары:*
 ${itemsText}
 
-💰 *Итого: ${order.totalAmount.toLocaleString('ru-RU')} ₽*${commentText}
+💰 *Итого: ${order.totalAmount.toLocaleString('ru-RU')} ₽*${commentText}${professionalLaunchText}
 
 ⏰ Время: ${new Date().toLocaleString('ru-RU')}
   `.trim()

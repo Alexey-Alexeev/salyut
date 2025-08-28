@@ -24,6 +24,7 @@ const orderSchema = z.object({
   contactMethod: z.enum(['telegram', 'whatsapp']).optional(),
   contact: z.string().optional(),
   comment: z.string().optional(),
+  professionalLaunch: z.boolean().optional(),
   ageConfirmed: z.boolean().refine(val => val === true, {
     message: 'Необходимо подтвердить возраст'
   })
@@ -90,6 +91,7 @@ export default function CartPage() {
         delivery_cost: DELIVERY_COST, // в рублях
         discount_amount: Math.round(discountAmount), // округляем скидку до целого числа рублей
         age_confirmed: data.ageConfirmed,
+        professional_launch_requested: data.professionalLaunch || false,
         items: items.map(item => ({
           product_id: item.id,
           quantity: item.quantity,
@@ -354,6 +356,34 @@ export default function CartPage() {
                     />
                   </div>
 
+                  {/* Профессиональный запуск */}
+                  <div className="p-4 border rounded-lg bg-gradient-to-r from-orange-50 to-red-50">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="professionalLaunch"
+                        onCheckedChange={(checked) => setValue('professionalLaunch', checked as boolean)}
+                      />
+                      <div className="flex-1">
+                        <Label
+                          htmlFor="professionalLaunch"
+                          className="text-sm font-medium leading-none cursor-pointer"
+                        >
+                          🎆 Профессиональный запуск салютов
+                        </Label>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Безопасно, качественно, с соблюдением всех норм. Стоимость рассчитывается индивидуально.
+                        </p>
+                        <a 
+                          href="/services/launching" 
+                          target="_blank"
+                          className="text-xs text-orange-600 hover:text-orange-700 underline"
+                        >
+                          Подробнее об услуге →
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="ageConfirmed"
@@ -379,7 +409,12 @@ export default function CartPage() {
                   </Button>
 
                   <p className="text-xs text-muted-foreground text-center">
-                    После оформления заказа с вами свяжется менеджер для подтверждения деталей
+                    После оформления заказа с вами свяжется менеджер для подтверждения деталей.
+                    {watch('professionalLaunch') && (
+                      <span className="block mt-1 text-orange-600 font-medium">
+                        Менеджер обсудит с вами детали профессионального запуска.
+                      </span>
+                    )}
                   </p>
                 </form>
               </CardContent>

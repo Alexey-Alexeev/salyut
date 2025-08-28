@@ -65,6 +65,10 @@ export const orders = pgTable('orders', {
   delivery_cost: integer('delivery_cost').notNull().default(0),
   discount_amount: integer('discount_amount').default(0),
   age_confirmed: boolean('age_confirmed').notNull().default(false),
+  
+  // Поле для услуги профессионального запуска салютов
+  professional_launch_requested: boolean('professional_launch_requested').default(false),
+  
   created_at: timestamp('created_at').defaultNow(),
   updated_at: timestamp('updated_at').defaultNow(),
 })
