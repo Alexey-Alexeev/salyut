@@ -22,7 +22,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
       >
         <Home className="h-4 w-4" />
       </Link>
-      
+
       {items.map((item, index) => (
         <div key={index} className="flex items-center space-x-1">
           <ChevronRight className="h-4 w-4" />

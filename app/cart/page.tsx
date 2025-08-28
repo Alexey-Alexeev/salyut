@@ -2,8 +2,9 @@
 
 import { DeliverySelection } from '@/components/delivery-selection'
 import { type DeliveryCalculationResult } from '@/lib/delivery-utils'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Minus, Plus, Trash2, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -58,6 +59,7 @@ export default function CartPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [orderComplete, setOrderComplete] = useState(false)
   const [deliveryResult, setDeliveryResult] = useState<DeliveryCalculationResult | null>(null)
+  const [isHydrated, setIsHydrated] = useState(false)
 
   const {
     register,
@@ -69,6 +71,8 @@ export default function CartPage() {
   } = useForm<OrderForm>({
     resolver: zodResolver(orderSchema),
     mode: 'onSubmit', // Only validate on submit to avoid premature errors
+    reValidateMode: 'onSubmit', // Prevent excessive re-validation
+    shouldFocusError: false, // Prevent focus management that might interfere with navigation
     defaultValues: {
       deliveryMethod: 'delivery', // Default to delivery as requested
       ageConfirmed: false,
@@ -78,6 +82,11 @@ export default function CartPage() {
   })
 
   const contactMethod = watch('contactMethod')
+
+  // Hydration check to prevent server-client mismatch
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
 
   // Initialize form with default delivery method
   useEffect(() => {
@@ -94,11 +103,48 @@ export default function CartPage() {
     }
   }, [])
 
+  // Stabilize onDeliveryChange function to prevent infinite re-renders
+  const handleDeliveryChange = useCallback((result: DeliveryCalculationResult) => {
+    setDeliveryResult(result)
+    setValue('deliveryMethod', result.method)
+
+    // Clear or set delivery address based on method
+    if (result.method === 'pickup') {
+      setValue('deliveryAddress', undefined)
+    } else if (result.address) {
+      setValue('deliveryAddress', result.address)
+    } else {
+      setValue('deliveryAddress', undefined)
+    }
+
+    // Synchronous validation - no setTimeout needed
+    trigger(['deliveryMethod', 'deliveryAddress'])
+  }, [setValue, trigger])
+
   const subtotal = getTotalPrice()
   const discount = subtotal >= DISCOUNT_THRESHOLD_2 ? 0.1 : subtotal >= DISCOUNT_THRESHOLD_1 ? 0.05 : 0
   const discountAmount = roundDiscount(subtotal * discount) // Округляем скидку
   const deliveryCost = deliveryResult?.cost || DELIVERY_COST
   const total = subtotal - discountAmount + (items.length > 0 ? deliveryCost : 0)
+
+  // Show loading state during hydration to prevent mismatch
+  if (!isHydrated) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <Breadcrumb
+            items={[
+              { label: 'Корзина' }
+            ]}
+          />
+        </div>
+        <h1 className="text-3xl font-bold mb-8">Корзина</h1>
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Загрузка...</p>
+        </div>
+      </div>
+    )
+  }
 
   const onSubmit = async (data: OrderForm) => {
     if (items.length === 0) {
@@ -179,7 +225,7 @@ export default function CartPage() {
             Спасибо за ваш заказ. Наш менеджер свяжется с вами в ближайшее время для подтверждения деталей.
           </p>
           <Button asChild>
-            <a href="/">Вернуться на главную</a>
+            <Link href="/">Вернуться на главную</Link>
           </Button>
         </div>
       </div>
@@ -202,7 +248,7 @@ export default function CartPage() {
         <div className="text-center py-12">
           <p className="text-muted-foreground mb-4">Ваша корзина пуста</p>
           <Button asChild>
-            <a href="/catalog">Перейти в каталог</a>
+            <Link href="/catalog">Перейти в каталог</Link>
           </Button>
         </div>
       ) : (
@@ -324,24 +370,7 @@ export default function CartPage() {
 
             {/* Delivery Selection */}
             <DeliverySelection
-              onDeliveryChange={async (result) => {
-                setDeliveryResult(result)
-                setValue('deliveryMethod', result.method)
-
-                // Clear or set delivery address based on method
-                if (result.method === 'pickup') {
-                  setValue('deliveryAddress', undefined)
-                } else if (result.address) {
-                  setValue('deliveryAddress', result.address)
-                } else {
-                  setValue('deliveryAddress', undefined)
-                }
-
-                // Trigger validation for delivery fields after state update
-                setTimeout(async () => {
-                  await trigger(['deliveryMethod', 'deliveryAddress'])
-                }, 100)
-              }}
+              onDeliveryChange={handleDeliveryChange}
               selectedMethod={deliveryResult?.method || 'delivery'}
               className="mb-6"
             />

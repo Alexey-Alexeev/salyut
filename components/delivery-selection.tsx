@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { AddressAutocomplete } from '@/components/ui/address-autocomplete'
 import { MapPin, Truck, Store, Clock, Phone } from 'lucide-react'
@@ -16,7 +14,6 @@ import {
     type DeliveryMethod,
     type DeliveryCalculationResult
 } from '@/lib/delivery-utils'
-import { log } from 'console'
 
 export interface DeliverySelectionProps {
     onDeliveryChange: (result: DeliveryCalculationResult) => void
@@ -139,7 +136,7 @@ export function DeliverySelection({
 
         setDeliveryResult(result)
         onDeliveryChange(result)
-    }, [method, address, distanceFromMKAD, onDeliveryChange])
+    }, [method, address, distanceFromMKAD]) // Removed onDeliveryChange from dependencies to prevent infinite re-renders
 
     const handleMethodChange = (value: string) => {
         setMethod(value as DeliveryMethod)
@@ -270,10 +267,6 @@ export function DeliverySelection({
                                     <p className="text-green-800">{pickupInfo.address.fullAddress}</p>
 
                                     <div className="space-y-2 pt-2 border-t border-green-200">
-                                        <div className="flex items-center gap-2 text-sm text-green-700">
-                                            <Clock className="w-4 h-4" />
-                                            <span>{pickupInfo.workingHours}</span>
-                                        </div>
                                         <div className="flex items-center gap-2 text-sm text-green-700">
                                             <Phone className="w-4 h-4" />
                                             <span>{pickupInfo.phone}</span>

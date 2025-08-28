@@ -7,13 +7,19 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useCartStore } from '@/lib/cart-store'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ConsultationDialog } from '../consultation-dialog'
 
 export function Header() {
   const totalItems = useCartStore((state) => state.getTotalItems())
   const [isSheetOpen, setIsSheetOpen] = useState(false)
-  const [isDialogOpen, setIsDialogOpen] = useState(false) // 👈 состояние для диалога
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  // Hydration check to prevent server-client mismatch
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
 
   const navItems = [
     { href: '/', label: 'Главная' },
@@ -68,7 +74,7 @@ export function Header() {
               <Link href="/cart">
                 <Button variant="ghost" size="sm" className="relative">
                   <ShoppingCart className="h-4 w-4" />
-                  {totalItems > 0 && (
+                  {isHydrated && totalItems > 0 && (
                     <Badge
                       variant="destructive"
                       className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
