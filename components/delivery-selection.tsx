@@ -36,7 +36,7 @@ export function DeliverySelection({
     const [distanceFromMKAD, setDistanceFromMKAD] = useState<number | undefined>()
     const [isCalculatingDistance, setIsCalculatingDistance] = useState(false)
     const [deliveryResult, setDeliveryResult] = useState<DeliveryCalculationResult | null>(null)
-    console.log('address', address)
+
     const pickupInfo = getPickupInfo()
 
     // Функция для расчета расстояния от МКАД до адреса
@@ -132,9 +132,9 @@ export function DeliverySelection({
         const city = extractCityFromAddress(address)
         const result = calculateDelivery({
             method,
-            address: address || undefined,
-            city: city || undefined,
-            distanceFromMKAD
+            address: method === 'delivery' ? (address || undefined) : undefined,
+            city: method === 'delivery' ? (city || undefined) : undefined,
+            distanceFromMKAD: method === 'delivery' ? distanceFromMKAD : undefined
         })
 
         setDeliveryResult(result)
@@ -143,6 +143,12 @@ export function DeliverySelection({
 
     const handleMethodChange = (value: string) => {
         setMethod(value as DeliveryMethod)
+
+        // Clear address when switching to pickup
+        if (value === 'pickup') {
+            setAddress('')
+            setDistanceFromMKAD(undefined)
+        }
     }
 
     const handleAddressChange = (value: string) => {

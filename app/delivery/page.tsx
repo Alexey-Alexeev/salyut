@@ -171,16 +171,6 @@ export default function DeliveryPage() {
                         <div className="space-y-4">
                             <div className="bg-slate-50 p-4 rounded-lg">
                                 <h3 className="font-medium mb-2">Как добраться:</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
-                                    <div>
-                                        <h4 className="font-medium text-slate-900 mb-1">На автомобиле:</h4>
-                                        <p>По МКАД до съезда на Балашиху, далее по навигатору до адреса</p>
-                                    </div>
-                                    <div>
-                                        <h4 className="font-medium text-slate-900 mb-1">На общественном транспорте:</h4>
-                                        <p>Электричка до станции Балашиха, далее автобус или такси</p>
-                                    </div>
-                                </div>
                             </div>
 
                             {/* Yandex Map */}

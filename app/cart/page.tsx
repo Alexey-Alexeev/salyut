@@ -2,7 +2,7 @@
 
 import { DeliverySelection } from '@/components/delivery-selection'
 import { type DeliveryCalculationResult } from '@/lib/delivery-utils'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Minus, Plus, Trash2, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -27,9 +27,7 @@ const orderSchema = z.object({
   contact: z.string().optional(),
   comment: z.string().optional(),
   professionalLaunch: z.boolean().optional(),
-  deliveryMethod: z.enum(['delivery', 'pickup']).refine(val => val, {
-    message: 'Выберите способ получения заказа'
-  }),
+  deliveryMethod: z.enum(['delivery', 'pickup']),
   deliveryAddress: z.string().optional(),
   ageConfirmed: z.boolean().refine(val => val === true, {
     message: 'Необходимо подтвердить возраст'
@@ -66,12 +64,35 @@ export default function CartPage() {
     handleSubmit,
     watch,
     formState: { errors },
-    setValue
+    setValue,
+    trigger // Add trigger for manual validation
   } = useForm<OrderForm>({
-    resolver: zodResolver(orderSchema)
+    resolver: zodResolver(orderSchema),
+    mode: 'onSubmit', // Only validate on submit to avoid premature errors
+    defaultValues: {
+      deliveryMethod: 'delivery', // Default to delivery as requested
+      ageConfirmed: false,
+      professionalLaunch: false,
+      deliveryAddress: undefined
+    }
   })
 
   const contactMethod = watch('contactMethod')
+
+  // Initialize form with default delivery method
+  useEffect(() => {
+    if (!deliveryResult) {
+      // Set initial delivery result for default method (delivery)
+      const initialResult: DeliveryCalculationResult = {
+        method: 'delivery',
+        cost: DELIVERY_COST,
+        address: undefined,
+        description: 'Доставка по Москве'
+      }
+      setDeliveryResult(initialResult)
+      setValue('deliveryMethod', 'delivery')
+    }
+  }, [])
 
   const subtotal = getTotalPrice()
   const discount = subtotal >= DISCOUNT_THRESHOLD_2 ? 0.1 : subtotal >= DISCOUNT_THRESHOLD_1 ? 0.05 : 0
@@ -82,11 +103,6 @@ export default function CartPage() {
   const onSubmit = async (data: OrderForm) => {
     if (items.length === 0) {
       toast.error('Корзина пуста')
-      return
-    }
-
-    if (!deliveryResult) {
-      toast.error('Выберите способ получения заказа')
       return
     }
 
@@ -105,16 +121,14 @@ export default function CartPage() {
         discount_amount: Math.round(discountAmount),
         age_confirmed: data.ageConfirmed,
         professional_launch_requested: data.professionalLaunch || false,
-        delivery_method: deliveryResult.method,
-        delivery_address: deliveryResult.address || null,
+        delivery_method: data.deliveryMethod,
+        delivery_address: data.deliveryAddress || null,
         items: items.map(item => ({
           product_id: item.id,
           quantity: item.quantity,
           price_at_time: Math.round(item.price)
         }))
       }
-
-      console.log('Отправляем заказ:', orderData)
 
       // Отправляем заказ в API
       const response = await fetch('/api/orders', {
@@ -126,20 +140,28 @@ export default function CartPage() {
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
         throw new Error(errorData.error || 'Ошибка при создании заказа')
       }
 
       const result = await response.json()
-      console.log('Заказ создан:', result)
 
       clearCart()
       setOrderComplete(true)
       toast.success('Заказ успешно оформлен! Мы свяжемся с вами в ближайшее время.')
 
     } catch (error) {
-      console.error('Ошибка при оформлении заказа:', error)
-      toast.error(error instanceof Error ? error.message : 'Ошибка при оформлении заказа')
+      let errorMessage = 'Ошибка при оформлении заказа'
+
+      if (error instanceof Error) {
+        if (error.message.includes('Failed to fetch')) {
+          errorMessage = 'Ошибка соединения. Проверьте интернет и попробуйте снова'
+        } else {
+          errorMessage = error.message
+        }
+      }
+
+      toast.error(errorMessage)
     } finally {
       setIsSubmitting(false)
     }
@@ -302,7 +324,24 @@ export default function CartPage() {
 
             {/* Delivery Selection */}
             <DeliverySelection
-              onDeliveryChange={setDeliveryResult}
+              onDeliveryChange={async (result) => {
+                setDeliveryResult(result)
+                setValue('deliveryMethod', result.method)
+
+                // Clear or set delivery address based on method
+                if (result.method === 'pickup') {
+                  setValue('deliveryAddress', undefined)
+                } else if (result.address) {
+                  setValue('deliveryAddress', result.address)
+                } else {
+                  setValue('deliveryAddress', undefined)
+                }
+
+                // Trigger validation for delivery fields after state update
+                setTimeout(async () => {
+                  await trigger(['deliveryMethod', 'deliveryAddress'])
+                }, 100)
+              }}
               selectedMethod={deliveryResult?.method || 'delivery'}
               className="mb-6"
             />
