@@ -205,8 +205,7 @@ export function getPickupInfo() {
     return {
         address: DELIVERY_CONSTANTS.PICKUP_ADDRESS,
         description: 'Самовывоз с нашего склада в Балашихе',
-        workingHours: 'Пн-Пт: 9:00-18:00, Сб-Вс: 10:00-16:00',
-        phone: '+7 (XXX) XXX-XX-XX', // TODO: добавить реальный номер
+        phone: '+7 (977) 360-20-08',
         notes: 'Предварительно позвоните, чтобы уточнить готовность заказа'
     }
 }
