@@ -128,10 +128,7 @@ export function DeliverySelection({
 
     // 🚀 Основная функция расчёта расстояния от МКАД
     const calculateDistanceFromMKAD = async (addressText: string) => {
-        console.log('🚀 calculateDistanceFromMKAD вызвана для адреса:', addressText)
-
         if (!addressText || addressText.length < 10) {
-            console.log('🚫 Адрес слишком короткий')
             setDistanceFromMKAD(undefined)
             return
         }
@@ -144,7 +141,6 @@ export function DeliverySelection({
         }
 
         setIsCalculatingDistance(true)
-        console.log('🔄 Начинаем расчет расстояния...')
 
         try {
             const response = await fetch(
@@ -168,8 +164,6 @@ export function DeliverySelection({
                 setDistanceFromMKAD(undefined)
                 return
             }
-
-            console.log('📍 Координаты получены:', { lat: deliveryLat, lng: deliveryLng })
 
             // 🎯 Находим минимальное прямое расстояние до любой точки МКАД
             let minStraightDistanceKm = Infinity
@@ -199,14 +193,11 @@ export function DeliverySelection({
             })
 
             setDistanceFromMKAD(finalDistance)
-            console.log('✅ Расстояние от МКАД установлено:', finalDistance, 'км')
-
         } catch (error) {
             console.error('🚨 Ошибка при расчете расстояния:', error)
             setDistanceFromMKAD(undefined)
         } finally {
             setIsCalculatingDistance(false)
-            console.log('🏁 Расчет расстояния завершен')
         }
     }
 
