@@ -23,11 +23,11 @@ export interface DeliverySelectionProps {
 }
 
 export function DeliverySelection({
-                                      onDeliveryChange,
-                                      selectedMethod = 'delivery',
-                                      initialAddress = '',
-                                      className = ''
-                                  }: DeliverySelectionProps) {
+    onDeliveryChange,
+    selectedMethod = 'delivery',
+    initialAddress = '',
+    className = ''
+}: DeliverySelectionProps) {
     const [method, setMethod] = useState<DeliveryMethod>(selectedMethod)
     const [address, setAddress] = useState(initialAddress)
     const [distanceFromMKAD, setDistanceFromMKAD] = useState<number | undefined>()
@@ -38,39 +38,53 @@ export function DeliverySelection({
 
     // 🔹 Уточнённый полигон МКАД (внешний край, с акцентом на север и восток)
     const MKAD_POINTS = [
-        // 🌅 Запад (Одинцово, Красногорск)
-        [37.2500, 55.6300],
-        [37.2800, 55.6400],
-        [37.3000, 55.6500],
-        [37.3200, 55.6800],
-        [37.3400, 55.7000],
-        [37.3600, 55.7300],
-        [37.3900, 55.7700],
-        [37.4100, 55.8200],
-        [37.4500, 55.8700],
-        [37.5000, 55.8900],
-        [37.5600, 55.9000],
-        [37.6200, 55.8800],
-        [37.6500, 55.8850],
-        [37.7000, 55.8750],
-        [37.7300, 55.8650],
-        [37.7500, 55.8400],
-        [37.8200, 55.8300],
-        [37.8800, 55.8000],
-        [37.9200, 55.7600],
-        [37.9500, 55.7200],
-        [37.9750, 55.6800],
-        [37.9800, 55.6400],
-        [37.9400, 55.5900],
-        [37.8500, 55.5500],
-        [37.7500, 55.5300],
-        [37.6500, 55.5250],
-        [37.5500, 55.5300],
-        [37.4500, 55.5500],
-        [37.3500, 55.5800],
-        [37.3000, 55.6000],
-        [37.2500, 55.6300]
-    ]
+        [37.430453, 55.663664],
+        [37.417131, 55.683036],
+        [37.383391, 55.713116],
+        [37.373877, 55.733695],
+        [37.397943, 55.702952],
+        [37.368047, 55.766410],
+        [37.368487, 55.772188],
+        [37.366906, 55.791081],
+        [37.393245, 55.833521],
+        [37.391835, 55.849453],
+        [37.413673, 55.871955],
+        [37.429115, 55.877794],
+        [37.447144, 55.882757],
+        [37.484837, 55.890058],
+        [37.497414, 55.893813],
+        [37.547737, 55.908515],
+        [37.591036, 55.910775],
+        [37.629619, 55.899714],
+        [37.678236, 55.895313],
+        [37.707323, 55.891744],
+        [37.725828, 55.883742],
+        [37.829629, 55.828880],
+        [37.840561, 55.812621],
+        [37.845924, 55.777332],
+        [37.844145, 55.767539],
+        [37.842924, 55.755297],
+        [37.840040, 55.745843],
+        [37.844460, 55.742716],
+        [37.841397, 55.730243],
+        [37.838154, 55.719977],
+        [37.839501, 55.711371],
+        [37.835315, 55.706015],
+        [37.832952, 55.684295],
+        [37.840983, 55.656224],
+        [37.818139, 55.639268],
+        [37.780105, 55.616000],
+        [37.726376, 55.590099],
+        [37.685162, 55.575103],
+        [37.652813, 55.572940],
+        [37.641593, 55.574610],
+        [37.598384, 55.575790],
+        [37.596803, 55.574701],
+        [37.571354, 55.580579],
+        [37.527220, 55.591086],
+        [37.494377, 55.609777],
+        [37.457897, 55.640081],
+    ];
 
     // 📏 Формула гаверсинуса — точное расстояние между двумя точками
     const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
@@ -87,46 +101,50 @@ export function DeliverySelection({
     }
 
     // 🧭 Определяем направление от центра Москвы и подбираем коэффициент
-    const getDistanceCoefficient = (lat: number, lng: number): number => {
-        // 🔹 Одинцово / Красногорск / Запад
-        if (lng < 37.45 && lat < 55.75 && lat > 55.60) return 2.0
+    // const getDistanceCoefficient = (lat: number, lng: number): number => {
+    //     // 🔹 Одинцово / Красногорск / Запад
+    //     if (lng < 37.45 && lat < 55.75 && lat > 55.60) return 2.0
 
-        // 🔹 Восток: Железнодорожный
-        if (lng > 37.95 && lat > 55.70 && lat < 55.78) return 2.5
+    //     // 🔹 Восток: Железнодорожный
+    //     if (lng > 37.95 && lat > 55.70 && lat < 55.78) return 1.3
 
-        // 🔹 Юго-восток: Дзержинский
-        if (lng > 37.85 && lat < 55.65) return 1.9
+    //     // 🔹 Юго-восток: Дзержинский
+    //     if (lng > 37.85 && lat < 55.65) return 1.9
 
-        // 🔹 Северо-восток: Мытищи
-        if (lng > 37.65 && lng < 37.85 && lat > 55.85) return 2.0
+    //     // 🔹 Северо-восток: Мытищи
+    //     if (lng > 37.65 && lng < 37.85 && lat > 55.85) return 2.0
 
-        // 🔹 Юг: Подольск
-        if (lng < 37.70 && lat < 55.58) return 1.7
+    //     // 🔹 Юг: Подольск
+    //     if (lng < 37.70 && lat < 55.58) return 1.7
 
-        // 🔹 Общие направления
-        if (lng > 37.90) return 2.3
-        if (lat > 55.85) return 1.8
-        if (lat < 55.60) return 1.6
-        if (lng < 37.40) return 1.8  // Увеличили общий запад
+    //     // 🔹 Общие направления
+    //     if (lng > 37.90) return 2.3
+    //     if (lat > 55.85) return 1.8
+    //     if (lat < 55.60) return 1.6
+    //     if (lng < 37.40) return 1.8  // Увеличили общий запад
 
-        return 1.6
-    }
+    //     return 1.6
+    // }
 
     // 🚀 Основная функция расчёта расстояния от МКАД
     const calculateDistanceFromMKAD = async (addressText: string) => {
+        console.log('🚀 calculateDistanceFromMKAD вызвана для адреса:', addressText)
+
         if (!addressText || addressText.length < 10) {
+            console.log('🚫 Адрес слишком короткий')
             setDistanceFromMKAD(undefined)
             return
         }
 
         const apiKey = process.env.NEXT_PUBLIC_YANDEX_API_KEY
         if (!apiKey) {
-            console.warn('No Yandex API key')
+            console.warn('🚫 Нет Yandex API key')
             setDistanceFromMKAD(undefined)
             return
         }
 
         setIsCalculatingDistance(true)
+        console.log('🔄 Начинаем расчет расстояния...')
 
         try {
             const response = await fetch(
@@ -136,7 +154,7 @@ export function DeliverySelection({
             const data = await response.json()
             const geoObjects = data.response?.GeoObjectCollection?.featureMember
             if (!geoObjects?.length) {
-                console.warn('Address not found')
+                console.warn('🚫 Адрес не найден в Yandex Geocoder')
                 setDistanceFromMKAD(undefined)
                 return
             }
@@ -146,12 +164,12 @@ export function DeliverySelection({
             const deliveryLat = parseFloat(latStr)
 
             if (!isFinite(deliveryLat) || !isFinite(deliveryLng)) {
-                console.warn('Invalid coordinates')
+                console.warn('🚫 Некорректные координаты')
                 setDistanceFromMKAD(undefined)
                 return
             }
 
-            console.log('Geocoded:', { lat: deliveryLat, lng: deliveryLng })
+            console.log('📍 Координаты получены:', { lat: deliveryLat, lng: deliveryLng })
 
             // 🎯 Находим минимальное прямое расстояние до любой точки МКАД
             let minStraightDistanceKm = Infinity
@@ -162,38 +180,52 @@ export function DeliverySelection({
                 }
             }
 
-            // 🛑 Если ближе 2 км — считаем внутри или у границы МКАД
-            if (minStraightDistanceKm < 2) {
-                setDistanceFromMKAD(0)
-                return
-            }
+            // // 🛑 Если ближе 2 км — считаем внутри или у границы МКАД
+            // if (minStraightDistanceKm < 2) {
+            //     setDistanceFromMKAD(0)
+            //     return
+            // }
 
             // 🛣️ Применяем адаптивный коэффициент
-            const coefficient = getDistanceCoefficient(deliveryLat, deliveryLng)
-            const estimatedRoadDistance = minStraightDistanceKm * coefficient
+            // const coefficient = getDistanceCoefficient(deliveryLat, deliveryLng)
+            const estimatedRoadDistance = minStraightDistanceKm * 1.35;
             const finalDistance = Math.ceil(estimatedRoadDistance)
 
-            console.log('Straight:', minStraightDistanceKm.toFixed(2), '×', coefficient, '→', finalDistance)
+            console.log('📏 Расчет расстояния:', {
+                straight: minStraightDistanceKm.toFixed(2),
+                // coefficient,
+                estimated: estimatedRoadDistance.toFixed(2),
+                final: finalDistance
+            })
 
             setDistanceFromMKAD(finalDistance)
+            console.log('✅ Расстояние от МКАД установлено:', finalDistance, 'км')
 
         } catch (error) {
-            console.error('Error calculating distance:', error)
+            console.error('🚨 Ошибка при расчете расстояния:', error)
             setDistanceFromMKAD(undefined)
         } finally {
             setIsCalculatingDistance(false)
+            console.log('🏁 Расчет расстояния завершен')
         }
     }
 
     // Пересчёт при изменении
     useEffect(() => {
         const city = extractCityFromAddress(address)
+        console.log('🔍 DeliverySelection useEffect - Адрес:', address)
+        console.log('🔍 DeliverySelection useEffect - Город:', city)
+        console.log('🔍 DeliverySelection useEffect - Расстояние от МКАД:', distanceFromMKAD)
+
         const result = calculateDelivery({
             method,
             address: method === 'delivery' ? address || undefined : undefined,
             city: method === 'delivery' ? city || undefined : undefined,
             distanceFromMKAD: method === 'delivery' ? distanceFromMKAD : undefined
         })
+
+        console.log('🔍 DeliverySelection useEffect - Результат расчета:', result)
+
         setDeliveryResult(result)
         onDeliveryChange(result)
     }, [method, address, distanceFromMKAD])
@@ -207,13 +239,15 @@ export function DeliverySelection({
     }
 
     const handleAddressChange = (value: string) => {
+        console.log('📝 handleAddressChange вызвана с адресом:', value)
         setAddress(value)
         if (value && value.length > 10) {
-            const timeoutId = setTimeout(() => {
+            console.log('⏰ Запускаем таймер для расчета расстояния...')
+            setTimeout(() => {
                 calculateDistanceFromMKAD(value)
             }, 1000)
-            return () => clearTimeout(timeoutId)
         } else {
+            console.log('💯 Адрес слишком короткий, сбрасываем расстояние')
             setDistanceFromMKAD(undefined)
         }
     }
@@ -273,7 +307,7 @@ export function DeliverySelection({
                                                     <span className="text-green-600">✅ В пределах МКАД</span>
                                                 ) : (
                                                     <span className="text-green-600">
-                                                        ✅ Примерно: <strong>{distanceFromMKAD} км</strong> от МКАД (если вы считаете, что расстояние указано неверно — сообщите в комментарии или при общении с менеджером
+                                                        ✅ Примерно: <strong>{distanceFromMKAD} км</strong> от МКАД (если вы считаете, что расстояние указано неверно — сообщите в комментарии или при общении с менеджером)
                                                     </span>
                                                 )
                                             ) : (

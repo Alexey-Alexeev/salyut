@@ -137,11 +137,11 @@ export function isFixedDeliveryCity(city: string): boolean {
  */
 export function calculateDeliveryCost(city: string, distanceFromMKAD?: number): number {
     // Если это город с фиксированной стоимостью (внутри МКАД или основные города)
-    if (isFixedDeliveryCity(city)) {
+    if (city && isFixedDeliveryCity(city)) {
         return DELIVERY_CONSTANTS.MOSCOW_DELIVERY_COST
     }
 
-    // Если указано расстояние от МКАД, используем его
+    // Если указано расстояние от МКАД, используем его (независимо от того, определен ли город)
     if (distanceFromMKAD !== undefined) {
         if (distanceFromMKAD <= 0) {
             // Внутри МКАД - фиксированная стоимость
@@ -174,11 +174,10 @@ export function calculateDelivery(data: DeliveryData): DeliveryCalculationResult
     const cost = calculateDeliveryCost(city, data.distanceFromMKAD)
 
     let description = ''
-    if (isFixedDeliveryCity(city)) {
+    if (city && isFixedDeliveryCity(city)) {
         const formattedCity = formatCityName(city)
         description = `Доставка: ${cost} ₽`
     } else if (data.distanceFromMKAD !== undefined) {
-        const formattedCity = formatCityName(city)
         if (data.distanceFromMKAD <= 0) {
             description = `Доставка: ${cost} ₽`
         } else {
@@ -242,39 +241,33 @@ export function extractCityFromAddress(address: string): string {
         }
     }
 
-    // Специальный паттерн для "муниципальный округ Город"
-    const municipalMatch = address.match(/муниципальный\s+округ\s+([а-яё\-]+)/i)
-    if (municipalMatch && municipalMatch[1]) {
-        const candidate = municipalMatch[1].toLowerCase()
-        if (MOSCOW_OBLAST_CITIES.includes(candidate as any)) {
-            return candidate
-        }
-    }
-
-    // Если ничего не нашли, пробуем старые паттерны как fallback
-    const patterns = [
-        // Ищем "г. Название" или "город Название"
+    // Специальные паттерны для сложных административных единиц
+    const specialPatterns = [
+        // "Ленинский городской округ, Видное" или "городской округ, Город"
+        /городской\s+округ,\s*([а-яё\-]+)/i,
+        // "муниципальный округ Город"
+        /муниципальный\s+округ\s+([а-яё\-]+)/i,
+        // "г. Название" или "город Название"
         /(?:^|,\s*)(?:г\.?\s+|город\s+)([а-яё\-]+)(?=\s*[,.]|$)/i,
         // После области - только одно слово
         /московская\s+область,\s*([а-яё\-]+)(?=\s*[,.]|$)/i,
         // После любой области - только одно слово
         /область,\s*([а-яё\-]+)(?=\s*[,.]|$)/i,
-        // Специальный паттерн для "муниципальный округ Город"
-        /муниципальный\s+округ\s+([а-яё\-]+)/i,
     ]
 
-    for (const pattern of patterns) {
+    for (const pattern of specialPatterns) {
         const match = address.match(pattern)
         if (match && match[1]) {
             const candidate = match[1].trim().toLowerCase()
-            // Проверяем, что это не служебное слово
+            // Проверяем, что это не служебное слово и что оно есть в списке
             const excludeWords = [
                 'область', 'московская', 'россия', 'улица', 'проспект',
                 'переулок', 'муниципальный', 'округ', 'посёлок', 'деревня',
-                'село', 'посад', 'дом', 'квартира', 'строение'
+                'село', 'посад', 'дом', 'квартира', 'строение', 'городской',
+                'ленинский', 'школьная'
             ]
 
-            if (!excludeWords.includes(candidate)) {
+            if (!excludeWords.includes(candidate) && MOSCOW_OBLAST_CITIES.includes(candidate as any)) {
                 return candidate
             }
         }
