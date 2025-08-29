@@ -107,7 +107,7 @@ export default function LaunchingServicePage() {
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto">
                         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
-                            Безопасность - наш приоритет
+                            Безопасность — наш приоритет
                         </h2>
                         <p className="text-center text-gray-600 mb-12">
                             Самостоятельный запуск фейерверков связан с высоким риском травм и пожаров. Мы строго соблюдаем все правила безопасности, чтобы праздник оставил только приятные воспоминания.

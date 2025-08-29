@@ -324,6 +324,14 @@ export default function CartPage() {
 
           {/* Order Summary & Form */}
           <div className="space-y-6">
+
+            {/* Delivery Selection */}
+            <DeliverySelection
+              onDeliveryChange={handleDeliveryChange}
+              selectedMethod={deliveryResult?.method || 'delivery'}
+              className="mb-6"
+            />
+
             {/* Order Summary */}
             <Card>
               <CardHeader>
@@ -341,10 +349,10 @@ export default function CartPage() {
                 </div>
 
                 {discount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Скидка ({Math.round(discount * 100)}%):</span>
-                    <span>-{discountAmount.toLocaleString('ru-RU')} ₽</span>
-                  </div>
+                    <div className="flex justify-between text-green-600">
+                      <span>Скидка ({Math.round(discount * 100)}%):</span>
+                      <span>-{discountAmount.toLocaleString('ru-RU')} ₽</span>
+                    </div>
                 )}
 
                 <Separator />
@@ -355,25 +363,18 @@ export default function CartPage() {
                 </div>
 
                 {subtotal < DISCOUNT_THRESHOLD_1 && (
-                  <p className="text-sm text-muted-foreground">
-                    До скидки 5% осталось {(DISCOUNT_THRESHOLD_1 - subtotal).toLocaleString('ru-RU')} ₽
-                  </p>
+                    <p className="text-sm text-muted-foreground">
+                      До скидки 5% осталось {(DISCOUNT_THRESHOLD_1 - subtotal).toLocaleString('ru-RU')} ₽
+                    </p>
                 )}
 
                 {subtotal >= DISCOUNT_THRESHOLD_1 && subtotal < DISCOUNT_THRESHOLD_2 && (
-                  <p className="text-sm text-muted-foreground">
-                    До скидки 10% осталось {(DISCOUNT_THRESHOLD_2 - subtotal).toLocaleString('ru-RU')} ₽
-                  </p>
+                    <p className="text-sm text-muted-foreground">
+                      До скидки 10% осталось {(DISCOUNT_THRESHOLD_2 - subtotal).toLocaleString('ru-RU')} ₽
+                    </p>
                 )}
               </CardContent>
             </Card>
-
-            {/* Delivery Selection */}
-            <DeliverySelection
-              onDeliveryChange={handleDeliveryChange}
-              selectedMethod={deliveryResult?.method || 'delivery'}
-              className="mb-6"
-            />
 
             {/* Order Form */}
             <Card>

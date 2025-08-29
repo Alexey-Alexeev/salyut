@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { AddressAutocomplete } from '@/components/ui/address-autocomplete'
-import { MapPin, Truck, Store, Clock, Phone } from 'lucide-react'
+import { MapPin, Truck, Store, Phone } from 'lucide-react'
 import {
     calculateDelivery,
     extractCityFromAddress,
@@ -23,11 +23,11 @@ export interface DeliverySelectionProps {
 }
 
 export function DeliverySelection({
-    onDeliveryChange,
-    selectedMethod = 'delivery',
-    initialAddress = '',
-    className = ''
-}: DeliverySelectionProps) {
+                                      onDeliveryChange,
+                                      selectedMethod = 'delivery',
+                                      initialAddress = '',
+                                      className = ''
+                                  }: DeliverySelectionProps) {
     const [method, setMethod] = useState<DeliveryMethod>(selectedMethod)
     const [address, setAddress] = useState(initialAddress)
     const [distanceFromMKAD, setDistanceFromMKAD] = useState<number | undefined>()
@@ -36,7 +36,83 @@ export function DeliverySelection({
 
     const pickupInfo = getPickupInfo()
 
-    // Функция для расчета расстояния от МКАД до адреса
+    // 🔹 Уточнённый полигон МКАД (внешний край, с акцентом на север и восток)
+    const MKAD_POINTS = [
+        // 🌅 Запад (Одинцово, Красногорск)
+        [37.2500, 55.6300],
+        [37.2800, 55.6400],
+        [37.3000, 55.6500],
+        [37.3200, 55.6800],
+        [37.3400, 55.7000],
+        [37.3600, 55.7300],
+        [37.3900, 55.7700],
+        [37.4100, 55.8200],
+        [37.4500, 55.8700],
+        [37.5000, 55.8900],
+        [37.5600, 55.9000],
+        [37.6200, 55.8800],
+        [37.6500, 55.8850],
+        [37.7000, 55.8750],
+        [37.7300, 55.8650],
+        [37.7500, 55.8400],
+        [37.8200, 55.8300],
+        [37.8800, 55.8000],
+        [37.9200, 55.7600],
+        [37.9500, 55.7200],
+        [37.9750, 55.6800],
+        [37.9800, 55.6400],
+        [37.9400, 55.5900],
+        [37.8500, 55.5500],
+        [37.7500, 55.5300],
+        [37.6500, 55.5250],
+        [37.5500, 55.5300],
+        [37.4500, 55.5500],
+        [37.3500, 55.5800],
+        [37.3000, 55.6000],
+        [37.2500, 55.6300]
+    ]
+
+    // 📏 Формула гаверсинуса — точное расстояние между двумя точками
+    const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+        const R = 6371
+        const dLat = (lat2 - lat1) * Math.PI / 180
+        const dLon = (lon2 - lon1) * Math.PI / 180
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) *
+            Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2)
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        return R * c
+    }
+
+    // 🧭 Определяем направление от центра Москвы и подбираем коэффициент
+    const getDistanceCoefficient = (lat: number, lng: number): number => {
+        // 🔹 Одинцово / Красногорск / Запад
+        if (lng < 37.45 && lat < 55.75 && lat > 55.60) return 2.0
+
+        // 🔹 Восток: Железнодорожный
+        if (lng > 37.95 && lat > 55.70 && lat < 55.78) return 2.5
+
+        // 🔹 Юго-восток: Дзержинский
+        if (lng > 37.85 && lat < 55.65) return 1.9
+
+        // 🔹 Северо-восток: Мытищи
+        if (lng > 37.65 && lng < 37.85 && lat > 55.85) return 2.0
+
+        // 🔹 Юг: Подольск
+        if (lng < 37.70 && lat < 55.58) return 1.7
+
+        // 🔹 Общие направления
+        if (lng > 37.90) return 2.3
+        if (lat > 55.85) return 1.8
+        if (lat < 55.60) return 1.6
+        if (lng < 37.40) return 1.8  // Увеличили общий запад
+
+        return 1.6
+    }
+
+    // 🚀 Основная функция расчёта расстояния от МКАД
     const calculateDistanceFromMKAD = async (addressText: string) => {
         if (!addressText || addressText.length < 10) {
             setDistanceFromMKAD(undefined)
@@ -45,103 +121,85 @@ export function DeliverySelection({
 
         const apiKey = process.env.NEXT_PUBLIC_YANDEX_API_KEY
         if (!apiKey) {
-            console.warn('No Yandex API key for distance calculation')
+            console.warn('No Yandex API key')
+            setDistanceFromMKAD(undefined)
             return
         }
 
         setIsCalculatingDistance(true)
 
         try {
-            // Сначала получаем координаты адреса доставки
-            const geocodeResponse = await fetch(
+            const response = await fetch(
                 `https://geocode-maps.yandex.ru/1.x/?apikey=${apiKey}&format=json&geocode=${encodeURIComponent(addressText)}&results=1`
             )
 
-            if (!geocodeResponse.ok) {
-                throw new Error('Failed to geocode address')
-            }
-
-            const geocodeData = await geocodeResponse.json()
-            const geoObjects = geocodeData.response?.GeoObjectCollection?.featureMember || []
-
-            if (geoObjects.length === 0) {
-                console.warn('Address not found for distance calculation')
+            const data = await response.json()
+            const geoObjects = data.response?.GeoObjectCollection?.featureMember
+            if (!geoObjects?.length) {
+                console.warn('Address not found')
                 setDistanceFromMKAD(undefined)
                 return
             }
 
-            const coordinates = geoObjects[0].GeoObject.Point.pos.split(' ')
-            const deliveryLng = parseFloat(coordinates[0])
-            const deliveryLat = parseFloat(coordinates[1])
+            const [lngStr, latStr] = geoObjects[0].GeoObject.Point.pos.split(' ')
+            const deliveryLng = parseFloat(lngStr)
+            const deliveryLat = parseFloat(latStr)
 
-            // Координаты центра Москвы (Красная площадь)
-            const moscowCenterLat = 55.7558
-            const moscowCenterLng = 37.6176
+            if (!isFinite(deliveryLat) || !isFinite(deliveryLng)) {
+                console.warn('Invalid coordinates')
+                setDistanceFromMKAD(undefined)
+                return
+            }
 
-            // Рассчитываем расстояние от центра Москвы
-            const distanceFromCenter = calculateDistanceKm(
-                moscowCenterLat, moscowCenterLng,
-                deliveryLat, deliveryLng
-            )
+            console.log('Geocoded:', { lat: deliveryLat, lng: deliveryLng })
 
-            // МКАД проходит на расстоянии примерно 15-25 км от центра
-            // Используем средний радиус 19 км
-            const mkadRadius = 15.5
+            // 🎯 Находим минимальное прямое расстояние до любой точки МКАД
+            let minStraightDistanceKm = Infinity
+            for (const [mkadLng, mkadLat] of MKAD_POINTS) {
+                const dist = haversineDistance(deliveryLat, deliveryLng, mkadLat, mkadLng)
+                if (dist < minStraightDistanceKm) {
+                    minStraightDistanceKm = dist
+                }
+            }
 
-            // Если адрес в пределах МКАД, расстояние = 0
-            if (distanceFromCenter <= mkadRadius) {
+            // 🛑 Если ближе 2 км — считаем внутри или у границы МКАД
+            if (minStraightDistanceKm < 2) {
                 setDistanceFromMKAD(0)
                 return
             }
 
-            // Если за МКАД, рассчитываем расстояние от границы МКАД
-            const distanceFromMKAD = Math.max(0, distanceFromCenter - mkadRadius)
-            setDistanceFromMKAD(Math.round(distanceFromMKAD))
+            // 🛣️ Применяем адаптивный коэффициент
+            const coefficient = getDistanceCoefficient(deliveryLat, deliveryLng)
+            const estimatedRoadDistance = minStraightDistanceKm * coefficient
+            const finalDistance = Math.ceil(estimatedRoadDistance)
+
+            console.log('Straight:', minStraightDistanceKm.toFixed(2), '×', coefficient, '→', finalDistance)
+
+            setDistanceFromMKAD(finalDistance)
 
         } catch (error) {
-            console.error('Error calculating distance from MKAD:', error)
+            console.error('Error calculating distance:', error)
             setDistanceFromMKAD(undefined)
         } finally {
             setIsCalculatingDistance(false)
         }
     }
 
-    // Функция для расчета расстояния между двумя точками (формула гаверсинусов)
-    const calculateDistanceKm = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-        const R = 6371 // Радиус Земли в км
-
-        // Конвертируем градусы в радианы
-        const dLat = (lat2 - lat1) * Math.PI / 180
-        const dLon = (lon2 - lon1) * Math.PI / 180
-
-        // Формула гаверсинусов
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2)
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-
-        return R * c // Возвращаем расстояние в км
-    }
-
-    // Пересчитываем доставку при изменении данных
+    // Пересчёт при изменении
     useEffect(() => {
         const city = extractCityFromAddress(address)
         const result = calculateDelivery({
             method,
-            address: method === 'delivery' ? (address || undefined) : undefined,
-            city: method === 'delivery' ? (city || undefined) : undefined,
+            address: method === 'delivery' ? address || undefined : undefined,
+            city: method === 'delivery' ? city || undefined : undefined,
             distanceFromMKAD: method === 'delivery' ? distanceFromMKAD : undefined
         })
-
         setDeliveryResult(result)
         onDeliveryChange(result)
-    }, [method, address, distanceFromMKAD]) // Removed onDeliveryChange from dependencies to prevent infinite re-renders
+    }, [method, address, distanceFromMKAD])
 
     const handleMethodChange = (value: string) => {
         setMethod(value as DeliveryMethod)
-
-        // Clear address when switching to pickup
         if (value === 'pickup') {
             setAddress('')
             setDistanceFromMKAD(undefined)
@@ -150,9 +208,7 @@ export function DeliverySelection({
 
     const handleAddressChange = (value: string) => {
         setAddress(value)
-        // Автоматически рассчитываем расстояние от МКАД
         if (value && value.length > 10) {
-            // Дебаунс для сокращения количества API запросов
             const timeoutId = setTimeout(() => {
                 calculateDistanceFromMKAD(value)
             }, 1000)
@@ -199,36 +255,29 @@ export function DeliverySelection({
                                         id="address"
                                         value={address}
                                         onChange={handleAddressChange}
-                                        placeholder="Введите полный адрес доставки (город, улица, дом, квартира)..."
+                                        placeholder="Введите адрес доставки..."
                                     />
                                     <p className="text-sm text-muted-foreground">
-                                        💡 Начните вводить — система предложит варианты адресов. Адрес можно оставить пустым — менеджер уточнит его при подтверждении заказа
+                                        💡 Начните вводить — система предложит варианты. Адрес можно оставить пустым — менеджер уточнит его при подтверждении заказа
                                     </p>
                                 </div>
 
-                                {/* Убрано поле расстояния, теперь показываем только текст */}
                                 <div className="space-y-3">
                                     <Label>Расстояние от МКАД</Label>
                                     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                                         <p className="text-sm text-yellow-800">
                                             {isCalculatingDistance ? (
-                                                <span className="text-blue-600">
-                                                    🔄 Рассчитываем расстояние от МКАД...
-                                                </span>
+                                                <span className="text-blue-600">🔄 Рассчитываем...</span>
                                             ) : distanceFromMKAD !== undefined && address ? (
                                                 distanceFromMKAD === 0 ? (
-                                                    <span className="text-green-600">
-                                                        ✅ Адрес находится в пределах МКАД
-                                                    </span>
+                                                    <span className="text-green-600">✅ В пределах МКАД</span>
                                                 ) : (
                                                     <span className="text-green-600">
-                                                        ✅ Примерное расстояние: {distanceFromMKAD} км от МКАД
+                                                        ✅ Примерно: <strong>{distanceFromMKAD} км</strong> от МКАД (если вы считаете, что расстояние указано неверно — сообщите в комментарии или при общении с менеджером
                                                     </span>
                                                 )
                                             ) : (
-                                                <span className="text-gray-600">
-                                                    📍 Расстояние будет рассчитано автоматически по адресу доставки
-                                                </span>
+                                                <span className="text-gray-600">📍 Будет рассчитано автоматически. </span>
                                             )}
                                         </p>
                                     </div>
@@ -265,24 +314,18 @@ export function DeliverySelection({
                                         Адрес склада:
                                     </h4>
                                     <p className="text-green-800">{pickupInfo.address.fullAddress}</p>
-
                                     <div className="space-y-2 pt-2 border-t border-green-200">
                                         <div className="flex items-center gap-2 text-sm text-green-700">
                                             <Phone className="w-4 h-4" />
                                             <span>{pickupInfo.phone}</span>
                                         </div>
                                     </div>
-
-                                    <p className="text-sm text-green-600 bg-green-100 p-2 rounded">
-                                        💡 {pickupInfo.notes}
-                                    </p>
                                 </div>
                             </div>
                         )}
                     </div>
                 </RadioGroup>
 
-                {/* Итоговая информация */}
                 {deliveryResult && (
                     <div className="border-t pt-4">
                         <div className="flex justify-between items-center">
