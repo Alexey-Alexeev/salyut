@@ -56,23 +56,21 @@ export function Header() {
             </div>
 
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="hidden md:flex">
-                <Search className="h-4 w-4" />
-              </Button>
-
               {/* Кнопка "Консультация" в хедере */}
               <Button
                 variant="ghost"
                 size="sm"
                 className="hidden md:flex items-center space-x-1"
                 onClick={() => setIsDialogOpen(true)}
+                aria-label="Открыть форму консультации"
               >
                 <Phone className="h-4 w-4" />
                 <span className="text-sm">Консультация</span>
               </Button>
 
+              {/* Кнопка корзины */}
               <Link href="/cart">
-                <Button variant="ghost" size="sm" className="relative">
+                <Button variant="ghost" size="sm" className="relative" aria-label="Перейти в корзину">
                   <ShoppingCart className="h-4 w-4" />
                   {isHydrated && totalItems > 0 && (
                     <Badge
@@ -85,9 +83,10 @@ export function Header() {
                 </Button>
               </Link>
 
+              {/* Мобильное меню */}
               <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm" className="md:hidden">
+                  <Button variant="ghost" size="sm" className="md:hidden" aria-label="Открыть меню">
                     <Menu className="h-4 w-4" />
                   </Button>
                 </SheetTrigger>
@@ -110,6 +109,7 @@ export function Header() {
                         setIsSheetOpen(false)
                         setIsDialogOpen(true)
                       }}
+                      aria-label="Открыть форму консультации"
                     >
                       <Phone className="h-4 w-4 mr-2" />
                       Консультация
@@ -121,6 +121,7 @@ export function Header() {
           </div>
         </div>
       </header>
+
 
       {/* Единый диалог для всей страницы */}
       <ConsultationDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />

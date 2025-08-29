@@ -141,101 +141,104 @@ export function ProductCard({ product }: ProductCardProps) {
   // Не рендерим до монтирования, чтобы избежать hydration mismatch
   if (!isMounted) {
     return (
-        <Card className="overflow-hidden">
-          <div className="aspect-square relative bg-muted animate-pulse" />
-          <CardContent className="p-4">
-            <div className="h-4 bg-muted rounded animate-pulse mb-2" />
-            <div className="h-6 bg-muted rounded animate-pulse w-1/2" />
-          </CardContent>
-          <CardFooter className="p-4 pt-0">
-            <div className="h-9 bg-muted rounded animate-pulse w-full" />
-          </CardFooter>
-        </Card>
+      <Card className="overflow-hidden">
+        <div className="aspect-square relative bg-muted animate-pulse" />
+        <CardContent className="p-4">
+          <div className="h-4 bg-muted rounded animate-pulse mb-2" />
+          <div className="h-6 bg-muted rounded animate-pulse w-1/2" />
+        </CardContent>
+        <CardFooter className="p-4 pt-0">
+          <div className="h-9 bg-muted rounded animate-pulse w-full" />
+        </CardFooter>
+      </Card>
     )
   }
 
   return (
-      <Card className="group overflow-hidden transition-all duration-200 hover:shadow-lg">
-        <div className="relative">
-          <Link href={`/product/${product.slug}`}>
-            <div className="aspect-square relative overflow-hidden bg-gray-100">
-              <Image
-                  src={product.images?.[0] || '/placeholder-product.jpg'}
-                  alt={product.name}
-                  fill
-                  className="object-cover transition-transform duration-200 group-hover:scale-105"
-                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                  placeholder="blur"
-                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmM2Y0ZjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU3ZWIiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFkKSIvPjwvc3ZnPg=="
-              />
-            </div>
-          </Link>
-          {product.is_popular && (
-              <Badge className="absolute top-2 left-2 bg-orange-500">
-                Популярный
-              </Badge>
-          )}
-        </div>
+    <Card className="group overflow-hidden transition-all duration-200 hover:shadow-lg">
+      <div className="relative">
+        <Link href={`/product/${product.slug}`}>
+          <div className="aspect-square relative overflow-hidden bg-gray-100">
+            <Image
+              src={product.images?.[0] || '/placeholder-product.jpg'}
+              alt={product.name}
+              fill
+              className="object-cover transition-transform duration-200 group-hover:scale-105"
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+              placeholder="blur"
+              blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmM2Y0ZjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU3ZWIiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFkKSIvPjwvc3ZnPg=="
+            />
+          </div>
+        </Link>
+        {product.is_popular && (
+          <Badge className="absolute top-2 left-2 bg-orange-700 text-white font-semibold px-2 py-1 rounded shadow-md">
+            Популярный
+          </Badge>
+        )}
+      </div>
 
-        <CardContent className="p-4">
-          <Link href={`/product/${product.slug}`}>
-            <h3 className="font-medium text-sm mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-              {product.name}
-            </h3>
-          </Link>
-          <p className="text-lg font-bold text-primary">
-            {(product.price).toLocaleString('ru-RU')} ₽
-          </p>
-        </CardContent>
+      <CardContent className="p-4">
+        <Link href={`/product/${product.slug}`}>
+          <h3 className="font-medium text-sm mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+            {product.name}
+          </h3>
+        </Link>
+        <p className="text-lg font-bold text-primary">
+          {(product.price).toLocaleString('ru-RU')} ₽
+        </p>
+      </CardContent>
 
-        <CardFooter className="p-4 pt-0">
-          {quantity > 0 ? (
-              <div className="flex items-center justify-between w-full gap-2">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleDecrease}
-                    className="h-9 w-9 p-0"
-                >
-                  {quantity === 1 ? (
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                  ) : (
-                      <Minus className="h-4 w-4" />
-                  )}
-                </Button>
+      <CardFooter className="p-4 pt-0">
+        {quantity > 0 ? (
+          <div className="flex items-center justify-between w-full gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleDecrease}
+              className="h-9 w-9 p-0"
+              aria-label={quantity === 1 ? "Удалить товар из корзины" : "Уменьшить количество"}
+            >
+              {quantity === 1 ? (
+                <Trash2 className="h-4 w-4 text-destructive" aria-hidden="true" />
+              ) : (
+                <Minus className="h-4 w-4" aria-hidden="true" />
+              )}
+            </Button>
 
-                <Input
-                    type="text"
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    onBlur={handleInputBlur}
-                    onKeyPress={handleInputKeyPress}
-                    className="w-16 h-9 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                />
+            <Input
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              onBlur={handleInputBlur}
+              onKeyPress={handleInputKeyPress}
+              className="w-20 h-10 text-center text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              aria-label="Количество товара"
+            />
 
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleIncrease}
-                    className="h-9 w-9 p-0"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-          ) : (
-              <Button
-                  onClick={handleAddToCart}
-                  className="w-full"
-                  size="sm"
-                  variant="default"
-              >
-                <ShoppingCart className="h-4 w-4 mr-2" />
-                В корзину
-              </Button>
-          )}
-        </CardFooter>
-      </Card>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleIncrease}
+              className="h-9 w-9 p-0"
+              aria-label="Увеличить количество"
+            >
+              <Plus className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </div>
+        ) : (
+          <Button
+            onClick={handleAddToCart}
+            className="w-full"
+            size="sm"
+            variant="default"
+          >
+            <ShoppingCart className="h-4 w-4 mr-2" />
+            В корзину
+          </Button>
+        )}
+      </CardFooter>
+    </Card>
   )
 }

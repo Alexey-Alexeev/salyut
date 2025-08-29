@@ -169,10 +169,6 @@ export default function DeliveryPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
-                            <div className="bg-slate-50 p-4 rounded-lg">
-                                <h3 className="font-medium mb-2">Как добраться:</h3>
-                            </div>
-
                             {/* Yandex Map */}
                             <YandexMapWithFallback
                                 height="384px"
@@ -196,7 +192,6 @@ export default function DeliveryPage() {
                                 <ul className="text-sm text-muted-foreground space-y-1">
                                     <li>• Продажа только лицам старше 18 лет</li>
                                     <li>• Соблюдение правил перевозки пиротехники</li>
-                                    <li>• Инструкции по безопасному использованию</li>
                                     <li>• Сертифицированная продукция</li>
                                 </ul>
                             </div>
@@ -207,7 +202,6 @@ export default function DeliveryPage() {
                                     <li>• Консультации по выбору товаров</li>
                                     <li>• Помощь с расчетом доставки</li>
                                     <li>• Уведомления о готовности заказа</li>
-                                    <li>• Техническая поддержка 24/7</li>
                                 </ul>
                             </div>
                         </div>

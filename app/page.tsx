@@ -11,7 +11,6 @@ import { VideoReviewCard } from "@/components/video-review-card";
 import { ConsultationCTA } from "@/components/consultation-cta";
 
 export default async function HomePage() {
-  // Загружаем данные из БД с обработкой ошибок
   let categoriesData: any[] = [];
   let popularProducts: any[] = [];
   let videoReviews: any[] = [];
@@ -25,7 +24,6 @@ export default async function HomePage() {
     console.error('Error loading categories or products:', error);
   }
 
-  // Отдельно загружаем отзывы
   try {
     videoReviews = await db.select().from(reviews).limit(3);
   } catch (error) {
@@ -33,13 +31,14 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-8">
+
       {/* Hero Section */}
-      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+      <section className="relative flex items-center justify-center overflow-hidden pt-12 pb-12 sm:pt-16 sm:pb-16 min-h-[50vh] md:min-h-[70vh]">
         <div className="absolute inset-0 z-0">
           <Image
             src="../../images/hero-bg.webp"
-            alt="Яркие салюты на Новый год, праздничное настроение, вспышки огней"
+            alt="" // декоративное изображение
             fill
             className="object-cover"
             priority
@@ -50,15 +49,21 @@ export default async function HomePage() {
           <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        <div className="relative z-10 text-center text-white space-y-6 px-4 max-w-4xl mx-auto">
+        <div className="relative z-10 text-center space-y-4 px-4 max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold leading-tight text-white bg-black/40 p-4 rounded-lg">
             Незабываемые <span className="text-orange-400">салюты</span> для ваших праздников
           </h1>
+
+          <div className="inline-block bg-gradient-to-r from-orange-700 via-orange-600 to-yellow-600 text-white text-xs md:text-sm px-2 py-0.5 rounded-lg shadow-md">
+            Доставка и самовывоз — только Москва и Московская область
+          </div>
+
           <p className="text-lg md:text-xl text-white bg-black/30 p-4 rounded-lg max-w-2xl mx-auto">
             Качественная пиротехника от проверенных производителей. Создайте магию праздника вместе с нами!
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-orange-500 hover:bg-orange-600">
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+            <Button aria-label="Смотреть каталог" asChild size="lg" className="bg-orange-700 text-white shadow-lg hover:bg-orange-800">
               <Link href="/catalog">Смотреть каталог</Link>
             </Button>
           </div>
@@ -69,7 +74,7 @@ export default async function HomePage() {
       <section className="w-full">
         <Card className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-none">
           <CardContent className="container mx-auto px-4 py-6 md:py-12 text-center space-y-6">
-            <h2 className="text-2xl md:text-4xl font-bold">
+            <h2 className="text-2xl md:text-4xl font-bold flex items-center justify-center gap-2">
               <PartyPopper className="inline-block mr-2 animate-bounce text-yellow-200" size={32} />
               Выгодные скидки при покупке!
             </h2>
@@ -77,18 +82,18 @@ export default async function HomePage() {
               Чем больше заказ, тем больше экономия — скидки применяются автоматически
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              <Card className="bg-white/10 backdrop-blur border-white/20">
+              <Card className="bg-white/20 backdrop-blur border-white/20">
                 <CardContent className="p-6 text-center">
                   <div className="text-4xl font-bold text-yellow-300 mb-2">5%</div>
                   <div className="text-lg font-semibold mb-1">скидка</div>
-                  <div className="text-sm text-white/80">при заказе от 7 000 ₽</div>
+                  <div className="text-sm text-white/90">при заказе от 7 000 ₽</div>
                 </CardContent>
               </Card>
-              <Card className="bg-white/10 backdrop-blur border-white/20">
+              <Card className="bg-white/20 backdrop-blur border-white/20">
                 <CardContent className="p-6 text-center">
                   <div className="text-4xl font-bold text-yellow-300 mb-2">10%</div>
                   <div className="text-lg font-semibold mb-1">скидка</div>
-                  <div className="text-sm text-white/80">при заказе от 15 000 ₽</div>
+                  <div className="text-sm text-white/90">при заказе от 15 000 ₽</div>
                 </CardContent>
               </Card>
             </div>
@@ -96,8 +101,52 @@ export default async function HomePage() {
         </Card>
       </section>
 
+      {/* Delivery & Pickup Section */}
+      <section className="container mx-auto px-4 py-12">
+        <div className="text-center space-y-4 mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold">Доставка и самовывоз</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Доставка к двери или самовывоз из пункта выдачи.{' '}
+            <span className="bg-red-700 text-white font-semibold px-2 py-1 rounded whitespace-nowrap">
+              Только Москва и Московская область
+            </span>
+          </p>
+        </div>
+
+        <Card className="max-w-4xl mx-auto p-6 md:p-8 bg-gradient-to-br from-orange-50 to-green-50 border border-orange-300 rounded-lg shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+            <div className="flex flex-col items-center text-center max-w-sm">
+              <div className="text-6xl mb-2">🚚</div>
+              <h3 className="font-semibold text-lg mb-2">Доставка</h3>
+              <p className="text-sm text-gray-800">
+                Доставка по Москве и Московской области в течение 1–3 дней. Время согласовывается с менеджером.
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center text-center max-w-sm">
+              <div className="text-6xl mb-2">🏪</div>
+              <h3 className="font-semibold text-lg mb-2">Самовывоз</h3>
+              <p className="text-sm text-gray-800">
+                Самовывоз возможен из пункта выдачи в Балашихе. Заказ будет готов к согласованному времени.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <Button
+              asChild
+              aria-label="Подробнее о доставке и самовывозе"
+              size="lg"
+              className="bg-orange-700 text-white font-semibold rounded-lg shadow-lg hover:bg-orange-800 transition-colors"
+            >
+              <Link href="/delivery">Подробнее о доставке и самовывозе</Link>
+            </Button>
+          </div>
+        </Card>
+      </section>
+
       {/* Categories Section */}
-      <section className="container mx-auto px-4">
+      <section className="container mx-auto px-4 bg-gray-50 py-12">
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-3xl md:text-4xl font-bold">Категории товаров</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -112,7 +161,7 @@ export default async function HomePage() {
                 <div className="aspect-square relative">
                   <Image
                     src={category.image || 'https://images.pexels.com/photos/1387174/pexels-photo-1387174.jpeg?auto=compress&cs=tinysrgb&w=400'}
-                    alt={category.name}
+                    alt="" // decorative
                     fill
                     className="object-cover transition-transform duration-200 group-hover:scale-105"
                   />
@@ -145,15 +194,14 @@ export default async function HomePage() {
         </div>
 
         <div className="text-center mt-8">
-          <Button asChild variant="outline" size="lg">
+          <Button asChild aria-label="Смотреть все товары" variant="outline" size="lg">
             <Link href="/catalog">Смотреть все товары</Link>
           </Button>
         </div>
       </section>
 
-
       {/* Professional Launch Service */}
-      <section className="w-full">
+      <section className="w-full py-12">
         <Card className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-none">
           <CardContent className="container mx-auto px-4 py-8 md:py-16">
             <div className="max-w-6xl mx-auto">
@@ -169,45 +217,41 @@ export default async function HomePage() {
                 </div>
                 <div className="flex flex-col justify-center space-y-6">
                   <div className="grid grid-cols-1 gap-6">
-                    <Card className="bg-white/10 backdrop-blur border-white/20">
-                      <CardContent className="p-6">
-                        <div className="flex items-center gap-4">
-                          <div className="text-2xl">🛡️</div>
-                          <div className="text-left">
-                            <h3 className="font-semibold text-lg">Безопасность и опыт</h3>
-                            <p className="text-sm text-white/80">Опытные пиротехники с соблюдением всех мер безопасности</p>
-                          </div>
+                    <Card className="bg-white/20 backdrop-blur border-white/20">
+                      <CardContent className="p-6 flex items-center gap-4">
+                        <div className="text-2xl">🛡️</div>
+                        <div className="text-left">
+                          <h3 className="font-semibold text-lg">Безопасность и опыт</h3>
+                          <p className="text-sm text-white/90">Опытные пиротехники с соблюдением всех мер безопасности</p>
                         </div>
                       </CardContent>
                     </Card>
-                    <Card className="bg-white/10 backdrop-blur border-white/20">
-                      <CardContent className="p-6">
-                        <div className="flex items-center gap-4">
-                          <div className="text-2xl">💥</div>
-                          <div className="text-left">
-                            <h3 className="font-semibold text-lg">Профессиональный подход</h3>
-                            <p className="text-sm text-white/80">Качественное шоу по высшему уровню</p>
-                          </div>
+                    <Card className="bg-white/20 backdrop-blur border-white/20">
+                      <CardContent className="p-6 flex items-center gap-4">
+                        <div className="text-2xl">💥</div>
+                        <div className="text-left">
+                          <h3 className="font-semibold text-lg">Профессиональный подход</h3>
+                          <p className="text-sm text-white/90">Качественное шоу по высшему уровню</p>
                         </div>
                       </CardContent>
                     </Card>
-                    <Card className="bg-white/10 backdrop-blur border-white/20">
-                      <CardContent className="p-6">
-                        <div className="flex items-center gap-4">
-                          <div className="text-2xl">👥</div>
-                          <div className="text-left">
-                            <h3 className="font-semibold text-lg">Много довольных клиентов</h3>
-                            <p className="text-sm text-white/80">Клиенты, которые много раз сказали нам спасибо</p>
-                          </div>
+                    <Card className="bg-white/20 backdrop-blur border-white/20">
+                      <CardContent className="p-6 flex items-center gap-4">
+                        <div className="text-2xl">👥</div>
+                        <div className="text-left">
+                          <h3 className="font-semibold text-lg">Много довольных клиентов</h3>
+                          <p className="text-sm text-white/90">Клиенты, которые много раз сказали нам спасибо</p>
                         </div>
                       </CardContent>
                     </Card>
                   </div>
                 </div>
               </div>
-              {/* Центрированная кнопка */}
               <div className="flex justify-center pt-8">
-                <Button asChild size="lg" variant="secondary">
+
+                <Button asChild aria-label="Подробнее об услуге" size="lg"
+                  variant="secondary"
+                  className="w-auto whitespace-nowrap px-6">
                   <Link href="/services/launching">Подробнее об услуге</Link>
                 </Button>
               </div>
@@ -221,7 +265,7 @@ export default async function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center space-y-4 mb-12">
             <h2 className="text-3xl md:text-4xl font-bold">Наши салюты в действии</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-gray-800 max-w-2xl mx-auto">
               Посмотрите, как выглядит наш товар на реальных праздниках клиентов
             </p>
           </div>
@@ -236,6 +280,7 @@ export default async function HomePage() {
 
       {/* CTA Section с диалогом */}
       <ConsultationCTA className="pb-8 md:pb-16" />
+
     </div>
-  );
+  )
 }
