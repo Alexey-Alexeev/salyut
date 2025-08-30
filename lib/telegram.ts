@@ -23,6 +23,7 @@ interface TelegramNotification {
   deliveryMethod: 'delivery' | 'pickup'
   deliveryAddress?: string
   deliveryCost: number
+  distanceFromMKAD?: number // расстояние от МКАД в км
 }
 
 export async function sendConsultationNotification(consultation: TelegramConsultationNotification) {
@@ -114,6 +115,10 @@ export async function sendTelegramNotification(order: TelegramNotification) {
     ? '\n🏬 **Самовывоз** (бесплатно)\n📍 Рассветная ул., 4, д. Чёрное, Балашиха'
     : `\n🚚 **Доставка** - ${order.deliveryCost.toLocaleString('ru-RU')} ₽${order.deliveryAddress ? `\n📍 ${order.deliveryAddress}` : '\n📍 _Адрес не указан. Необходимо уточнить_'}`
 
+  const distanceFromMKADText = order.distanceFromMKAD
+    ? `\n🚗 Расстояние от МКАД: ${order.distanceFromMKAD} км`
+    : ''
+
   const message = `
 🎆 *Новый заказ!*
 
@@ -124,7 +129,7 @@ export async function sendTelegramNotification(order: TelegramNotification) {
 🛒 *Товары:*
 ${itemsText}
 
-💰 *Итого: ${order.totalAmount.toLocaleString('ru-RU')} ₽*${deliveryText}${commentText}${professionalLaunchText}
+💰 *Итого: ${order.totalAmount.toLocaleString('ru-RU')} ₽*${deliveryText}${distanceFromMKADText}${commentText}${professionalLaunchText}
 
 ⏰ Время: ${new Date().toLocaleString('ru-RU')}
   `.trim()

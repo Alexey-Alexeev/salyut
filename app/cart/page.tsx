@@ -169,6 +169,7 @@ export default function CartPage() {
         professional_launch_requested: data.professionalLaunch || false,
         delivery_method: data.deliveryMethod,
         delivery_address: data.deliveryAddress || null,
+        distance_from_mkad: deliveryResult?.distanceFromMKAD || null, // добавляем расстояние от МКАД
         items: items.map(item => ({
           product_id: item.id,
           quantity: item.quantity,

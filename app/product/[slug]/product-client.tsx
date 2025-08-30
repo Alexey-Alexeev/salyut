@@ -64,15 +64,15 @@ export default function ProductClient({ product, category, manufacturer }: Produ
   }
 
   const images = product.images || []
-
+  console.log('product', product)
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
         <Breadcrumb
-            items={[
-              { href: '/catalog', label: 'Каталог' },
-              { label: product.name }
-            ]}
+          items={[
+            { href: '/catalog', label: 'Каталог' },
+            { label: product.name }
+          ]}
         />
       </div>
 
@@ -95,11 +95,10 @@ export default function ProductClient({ product, category, manufacturer }: Produ
               {images.map((image, index) => (
                 <button
                   key={index}
-                  className={`flex-shrink-0 w-20 h-20 relative rounded-lg border-2 overflow-hidden transition-all ${
-                    selectedImage === index 
-                      ? 'border-primary' 
+                  className={`flex-shrink-0 w-20 h-20 relative rounded-lg border-2 overflow-hidden transition-all ${selectedImage === index
+                      ? 'border-primary'
                       : 'border-border hover:border-primary/50'
-                  }`}
+                    }`}
                   onClick={() => setSelectedImage(index)}
                 >
                   <Image
@@ -152,9 +151,9 @@ export default function ProductClient({ product, category, manufacturer }: Produ
               </div>
             </div>
 
-            <Button 
+            <Button
               onClick={handleAddToCart}
-              size="lg" 
+              size="lg"
               className="w-full"
             >
               <ShoppingCart className="h-5 w-5 mr-2" />
@@ -193,7 +192,7 @@ export default function ProductClient({ product, category, manufacturer }: Produ
             <TabsTrigger value="description">Описание</TabsTrigger>
             <TabsTrigger value="characteristics">Характеристики</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="description" className="mt-6">
             <Card>
               <CardContent className="pt-6">

@@ -22,6 +22,7 @@ const orderSchema = z.object({
   professional_launch_requested: z.boolean().optional(),
   delivery_method: z.enum(['delivery', 'pickup']),
   delivery_address: z.string().optional().nullable(),
+  distance_from_mkad: z.number().int().min(0).optional().nullable(), // расстояние от МКАД в км
   items: z.array(z.object({
     product_id: z.string(),
     quantity: z.number().positive(),
@@ -55,6 +56,7 @@ export async function POST(request: NextRequest) {
       professional_launch_requested: validatedData.professional_launch_requested || false,
       delivery_method: validatedData.delivery_method,
       delivery_address: validatedData.delivery_address || null,
+      distance_from_mkad: validatedData.distance_from_mkad || null,
     }
 
     console.log('Данные для вставки:', orderData)
@@ -67,12 +69,12 @@ export async function POST(request: NextRequest) {
           customer_name, customer_phone, customer_contact, 
           contact_method, comment, total_amount, 
           delivery_cost, discount_amount, age_confirmed, professional_launch_requested,
-          delivery_method, delivery_address
+          delivery_method, delivery_address, distance_from_mkad
         ) VALUES (
           ${orderData.customer_name}, ${orderData.customer_phone}, ${orderData.customer_contact},
           ${orderData.contact_method}, ${orderData.comment}, ${orderData.total_amount},
           ${orderData.delivery_cost}, ${orderData.discount_amount}, ${orderData.age_confirmed}, ${orderData.professional_launch_requested},
-          ${orderData.delivery_method}, ${orderData.delivery_address}
+          ${orderData.delivery_method}, ${orderData.delivery_address}, ${orderData.distance_from_mkad}
         ) RETURNING *
       `)
 
@@ -129,6 +131,7 @@ export async function POST(request: NextRequest) {
 
     // Отправляем уведомление в Telegram
     console.log('Отправляем уведомление в Telegram...')
+    console.log('validatedData', validatedData)
     try {
       await sendTelegramNotification({
         orderId: order.id as string,
@@ -142,7 +145,8 @@ export async function POST(request: NextRequest) {
         professionalLaunchRequested: validatedData.professional_launch_requested || false,
         deliveryMethod: validatedData.delivery_method,
         deliveryAddress: validatedData.delivery_address || undefined,
-        deliveryCost: validatedData.delivery_cost
+        deliveryCost: validatedData.delivery_cost,
+        distanceFromMKAD: validatedData.distance_from_mkad || undefined
       })
       console.log('Уведомление в Telegram отправлено')
     } catch (telegramError) {

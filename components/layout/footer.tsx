@@ -59,18 +59,18 @@ export async function Footer() {
             <h3 className="font-semibold text-gray-900">Информация</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/about" className="text-gray-700 hover:text-orange-600">
-                  О компании
+                <Link href="/services/launching" className="text-gray-700 hover:text-orange-600">
+                  Услуги
                 </Link>
               </li>
               <li>
                 <Link href="/delivery" className="text-gray-700 hover:text-orange-600">
-                  Доставка
+                  Доставка и самовывоз
                 </Link>
               </li>
               <li>
-                <Link href="/safety" className="text-gray-700 hover:text-orange-600">
-                  Безопасность
+                <Link href="/about" className="text-gray-700 hover:text-orange-600">
+                  О компании
                 </Link>
               </li>
             </ul>

@@ -87,6 +87,7 @@ export const orders = pgTable('orders', {
   // Поля для способа получения заказа
   delivery_method: text('delivery_method', { enum: deliveryMethodEnum }).notNull(),
   delivery_address: text('delivery_address'), // адрес доставки (если выбрана доставка)
+  distance_from_mkad: integer('distance_from_mkad'), // расстояние от МКАД в км (для доставки)
 
   // Поле для услуги профессионального запуска салютов
   professional_launch_requested: boolean('professional_launch_requested').default(false),
