@@ -38,7 +38,7 @@ export default async function HomePage() {
         <div className="absolute inset-0 z-0">
           <Image
             src="../../images/hero-bg.webp"
-            alt="" // декоративное изображение
+            alt=""
             fill
             className="object-cover"
             priority
@@ -53,10 +53,6 @@ export default async function HomePage() {
           <h1 className="text-4xl md:text-6xl font-bold leading-tight text-white bg-black/40 p-4 rounded-lg">
             Незабываемые <span className="text-orange-400">салюты</span> для ваших праздников
           </h1>
-
-          <div className="inline-block bg-gradient-to-r from-orange-700 via-orange-600 to-yellow-600 text-white text-xs md:text-sm px-2 py-0.5 rounded-lg shadow-md">
-            Доставка и самовывоз — только Москва и Московская область
-          </div>
 
           <p className="text-lg md:text-xl text-white bg-black/30 p-4 rounded-lg max-w-2xl mx-auto">
             Качественная пиротехника от проверенных производителей. Создайте магию праздника вместе с нами!
@@ -137,7 +133,7 @@ export default async function HomePage() {
               asChild
               aria-label="Подробнее о доставке и самовывозе"
               size="lg"
-              className="bg-orange-700 text-white font-semibold rounded-lg shadow-lg hover:bg-orange-800 transition-colors"
+              className="w-full max-w-xs sm:w-auto bg-orange-700 text-white font-semibold rounded-lg shadow-lg hover:bg-orange-800 transition-colors"
             >
               <Link href="/delivery">Подробнее о доставке и самовывозе</Link>
             </Button>
