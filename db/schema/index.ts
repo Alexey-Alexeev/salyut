@@ -50,10 +50,8 @@ export const products = pgTable('products', {
   characteristics: jsonb('characteristics').$type<Record<string, any>>(),
   is_popular: boolean('is_popular').default(false),
   is_active: boolean('is_active').default(true),
-  is_archived: boolean('is_archived').default(false),
   seo_title: text('seo_title'),
   seo_description: text('seo_description'),
-  stock_quantity: integer('stock_quantity').default(0),
   created_at: timestamp('created_at').defaultNow(),
   updated_at: timestamp('updated_at').defaultNow(),
 })
