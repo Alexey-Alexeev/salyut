@@ -1,67 +1,77 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect, Suspense, useCallback } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { ProductCard } from '@/components/product-card'
-import { Breadcrumb } from '@/components/ui/breadcrumb'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Filter, Grid, List } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { PriceRangeFilter } from '@/components/catalog/price-range-filter'
-import { CategoryFilter } from '@/components/catalog/category-filter'
-import { ActiveFilters } from '@/components/catalog/active-filters'
+import React, { useState, useEffect, Suspense, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { ProductCard } from '@/components/product-card';
+import { Breadcrumb } from '@/components/ui/breadcrumb';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Filter, Grid, List } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { PriceRangeFilter } from '@/components/catalog/price-range-filter';
+import { CategoryFilter } from '@/components/catalog/category-filter';
+import { ActiveFilters } from '@/components/catalog/active-filters';
 
 // Типы
 interface Category {
-  id: string
-  name: string
-  slug: string
+  id: string;
+  name: string;
+  slug: string;
 }
 
 interface Product {
-  id: string
-  name: string
-  slug: string
-  price: number
-  category_id: string | null
-  images: string[] | null
-  is_popular: boolean | null
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  category_id: string | null;
+  images: string[] | null;
+  is_popular: boolean | null;
 }
 
 interface FilterState {
-  categories: string[]
-  priceFrom: string
-  priceTo: string
-  priceMin: number
-  priceMax: number
+  categories: string[];
+  priceFrom: string;
+  priceTo: string;
+  priceMin: number;
+  priceMax: number;
 }
 
-
-
 function CatalogContent() {
-  const searchParams = useSearchParams()
-  
+  const searchParams = useSearchParams();
+
   // Основное состояние
-  const [categories, setCategories] = useState<Category[]>([])
-  const [products, setProducts] = useState<Product[]>([])
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-  
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
   // Состояние фильтров
   const [filters, setFilters] = useState<FilterState>({
     categories: [],
     priceFrom: '',
     priceTo: '',
     priceMin: 0,
-    priceMax: 10000
-  })
-  
+    priceMax: 10000,
+  });
+
   // Состояние интерфейса
-  const [sortBy, setSortBy] = useState('name')
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false)
+  const [sortBy, setSortBy] = useState('name');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
   // Загрузка данных
   useEffect(() => {
@@ -70,125 +80,132 @@ function CatalogContent() {
         const [categoriesRes, productsRes] = await Promise.all([
           fetch('/api/categories'),
           fetch('/api/products'),
-        ])
+        ]);
 
         if (categoriesRes.ok && productsRes.ok) {
           const [categoriesData, productsData] = await Promise.all([
             categoriesRes.json(),
             productsRes.json(),
-          ])
+          ]);
 
-          setCategories(categoriesData)
-          setProducts(productsData)
+          setCategories(categoriesData);
+          setProducts(productsData);
 
           // Определяем диапазон цен
-          const prices = productsData.map((p: Product) => p.price)
-          const maxPrice = prices.length > 0 ? Math.max(...prices) : 10000
-          
+          const prices = productsData.map((p: Product) => p.price);
+          const maxPrice = prices.length > 0 ? Math.max(...prices) : 10000;
+
           setFilters(prev => ({
             ...prev,
-            priceMax: maxPrice
-          }))
-          
-          setFilteredProducts(productsData)
+            priceMax: maxPrice,
+          }));
+
+          setFilteredProducts(productsData);
         }
       } catch (error) {
-        console.error('Error loading data:', error)
+        console.error('Error loading data:', error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   // Инициализация фильтров из URL
   useEffect(() => {
-    const categoryParam = searchParams.get('category')
+    const categoryParam = searchParams.get('category');
     if (categoryParam) {
       setFilters(prev => ({
         ...prev,
-        categories: [categoryParam]
-      }))
+        categories: [categoryParam],
+      }));
     }
-  }, [searchParams])
+  }, [searchParams]);
 
   // Применение фильтров
   const applyFilters = useCallback(() => {
-    let filtered = [...products]
+    let filtered = [...products];
 
     // Фильтр по категориям
     if (filters.categories.length > 0) {
       const categoryIds = categories
-        .filter((cat) => filters.categories.includes(cat.slug))
-        .map((cat) => cat.id)
-      filtered = filtered.filter((product) => 
+        .filter(cat => filters.categories.includes(cat.slug))
+        .map(cat => cat.id);
+      filtered = filtered.filter(product =>
         categoryIds.includes(product.category_id || '')
-      )
+      );
     }
 
     // Фильтр по цене
-    const minPrice = filters.priceFrom ? parseInt(filters.priceFrom) : filters.priceMin
-    const maxPrice = filters.priceTo ? parseInt(filters.priceTo) : filters.priceMax
-    
-    filtered = filtered.filter((product) => 
-      product.price >= minPrice && product.price <= maxPrice
-    )
+    const minPrice = filters.priceFrom
+      ? parseInt(filters.priceFrom)
+      : filters.priceMin;
+    const maxPrice = filters.priceTo
+      ? parseInt(filters.priceTo)
+      : filters.priceMax;
+
+    filtered = filtered.filter(
+      product => product.price >= minPrice && product.price <= maxPrice
+    );
 
     // Сортировка
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'price-asc':
-          return a.price - b.price
+          return a.price - b.price;
         case 'price-desc':
-          return b.price - a.price
+          return b.price - a.price;
         case 'popular':
-          return (b.is_popular ? 1 : 0) - (a.is_popular ? 1 : 0)
+          return (b.is_popular ? 1 : 0) - (a.is_popular ? 1 : 0);
         default:
-          return a.name.localeCompare(b.name, 'ru')
+          return a.name.localeCompare(b.name, 'ru');
       }
-    })
+    });
 
-    setFilteredProducts(filtered)
-  }, [products, categories, filters, sortBy])
+    setFilteredProducts(filtered);
+  }, [products, categories, filters, sortBy]);
 
   // Применяем фильтры при изменении
   useEffect(() => {
-    applyFilters()
-  }, [applyFilters])
+    applyFilters();
+  }, [applyFilters]);
 
   // Обработчики событий
-  const handleCategoryChange = useCallback((categorySlug: string, checked: boolean) => {
-    setFilters(prev => ({
-      ...prev,
-      categories: checked 
-        ? [...prev.categories, categorySlug]
-        : prev.categories.filter(slug => slug !== categorySlug)
-    }))
-  }, [])
+  const handleCategoryChange = useCallback(
+    (categorySlug: string, checked: boolean) => {
+      setFilters(prev => ({
+        ...prev,
+        categories: checked
+          ? [...prev.categories, categorySlug]
+          : prev.categories.filter(slug => slug !== categorySlug),
+      }));
+    },
+    []
+  );
 
   const handlePriceChange = useCallback((from: string, to: string) => {
     setFilters(prev => ({
       ...prev,
       priceFrom: from,
-      priceTo: to
-    }))
-  }, [])
+      priceTo: to,
+    }));
+  }, []);
 
   const handleRemoveCategory = useCallback((categorySlug: string) => {
     setFilters(prev => ({
       ...prev,
-      categories: prev.categories.filter(slug => slug !== categorySlug)
-    }))
-  }, [])
+      categories: prev.categories.filter(slug => slug !== categorySlug),
+    }));
+  }, []);
 
   const handleClearPrice = useCallback(() => {
     setFilters(prev => ({
       ...prev,
       priceFrom: '',
-      priceTo: ''
-    }))
-  }, [])
+      priceTo: '',
+    }));
+  }, []);
 
   const handleClearAllFilters = useCallback(() => {
     setFilters({
@@ -196,9 +213,9 @@ function CatalogContent() {
       priceFrom: '',
       priceTo: '',
       priceMin: 0,
-      priceMax: filters.priceMax
-    })
-  }, [filters.priceMax])
+      priceMax: filters.priceMax,
+    });
+  }, [filters.priceMax]);
 
   if (loading) {
     return (
@@ -268,17 +285,21 @@ function CatalogContent() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  const FiltersContent = ({ onMobileClose }: { onMobileClose?: () => void }) => (
+  const FiltersContent = ({
+    onMobileClose,
+  }: {
+    onMobileClose?: () => void;
+  }) => (
     <div className="space-y-6">
       <CategoryFilter
         categories={categories}
         selectedCategories={filters.categories}
         onCategoryChange={handleCategoryChange}
       />
-      
+
       <PriceRangeFilter
         priceFrom={filters.priceFrom}
         priceTo={filters.priceTo}
@@ -289,7 +310,7 @@ function CatalogContent() {
         onMobileFilterClose={onMobileClose}
       />
     </div>
-  )
+  );
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -320,7 +341,10 @@ function CatalogContent() {
           <div className="flex flex-col gap-4 mb-6">
             {/* Мобильные фильтры */}
             <div className="flex justify-between items-center lg:hidden">
-              <Sheet open={isMobileFiltersOpen} onOpenChange={setIsMobileFiltersOpen}>
+              <Sheet
+                open={isMobileFiltersOpen}
+                onOpenChange={setIsMobileFiltersOpen}
+              >
                 <SheetTrigger asChild>
                   <Button variant="outline" size="sm">
                     <Filter className="h-4 w-4 mr-2" />
@@ -332,7 +356,9 @@ function CatalogContent() {
                     <SheetTitle>Фильтры</SheetTitle>
                   </SheetHeader>
                   <div className="mt-6">
-                    <FiltersContent onMobileClose={() => setIsMobileFiltersOpen(false)} />
+                    <FiltersContent
+                      onMobileClose={() => setIsMobileFiltersOpen(false)}
+                    />
                   </div>
                 </SheetContent>
               </Sheet>
@@ -360,7 +386,8 @@ function CatalogContent() {
             {/* Управление для десктопа */}
             <div className="hidden lg:flex justify-between items-center">
               <span className="text-sm text-muted-foreground">
-                Найдено: {filteredProducts.length} {filteredProducts.length === 1 ? 'товар' : 'товаров'}
+                Найдено: {filteredProducts.length}{' '}
+                {filteredProducts.length === 1 ? 'товар' : 'товаров'}
               </span>
 
               <div className="flex items-center gap-3">
@@ -436,7 +463,7 @@ function CatalogContent() {
                 : 'grid-cols-1'
             }`}
           >
-            {filteredProducts.map((product) => (
+            {filteredProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -455,14 +482,16 @@ function CatalogContent() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Экспорт страницы с Suspense
 export default function CatalogPage() {
   return (
-    <Suspense fallback={<div className="container mx-auto px-4 py-8">Загрузка...</div>}>
+    <Suspense
+      fallback={<div className="container mx-auto px-4 py-8">Загрузка...</div>}
+    >
       <CatalogContent />
     </Suspense>
-  )
+  );
 }

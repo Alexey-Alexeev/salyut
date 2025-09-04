@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import { Phone, Mail, MapPin } from 'lucide-react'
-import { db } from '@/lib/db'
-import { categories } from '@/db/schema'
+import Link from 'next/link';
+import { Phone, Mail, MapPin } from 'lucide-react';
+import { db } from '@/lib/db';
+import { categories } from '@/db/schema';
 
 export async function Footer() {
   // Загружаем категории из БД с обработкой ошибок
@@ -21,7 +21,9 @@ export async function Footer() {
               <div className="h-8 w-8 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
                 <span className="text-white font-bold text-sm">🎆</span>
               </div>
-              <span className="font-bold text-xl text-gray-900">КупитьСалюты</span>
+              <span className="font-bold text-xl text-gray-900">
+                КупитьСалюты
+              </span>
             </Link>
             <p className="text-sm text-gray-700">
               Качественные фейерверки для незабываемых праздников
@@ -31,17 +33,16 @@ export async function Footer() {
           <div className="space-y-4">
             <h3 className="font-semibold text-gray-900">Каталог</h3>
             <ul className="space-y-2 text-sm">
-              {(
-                categoriesData.length > 0
-                  ? categoriesData
-                  : [
-                    { slug: "firecrackers", name: "Петарды" },
-                    { slug: "rockets", name: "Ракеты" },
-                    { slug: "fountains", name: "Фонтаны" },
-                    { slug: "roman-candles", name: "Римские свечи" },
-                    { slug: "sparklers", name: "Бенгальские огни" },
+              {(categoriesData.length > 0
+                ? categoriesData
+                : [
+                    { slug: 'firecrackers', name: 'Петарды' },
+                    { slug: 'rockets', name: 'Ракеты' },
+                    { slug: 'fountains', name: 'Фонтаны' },
+                    { slug: 'roman-candles', name: 'Римские свечи' },
+                    { slug: 'sparklers', name: 'Бенгальские огни' },
                   ]
-              ).map((cat) => (
+              ).map(cat => (
                 <li key={cat.slug}>
                   <Link
                     href={`/catalog?category=${cat.slug}`}
@@ -59,17 +60,26 @@ export async function Footer() {
             <h3 className="font-semibold text-gray-900">Информация</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/services/launching" className="text-gray-700 hover:text-orange-600">
+                <Link
+                  href="/services/launching"
+                  className="text-gray-700 hover:text-orange-600"
+                >
                   Услуги
                 </Link>
               </li>
               <li>
-                <Link href="/delivery" className="text-gray-700 hover:text-orange-600">
+                <Link
+                  href="/delivery"
+                  className="text-gray-700 hover:text-orange-600"
+                >
                   Доставка и самовывоз
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-700 hover:text-orange-600">
+                <Link
+                  href="/about"
+                  className="text-gray-700 hover:text-orange-600"
+                >
                   О компании
                 </Link>
               </li>
@@ -92,16 +102,21 @@ export async function Footer() {
             ©КупитьСалюты. Все права защищены.
           </p>
           <div className="flex items-center space-x-4 mt-4 md:mt-0">
-            <Link href="/privacy" className="text-sm text-gray-700 hover:text-orange-600">
+            <Link
+              href="/privacy"
+              className="text-sm text-gray-700 hover:text-orange-600"
+            >
               Политика конфиденциальности
             </Link>
-            <Link href="/terms" className="text-sm text-gray-700 hover:text-orange-600">
+            <Link
+              href="/terms"
+              className="text-sm text-gray-700 hover:text-orange-600"
+            >
               Пользовательское соглашение
             </Link>
           </div>
         </div>
       </div>
     </footer>
-
-  )
+  );
 }

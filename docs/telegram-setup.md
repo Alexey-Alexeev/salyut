@@ -3,6 +3,7 @@
 ## 🚀 Quick Setup (Recommended for your use case)
 
 ### 1. Create Telegram Bot
+
 ```bash
 # 1. Message @BotFather on Telegram
 # 2. Send: /newbot
@@ -12,6 +13,7 @@
 ```
 
 ### 2. Get Your Chat ID
+
 ```bash
 # Option A: Send message to your bot, then visit:
 # https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates
@@ -24,6 +26,7 @@ fetch('https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates')
 ```
 
 ### 3. Environment Variables (reg.ru hosting)
+
 ```env
 # Add to your .env.local and reg.ru environment:
 TELEGRAM_BOT_TOKEN=your_bot_token_from_botfather
@@ -36,6 +39,7 @@ DATABASE_URL=your_supabase_database_url
 ```
 
 ### 4. Enable Notifications in Code
+
 ```typescript
 // In app/api/orders/route.ts - uncomment line 55:
 await sendTelegramNotification({
@@ -43,7 +47,7 @@ await sendTelegramNotification({
   customerName: validatedData.customer_name,
   customerPhone: validatedData.customer_phone,
   // ... rest of the notification data
-})
+});
 ```
 
 ## 📱 Message Format You'll Receive
@@ -69,12 +73,14 @@ await sendTelegramNotification({
 ## 🔄 Order Management Workflow
 
 ### For You (Business Owner):
+
 1. **Receive Order** → Instant Telegram notification
-2. **Process Order** → Use web admin panel at yourdomain.com/admin/orders  
+2. **Process Order** → Use web admin panel at yourdomain.com/admin/orders
 3. **Update Status** → Customer gets automatic status updates
 4. **Track Analytics** → Dashboard shows revenue, popular products
 
 ### For Customers:
+
 1. **Place Order** → Confirmation on website + email
 2. **Get Updates** → Status changes via their preferred contact method
 3. **Support** → Can reach you via consultation form or direct Telegram/WhatsApp
@@ -82,15 +88,17 @@ await sendTelegramNotification({
 ## 🛠️ Advanced Options (Future Enhancements)
 
 ### Option A: Telegram Bot with Commands
+
 ```typescript
 // Future enhancement: Interactive bot commands
 /orders - List recent orders
-/order_123456 - Get order details  
+/order_123456 - Get order details
 /complete_123456 - Mark order complete
 /stats - Show daily/weekly stats
 ```
 
-### Option B: WhatsApp Business Integration  
+### Option B: WhatsApp Business Integration
+
 ```typescript
 // Alternative: WhatsApp Business API
 // For customers who prefer WhatsApp over Telegram
@@ -99,6 +107,7 @@ await sendTelegramNotification({
 ## 🚀 Deployment on reg.ru
 
 ### 1. Environment Variables Setup
+
 ```bash
 # In reg.ru hosting panel, add environment variables:
 TELEGRAM_BOT_TOKEN=your_token
@@ -106,6 +115,7 @@ TELEGRAM_CHAT_ID=your_chat_id
 ```
 
 ### 2. Webhook Configuration (Optional)
+
 ```typescript
 // For instant delivery, set webhook (optional):
 // POST to: https://api.telegram.org/bot<TOKEN>/setWebhook
@@ -118,7 +128,7 @@ TELEGRAM_CHAT_ID=your_chat_id
 ## ✅ Testing Checklist
 
 - [ ] Bot created and token obtained
-- [ ] Chat ID retrieved  
+- [ ] Chat ID retrieved
 - [ ] Environment variables set
 - [ ] Test order placed
 - [ ] Telegram notification received
@@ -128,7 +138,7 @@ TELEGRAM_CHAT_ID=your_chat_id
 ## 🎯 Why This Approach Works Best for You
 
 1. **Simple & Reliable**: No complex bot logic, just notifications
-2. **reg.ru Compatible**: Standard HTTP requests, no special server requirements  
+2. **reg.ru Compatible**: Standard HTTP requests, no special server requirements
 3. **Scalable**: Easy to add WhatsApp, email, or SMS later
 4. **Professional**: Clean message format, automated workflow
 5. **Cost-Effective**: Free Telegram Bot API, minimal server resources
@@ -136,6 +146,7 @@ TELEGRAM_CHAT_ID=your_chat_id
 ## 📞 Support
 
 If you need help with setup:
+
 - Check logs in `/api/orders` endpoint
 - Test Telegram API manually: `curl -X POST "https://api.telegram.org/bot<TOKEN>/sendMessage" -d "chat_id=<CHAT_ID>&text=Test"`
 - Verify environment variables in reg.ru panel

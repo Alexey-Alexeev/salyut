@@ -1,11 +1,13 @@
 # Address Autocomplete Configuration
 
 ## Overview
+
 The address autocomplete component (`AddressAutocomplete`) uses **Yandex Geocoder API** to provide address suggestions for users in the Moscow region.
 
 ⚠️ **Important**: Yandex Suggest API has been **deprecated and removed**. This component now uses the Geocoder API which is still functional.
 
 ## Features
+
 - **Real-time address suggestions** using Yandex Geocoder API
 - **Keyboard navigation** (Arrow keys, Enter, Escape)
 - **Fallback suggestions** when API is unavailable
@@ -14,6 +16,7 @@ The address autocomplete component (`AddressAutocomplete`) uses **Yandex Geocode
 - **Error handling** with graceful degradation
 
 ## Required Setup
+
 You **must** obtain a Yandex Maps API key for the autocomplete to work:
 
 1. Visit [Yandex Developer Console](https://developer.tech.yandex.ru/)
@@ -27,6 +30,7 @@ NEXT_PUBLIC_YANDEX_API_KEY=your_api_key_here
 ```
 
 ## Debugging
+
 If autocomplete is not working:
 
 1. **Check console for errors** - Open browser DevTools → Console
@@ -38,7 +42,9 @@ If autocomplete is not working:
    ```
 
 ## API Response Format
+
 The Geocoder API returns structured data:
+
 ```json
 {
   "response": {
@@ -60,6 +66,7 @@ The Geocoder API returns structured data:
 ```
 
 ## Alternative: DaData API
+
 If you prefer to use DaData API instead:
 
 1. Register at [DaData.ru](https://dadata.ru/)
@@ -67,21 +74,26 @@ If you prefer to use DaData API instead:
 3. Replace the Yandex implementation with DaData calls:
 
 ```typescript
-const response = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Token ${DADATA_API_KEY}`
-  },
-  body: JSON.stringify({
-    query: query,
-    locations: [{ region: 'Московская' }]
-  })
-})
+const response = await fetch(
+  'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${DADATA_API_KEY}`,
+    },
+    body: JSON.stringify({
+      query: query,
+      locations: [{ region: 'Московская' }],
+    }),
+  }
+);
 ```
 
 ## Fallback Behavior
+
 When the API is unavailable, the component provides simple suggestions for major cities in Moscow region:
+
 - Moscow
 - Balashikha
 - Lyubertsy
@@ -94,15 +106,17 @@ When the API is unavailable, the component provides simple suggestions for major
 - Zhukovsky
 
 ## Usage
+
 ```tsx
-import { AddressAutocomplete } from '@/components/ui/address-autocomplete'
+import { AddressAutocomplete } from '@/components/ui/address-autocomplete';
 
 <AddressAutocomplete
   value={address}
   onChange={setAddress}
   placeholder="Введите адрес доставки..."
-/>
+/>;
 ```
 
 ## Integration with Delivery System
+
 The autocomplete is integrated into the delivery selection component to help users quickly enter accurate delivery addresses, improving the overall user experience and reducing delivery errors.

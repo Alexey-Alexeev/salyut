@@ -1,105 +1,105 @@
-'use client'
+'use client';
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { useCartStore } from '@/lib/cart-store'
-import { toast } from 'sonner'
-import { useEffect, useState } from 'react'
+import Image from 'next/image';
+import Link from 'next/link';
+import { ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { useCartStore } from '@/lib/cart-store';
+import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
 
 interface Product {
-  id: string
-  name: string
-  slug: string
-  price: number
-  images: string[] | null
-  is_popular?: boolean | null
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  images: string[] | null;
+  is_popular?: boolean | null;
 }
 
 interface ProductCardProps {
-  product: Product
+  product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const [quantity, setQuantity] = useState(0)
-  const [inputValue, setInputValue] = useState('')
-  const [isMounted, setIsMounted] = useState(false)
+  const [quantity, setQuantity] = useState(0);
+  const [inputValue, setInputValue] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
 
-  const items = useCartStore((state) => state.items)
-  const addItem = useCartStore((state) => state.addItem)
-  const updateQuantity = useCartStore((state) => state.updateQuantity)
-  const removeItem = useCartStore((state) => state.removeItem)
+  const items = useCartStore(state => state.items);
+  const addItem = useCartStore(state => state.addItem);
+  const updateQuantity = useCartStore(state => state.updateQuantity);
+  const removeItem = useCartStore(state => state.removeItem);
 
   // Синхронизируем локальное состояние с глобальным после монтирования
   useEffect(() => {
-    setIsMounted(true)
-    const cartItem = items.find(item => item.id === product.id)
-    const newQuantity = cartItem?.quantity || 0
-    setQuantity(newQuantity)
-    setInputValue(newQuantity.toString())
-  }, [items, product.id])
+    setIsMounted(true);
+    const cartItem = items.find(item => item.id === product.id);
+    const newQuantity = cartItem?.quantity || 0;
+    setQuantity(newQuantity);
+    setInputValue(newQuantity.toString());
+  }, [items, product.id]);
 
   const handleAddToCart = () => {
     addItem({
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images?.[0] || '/placeholder-product.jpg'
-    })
-    setQuantity(1)
-    setInputValue('1')
-    toast.success('Товар добавлен в корзину')
-  }
+      image: product.images?.[0] || '/placeholder-product.jpg',
+    });
+    setQuantity(1);
+    setInputValue('1');
+    toast.success('Товар добавлен в корзину');
+  };
 
   const handleIncrease = () => {
     if (quantity === 0) {
-      handleAddToCart()
+      handleAddToCart();
     } else {
-      const newQuantity = quantity + 1
-      updateQuantity(product.id, newQuantity)
-      setQuantity(newQuantity)
-      setInputValue(newQuantity.toString())
+      const newQuantity = quantity + 1;
+      updateQuantity(product.id, newQuantity);
+      setQuantity(newQuantity);
+      setInputValue(newQuantity.toString());
     }
-  }
+  };
 
   const handleDecrease = () => {
     if (quantity === 1) {
-      handleRemoveCompletely()
+      handleRemoveCompletely();
     } else if (quantity > 1) {
-      const newQuantity = quantity - 1
-      updateQuantity(product.id, newQuantity)
-      setQuantity(newQuantity)
-      setInputValue(newQuantity.toString())
+      const newQuantity = quantity - 1;
+      updateQuantity(product.id, newQuantity);
+      setQuantity(newQuantity);
+      setInputValue(newQuantity.toString());
     }
-  }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setInputValue(value)
+    const value = e.target.value;
+    setInputValue(value);
 
     // Разрешаем только цифры и пустую строку
     if (value === '' || /^\d+$/.test(value)) {
-      const numValue = parseInt(value) || 0
+      const numValue = parseInt(value) || 0;
 
       // Ограничиваем максимальное значение (например, 999)
       if (numValue > 999) {
-        setInputValue('999')
-        return
+        setInputValue('999');
+        return;
       }
 
-      setInputValue(value)
+      setInputValue(value);
     }
-  }
+  };
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const numValue = parseInt(inputValue) || 0
+    const numValue = parseInt(inputValue) || 0;
 
     if (numValue === 0) {
-      handleRemoveCompletely()
+      handleRemoveCompletely();
     } else if (numValue > 0) {
       if (quantity === 0) {
         // Добавляем товар если его не было в корзине
@@ -107,36 +107,36 @@ export function ProductCard({ product }: ProductCardProps) {
           id: product.id,
           name: product.name,
           price: product.price,
-          image: product.images?.[0] || '/placeholder-product.jpg'
+          image: product.images?.[0] || '/placeholder-product.jpg',
           // quantity не нужен, т.к. addItem по умолчанию добавляет 1 штуку
-        })
+        });
         // Но нам нужно установить нужное количество
         // Поэтому после добавления обновляем количество
-        updateQuantity(product.id, numValue)
+        updateQuantity(product.id, numValue);
       } else {
         // Обновляем количество существующего товара
-        updateQuantity(product.id, numValue)
+        updateQuantity(product.id, numValue);
       }
-      setQuantity(numValue)
-      setInputValue(numValue.toString())
+      setQuantity(numValue);
+      setInputValue(numValue.toString());
     } else {
       // Если ввели 0 или невалидное значение, восстанавливаем предыдущее
-      setInputValue(quantity.toString())
+      setInputValue(quantity.toString());
     }
-  }
+  };
 
   const handleInputKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      e.currentTarget.blur()
+      e.currentTarget.blur();
     }
-  }
+  };
 
   const handleRemoveCompletely = () => {
-    removeItem(product.id)
-    setQuantity(0)
-    setInputValue('0')
-    toast.info('Товар удален из корзины')
-  }
+    removeItem(product.id);
+    setQuantity(0);
+    setInputValue('0');
+    toast.info('Товар удален из корзины');
+  };
 
   // Не рендерим до монтирования, чтобы избежать hydration mismatch
   if (!isMounted) {
@@ -151,7 +151,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <div className="h-9 bg-muted rounded animate-pulse w-full" />
         </CardFooter>
       </Card>
-    )
+    );
   }
 
   return (
@@ -184,7 +184,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </h3>
         </Link>
         <p className="text-lg font-bold text-primary">
-          {(product.price).toLocaleString('ru-RU')} ₽
+          {product.price.toLocaleString('ru-RU')} ₽
         </p>
       </CardContent>
 
@@ -196,10 +196,17 @@ export function ProductCard({ product }: ProductCardProps) {
               size="sm"
               onClick={handleDecrease}
               className="h-9 w-9 p-0"
-              aria-label={quantity === 1 ? "Удалить товар из корзины" : "Уменьшить количество"}
+              aria-label={
+                quantity === 1
+                  ? 'Удалить товар из корзины'
+                  : 'Уменьшить количество'
+              }
             >
               {quantity === 1 ? (
-                <Trash2 className="h-4 w-4 text-destructive" aria-hidden="true" />
+                <Trash2
+                  className="h-4 w-4 text-destructive"
+                  aria-hidden="true"
+                />
               ) : (
                 <Minus className="h-4 w-4" aria-hidden="true" />
               )}
@@ -234,11 +241,10 @@ export function ProductCard({ product }: ProductCardProps) {
             size="sm"
             variant="default"
           >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            В корзину
+            <ShoppingCart className="h-4 w-4 mr-2" />В корзину
           </Button>
         )}
       </CardFooter>
     </Card>
-  )
+  );
 }

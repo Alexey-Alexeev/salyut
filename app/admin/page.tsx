@@ -1,40 +1,40 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
-import { 
-  Package, 
-  ShoppingCart, 
-  Users, 
-  DollarSign, 
-  TrendingUp, 
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { supabase } from '@/lib/supabase';
+import { toast } from 'sonner';
+import {
+  Package,
+  ShoppingCart,
+  Users,
+  DollarSign,
+  TrendingUp,
   LogOut,
   Plus,
   Edit,
   Trash2,
-  Eye
-} from 'lucide-react'
-import Link from 'next/link'
+  Eye,
+} from 'lucide-react';
+import Link from 'next/link';
 
 interface DashboardStats {
-  totalProducts: number
-  totalOrders: number
-  totalRevenue: number
-  pendingOrders: number
+  totalProducts: number;
+  totalOrders: number;
+  totalRevenue: number;
+  pendingOrders: number;
 }
 
 interface RecentOrder {
-  id: string
-  customer_name: string
-  total_amount: number
-  status: string
-  created_at: string
+  id: string;
+  customer_name: string;
+  total_amount: number;
+  status: string;
+  created_at: string;
 }
 
 export default function AdminDashboard() {
@@ -42,22 +42,24 @@ export default function AdminDashboard() {
     totalProducts: 0,
     totalOrders: 0,
     totalRevenue: 0,
-    pendingOrders: 0
-  })
-  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([])
-  const [loading, setLoading] = useState(true)
-  const router = useRouter()
+    pendingOrders: 0,
+  });
+  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    checkAuth()
-    loadDashboardData()
-  }, [])
+    checkAuth();
+    loadDashboardData();
+  }, []);
 
   const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
-      router.push('/admin/login')
-      return
+      router.push('/admin/login');
+      return;
     }
 
     // Проверяем роль пользователя
@@ -65,65 +67,71 @@ export default function AdminDashboard() {
       .from('profiles')
       .select('role')
       .eq('user_id', user.id)
-      .single()
+      .single();
 
     if (profile?.role !== 'admin') {
-      toast.error('У вас нет доступа к административной панели')
-      router.push('/admin/login')
+      toast.error('У вас нет доступа к административной панели');
+      router.push('/admin/login');
     }
-  }
+  };
 
   const loadDashboardData = async () => {
     try {
       // Загружаем статистику
       const [productsResult, ordersResult] = await Promise.all([
         supabase.from('products').select('*', { count: 'exact' }),
-        supabase.from('orders').select('*')
-      ])
+        supabase.from('orders').select('*'),
+      ]);
 
-      const orders = ordersResult.data || []
-      const totalRevenue = orders.reduce((sum, order) => sum + order.total_amount, 0)
-      const pendingOrders = orders.filter(order => order.status === 'created').length
+      const orders = ordersResult.data || [];
+      const totalRevenue = orders.reduce(
+        (sum, order) => sum + order.total_amount,
+        0
+      );
+      const pendingOrders = orders.filter(
+        order => order.status === 'created'
+      ).length;
 
       setStats({
         totalProducts: productsResult.count || 0,
         totalOrders: orders.length,
         totalRevenue,
-        pendingOrders
-      })
+        pendingOrders,
+      });
 
       // Загружаем последние заказы
       const { data: recentOrdersData } = await supabase
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(5)
+        .limit(5);
 
-      setRecentOrders(recentOrdersData || [])
+      setRecentOrders(recentOrdersData || []);
     } catch (error) {
-      toast.error('Ошибка при загрузке данных')
+      toast.error('Ошибка при загрузке данных');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/admin/login')
-    toast.success('Выход выполнен')
-  }
+    await supabase.auth.signOut();
+    router.push('/admin/login');
+    toast.success('Выход выполнен');
+  };
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       created: { label: 'Новый', variant: 'default' as const },
       in_progress: { label: 'В обработке', variant: 'secondary' as const },
       completed: { label: 'Завершен', variant: 'default' as const },
-      cancelled: { label: 'Отменен', variant: 'destructive' as const }
-    }
-    
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.created
-    return <Badge variant={config.variant}>{config.label}</Badge>
-  }
+      cancelled: { label: 'Отменен', variant: 'destructive' as const },
+    };
+
+    const config =
+      statusConfig[status as keyof typeof statusConfig] || statusConfig.created;
+    return <Badge variant={config.variant}>{config.label}</Badge>;
+  };
 
   if (loading) {
     return (
@@ -133,7 +141,7 @@ export default function AdminDashboard() {
           <p>Загрузка...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -174,9 +182,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalOrders}</div>
-              <p className="text-xs text-muted-foreground">
-                Всего заказов
-              </p>
+              <p className="text-xs text-muted-foreground">Всего заказов</p>
             </CardContent>
           </Card>
 
@@ -189,9 +195,7 @@ export default function AdminDashboard() {
               <div className="text-2xl font-bold">
                 {stats.totalRevenue.toLocaleString('ru-RU')} ₽
               </div>
-              <p className="text-xs text-muted-foreground">
-                Общая выручка
-              </p>
+              <p className="text-xs text-muted-foreground">Общая выручка</p>
             </CardContent>
           </Card>
 
@@ -202,9 +206,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.pendingOrders}</div>
-              <p className="text-xs text-muted-foreground">
-                Новых заказов
-              </p>
+              <p className="text-xs text-muted-foreground">Новых заказов</p>
             </CardContent>
           </Card>
         </div>
@@ -238,8 +240,11 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentOrders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
+              {recentOrders.map(order => (
+                <div
+                  key={order.id}
+                  className="flex items-center justify-between p-4 border rounded-lg"
+                >
                   <div>
                     <p className="font-medium">{order.customer_name}</p>
                     <p className="text-sm text-muted-foreground">
@@ -256,7 +261,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               ))}
-              
+
               {recentOrders.length === 0 && (
                 <p className="text-center text-muted-foreground py-8">
                   Заказов пока нет
@@ -267,5 +272,5 @@ export default function AdminDashboard() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

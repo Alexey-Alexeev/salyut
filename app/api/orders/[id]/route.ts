@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
-import { orders, orderItems, products } from '@/db/schema'
-import { eq } from 'drizzle-orm'
-import { sendOrderStatusUpdate } from '@/lib/telegram'
+import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { orders, orderItems, products } from '@/db/schema';
+import { eq } from 'drizzle-orm';
+import { sendOrderStatusUpdate } from '@/lib/telegram';
 
 // export async function GET(
 //   request: NextRequest,
@@ -60,16 +60,19 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params
-    const body = await request.json()
-    const { status } = body
+    const { id } = params;
+    const body = await request.json();
+    const { status } = body;
 
     // Валидация статуса
-    const validStatuses = ['created', 'in_progress', 'completed', 'cancelled']
+    const validStatuses = ['created', 'in_progress', 'completed', 'cancelled'];
     if (!validStatuses.includes(status)) {
-      return NextResponse.json({ 
-        error: 'Invalid status' 
-      }, { status: 400 })
+      return NextResponse.json(
+        {
+          error: 'Invalid status',
+        },
+        { status: 400 }
+      );
     }
 
     // Обновляем статус заказа
@@ -77,12 +80,15 @@ export async function PATCH(
       .update(orders)
       .set({ status })
       .where(eq(orders.id, id))
-      .returning()
+      .returning();
 
     if (!updatedOrder) {
-      return NextResponse.json({ 
-        error: 'Order not found' 
-      }, { status: 404 })
+      return NextResponse.json(
+        {
+          error: 'Order not found',
+        },
+        { status: 404 }
+      );
     }
 
     // Отправляем уведомление об изменении статуса
@@ -90,14 +96,16 @@ export async function PATCH(
       updatedOrder.id,
       status,
       updatedOrder.customer_name
-    )
+    );
 
-    return NextResponse.json(updatedOrder)
-
+    return NextResponse.json(updatedOrder);
   } catch (error) {
-    console.error('Error updating order:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error' 
-    }, { status: 500 })
+    console.error('Error updating order:', error);
+    return NextResponse.json(
+      {
+        error: 'Internal server error',
+      },
+      { status: 500 }
+    );
   }
 }

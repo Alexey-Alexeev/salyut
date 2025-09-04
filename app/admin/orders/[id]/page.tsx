@@ -1,14 +1,20 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Separator } from '@/components/ui/separator'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
+import { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { supabase } from '@/lib/supabase';
+import { toast } from 'sonner';
 import {
   ArrowLeft,
   User,
@@ -22,72 +28,72 @@ import {
   XCircle,
   Truck,
   Store,
-  MapPin
-} from 'lucide-react'
-import Link from 'next/link'
-import Image from 'next/image'
+  MapPin,
+} from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 interface OrderItem {
-  id: string
-  quantity: number
-  price_at_time: number
+  id: string;
+  quantity: number;
+  price_at_time: number;
   product: {
-    id: string
-    name: string
-    images: string[]
-  }
+    id: string;
+    name: string;
+    images: string[];
+  };
 }
 
 interface Order {
-  id: string
-  customer_name: string
-  customer_phone: string
-  customer_contact: string | null
-  contact_method: 'telegram' | 'whatsapp' | null
-  total_amount: number
-  delivery_cost: number
-  discount_amount: number
-  status: 'created' | 'in_progress' | 'completed' | 'cancelled'
-  comment: string | null
-  delivery_method: 'delivery' | 'pickup'
-  delivery_address: string | null
-  age_confirmed: boolean
-  created_at: string
-  items: OrderItem[]
+  id: string;
+  customer_name: string;
+  customer_phone: string;
+  customer_contact: string | null;
+  contact_method: 'telegram' | 'whatsapp' | null;
+  total_amount: number;
+  delivery_cost: number;
+  discount_amount: number;
+  status: 'created' | 'in_progress' | 'completed' | 'cancelled';
+  comment: string | null;
+  delivery_method: 'delivery' | 'pickup';
+  delivery_address: string | null;
+  age_confirmed: boolean;
+  created_at: string;
+  items: OrderItem[];
 }
 
 export default function OrderDetailPage() {
-  const params = useParams()
-  const router = useRouter()
-  const [order, setOrder] = useState<Order | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [updating, setUpdating] = useState(false)
+  const params = useParams();
+  const router = useRouter();
+  const [order, setOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
-    loadOrder()
-  }, [params.id])
+    loadOrder();
+  }, [params.id]);
 
   const loadOrder = async () => {
     try {
-      const response = await fetch(`/api/orders/${params.id}`)
+      const response = await fetch(`/api/orders/${params.id}`);
       if (!response.ok) {
-        throw new Error('Failed to load order')
+        throw new Error('Failed to load order');
       }
 
-      const orderData = await response.json()
-      setOrder(orderData)
+      const orderData = await response.json();
+      setOrder(orderData);
     } catch (error) {
-      toast.error('Ошибка при загрузке заказа')
-      router.push('/admin/orders')
+      toast.error('Ошибка при загрузке заказа');
+      router.push('/admin/orders');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const updateOrderStatus = async (newStatus: string) => {
-    if (!order) return
+    if (!order) return;
 
-    setUpdating(true)
+    setUpdating(true);
     try {
       const response = await fetch(`/api/orders/${order.id}`, {
         method: 'PATCH',
@@ -95,48 +101,49 @@ export default function OrderDetailPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ status: newStatus }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Failed to update order')
+        throw new Error('Failed to update order');
       }
 
-      const updatedOrder = await response.json()
-      setOrder(updatedOrder)
-      toast.success('Статус заказа обновлен')
+      const updatedOrder = await response.json();
+      setOrder(updatedOrder);
+      toast.success('Статус заказа обновлен');
     } catch (error) {
-      toast.error('Ошибка при обновлении статуса')
+      toast.error('Ошибка при обновлении статуса');
     } finally {
-      setUpdating(false)
+      setUpdating(false);
     }
-  }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'created':
-        return <Clock className="h-4 w-4" />
+        return <Clock className="h-4 w-4" />;
       case 'in_progress':
-        return <Package className="h-4 w-4" />
+        return <Package className="h-4 w-4" />;
       case 'completed':
-        return <CheckCircle className="h-4 w-4" />
+        return <CheckCircle className="h-4 w-4" />;
       case 'cancelled':
-        return <XCircle className="h-4 w-4" />
+        return <XCircle className="h-4 w-4" />;
       default:
-        return <Clock className="h-4 w-4" />
+        return <Clock className="h-4 w-4" />;
     }
-  }
+  };
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       created: { label: 'Новый', variant: 'default' as const },
       in_progress: { label: 'В обработке', variant: 'secondary' as const },
       completed: { label: 'Завершен', variant: 'default' as const },
-      cancelled: { label: 'Отменен', variant: 'destructive' as const }
-    }
+      cancelled: { label: 'Отменен', variant: 'destructive' as const },
+    };
 
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.created
-    return <Badge variant={config.variant}>{config.label}</Badge>
-  }
+    const config =
+      statusConfig[status as keyof typeof statusConfig] || statusConfig.created;
+    return <Badge variant={config.variant}>{config.label}</Badge>;
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ru-RU', {
@@ -144,9 +151,9 @@ export default function OrderDetailPage() {
       month: '2-digit',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+      minute: '2-digit',
+    });
+  };
 
   if (loading) {
     return (
@@ -156,7 +163,7 @@ export default function OrderDetailPage() {
           <p>Загрузка...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (!order) {
@@ -169,7 +176,7 @@ export default function OrderDetailPage() {
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -185,7 +192,9 @@ export default function OrderDetailPage() {
                   Назад
                 </Link>
               </Button>
-              <h1 className="text-2xl font-bold">Заказ #{order.id.slice(0, 8)}</h1>
+              <h1 className="text-2xl font-bold">
+                Заказ #{order.id.slice(0, 8)}
+              </h1>
             </div>
             <div className="flex items-center gap-2">
               {getStatusIcon(order.status)}
@@ -210,11 +219,15 @@ export default function OrderDetailPage() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Имя</label>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Имя
+                    </label>
                     <p className="font-medium">{order.customer_name}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Телефон</label>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Телефон
+                    </label>
                     <p className="font-medium flex items-center gap-2">
                       <Phone className="h-4 w-4" />
                       {order.customer_phone}
@@ -225,7 +238,9 @@ export default function OrderDetailPage() {
                 {order.customer_contact && (
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">
-                      {order.contact_method === 'telegram' ? 'Telegram' : 'WhatsApp'}
+                      {order.contact_method === 'telegram'
+                        ? 'Telegram'
+                        : 'WhatsApp'}
                     </label>
                     <p className="font-medium flex items-center gap-2">
                       <MessageCircle className="h-4 w-4" />
@@ -235,7 +250,9 @@ export default function OrderDetailPage() {
                 )}
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Дата заказа</label>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Дата заказа
+                  </label>
                   <p className="font-medium flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
                     {formatDate(order.created_at)}
@@ -244,13 +261,19 @@ export default function OrderDetailPage() {
 
                 {order.comment && (
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Комментарий</label>
-                    <p className="text-sm bg-muted p-3 rounded-md">{order.comment}</p>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Комментарий
+                    </label>
+                    <p className="text-sm bg-muted p-3 rounded-md">
+                      {order.comment}
+                    </p>
                   </div>
                 )}
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Подтверждение возраста</label>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Подтверждение возраста
+                  </label>
                   <p className="font-medium">
                     {order.age_confirmed ? (
                       <span className="text-green-600 flex items-center gap-2">
@@ -278,11 +301,17 @@ export default function OrderDetailPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {order.items.map((item) => (
-                    <div key={item.id} className="flex items-center gap-4 p-4 border rounded-lg">
+                  {order.items.map(item => (
+                    <div
+                      key={item.id}
+                      className="flex items-center gap-4 p-4 border rounded-lg"
+                    >
                       <div className="relative w-16 h-16 rounded-lg overflow-hidden">
                         <Image
-                          src={item.product.images?.[0] || '/placeholder-product.jpg'}
+                          src={
+                            item.product.images?.[0] ||
+                            '/placeholder-product.jpg'
+                          }
                           alt={item.product.name}
                           fill
                           className="object-cover"
@@ -298,10 +327,14 @@ export default function OrderDetailPage() {
 
                       <div className="text-right">
                         <p className="font-medium">
-                          {(item.price_at_time).toLocaleString('ru-RU')} ₽
+                          {item.price_at_time.toLocaleString('ru-RU')} ₽
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          Итого: {(item.price_at_time * item.quantity).toLocaleString('ru-RU')} ₽
+                          Итого:{' '}
+                          {(item.price_at_time * item.quantity).toLocaleString(
+                            'ru-RU'
+                          )}{' '}
+                          ₽
                         </p>
                       </div>
                     </div>
@@ -324,7 +357,9 @@ export default function OrderDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Способ получения</label>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Способ получения
+                  </label>
                   <p className="font-medium flex items-center gap-2">
                     {order.delivery_method === 'delivery' ? (
                       <>
@@ -340,18 +375,23 @@ export default function OrderDetailPage() {
                   </p>
                 </div>
 
-                {order.delivery_method === 'delivery' && order.delivery_address && (
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Адрес доставки</label>
-                    <p className="font-medium flex items-start gap-2">
-                      <MapPin className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                      {order.delivery_address}
-                    </p>
-                  </div>
-                )}
+                {order.delivery_method === 'delivery' &&
+                  order.delivery_address && (
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">
+                        Адрес доставки
+                      </label>
+                      <p className="font-medium flex items-start gap-2">
+                        <MapPin className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                        {order.delivery_address}
+                      </p>
+                    </div>
+                  )}
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Стоимость доставки</label>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Стоимость доставки
+                  </label>
                   <p className="font-medium">
                     {order.delivery_cost === 0 ? (
                       <span className="text-green-600">Бесплатно</span>
@@ -405,18 +445,20 @@ export default function OrderDetailPage() {
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
                   <span>Товары:</span>
-                  <span>{(order.total_amount).toLocaleString('ru-RU')} ₽</span>
+                  <span>{order.total_amount.toLocaleString('ru-RU')} ₽</span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>Доставка:</span>
-                  <span>{(order.delivery_cost).toLocaleString('ru-RU')} ₽</span>
+                  <span>{order.delivery_cost.toLocaleString('ru-RU')} ₽</span>
                 </div>
 
                 {order.discount_amount > 0 && (
                   <div className="flex justify-between text-green-600">
                     <span>Скидка:</span>
-                    <span>-{(order.discount_amount).toLocaleString('ru-RU')} ₽</span>
+                    <span>
+                      -{order.discount_amount.toLocaleString('ru-RU')} ₽
+                    </span>
                   </div>
                 )}
 
@@ -425,7 +467,12 @@ export default function OrderDetailPage() {
                 <div className="flex justify-between text-lg font-bold">
                   <span>К оплате:</span>
                   <span>
-                    {(order.total_amount + order.delivery_cost - order.discount_amount).toLocaleString('ru-RU')} ₽
+                    {(
+                      order.total_amount +
+                      order.delivery_cost -
+                      order.discount_amount
+                    ).toLocaleString('ru-RU')}{' '}
+                    ₽
                   </span>
                 </div>
               </CardContent>
@@ -434,5 +481,5 @@ export default function OrderDetailPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

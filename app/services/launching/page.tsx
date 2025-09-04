@@ -1,10 +1,10 @@
 // import { Metadata } from 'next'
 // import { Card, CardContent } from '@/components/ui/card'
 // import { Button } from '@/components/ui/button'
-// import { 
-//   Shield, 
-//   Award, 
-//   Users, 
+// import {
+//   Shield,
+//   Award,
+//   Users,
 //   Phone,
 //   Sparkles,
 //   AlertTriangle,
@@ -186,9 +186,9 @@
 // }
 
 // app/launching-service/page.tsx
-import { Metadata } from 'next'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Metadata } from 'next';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   Shield,
   Award,
@@ -211,32 +211,34 @@ import {
   FileCheck,
   ThumbsUp,
   Hospital,
-} from 'lucide-react'
-import Link from 'next/link'
-import Image from 'next/image'
-import LaunchingServicePage from './LaunchingServicePage'
+} from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import LaunchingServicePage from './LaunchingServicePage';
 
 // Metadata должен быть экспортирован на уровне модуля, не внутри компонента
 export const metadata: Metadata = {
   title: 'Профессиональный запуск салютов - КупитьСалюты.рф',
-  description: 'Безопасный и профессиональный запуск фейерверков. Все детали обсуждаются индивидуально с менеджером. Профессиональные пиротехники и максимальная безопасность.',
-  keywords: 'профессиональный запуск, салют, фейерверк, безопасность, мероприятие, праздник, запуск салютов, пиротехника',
+  description:
+    'Безопасный и профессиональный запуск фейерверков. Все детали обсуждаются индивидуально с менеджером. Профессиональные пиротехники и максимальная безопасность.',
+  keywords:
+    'профессиональный запуск, салют, фейерверк, безопасность, мероприятие, праздник, запуск салютов, пиротехника',
   openGraph: {
     title: 'Профессиональный запуск салютов - КупитьСалюты.рф',
-    description: 'Безопасный и профессиональный запуск фейерверков. Все детали обсуждаются индивидуально с менеджером.',
+    description:
+      'Безопасный и профессиональный запуск фейерверков. Все детали обсуждаются индивидуально с менеджером.',
     type: 'website',
     locale: 'ru_RU',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Профессиональный запуск салютов - КупитьСалюты.рф',
-    description: 'Безопасный и профессиональный запуск фейерверков. Все детали обсуждаются индивидуально с менеджером.',
+    description:
+      'Безопасный и профессиональный запуск фейерверков. Все детали обсуждаются индивидуально с менеджером.',
   },
-}
+};
 
 // Удалите "use client" если он есть в файле
 export default function LaunchingPage() {
-  return (
-    <LaunchingServicePage />
-  )
+  return <LaunchingServicePage />;
 }

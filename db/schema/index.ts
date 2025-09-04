@@ -1,15 +1,32 @@
 // schema.ts
-import { pgTable, text, timestamp, integer, boolean, jsonb, uuid } from 'drizzle-orm/pg-core'
-import { relations } from 'drizzle-orm'
+import {
+  pgTable,
+  text,
+  timestamp,
+  integer,
+  boolean,
+  jsonb,
+  uuid,
+} from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
 // Enum для статусов заказов
-export const orderStatusEnum = ['created', 'in_progress', 'completed', 'cancelled'] as const;
+export const orderStatusEnum = [
+  'created',
+  'in_progress',
+  'completed',
+  'cancelled',
+] as const;
 
 // Enum для способов связи
 export const contactMethodEnum = ['telegram', 'whatsapp', 'phone'] as const;
 
 // Enum для статусов консультаций
-export const consultationStatusEnum = ['new', 'contacted', 'completed'] as const;
+export const consultationStatusEnum = [
+  'new',
+  'contacted',
+  'completed',
+] as const;
 
 // Enum для ролей пользователей
 export const userRoleEnum = ['admin', 'user'] as const;
@@ -25,7 +42,7 @@ export const categories = pgTable('categories', {
   description: text('description'),
   image: text('image'),
   created_at: timestamp('created_at').defaultNow(),
-})
+});
 
 // Таблица производителей
 export const manufacturers = pgTable('manufacturers', {
@@ -34,7 +51,7 @@ export const manufacturers = pgTable('manufacturers', {
   country: text('country'),
   description: text('description'),
   created_at: timestamp('created_at').defaultNow(),
-})
+});
 
 // Таблица продуктов
 export const products = pgTable('products', {
@@ -42,8 +59,12 @@ export const products = pgTable('products', {
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
   price: integer('price').notNull(), // цена в рублях
-  category_id: uuid('category_id').references(() => categories.id, { onDelete: 'set null' }),
-  manufacturer_id: uuid('manufacturer_id').references(() => manufacturers.id, { onDelete: 'set null' }),
+  category_id: uuid('category_id').references(() => categories.id, {
+    onDelete: 'set null',
+  }),
+  manufacturer_id: uuid('manufacturer_id').references(() => manufacturers.id, {
+    onDelete: 'set null',
+  }),
   images: jsonb('images').$type<string[]>(),
   description: text('description'),
   short_description: text('short_description'),
@@ -54,7 +75,7 @@ export const products = pgTable('products', {
   seo_description: text('seo_description'),
   created_at: timestamp('created_at').defaultNow(),
   updated_at: timestamp('updated_at').defaultNow(),
-})
+});
 
 // Таблица консультаций
 export const consultations = pgTable('consultations', {
@@ -66,7 +87,7 @@ export const consultations = pgTable('consultations', {
   status: text('status', { enum: consultationStatusEnum }).default('new'),
   created_at: timestamp('created_at').defaultNow(),
   updated_at: timestamp('updated_at').defaultNow(),
-})
+});
 
 // Таблица заказов
 export const orders = pgTable('orders', {
@@ -83,26 +104,34 @@ export const orders = pgTable('orders', {
   age_confirmed: boolean('age_confirmed').notNull().default(false),
 
   // Поля для способа получения заказа
-  delivery_method: text('delivery_method', { enum: deliveryMethodEnum }).notNull(),
+  delivery_method: text('delivery_method', {
+    enum: deliveryMethodEnum,
+  }).notNull(),
   delivery_address: text('delivery_address'), // адрес доставки (если выбрана доставка)
   distance_from_mkad: integer('distance_from_mkad'), // расстояние от МКАД в км (для доставки)
 
   // Поле для услуги профессионального запуска салютов
-  professional_launch_requested: boolean('professional_launch_requested').default(false),
+  professional_launch_requested: boolean(
+    'professional_launch_requested'
+  ).default(false),
 
   created_at: timestamp('created_at').defaultNow(),
   updated_at: timestamp('updated_at').defaultNow(),
-})
+});
 
 // Таблица элементов заказа
 export const orderItems = pgTable('order_items', {
   id: uuid('id').defaultRandom().primaryKey(),
-  order_id: uuid('order_id').references(() => orders.id, { onDelete: 'cascade' }).notNull(),
-  product_id: uuid('product_id').references(() => products.id, { onDelete: 'set null' }),
+  order_id: uuid('order_id')
+    .references(() => orders.id, { onDelete: 'cascade' })
+    .notNull(),
+  product_id: uuid('product_id').references(() => products.id, {
+    onDelete: 'set null',
+  }),
   quantity: integer('quantity').notNull(),
   price_at_time: integer('price_at_time').notNull(), // цена в рублях на момент заказа
   created_at: timestamp('created_at').defaultNow(),
-})
+});
 
 // Таблица профилей пользователей (для админов)
 export const profiles = pgTable('profiles', {
@@ -113,7 +142,7 @@ export const profiles = pgTable('profiles', {
   full_name: text('full_name'),
   created_at: timestamp('created_at').defaultNow(),
   updated_at: timestamp('updated_at').defaultNow(),
-})
+});
 
 // Таблица отзывов (видео)
 export const reviews = pgTable('reviews', {
@@ -126,21 +155,23 @@ export const reviews = pgTable('reviews', {
   // Прямая ссылка на превью-картинку (для красивого отображения до воспроизведения)
   thumbnail_url: text('thumbnail_url'),
 
-  product_id: uuid('product_id').references(() => products.id, { onDelete: 'set null' }),
+  product_id: uuid('product_id').references(() => products.id, {
+    onDelete: 'set null',
+  }),
   is_approved: boolean('is_approved').default(false),
   sort_order: integer('sort_order').default(0),
   created_at: timestamp('created_at').defaultNow(),
   updated_at: timestamp('updated_at').defaultNow(),
-})
+});
 
 // Отношения
 export const categoriesRelations = relations(categories, ({ many }) => ({
   products: many(products),
-}))
+}));
 
 export const manufacturersRelations = relations(manufacturers, ({ many }) => ({
   products: many(products),
-}))
+}));
 
 export const productsRelations = relations(products, ({ one, many }) => ({
   category: one(categories, {
@@ -153,11 +184,11 @@ export const productsRelations = relations(products, ({ one, many }) => ({
   }),
   orderItems: many(orderItems),
   reviews: many(reviews),
-}))
+}));
 
 export const ordersRelations = relations(orders, ({ many }) => ({
   items: many(orderItems),
-}))
+}));
 
 export const orderItemsRelations = relations(orderItems, ({ one }) => ({
   order: one(orders, {
@@ -168,11 +199,11 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
     fields: [orderItems.product_id],
     references: [products.id],
   }),
-}))
+}));
 
 export const reviewsRelations = relations(reviews, ({ one }) => ({
   product: one(products, {
     fields: [reviews.product_id],
     references: [products.id],
   }),
-}))
+}));

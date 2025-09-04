@@ -3,7 +3,9 @@
 ## Шаги настройки:
 
 ### 1. Создание бота (уже сделано ✅)
+
 Если еще не создали:
+
 - Напишите @BotFather в Telegram
 - Отправьте `/newbot`
 - Выберите имя и username для бота
@@ -12,6 +14,7 @@
 ### 2. Настройка переменных окружения
 
 Добавьте в файл `.env.local`:
+
 ```env
 TELEGRAM_BOT_TOKEN=your_bot_token_here
 TELEGRAM_CHAT_ID=your_chat_id_here
@@ -20,6 +23,7 @@ TELEGRAM_CHAT_ID=your_chat_id_here
 ### 3. Получение Chat ID
 
 **Способ 1 - Автоматический (рекомендуется):**
+
 1. Запустите скрипт диагностики:
    ```bash
    node scripts/setup-telegram.js
@@ -30,6 +34,7 @@ TELEGRAM_CHAT_ID=your_chat_id_here
 5. Скопируйте Chat ID в `.env.local`
 
 **Способ 2 - Ручной:**
+
 1. Найдите вашего бота в Telegram по username
 2. Отправьте боту сообщение `/start`
 3. Откройте в браузере: `https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates`
@@ -39,6 +44,7 @@ TELEGRAM_CHAT_ID=your_chat_id_here
 ### 4. Тестирование
 
 Запустите скрипт для проверки:
+
 ```bash
 node scripts/setup-telegram.js
 ```
@@ -48,14 +54,17 @@ node scripts/setup-telegram.js
 ## Возможные ошибки:
 
 ### Ошибка 400 "Bad Request"
+
 - **Причина**: Неверный Chat ID или пользователь не начал диалог с ботом
 - **Решение**: Отправьте боту `/start` и получите правильный Chat ID
 
-### Ошибка 401 "Unauthorized" 
+### Ошибка 401 "Unauthorized"
+
 - **Причина**: Неверный токен бота
 - **Решение**: Проверьте токен в `.env.local`
 
 ### Ошибка 403 "Forbidden"
+
 - **Причина**: Пользователь заблокировал бота
 - **Решение**: Разблокируйте бота в Telegram
 

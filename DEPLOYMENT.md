@@ -5,22 +5,26 @@
 ### 1. Подготовка сервера
 
 #### Обновление системы
+
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
 #### Установка Node.js 18+
+
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 
 #### Установка PM2 для управления процессами
+
 ```bash
 sudo npm install -g pm2
 ```
 
 #### Установка Nginx
+
 ```bash
 sudo apt install nginx -y
 sudo systemctl enable nginx
@@ -100,15 +104,15 @@ module.exports = {
       cwd: '/var/www/fireworks-store',
       env: {
         NODE_ENV: 'production',
-        PORT: 3000
+        PORT: 3000,
       },
       instances: 1,
       autorestart: true,
       watch: false,
-      max_memory_restart: '1G'
-    }
-  ]
-}
+      max_memory_restart: '1G',
+    },
+  ],
+};
 ```
 
 ### 5. Запуск приложения
@@ -431,7 +435,7 @@ const nextConfig = {
     domains: ['images.pexels.com', 'your-domain.com'],
   },
   compress: true,
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
 ```

@@ -1,25 +1,29 @@
 // components/Header.tsx
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { Search, ShoppingCart, Phone, Menu } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { useCartStore } from '@/lib/cart-store'
-import { useState, useEffect } from 'react'
-import { ConsultationDialog } from '../consultation-dialog'
+import Link from 'next/link';
+import { Menu, Phone, Shield, ShoppingCart } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+import { useAuth } from '@/hooks/use-auth';
+import { useCartStore } from '@/lib/cart-store';
+
+import { ConsultationDialog } from '../consultation-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export function Header() {
-  const totalItems = useCartStore((state) => state.getTotalItems())
-  const [isSheetOpen, setIsSheetOpen] = useState(false)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [isHydrated, setIsHydrated] = useState(false)
+  const totalItems = useCartStore(state => state.getTotalItems());
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const { role } = useAuth();
 
   // Hydration check to prevent server-client mismatch
   useEffect(() => {
-    setIsHydrated(true)
-  }, [])
+    setIsHydrated(true);
+  }, []);
 
   const navItems = [
     { href: '/', label: 'Главная' },
@@ -27,23 +31,25 @@ export function Header() {
     { href: '/services/launching', label: 'Услуги' },
     { href: '/delivery', label: 'Доставка / Самовывоз' },
     { href: '/about', label: 'О нас' },
-  ]
+  ];
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center space-x-4">
               <Link href="/" className="flex items-center space-x-2">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">🎆</span>
+                <div className="flex size-8 items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-red-500">
+                  <span className="text-sm font-bold text-white">🎆</span>
                 </div>
-                <span className="font-bold text-xl text-primary">КупитьСалюты</span>
+                <span className="text-xl font-bold text-primary">
+                  КупитьСалюты
+                </span>
               </Link>
 
-              <nav className="hidden md:flex items-center space-x-6">
-                {navItems.map((item) => (
+              <nav className="hidden items-center space-x-6 md:flex">
+                {navItems.map(item => (
                   <Link
                     key={item.href}
                     href={item.href}
@@ -52,6 +58,15 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
+                {role === 'admin' && (
+                  <Link
+                    href="/admin"
+                    className="flex items-center text-sm font-medium transition-colors hover:text-primary"
+                  >
+                    <Shield className="mr-1 size-4" />
+                    Админ
+                  </Link>
+                )}
               </nav>
             </div>
 
@@ -60,22 +75,27 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="hidden md:flex items-center space-x-1"
+                className="hidden items-center space-x-1 md:flex"
                 onClick={() => setIsDialogOpen(true)}
                 aria-label="Открыть форму консультации"
               >
-                <Phone className="h-4 w-4" />
+                <Phone className="size-4" />
                 <span className="text-sm">Консультация</span>
               </Button>
 
               {/* Кнопка корзины */}
               <Link href="/cart">
-                <Button variant="ghost" size="sm" className="relative" aria-label="Перейти в корзину">
-                  <ShoppingCart className="h-4 w-4" />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="relative"
+                  aria-label="Перейти в корзину"
+                >
+                  <ShoppingCart className="size-4" />
                   {isHydrated && totalItems > 0 && (
                     <Badge
                       variant="destructive"
-                      className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                      className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full p-0 text-xs"
                     >
                       {totalItems}
                     </Badge>
@@ -86,13 +106,18 @@ export function Header() {
               {/* Мобильное меню */}
               <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm" className="md:hidden" aria-label="Открыть меню">
-                    <Menu className="h-4 w-4" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="md:hidden"
+                    aria-label="Открыть меню"
+                  >
+                    <Menu className="size-4" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right" className="w-80">
-                  <nav className="flex flex-col space-y-4 mt-8">
-                    {navItems.map((item) => (
+                  <nav className="mt-8 flex flex-col space-y-4">
+                    {navItems.map(item => (
                       <Link
                         key={item.href}
                         href={item.href}
@@ -102,16 +127,26 @@ export function Header() {
                         {item.label}
                       </Link>
                     ))}
+                    {role === 'admin' && (
+                      <Link
+                        href="/admin"
+                        className="flex items-center text-sm font-medium transition-colors hover:text-primary"
+                        onClick={() => setIsSheetOpen(false)}
+                      >
+                        <Shield className="mr-2 size-4" />
+                        Админ-панель
+                      </Link>
+                    )}
                     <Button
                       variant="outline"
                       className="justify-start"
                       onClick={() => {
-                        setIsSheetOpen(false)
-                        setIsDialogOpen(true)
+                        setIsSheetOpen(false);
+                        setIsDialogOpen(true);
                       }}
                       aria-label="Открыть форму консультации"
                     >
-                      <Phone className="h-4 w-4 mr-2" />
+                      <Phone className="mr-2 size-4" />
                       Консультация
                     </Button>
                   </nav>
@@ -122,9 +157,8 @@ export function Header() {
         </div>
       </header>
 
-
       {/* Единый диалог для всей страницы */}
       <ConsultationDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </>
-  )
+  );
 }

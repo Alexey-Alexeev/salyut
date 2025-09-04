@@ -1,37 +1,37 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
-import { Lock, Mail } from 'lucide-react'
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { supabase } from '@/lib/supabase';
+import { toast } from 'sonner';
+import { Lock, Mail } from 'lucide-react';
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const router = useRouter()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
-      })
+      });
 
       if (error) {
-        setError(error.message)
-        return
+        setError(error.message);
+        return;
       }
 
       if (data.user) {
@@ -40,22 +40,22 @@ export default function AdminLoginPage() {
           .from('profiles')
           .select('role')
           .eq('user_id', data.user.id)
-          .single()
+          .single();
 
         if (profile?.role === 'admin') {
-          toast.success('Вход выполнен успешно')
-          router.push('/admin')
+          toast.success('Вход выполнен успешно');
+          router.push('/admin');
         } else {
-          setError('У вас нет доступа к административной панели')
-          await supabase.auth.signOut()
+          setError('У вас нет доступа к административной панели');
+          await supabase.auth.signOut();
         }
       }
     } catch (error) {
-      setError('Произошла ошибка при входе')
+      setError('Произошла ошибка при входе');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/50 px-4">
@@ -82,7 +82,7 @@ export default function AdminLoginPage() {
                   id="email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                   placeholder="admin@example.com"
                   className="pl-10"
                   required
@@ -98,7 +98,7 @@ export default function AdminLoginPage() {
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="pl-10"
                   required
@@ -106,16 +106,12 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={loading}
-            >
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Вход...' : 'Войти'}
             </Button>
           </form>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

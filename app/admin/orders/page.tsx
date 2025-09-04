@@ -1,16 +1,36 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
-import { OrderStats } from '@/components/admin/order-stats'
-import { supabase } from '@/lib/supabase'
-import { toast } from 'sonner'
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
+import { OrderStats } from '@/components/admin/order-stats';
+import { supabase } from '@/lib/supabase';
+import { toast } from 'sonner';
 import {
   Search,
   Eye,
@@ -19,96 +39,102 @@ import {
   Phone,
   User,
   Truck,
-  Store
-} from 'lucide-react'
-import Link from 'next/link'
+  Store,
+} from 'lucide-react';
+import Link from 'next/link';
 
 interface Order {
-  id: string
-  customer_name: string
-  customer_phone: string
-  customer_contact: string | null
-  contact_method: 'telegram' | 'whatsapp' | null
-  total_amount: number
-  delivery_cost: number
-  discount_amount: number
-  status: 'created' | 'in_progress' | 'completed' | 'cancelled'
-  comment: string | null
-  delivery_method: 'delivery' | 'pickup'
-  delivery_address: string | null
-  created_at: string
+  id: string;
+  customer_name: string;
+  customer_phone: string;
+  customer_contact: string | null;
+  contact_method: 'telegram' | 'whatsapp' | null;
+  total_amount: number;
+  delivery_cost: number;
+  discount_amount: number;
+  status: 'created' | 'in_progress' | 'completed' | 'cancelled';
+  comment: string | null;
+  delivery_method: 'delivery' | 'pickup';
+  delivery_address: string | null;
+  created_at: string;
 }
 
 interface OrderStats {
-  total: number
-  created: number
-  in_progress: number
-  completed: number
-  cancelled: number
-  totalRevenue: number
+  total: number;
+  created: number;
+  in_progress: number;
+  completed: number;
+  cancelled: number;
+  totalRevenue: number;
 }
 
 export default function AdminOrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([])
+  const [orders, setOrders] = useState<Order[]>([]);
   const [stats, setStats] = useState<OrderStats>({
     total: 0,
     created: 0,
     in_progress: 0,
     completed: 0,
     cancelled: 0,
-    totalRevenue: 0
-  })
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>('all')
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+    totalRevenue: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    loadOrders()
-    loadStats()
-  }, [currentPage, statusFilter])
+    loadOrders();
+    loadStats();
+  }, [currentPage, statusFilter]);
 
   const loadOrders = async () => {
     try {
       let query = supabase
         .from('orders')
-        .select('id, customer_name, customer_phone, customer_contact, contact_method, total_amount, delivery_cost, discount_amount, status, comment, delivery_method, delivery_address, created_at')
-        .order('created_at', { ascending: false })
+        .select(
+          'id, customer_name, customer_phone, customer_contact, contact_method, total_amount, delivery_cost, discount_amount, status, comment, delivery_method, delivery_address, created_at'
+        )
+        .order('created_at', { ascending: false });
 
       if (statusFilter !== 'all') {
-        query = query.eq('status', statusFilter)
+        query = query.eq('status', statusFilter);
       }
 
       if (searchTerm) {
-        query = query.or(`customer_name.ilike.%${searchTerm}%,customer_phone.ilike.%${searchTerm}%`)
+        query = query.or(
+          `customer_name.ilike.%${searchTerm}%,customer_phone.ilike.%${searchTerm}%`
+        );
       }
 
-      const { data, error } = await query
-        .range((currentPage - 1) * 10, currentPage * 10 - 1)
+      const { data, error } = await query.range(
+        (currentPage - 1) * 10,
+        currentPage * 10 - 1
+      );
 
-      if (error) throw error
+      if (error) throw error;
 
-      setOrders(data || [])
+      setOrders(data || []);
 
       // Получаем общее количество для пагинации
       const { count } = await supabase
         .from('orders')
-        .select('*', { count: 'exact', head: true })
+        .select('*', { count: 'exact', head: true });
 
-      setTotalPages(Math.ceil((count || 0) / 10))
+      setTotalPages(Math.ceil((count || 0) / 10));
     } catch (error) {
-      toast.error('Ошибка при загрузке заказов')
+      toast.error('Ошибка при загрузке заказов');
     }
-  }
+  };
 
   const loadStats = async () => {
     try {
       const { data, error } = await supabase
         .from('orders')
-        .select('status, total_amount')
+        .select('status, total_amount');
 
-      if (error) throw error
+      if (error) throw error;
 
       const stats = {
         total: data.length,
@@ -116,45 +142,62 @@ export default function AdminOrdersPage() {
         in_progress: data.filter(o => o.status === 'in_progress').length,
         completed: data.filter(o => o.status === 'completed').length,
         cancelled: data.filter(o => o.status === 'cancelled').length,
-        totalRevenue: data.reduce((sum, order) => sum + order.total_amount, 0)
-      }
+        totalRevenue: data.reduce((sum, order) => sum + order.total_amount, 0),
+      };
 
-      setStats(stats)
+      setStats(stats);
     } catch (error) {
-      toast.error('Ошибка при загрузке статистики')
+      toast.error('Ошибка при загрузке статистики');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
       const { error } = await supabase
         .from('orders')
         .update({ status: newStatus })
-        .eq('id', orderId)
+        .eq('id', orderId);
 
-      if (error) throw error
+      if (error) throw error;
 
-      toast.success('Статус заказа обновлен')
-      loadOrders()
-      loadStats()
+      toast.success('Статус заказа обновлен');
+      loadOrders();
+      loadStats();
     } catch (error) {
-      toast.error('Ошибка при обновлении статуса')
+      toast.error('Ошибка при обновлении статуса');
     }
-  }
+  };
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      created: { label: 'Новый', variant: 'default' as const, color: 'bg-blue-100 text-blue-800' },
-      in_progress: { label: 'В обработке', variant: 'secondary' as const, color: 'bg-yellow-100 text-yellow-800' },
-      completed: { label: 'Завершен', variant: 'default' as const, color: 'bg-green-100 text-green-800' },
-      cancelled: { label: 'Отменен', variant: 'destructive' as const, color: 'bg-red-100 text-red-800' }
-    }
+      created: {
+        label: 'Новый',
+        variant: 'default' as const,
+        color: 'bg-blue-100 text-blue-800',
+      },
+      in_progress: {
+        label: 'В обработке',
+        variant: 'secondary' as const,
+        color: 'bg-yellow-100 text-yellow-800',
+      },
+      completed: {
+        label: 'Завершен',
+        variant: 'default' as const,
+        color: 'bg-green-100 text-green-800',
+      },
+      cancelled: {
+        label: 'Отменен',
+        variant: 'destructive' as const,
+        color: 'bg-red-100 text-red-800',
+      },
+    };
 
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.created
-    return <Badge variant={config.variant}>{config.label}</Badge>
-  }
+    const config =
+      statusConfig[status as keyof typeof statusConfig] || statusConfig.created;
+    return <Badge variant={config.variant}>{config.label}</Badge>;
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ru-RU', {
@@ -162,9 +205,9 @@ export default function AdminOrdersPage() {
       month: '2-digit',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+      minute: '2-digit',
+    });
+  };
 
   if (loading) {
     return (
@@ -174,7 +217,7 @@ export default function AdminOrdersPage() {
           <p>Загрузка...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -185,9 +228,7 @@ export default function AdminOrdersPage() {
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">Управление заказами</h1>
             <Button asChild variant="outline">
-              <Link href="/admin">
-                ← Назад к дашборду
-              </Link>
+              <Link href="/admin">← Назад к дашборду</Link>
             </Button>
           </div>
         </div>
@@ -208,7 +249,7 @@ export default function AdminOrdersPage() {
                 <Input
                   placeholder="Поиск по имени или телефону..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
               </div>
@@ -226,11 +267,13 @@ export default function AdminOrdersPage() {
                 </SelectContent>
               </Select>
 
-              <Button onClick={() => {
-                setSearchTerm('')
-                setStatusFilter('all')
-                setCurrentPage(1)
-              }}>
+              <Button
+                onClick={() => {
+                  setSearchTerm('');
+                  setStatusFilter('all');
+                  setCurrentPage(1);
+                }}
+              >
                 Сбросить фильтры
               </Button>
             </div>
@@ -257,7 +300,7 @@ export default function AdminOrdersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {orders.map((order) => (
+                {orders.map(order => (
                   <TableRow key={order.id}>
                     <TableCell className="font-medium">
                       #{order.id.slice(0, 8)}
@@ -276,7 +319,8 @@ export default function AdminOrdersPage() {
                         </div>
                         {order.customer_contact && (
                           <div className="text-sm text-muted-foreground">
-                            {order.contact_method === 'telegram' ? '📱' : '📞'} {order.customer_contact}
+                            {order.contact_method === 'telegram' ? '📱' : '📞'}{' '}
+                            {order.customer_contact}
                           </div>
                         )}
                       </div>
@@ -306,11 +350,15 @@ export default function AdminOrdersPage() {
                     <TableCell>
                       <div className="space-y-1">
                         <div className="font-medium">
-                          {(order.total_amount - order.discount_amount).toLocaleString('ru-RU')} ₽
+                          {(
+                            order.total_amount - order.discount_amount
+                          ).toLocaleString('ru-RU')}{' '}
+                          ₽
                         </div>
                         {order.discount_amount > 0 && (
                           <div className="text-sm text-green-600">
-                            Скидка: {order.discount_amount.toLocaleString('ru-RU')} ₽
+                            Скидка:{' '}
+                            {order.discount_amount.toLocaleString('ru-RU')} ₽
                           </div>
                         )}
                       </div>
@@ -318,14 +366,18 @@ export default function AdminOrdersPage() {
                     <TableCell>
                       <Select
                         value={order.status}
-                        onValueChange={(value) => updateOrderStatus(order.id, value)}
+                        onValueChange={value =>
+                          updateOrderStatus(order.id, value)
+                        }
                       >
                         <SelectTrigger className="w-32">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="created">Новый</SelectItem>
-                          <SelectItem value="in_progress">В обработке</SelectItem>
+                          <SelectItem value="in_progress">
+                            В обработке
+                          </SelectItem>
                           <SelectItem value="completed">Завершен</SelectItem>
                           <SelectItem value="cancelled">Отменен</SelectItem>
                         </SelectContent>
@@ -367,26 +419,38 @@ export default function AdminOrdersPage() {
                 <PaginationItem>
                   <PaginationPrevious
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    className={
+                      currentPage === 1
+                        ? 'pointer-events-none opacity-50'
+                        : 'cursor-pointer'
+                    }
                   />
                 </PaginationItem>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
-                      onClick={() => setCurrentPage(page)}
-                      isActive={currentPage === page}
-                      className="cursor-pointer"
-                    >
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  page => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        onClick={() => setCurrentPage(page)}
+                        isActive={currentPage === page}
+                        className="cursor-pointer"
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )
+                )}
 
                 <PaginationItem>
                   <PaginationNext
-                    onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                    className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    onClick={() =>
+                      setCurrentPage(Math.min(totalPages, currentPage + 1))
+                    }
+                    className={
+                      currentPage === totalPages
+                        ? 'pointer-events-none opacity-50'
+                        : 'cursor-pointer'
+                    }
                   />
                 </PaginationItem>
               </PaginationContent>
@@ -395,5 +459,5 @@ export default function AdminOrdersPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

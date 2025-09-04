@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { Button } from '@/components/ui/button'
-import { Home, ArrowLeft } from 'lucide-react'
+import Link from 'next/link';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Home, ArrowLeft } from 'lucide-react';
 
 export default function NotFound() {
   return (
@@ -18,13 +18,14 @@ export default function NotFound() {
             <span className="text-6xl font-bold text-primary">404</span>
           </div>
         </div>
-        
+
         <div className="space-y-4">
           <h1 className="text-4xl font-bold text-primary">
             Страница не найдена
           </h1>
           <p className="text-lg text-muted-foreground">
-            К сожалению, запрашиваемая страница не существует или была перемещена
+            К сожалению, запрашиваемая страница не существует или была
+            перемещена
           </p>
         </div>
 
@@ -45,10 +46,11 @@ export default function NotFound() {
 
         <div className="pt-8">
           <p className="text-sm text-muted-foreground">
-            Если вы считаете, что это ошибка, используйте форму консультации на сайте
+            Если вы считаете, что это ошибка, используйте форму консультации на
+            сайте
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }

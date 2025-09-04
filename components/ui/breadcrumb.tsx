@@ -1,20 +1,23 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { ChevronRight, Home } from 'lucide-react'
+import Link from 'next/link';
+import { ChevronRight, Home } from 'lucide-react';
 
 export interface BreadcrumbItem {
-  label: string
-  href?: string
+  label: string;
+  href?: string;
 }
 
 interface BreadcrumbProps {
-  items: BreadcrumbItem[]
+  items: BreadcrumbItem[];
 }
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <nav aria-label="Хлебные крошки" className="flex items-center space-x-1 text-sm text-muted-foreground">
+    <nav
+      aria-label="Хлебные крошки"
+      className="flex items-center space-x-1 text-sm text-muted-foreground"
+    >
       <Link
         href="/"
         className="flex items-center hover:text-foreground transition-colors"
@@ -39,5 +42,5 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
         </div>
       ))}
     </nav>
-  )
+  );
 }
