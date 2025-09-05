@@ -133,10 +133,59 @@ export const orderItems = pgTable('order_items', {
   created_at: timestamp('created_at').defaultNow(),
 });
 
+// Таблица завершенных заказов (отдельная от основных заказов)
+export const completedOrders = pgTable('completed_orders', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  original_order_id: uuid('original_order_id')
+    .references(() => orders.id, { onDelete: 'cascade' })
+    .notNull(),
+
+  // Административные поля
+  final_order_number: text('final_order_number'), // Номер заказа для администраторов
+
+  // Финальные данные клиента (может отличаться от исходных)
+  final_customer_name: text('final_customer_name').notNull(),
+  final_customer_phone: text('final_customer_phone').notNull(),
+  final_customer_contact: text('final_customer_contact'),
+  final_contact_method: text('final_contact_method', { enum: contactMethodEnum }),
+
+  // Финальные расчеты
+  final_delivery_method: text('final_delivery_method', { enum: deliveryMethodEnum }).notNull(),
+  final_delivery_cost: integer('final_delivery_cost').notNull().default(0),
+  final_discount_amount: integer('final_discount_amount').default(0),
+  final_total_amount: integer('final_total_amount').notNull(),
+  has_manual_discount: boolean('has_manual_discount').default(false),
+
+  // Комментарии и метаданные
+  admin_comment: text('admin_comment'),
+  completed_by: uuid('completed_by').references(() => profiles.id),
+
+  // Временные метки
+  completed_at: timestamp('completed_at').defaultNow(),
+  created_at: timestamp('created_at').defaultNow(),
+});
+
+// Таблица товаров в завершенных заказах
+export const completedOrderItems = pgTable('completed_order_items', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  completed_order_id: uuid('completed_order_id')
+    .references(() => completedOrders.id, { onDelete: 'cascade' })
+    .notNull(),
+  product_id: uuid('product_id').references(() => products.id, {
+    onDelete: 'set null',
+  }),
+
+  // Финальные данные товара
+  final_quantity: integer('final_quantity').notNull(),
+  final_price_at_time: integer('final_price_at_time').notNull(),
+
+  created_at: timestamp('created_at').defaultNow(),
+});
+
 // Таблица профилей пользователей (для админов)
 export const profiles = pgTable('profiles', {
   id: uuid('id').defaultRandom().primaryKey(),
-  user_id: uuid('user_id').notNull().unique(), // Supabase Auth user ID (ИСПРАВЛЕНО: было text)
+  user_id: text('user_id').notNull().unique(), // Supabase Auth user ID - keeping as text to avoid casting issues
   role: text('role', { enum: userRoleEnum }).default('user'),
   email: text('email'),
   full_name: text('full_name'),
@@ -186,8 +235,9 @@ export const productsRelations = relations(products, ({ one, many }) => ({
   reviews: many(reviews),
 }));
 
-export const ordersRelations = relations(orders, ({ many }) => ({
+export const ordersRelations = relations(orders, ({ many, one }) => ({
   items: many(orderItems),
+  completedOrder: one(completedOrders),
 }));
 
 export const orderItemsRelations = relations(orderItems, ({ one }) => ({
@@ -197,6 +247,29 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
   }),
   product: one(products, {
     fields: [orderItems.product_id],
+    references: [products.id],
+  }),
+}));
+
+export const completedOrdersRelations = relations(completedOrders, ({ one, many }) => ({
+  originalOrder: one(orders, {
+    fields: [completedOrders.original_order_id],
+    references: [orders.id],
+  }),
+  items: many(completedOrderItems),
+  completedBy: one(profiles, {
+    fields: [completedOrders.completed_by],
+    references: [profiles.id],
+  }),
+}));
+
+export const completedOrderItemsRelations = relations(completedOrderItems, ({ one }) => ({
+  completedOrder: one(completedOrders, {
+    fields: [completedOrderItems.completed_order_id],
+    references: [completedOrders.id],
+  }),
+  product: one(products, {
+    fields: [completedOrderItems.product_id],
     references: [products.id],
   }),
 }));

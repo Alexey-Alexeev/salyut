@@ -40,3 +40,11 @@ next-env.d.ts
 .idea/
 *.swp
 *.swo
+
+# Database migrations (auto-generated)
+# Only commit the base schema and important migrations
+db/migrations/*_snapshot.json
+db/migrations/meta/[0-9]*_snapshot.json
+
+# Ignore individual migration files - only keep the schema
+# db/migrations/*.sql

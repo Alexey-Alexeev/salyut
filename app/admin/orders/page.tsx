@@ -29,6 +29,7 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { OrderStats } from '@/components/admin/order-stats';
+import { EditOrderDialog } from '@/components/admin/edit-order-dialog';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 import {
@@ -57,6 +58,7 @@ interface Order {
   delivery_method: 'delivery' | 'pickup';
   delivery_address: string | null;
   created_at: string;
+  items?: any[];
 }
 
 interface OrderStats {
@@ -83,6 +85,9 @@ export default function AdminOrdersPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useEffect(() => {
     loadOrders();
@@ -150,6 +155,57 @@ export default function AdminOrdersPage() {
       toast.error('Ошибка при загрузке статистики');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStatusChange = async (order: Order, newStatus: string) => {
+    if (newStatus === 'completed') {
+      try {
+        // Use the API endpoint that properly handles the relationship
+        const response = await fetch(`/api/orders/${order.id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch order details');
+        }
+
+        const orderWithItems = await response.json();
+        console.log('order with items data', orderWithItems);
+
+        setSelectedOrder({ ...order, items: orderWithItems.items });
+        setIsModalOpen(true);
+      } catch (error) {
+        console.error('Error fetching order details:', error);
+        toast.error('Ошибка при загрузке товаров заказа');
+      }
+    } else {
+      updateOrderStatus(order.id, newStatus);
+    }
+  };
+
+  const updateOrder = async (values: any) => {
+    if (!selectedOrder) return;
+
+    console.log("Updating order with values:", values);
+
+    try {
+      const response = await fetch(`/api/orders/${selectedOrder.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update order');
+      }
+
+      toast.success('Заказ обновлен');
+      loadOrders();
+      loadStats();
+      setIsModalOpen(false);
+      setSelectedOrder(null);
+    } catch (error) {
+      toast.error('Ошибка при обновлении заказа');
     }
   };
 
@@ -367,7 +423,7 @@ export default function AdminOrdersPage() {
                       <Select
                         value={order.status}
                         onValueChange={value =>
-                          updateOrderStatus(order.id, value)
+                          handleStatusChange(order, value)
                         }
                       >
                         <SelectTrigger className="w-32">
@@ -458,6 +514,19 @@ export default function AdminOrdersPage() {
           </div>
         )}
       </div>
+      {selectedOrder && (
+        <EditOrderDialog
+          order={{
+            ...selectedOrder,
+            customer_contact: selectedOrder.customer_contact || undefined,
+            comment: selectedOrder.comment || undefined,
+            items: selectedOrder.items || [],
+          }}
+          isOpen={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          onSave={updateOrder}
+        />
+      )}
     </div>
   );
 }
