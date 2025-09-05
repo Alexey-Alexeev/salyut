@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { ShoppingCart, User, Trash2, Search as SearchIcon } from 'lucide-react';
+import { ShoppingCart, User, Trash2, Search as SearchIcon, ChevronsUpDown, X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -31,7 +31,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
@@ -88,6 +87,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
   const [isLoading, setIsLoading] = useState(false);
   const [isProductPopoverOpen, setIsProductPopoverOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const productsListRef = useRef<HTMLDivElement | null>(null);
 
   const DISCOUNT_THRESHOLD_1 = 7000;
   const DISCOUNT_THRESHOLD_2 = 15000;
@@ -109,7 +109,6 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
     }
   }, []);
 
-  // Нормализация строк для корректного поиска (регистронезависимо, ё->е, удаление диакритик)
   const normalize = (s: string) =>
     s
       .toLowerCase()
@@ -155,7 +154,6 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
     }
   }, [isOpen, fetchProducts, order, form]);
 
-  // Фокус на input при открытии поповера
   useEffect(() => {
     if (isProductPopoverOpen) {
       setTimeout(() => {
@@ -163,8 +161,22 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
       }, 50);
     } else {
       setSearchTerm('');
+      setSelectedProductId('');
     }
   }, [isProductPopoverOpen]);
+
+  // Обработчик для скролла внутри поповера
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    if (productsListRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = productsListRef.current;
+      const isAtTop = scrollTop === 0;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight;
+
+      if ((e.deltaY < 0 && isAtTop) || (e.deltaY > 0 && isAtBottom)) {
+        e.stopPropagation();
+      }
+    }
+  }, []);
 
   const subtotalAmount = orderItems.reduce((acc, item) => acc + item.price_at_time * item.quantity, 0);
   const deliveryCost = form.watch('delivery_cost') || 0;
@@ -262,15 +274,15 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[70vh] pr-4">
+        <div className="max-h-[70vh] overflow-y-auto pr-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* Клиентские данные (read-only) */}
+              {/* Клиентские данные */}
               <Card className="border-orange-200 bg-gradient-to-r from-orange-50 to-red-50">
                 <CardContent className="pt-6">
                   <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-orange-800">
                     <User className="size-5" />
-                    Информация о клиенте (из оригинального заказа)
+                    Информация о клиенте
                   </h3>
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="space-y-2">
@@ -309,7 +321,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                     )}
                   </div>
                   <p className="mt-3 text-sm italic text-orange-600">
-                    ℹ️ Данные клиента берутся из оригинального заказа и не могут быть изменены
+                    ℹ️ Данные клиента берутся из оригинального заказа
                   </p>
                   {order.comment && (
                     <div className="mt-4 space-y-2">
@@ -389,55 +401,99 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                     )}
                   </div>
 
-                  {/* Добавление товара — INPUT внутри Popover (mobile-friendly) */}
+                  {/* Добавление товара - кастомная реализация */}
                   <div className="mt-4">
                     <FormLabel>Добавить товар</FormLabel>
                     <Popover open={isProductPopoverOpen} onOpenChange={setIsProductPopoverOpen}>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" role="combobox" className="w-full justify-between">
-                          {selectedProductId ? products.find((p) => p.id === selectedProductId)?.name : 'Выберите товар для добавления'}
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className="w-full justify-between"
+                        >
+                          <span className="truncate">
+                            {selectedProductId
+                              ? products.find((p) => p.id === selectedProductId)?.name
+                              : "Выберите товар для добавления"}
+                          </span>
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </PopoverTrigger>
 
-                      <PopoverContent className="w-[320px] p-3">
-                        <div className="relative mb-2">
-                          <SearchIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                          <Input
-                            ref={searchInputRef}
-                            placeholder="Поиск товаров..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-10"
-                          />
+                      <PopoverContent
+                        className="w-[var(--radix-popover-trigger-width)] p-0"
+                        align="start"
+                        onWheel={handleWheel}
+                        onInteractOutside={(e) => {
+                          // Предотвращаем закрытие при клике на скроллбар
+                          if (e.target instanceof Element && e.target.closest('[class*="scrollbar"]')) {
+                            e.preventDefault();
+                          }
+                        }}
+                      >
+                        <div className="p-2 border-b">
+                          <div className="relative">
+                            <SearchIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Input
+                              ref={searchInputRef}
+                              placeholder="Поиск товаров..."
+                              value={searchTerm}
+                              onChange={(e) => setSearchTerm(e.target.value)}
+                              className="pl-8"
+                            />
+                            {searchTerm && (
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setSearchTerm('')}
+                                className="absolute right-1 top-1 h-6 w-6 p-0"
+                              >
+                                <X className="h-3 w-3" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
 
-                        <Separator className="mb-2" />
-
-                        <ScrollArea className="max-h-60">
-                          {filteredProducts.length > 0 ? (
-                            filteredProducts.map((product) => (
-                              <button
-                                key={product.id}
-                                type="button"
-                                onClick={() => handleAddProduct(product.id)}
-                                className="w-full text-left py-2 px-2 rounded hover:bg-muted flex flex-col"
-                              >
-                                <span className="font-medium break-words">{product.name}</span>
-                                <span className="text-xs text-muted-foreground mt-1">
-                                  {product.price.toLocaleString('ru-RU')} ₽
-                                </span>
-                              </button>
-                            ))
+                        <div
+                          ref={productsListRef}
+                          className="max-h-[250px] overflow-y-auto"
+                          style={{
+                            WebkitOverflowScrolling: 'touch',
+                            scrollbarWidth: 'thin',
+                            scrollbarColor: '#cbd5e1 #f1f5f9'
+                          }}
+                        >
+                          {filteredProducts.length === 0 ? (
+                            <div className="py-6 text-center text-sm text-muted-foreground">
+                              Товары не найдены
+                            </div>
                           ) : (
-                            <div className="p-4 text-center text-muted-foreground">Товары не найдены</div>
+                            <div className="p-1">
+                              {filteredProducts.map((product) => (
+                                <div
+                                  key={product.id}
+                                  className="flex items-center justify-between p-2 rounded-md hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
+                                  onClick={() => handleAddProduct(product.id)}
+                                >
+                                  <div className="flex flex-col flex-1 min-w-0">
+                                    <span className="font-medium truncate">{product.name}</span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {product.price.toLocaleString("ru-RU")} ₽
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
                           )}
-                        </ScrollArea>
+                        </div>
                       </PopoverContent>
                     </Popover>
                   </div>
                 </CardContent>
               </Card>
 
+              {/* Остальные секции остаются без изменений */}
               {/* Доставка и скидки */}
               <Card>
                 <CardContent className="pt-6">
@@ -535,7 +591,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
               </DialogFooter>
             </form>
           </Form>
-        </ScrollArea>
+        </div>
       </DialogContent>
     </Dialog>
   );
