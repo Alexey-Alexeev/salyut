@@ -63,6 +63,21 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   console.log('PATCH request data:', { id, status, items, orderUpdateData });
 
   try {
+    // First, get the current order to check its status
+    const [currentOrder] = await db
+      .select()
+      .from(orders)
+      .where(eq(orders.id, id));
+
+    if (!currentOrder) {
+      return new NextResponse('Order not found', { status: 404 });
+    }
+
+    // Prevent changing status of completed orders
+    if (currentOrder.status === 'completed' && status && status !== 'completed') {
+      return new NextResponse('Cannot change status of completed orders', { status: 400 });
+    }
+
     if (status === 'completed') {
       // Create a completed order record instead of modifying the original
       const [completedOrder] = await db
@@ -78,7 +93,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
           final_discount_amount: Number(orderUpdateData.discount_amount || 0),
           final_total_amount: Number(orderUpdateData.total_amount),
           has_manual_discount: Boolean(orderUpdateData.has_discount), // Map has_discount to has_manual_discount
-          admin_comment: orderUpdateData.comment || null,
+          admin_comment: orderUpdateData.admin_comment || null,
           // TODO: Add completed_by from authenticated admin user
         })
         .returning();

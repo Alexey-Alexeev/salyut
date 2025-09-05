@@ -216,11 +216,18 @@ export default function AdminOrdersPage() {
         .update({ status: newStatus })
         .eq('id', orderId);
 
-      if (error) throw error;
-
-      toast.success('Статус заказа обновлен');
-      loadOrders();
-      loadStats();
+      if (error) {
+        // Check if it's the specific error about completed orders
+        if (error.message.includes('Cannot change status of completed orders')) {
+          toast.error('Невозможно изменить статус завершенного заказа');
+        } else {
+          throw error;
+        }
+      } else {
+        toast.success('Статус заказа обновлен');
+        loadOrders();
+        loadStats();
+      }
     } catch (error) {
       toast.error('Ошибка при обновлении статуса');
     }
@@ -425,6 +432,7 @@ export default function AdminOrdersPage() {
                         onValueChange={value =>
                           handleStatusChange(order, value)
                         }
+                        disabled={order.status === 'completed'} // Disable if already completed
                       >
                         <SelectTrigger className="w-32">
                           <SelectValue />
@@ -434,10 +442,17 @@ export default function AdminOrdersPage() {
                           <SelectItem value="in_progress">
                             В обработке
                           </SelectItem>
-                          <SelectItem value="completed">Завершен</SelectItem>
+                          <SelectItem value="completed" disabled={order.status === 'completed'}>
+                            Завершен
+                          </SelectItem>
                           <SelectItem value="cancelled">Отменен</SelectItem>
                         </SelectContent>
                       </Select>
+                      {order.status === 'completed' && (
+                        <div className="text-muted-foreground mt-1 text-xs">
+                          Статус изменить нельзя
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">

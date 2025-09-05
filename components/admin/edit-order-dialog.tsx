@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { X, Plus, Trash2, ShoppingCart, User } from 'lucide-react';
+import { X, Plus, Trash2, ShoppingCart, User, Search } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -40,7 +40,8 @@ const formSchema = z.object({
   delivery_cost: z.number().min(0, 'Стоимость доставки не может быть отрицательной'),
   has_manual_discount: z.boolean(),
   discount_amount: z.number().min(0, 'Скидка не может быть отрицательной'),
-  comment: z.string().optional(),
+  comment: z.string().optional(), // User comment - read only
+  admin_comment: z.string().optional(), // Admin comment - editable
 });
 
 interface Product {
@@ -79,6 +80,9 @@ interface EditOrderDialogProps {
 
 export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrderDialogProps) {
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // For search functionality
+  const [searchTerm, setSearchTerm] = useState(''); // Search term for products
+  const [selectedProductId, setSelectedProductId] = useState<string>(''); // For controlling Select value
   const [orderItems, setOrderItems] = useState<OrderItem[]>(order.items || []);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -97,19 +101,42 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
 
       if (error) throw error;
       setProducts(data || []);
+      setFilteredProducts(data || []); // Initialize filtered products
     } catch (error) {
       toast.error('Ошибка при загрузке продуктов');
       console.error('Error fetching products:', error);
     }
   }, []);
 
+  // Filter products based on search term
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = products.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts(products);
+    }
+  }, [searchTerm, products]);
+
   useEffect(() => {
     if (isOpen) {
       fetchProducts();
       // Reset order items when opening dialog
       setOrderItems(order.items || []);
+
+      // Reset form with current order data
+      form.reset({
+        delivery_method: order.delivery_method || 'delivery',
+        delivery_cost: typeof order.delivery_cost === 'number' ? order.delivery_cost : 0,
+        has_manual_discount: order.discount_amount > 0,
+        discount_amount: typeof order.discount_amount === 'number' ? order.discount_amount : 0,
+        comment: order.comment || undefined,
+        admin_comment: undefined, // Will be populated from completed order if exists
+      });
     }
-  }, [isOpen, fetchProducts, order.items]);
+  }, [isOpen, fetchProducts, order]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -118,7 +145,8 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
       delivery_cost: typeof order.delivery_cost === 'number' ? order.delivery_cost : 0,
       has_manual_discount: order.discount_amount > 0,
       discount_amount: typeof order.discount_amount === 'number' ? order.discount_amount : 0,
-      comment: order.comment || '',
+      comment: order.comment || undefined, // Use undefined instead of empty string
+      admin_comment: undefined, // Will be populated from completed order if exists
     },
   });
 
@@ -161,6 +189,10 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
         };
         setOrderItems([...orderItems, newItem]);
       }
+
+      // Reset search term and selected product after selection
+      setSearchTerm('');
+      setSelectedProductId(''); // This will reset the Select to show placeholder
     }
   };
 
@@ -207,6 +239,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
         delivery_cost: Number(values.delivery_cost),
         total_amount: Number(finalAmount),
         comment: values.comment || null,
+        admin_comment: values.admin_comment || null, // Add admin comment
         discount_amount: Number(actualDiscountAmount),
         has_discount: values.has_manual_discount || actualDiscountAmount > 0,
         status: 'completed',
@@ -282,6 +315,14 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                   <p className="mt-3 text-sm italic text-orange-600">
                     ℹ️ Данные клиента берутся из оригинального заказа и не могут быть изменены
                   </p>
+                  {order.comment && (
+                    <div className="mt-4 space-y-2">
+                      <Label className="text-sm font-medium text-orange-700">Комментарий клиента</Label>
+                      <div className="rounded-md border border-orange-200 bg-white/70 p-3">
+                        {order.comment}
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -323,11 +364,43 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
 
                   <div className="mb-4 space-y-3">
                     {orderItems.map((item, index) => (
-                      <div key={item.id} className="flex flex-col gap-3 rounded-lg border p-3">
-                        <div className="flex items-center gap-3">
-                          <div className="min-w-0 flex-1">
-                            <p className="truncate font-medium">{item.product.name}</p>
-                          </div>
+                      <div key={item.id} className="flex items-center gap-3 rounded-lg border p-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate">{item.product.name}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {item.price_at_time.toLocaleString('ru-RU')} ₽ × {item.quantity} =
+                            <span className="font-semibold ml-1">
+                              {(item.price_at_time * item.quantity).toLocaleString('ru-RU')} ₽
+                            </span>
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => updateQuantity(index, item.quantity - 1)}
+                            disabled={item.quantity <= 1}
+                            className="size-8 p-0"
+                          >
+                            -
+                          </Button>
+                          <Input
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) => updateQuantity(index, Math.max(1, parseInt(e.target.value) || 1))}
+                            className="w-16 text-center text-sm"
+                            min={1}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => updateQuantity(index, item.quantity + 1)}
+                            className="size-8 p-0"
+                          >
+                            +
+                          </Button>
                           <Button
                             type="button"
                             variant="ghost"
@@ -337,58 +410,6 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                           >
                             <Trash2 className="size-4" />
                           </Button>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-2">
-                          <div>
-                            <Label className="text-xs">Цена за шт.</Label>
-                            <Input
-                              type="number"
-                              value={item.price_at_time}
-                              onChange={(e) => updatePrice(index, Math.max(0, parseInt(e.target.value) || 0))}
-                              className="text-sm"
-                              min={0}
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs">Количество</Label>
-                            <div className="flex items-center gap-1">
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => updateQuantity(index, item.quantity - 1)}
-                                disabled={item.quantity <= 1}
-                                className="size-8 p-0"
-                              >
-                                -
-                              </Button>
-                              <Input
-                                type="number"
-                                value={item.quantity}
-                                onChange={(e) => updateQuantity(index, Math.max(1, parseInt(e.target.value) || 1))}
-                                className="text-center text-sm"
-                                min={1}
-                              />
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => updateQuantity(index, item.quantity + 1)}
-                                className="size-8 p-0"
-                              >
-                                +
-                              </Button>
-                            </div>
-                          </div>
-                          <div>
-                            <Label className="text-xs">Сумма</Label>
-                            <Input
-                              value={`${(item.price_at_time * item.quantity).toLocaleString('ru-RU')} ₽`}
-                              className="text-sm font-semibold"
-                              readOnly
-                            />
-                          </div>
                         </div>
                       </div>
                     ))}
@@ -404,16 +425,48 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                   {/* Добавление товара */}
                   <div className="mt-4">
                     <FormLabel>Добавить товар</FormLabel>
-                    <Select onValueChange={handleAddProduct}>
+                    <Select
+                      value={selectedProductId}
+                      onValueChange={(value) => {
+                        handleAddProduct(value);
+                      }}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Выберите товар для добавления" />
                       </SelectTrigger>
                       <SelectContent>
-                        {products.map(product => (
-                          <SelectItem key={product.id} value={product.id}>
-                            {product.name} - {product.price.toLocaleString('ru-RU')} ₽
-                          </SelectItem>
-                        ))}
+                        <div className="p-2">
+                          <div className="relative">
+                            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Input
+                              placeholder="Поиск товаров..."
+                              value={searchTerm}
+                              onChange={(e) => setSearchTerm(e.target.value)}
+                              className="pl-8"
+                              onClick={(e) => e.stopPropagation()}
+                              onKeyDown={(e) => e.stopPropagation()}
+                            />
+                          </div>
+                        </div>
+                        <Separator />
+                        <ScrollArea className="h-60">
+                          {filteredProducts.length > 0 ? (
+                            filteredProducts.map(product => (
+                              <SelectItem key={product.id} value={product.id}>
+                                <div className="flex justify-between">
+                                  <span className="truncate max-w-[200px]">{product.name}</span>
+                                  <span className="ml-2 text-gray-500 whitespace-nowrap">
+                                    {product.price.toLocaleString('ru-RU')} ₽
+                                  </span>
+                                </div>
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <div className="p-4 text-center text-muted-foreground">
+                              Товары не найдены
+                            </div>
+                          )}
+                        </ScrollArea>
                       </SelectContent>
                     </Select>
                   </div>
@@ -435,7 +488,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                           <FormControl>
                             <Input
                               type="number"
-                              {...field}
+                              value={field.value || ''}
                               min={0}
                               placeholder="0"
                               onChange={(e) => {
@@ -478,7 +531,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                           <FormControl>
                             <Input
                               type="number"
-                              {...field}
+                              value={field.value || ''}
                               min={0}
                               placeholder="0"
                               onChange={(e) => {
@@ -495,17 +548,18 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                 </CardContent>
               </Card>
 
-              {/* Комментарий */}
+              {/* Комментарий администратора */}
               <FormField
                 control={form.control}
-                name="comment"
+                name="admin_comment"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Комментарий к заказу</FormLabel>
+                    <FormLabel>Комментарий администратора</FormLabel>
                     <FormControl>
                       <Textarea
-                        {...field}
-                        placeholder="Дополнительная информация о заказе..."
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                        placeholder="Комментарии и заметки для внутреннего использования..."
                         className="min-h-[100px]"
                       />
                     </FormControl>
