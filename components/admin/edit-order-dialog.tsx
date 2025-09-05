@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -85,6 +85,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
   const [selectedProductId, setSelectedProductId] = useState<string>(''); // For controlling Select value
   const [orderItems, setOrderItems] = useState<OrderItem[]>(order.items || []);
   const [isLoading, setIsLoading] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null); // Ref for search input
 
   // Constants from cart page
   const DISCOUNT_THRESHOLD_1 = 7000; // 5% discount
@@ -168,6 +169,19 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
   // Use manual discount if has_manual_discount is checked, otherwise use automatic
   const actualDiscountAmount = hasManualDiscount ? manualDiscountAmount : automaticDiscountAmount;
   const finalAmount = subtotalAmount + deliveryCost - actualDiscountAmount;
+
+  // Focus search input when dropdown opens (using a workaround since we can't directly detect dropdown open)
+  useEffect(() => {
+    if (searchInputRef.current && searchTerm === '') {
+      // Small delay to ensure the dropdown is open
+      const timer = setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [searchTerm]);
 
   const handleAddProduct = (productId: string) => {
     const product = products.find(p => p.id === productId);
@@ -364,10 +378,10 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
 
                   <div className="mb-4 space-y-3">
                     {orderItems.map((item, index) => (
-                      <div key={item.id} className="flex items-center gap-3 rounded-lg border p-3">
+                      <div key={item.id} className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-lg border p-3">
                         <div className="flex-1 min-w-0">
                           <p className="font-medium truncate">{item.product.name}</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground mt-1 sm:mt-0">
                             {item.price_at_time.toLocaleString('ru-RU')} ₽ × {item.quantity} =
                             <span className="font-semibold ml-1">
                               {(item.price_at_time * item.quantity).toLocaleString('ru-RU')} ₽
@@ -430,6 +444,16 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                       onValueChange={(value) => {
                         handleAddProduct(value);
                       }}
+                      onOpenChange={(open) => {
+                        // Focus search input when dropdown opens
+                        if (open && searchInputRef.current) {
+                          setTimeout(() => {
+                            if (searchInputRef.current) {
+                              searchInputRef.current.focus();
+                            }
+                          }, 50);
+                        }
+                      }}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Выберите товар для добавления" />
@@ -439,12 +463,21 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                           <div className="relative">
                             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
+                              ref={searchInputRef}
                               placeholder="Поиск товаров..."
                               value={searchTerm}
                               onChange={(e) => setSearchTerm(e.target.value)}
                               className="pl-8"
-                              onClick={(e) => e.stopPropagation()}
-                              onKeyDown={(e) => e.stopPropagation()}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                              onKeyDown={(e) => {
+                                e.stopPropagation();
+                                // Prevent closing dropdown on Enter
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                }
+                              }}
                             />
                           </div>
                         </div>
@@ -453,9 +486,9 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                           {filteredProducts.length > 0 ? (
                             filteredProducts.map(product => (
                               <SelectItem key={product.id} value={product.id}>
-                                <div className="flex justify-between">
-                                  <span className="truncate max-w-[200px]">{product.name}</span>
-                                  <span className="ml-2 text-gray-500 whitespace-nowrap">
+                                <div className="flex flex-col items-start w-full py-2">
+                                  <span className="text-sm font-medium w-full break-words">{product.name}</span>
+                                  <span className="text-xs text-gray-500 mt-1">
                                     {product.price.toLocaleString('ru-RU')} ₽
                                   </span>
                                 </div>
