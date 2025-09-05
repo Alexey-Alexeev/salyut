@@ -221,20 +221,20 @@ export function ConsultationDialog({
         </form>
 
         {/* Секция прямых контактов */}
-        <div className="border-t pt-4 mt-4">
-          <p className="text-sm text-muted-foreground text-center mb-3">
+        <div className="mt-4 border-t pt-4">
+          <p className="text-muted-foreground mb-3 text-center text-sm">
             Или можете связаться с нами напрямую
           </p>
-          <div className="flex gap-3 justify-center">
+          <div className="flex justify-center gap-3">
             {/* Telegram */}
             <Button
               type="button"
               variant="outline"
               size="sm"
-              className="flex items-center gap-2 flex-1"
+              className="flex flex-1 items-center gap-2"
               onClick={() => handleDirectContact('telegram')}
             >
-              <Send className="h-4 w-4" />
+              <Send className="size-4" />
               Telegram
             </Button>
 
@@ -243,10 +243,10 @@ export function ConsultationDialog({
               type="button"
               variant="outline"
               size="sm"
-              className="flex items-center gap-2 flex-1"
+              className="flex flex-1 items-center gap-2"
               onClick={() => handleDirectContact('whatsapp')}
             >
-              <Phone className="h-4 w-4" />
+              <Phone className="size-4" />
               WhatsApp
             </Button>
           </div>

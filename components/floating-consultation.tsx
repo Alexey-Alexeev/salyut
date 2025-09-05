@@ -21,16 +21,16 @@ export function FloatingConsultation() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              className="fixed bottom-6 right-6 z-50 rounded-full w-14 h-14 shadow-lg bg-orange-500 hover:bg-orange-600 hover:scale-105 transition-transform flex items-center justify-center p-0"
+              className="fixed bottom-6 right-6 z-50 flex size-14 items-center justify-center rounded-full bg-orange-500 p-0 shadow-lg transition-transform hover:scale-105 hover:bg-orange-600"
               aria-label="Получить консультацию"
               onClick={() => setOpen(true)}
             >
-              <MessageCircle className="w-6 h-6 text-white" />
+              <MessageCircle className="size-6 text-white" />
             </Button>
           </TooltipTrigger>
           <TooltipContent
             side="left"
-            className="bg-gray-800 text-white text-sm px-3 py-1.5 rounded shadow-lg"
+            className="rounded bg-gray-800 px-3 py-1.5 text-sm text-white shadow-lg"
           >
             <p>Проконсультироваться</p>
           </TooltipContent>

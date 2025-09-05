@@ -200,7 +200,7 @@ export default function OrderDetailPage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto mb-4 size-8 animate-spin rounded-full border-b-2 border-primary"></div>
+          <div className="border-primary mx-auto mb-4 size-8 animate-spin rounded-full border-b-2"></div>
           <p>Загрузка...</p>
         </div>
       </div>
@@ -209,7 +209,7 @@ export default function OrderDetailPage() {
 
   if (!order) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <p>Заказ не найден</p>
           <Button asChild className="mt-4">
@@ -222,10 +222,10 @@ export default function OrderDetailPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-muted/50">
+      <div className="bg-muted/50 min-h-screen">
         {/* Header */}
         <header className="border-b bg-white">
-          <div className="container mx-auto px-4 py-4">
+          <div className="container mx-auto p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <Button asChild variant="outline" size="sm">
@@ -261,13 +261,13 @@ export default function OrderDetailPage() {
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">
+                      <label className="text-muted-foreground text-sm font-medium">
                         Имя
                       </label>
                       <p className="font-medium">{order.customer_name}</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">
+                      <label className="text-muted-foreground text-sm font-medium">
                         Телефон
                       </label>
                       <p className="flex items-center gap-2 font-medium">
@@ -279,7 +279,7 @@ export default function OrderDetailPage() {
 
                   {order.customer_contact && (
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">
+                      <label className="text-muted-foreground text-sm font-medium">
                         {order.contact_method === 'telegram'
                           ? 'Telegram'
                           : 'WhatsApp'}
@@ -292,7 +292,7 @@ export default function OrderDetailPage() {
                   )}
 
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">
+                    <label className="text-muted-foreground text-sm font-medium">
                       Дата заказа
                     </label>
                     <p className="flex items-center gap-2 font-medium">
@@ -303,17 +303,17 @@ export default function OrderDetailPage() {
 
                   {order.comment && (
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">
+                      <label className="text-muted-foreground text-sm font-medium">
                         Комментарий
                       </label>
-                      <p className="rounded-md bg-muted p-3 text-sm">
+                      <p className="bg-muted rounded-md p-3 text-sm">
                         {order.comment}
                       </p>
                     </div>
                   )}
 
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">
+                    <label className="text-muted-foreground text-sm font-medium">
                       Подтверждение возраста
                     </label>
                     <p className="font-medium">
@@ -362,7 +362,7 @@ export default function OrderDetailPage() {
 
                         <div className="flex-1">
                           <h4 className="font-medium">{item.product.name}</h4>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-muted-foreground text-sm">
                             Количество: {item.quantity} шт.
                           </p>
                         </div>
@@ -371,7 +371,7 @@ export default function OrderDetailPage() {
                           <p className="font-medium">
                             {item.price_at_time.toLocaleString('ru-RU')} ₽
                           </p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-muted-foreground text-sm">
                             Итого:{' '}
                             {(item.price_at_time * item.quantity).toLocaleString(
                               'ru-RU'
@@ -399,7 +399,7 @@ export default function OrderDetailPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">
+                    <label className="text-muted-foreground text-sm font-medium">
                       Способ получения
                     </label>
                     <p className="flex items-center gap-2 font-medium">
@@ -420,18 +420,18 @@ export default function OrderDetailPage() {
                   {order.delivery_method === 'delivery' &&
                     order.delivery_address && (
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">
+                        <label className="text-muted-foreground text-sm font-medium">
                           Адрес доставки
                         </label>
                         <p className="flex items-start gap-2 font-medium">
-                          <MapPin className="mt-0.5 size-4 flex-shrink-0 text-blue-600" />
+                          <MapPin className="mt-0.5 size-4 shrink-0 text-blue-600" />
                           {order.delivery_address}
                         </p>
                       </div>
                     )}
 
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">
+                    <label className="text-muted-foreground text-sm font-medium">
                       Стоимость доставки
                     </label>
                     <p className="font-medium">
@@ -471,7 +471,7 @@ export default function OrderDetailPage() {
                   </Select>
 
                   {updating && (
-                    <p className="text-sm text-muted-foreground">Обновление...</p>
+                    <p className="text-muted-foreground text-sm">Обновление...</p>
                   )}
                 </CardContent>
               </Card>

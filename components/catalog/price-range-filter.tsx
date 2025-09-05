@@ -99,13 +99,13 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
 
     return (
       <div className="space-y-4">
-        <h3 className="font-semibold text-sm">Цена, ₽</h3>
+        <h3 className="text-sm font-semibold">Цена, ₽</h3>
 
         <div className="flex gap-2">
           <div className="flex-1">
             <Label
               htmlFor="price-from"
-              className="text-xs text-muted-foreground"
+              className="text-muted-foreground text-xs"
             >
               От
             </Label>
@@ -121,7 +121,7 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
             />
           </div>
           <div className="flex-1">
-            <Label htmlFor="price-to" className="text-xs text-muted-foreground">
+            <Label htmlFor="price-to" className="text-muted-foreground text-xs">
               До
             </Label>
             <Input
@@ -137,7 +137,7 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
           </div>
         </div>
 
-        <div className="text-xs text-muted-foreground">
+        <div className="text-muted-foreground text-xs">
           {fromValue || toValue ? (
             <>
               {fromValue || minPrice} ₽ —{' '}
@@ -154,14 +154,14 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
         </div>
 
         {validationError && (
-          <div className="text-xs text-red-500 bg-red-50 p-2 rounded border">
+          <div className="rounded border bg-red-50 p-2 text-xs text-red-500">
             {validationError}
           </div>
         )}
 
         <Button
           onClick={applyCurrentFilter}
-          className="w-full h-8 text-xs"
+          className="h-8 w-full text-xs"
           size="sm"
         >
           Применить фильтр

@@ -80,9 +80,9 @@ export default function ProductClient({
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
         <div className="space-y-4">
-          <div className="aspect-square relative overflow-hidden rounded-lg border">
+          <div className="relative aspect-square overflow-hidden rounded-lg border">
             {images[0] && (
               <Image
                 src={images[selectedImage]}
@@ -98,7 +98,7 @@ export default function ProductClient({
               {images.map((image, index) => (
                 <button
                   key={index}
-                  className={`flex-shrink-0 w-20 h-20 relative rounded-lg border-2 overflow-hidden transition-all ${
+                  className={`relative size-20 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
                     selectedImage === index
                       ? 'border-primary'
                       : 'border-border hover:border-primary/50'
@@ -119,17 +119,17 @@ export default function ProductClient({
 
         <div className="space-y-6">
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="mb-2 flex items-center gap-2">
               {product.is_popular && (
                 <Badge className="bg-orange-500">Популярный</Badge>
               )}
             </div>
 
-            <h1 className="text-2xl lg:text-3xl font-bold mb-4">
+            <h1 className="mb-4 text-2xl font-bold lg:text-3xl">
               {product.name}
             </h1>
 
-            <div className="text-3xl font-bold text-primary mb-6">
+            <div className="text-primary mb-6 text-3xl font-bold">
               {product.price.toLocaleString('ru-RU')} ₽
             </div>
           </div>
@@ -137,16 +137,16 @@ export default function ProductClient({
           <div className="space-y-4">
             <div className="flex items-center gap-4">
               <span className="text-sm font-medium">Количество:</span>
-              <div className="flex items-center border rounded-md">
+              <div className="flex items-center rounded-md border">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   disabled={quantity <= 1}
                 >
-                  <Minus className="h-4 w-4" />
+                  <Minus className="size-4" />
                 </Button>
-                <span className="px-4 py-2 min-w-[3rem] text-center">
+                <span className="min-w-[3rem] px-4 py-2 text-center">
                   {quantity}
                 </span>
                 <Button
@@ -154,19 +154,19 @@ export default function ProductClient({
                   size="sm"
                   onClick={() => setQuantity(quantity + 1)}
                 >
-                  <Plus className="h-4 w-4" />
+                  <Plus className="size-4" />
                 </Button>
               </div>
             </div>
 
             <Button onClick={handleAddToCart} size="lg" className="w-full">
-              <ShoppingCart className="h-5 w-5 mr-2" />
+              <ShoppingCart className="mr-2 size-5" />
               Добавить в корзину •{' '}
               {(product.price * quantity).toLocaleString('ru-RU')} ₽
             </Button>
 
             {product.short_description && (
-              <div className="text-sm text-muted-foreground">
+              <div className="text-muted-foreground text-sm">
                 {product.short_description}
               </div>
             )}
@@ -213,12 +213,12 @@ export default function ProductClient({
               <CardContent className="pt-6">
                 {product.characteristics &&
                 Object.keys(product.characteristics).length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     {Object.entries(product.characteristics).map(
                       ([key, value]) => (
                         <div
                           key={key}
-                          className="flex justify-between py-2 border-b border-border/50"
+                          className="border-border/50 flex justify-between border-b py-2"
                         >
                           <span className="font-medium">{key}:</span>
                           <span className="text-muted-foreground">

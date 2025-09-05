@@ -225,10 +225,10 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-hidden">
+      <DialogContent className="max-h-[90vh] overflow-hidden sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-            <ShoppingCart className="h-6 w-6" />
+          <DialogTitle className="flex items-center gap-2 text-2xl font-bold">
+            <ShoppingCart className="size-6" />
             Редактирование заказа
           </DialogTitle>
           <DialogDescription>
@@ -240,29 +240,29 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               {/* Customer Information - Read Only */}
-              <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200">
+              <Card className="border-orange-200 bg-gradient-to-r from-orange-50 to-red-50">
                 <CardContent className="pt-6">
-                  <h3 className="text-lg font-semibold mb-4 text-orange-800 flex items-center gap-2">
-                    <User className="h-5 w-5" />
+                  <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-orange-800">
+                    <User className="size-5" />
                     Информация о клиенте (из оригинального заказа)
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-orange-700">Имя клиента</Label>
-                      <div className="p-3 bg-white/70 border border-orange-200 rounded-md font-medium">
+                      <div className="rounded-md border border-orange-200 bg-white/70 p-3 font-medium">
                         {order.customer_name}
                       </div>
                     </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-orange-700">Телефон</Label>
-                      <div className="p-3 bg-white/70 border border-orange-200 rounded-md font-medium">
+                      <div className="rounded-md border border-orange-200 bg-white/70 p-3 font-medium">
                         {order.customer_phone}
                       </div>
                     </div>
                     {order.customer_contact && (
                       <div className="space-y-2">
                         <Label className="text-sm font-medium text-orange-700">Контакт для связи</Label>
-                        <div className="p-3 bg-white/70 border border-orange-200 rounded-md font-medium">
+                        <div className="rounded-md border border-orange-200 bg-white/70 p-3 font-medium">
                           {order.customer_contact}
                         </div>
                       </div>
@@ -270,7 +270,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                     {order.contact_method && (
                       <div className="space-y-2">
                         <Label className="text-sm font-medium text-orange-700">Способ связи</Label>
-                        <div className="p-3 bg-white/70 border border-orange-200 rounded-md font-medium capitalize">
+                        <div className="rounded-md border border-orange-200 bg-white/70 p-3 font-medium capitalize">
                           {order.contact_method === 'telegram' ? '📱 Telegram' :
                             order.contact_method === 'whatsapp' ? '📞 WhatsApp' :
                               order.contact_method === 'phone' ? '☎️ Телефон' :
@@ -279,7 +279,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                       </div>
                     )}
                   </div>
-                  <p className="text-sm text-orange-600 mt-3 italic">
+                  <p className="mt-3 text-sm italic text-orange-600">
                     ℹ️ Данные клиента берутся из оригинального заказа и не могут быть изменены
                   </p>
                 </CardContent>
@@ -288,7 +288,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
               {/* Способ доставки */}
               <Card>
                 <CardContent className="pt-6">
-                  <h3 className="text-lg font-semibold mb-4">Способ доставки</h3>
+                  <h3 className="mb-4 text-lg font-semibold">Способ доставки</h3>
                   <FormField
                     control={form.control}
                     name="delivery_method"
@@ -316,26 +316,26 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
               {/* Товары в заказе */}
               <Card>
                 <CardContent className="pt-6">
-                  <div className="flex justify-between items-center mb-4">
+                  <div className="mb-4 flex items-center justify-between">
                     <h3 className="text-lg font-semibold">Товары в заказе</h3>
                     <Badge variant="secondary">{orderItems.length} товаров</Badge>
                   </div>
 
-                  <div className="space-y-3 mb-4">
+                  <div className="mb-4 space-y-3">
                     {orderItems.map((item, index) => (
-                      <div key={item.id} className="flex flex-col gap-3 p-3 border rounded-lg">
+                      <div key={item.id} className="flex flex-col gap-3 rounded-lg border p-3">
                         <div className="flex items-center gap-3">
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium truncate">{item.product.name}</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate font-medium">{item.product.name}</p>
                           </div>
                           <Button
                             type="button"
                             variant="ghost"
                             size="sm"
                             onClick={() => removeItem(index)}
-                            className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                            className="text-destructive hover:text-destructive size-8 p-0"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="size-4" />
                           </Button>
                         </div>
 
@@ -359,7 +359,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                                 size="sm"
                                 onClick={() => updateQuantity(index, item.quantity - 1)}
                                 disabled={item.quantity <= 1}
-                                className="h-8 w-8 p-0"
+                                className="size-8 p-0"
                               >
                                 -
                               </Button>
@@ -375,7 +375,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                                 variant="outline"
                                 size="sm"
                                 onClick={() => updateQuantity(index, item.quantity + 1)}
-                                className="h-8 w-8 p-0"
+                                className="size-8 p-0"
                               >
                                 +
                               </Button>
@@ -394,8 +394,8 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                     ))}
 
                     {orderItems.length === 0 && (
-                      <div className="text-center py-8 text-muted-foreground">
-                        <ShoppingCart className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                      <div className="text-muted-foreground py-8 text-center">
+                        <ShoppingCart className="mx-auto mb-2 size-12 opacity-50" />
                         <p>Нет товаров в заказе</p>
                       </div>
                     )}
@@ -423,9 +423,9 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
               {/* Стоимость доставки и скидки */}
               <Card>
                 <CardContent className="pt-6">
-                  <h3 className="text-lg font-semibold mb-4">Стоимость и скидки</h3>
+                  <h3 className="mb-4 text-lg font-semibold">Стоимость и скидки</h3>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                     <FormField
                       control={form.control}
                       name="delivery_cost"
@@ -517,7 +517,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
               {/* Итоговая сумма */}
               <Card className="bg-muted/50">
                 <CardContent className="pt-6">
-                  <h3 className="text-lg font-semibold mb-4">Итоговый расчет</h3>
+                  <h3 className="mb-4 text-lg font-semibold">Итоговый расчет</h3>
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span>Сумма товаров:</span>
@@ -528,13 +528,13 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                       <span className="font-medium">{deliveryCost.toLocaleString('ru-RU')} ₽</span>
                     </div>
                     {actualDiscountAmount > 0 && (
-                      <div className="flex justify-between text-destructive">
+                      <div className="text-destructive flex justify-between">
                         <span>Скидка{hasManualDiscount ? ' (вручную)' : automaticDiscountRate > 0 ? ` (авто ${Math.round(automaticDiscountRate * 100)}%)` : ''}:</span>
                         <span className="font-medium">-{actualDiscountAmount.toLocaleString('ru-RU')} ₽</span>
                       </div>
                     )}
                     {!hasManualDiscount && automaticDiscountRate === 0 && subtotalAmount > 0 && (
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-muted-foreground text-sm">
                         {subtotalAmount < DISCOUNT_THRESHOLD_1 ? (
                           `До скидки 5% осталось ${(DISCOUNT_THRESHOLD_1 - subtotalAmount).toLocaleString('ru-RU')} ₽`
                         ) : subtotalAmount < DISCOUNT_THRESHOLD_2 ? (
@@ -551,7 +551,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                 </CardContent>
               </Card>
 
-              <DialogFooter className="sticky bottom-0 bg-background pt-4 border-t">
+              <DialogFooter className="bg-background sticky bottom-0 border-t pt-4">
                 <Button
                   type="button"
                   variant="outline"

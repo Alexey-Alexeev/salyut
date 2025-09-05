@@ -19,7 +19,7 @@ export const CategoryFilter = React.memo<CategoryFilterProps>(
   ({ categories, selectedCategories, onCategoryChange }) => {
     return (
       <div className="space-y-4">
-        <h3 className="font-semibold text-sm">Категории</h3>
+        <h3 className="text-sm font-semibold">Категории</h3>
         <div className="space-y-3">
           {categories.map(category => (
             <div key={category.id} className="flex items-center space-x-2">
@@ -32,7 +32,7 @@ export const CategoryFilter = React.memo<CategoryFilterProps>(
               />
               <label
                 htmlFor={`category-${category.slug}`}
-                className="text-sm leading-none cursor-pointer"
+                className="cursor-pointer text-sm leading-none"
               >
                 {category.name}
               </label>

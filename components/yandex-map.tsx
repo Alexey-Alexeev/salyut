@@ -112,9 +112,9 @@ export function YandexMap({
       <div
         ref={mapRef}
         style={{ width: '100%', height }}
-        className="rounded-lg overflow-hidden border border-gray-200"
+        className="overflow-hidden rounded-lg border border-gray-200"
       />
-      <div className="text-xs text-muted-foreground mt-2 text-center">
+      <div className="text-muted-foreground mt-2 text-center text-xs">
         📍 {DELIVERY_CONSTANTS.PICKUP_ADDRESS.fullAddress}
       </div>
     </div>
@@ -127,12 +127,12 @@ export function YandexMapWithFallback(props: YandexMapProps) {
       <YandexMap {...props} />
       <noscript>
         <div
-          className="w-full bg-slate-100 rounded-lg flex items-center justify-center border border-gray-200"
+          className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-slate-100"
           style={{ height: props.height || '400px' }}
         >
-          <div className="text-center space-y-2 p-6">
-            <div className="text-slate-400 text-4xl">🗺️</div>
-            <p className="text-slate-600 font-medium">Карта недоступна</p>
+          <div className="space-y-2 p-6 text-center">
+            <div className="text-4xl text-slate-400">🗺️</div>
+            <p className="font-medium text-slate-600">Карта недоступна</p>
             <p className="text-sm text-slate-500">
               {DELIVERY_CONSTANTS.PICKUP_ADDRESS.fullAddress}
             </p>
@@ -140,7 +140,7 @@ export function YandexMapWithFallback(props: YandexMapProps) {
               href={`https://yandex.ru/maps/?text=${encodeURIComponent(DELIVERY_CONSTANTS.PICKUP_ADDRESS.fullAddress)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block text-blue-600 hover:text-blue-700 underline text-sm"
+              className="inline-block text-sm text-blue-600 underline hover:text-blue-700"
             >
               Открыть в Яндекс.Картах →
             </a>

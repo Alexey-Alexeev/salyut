@@ -89,14 +89,14 @@ export default async function ProductPage({ params }: PageProps) {
       return (
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Товар не найден</h1>
+            <h1 className="mb-4 text-2xl font-bold">Товар не найден</h1>
             <p className="text-muted-foreground mb-4">
               Запрашиваемый товар не существует или был удален.
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Запрошенный slug: {params.slug}
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Искомый slug: {cleanSlug}
             </p>
           </div>
@@ -155,11 +155,11 @@ export default async function ProductPage({ params }: PageProps) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Ошибка загрузки</h1>
+          <h1 className="mb-4 text-2xl font-bold">Ошибка загрузки</h1>
           <p className="text-muted-foreground">
             Произошла ошибка при загрузке товара.
           </p>
-          <p className="text-sm text-muted-foreground mt-2">
+          <p className="text-muted-foreground mt-2 text-sm">
             Ошибка:{' '}
             {error instanceof Error ? error.message : 'Неизвестная ошибка'}
           </p>

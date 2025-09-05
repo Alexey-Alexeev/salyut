@@ -71,7 +71,7 @@ export function OrderStats({ stats }: OrderStatsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {statsCards.map((stat, index) => {
         const Icon = stat.icon;
         return (
@@ -80,11 +80,11 @@ export function OrderStats({ stats }: OrderStatsProps) {
               <CardTitle className="text-sm font-medium">
                 {stat.title}
               </CardTitle>
-              <Icon className={`h-4 w-4 ${stat.color}`} />
+              <Icon className={`size-4 ${stat.color}`} />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 {stat.description}
               </p>
             </CardContent>

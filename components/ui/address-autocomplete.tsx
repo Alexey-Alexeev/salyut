@@ -276,14 +276,14 @@ export function AddressAutocomplete({
             type="button"
             variant="ghost"
             size="sm"
-            className="absolute top-2 right-2 h-6 w-6 p-0"
+            className="absolute right-2 top-2 size-6 p-0"
             onClick={() => {
               onChange('');
               setIsOpen(false);
               setSuggestions([]);
             }}
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </Button>
         )}
       </div>
@@ -292,11 +292,11 @@ export function AddressAutocomplete({
       {isOpen && (suggestions.length > 0 || isLoading) && (
         <div
           ref={suggestionsRef}
-          className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto"
+          className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg"
         >
           {isLoading && (
-            <div className="px-4 py-3 text-sm text-gray-500 flex items-center gap-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+            <div className="flex items-center gap-2 px-4 py-3 text-sm text-gray-500">
+              <div className="size-4 animate-spin rounded-full border-b-2 border-blue-600"></div>
               Поиск адресов...
             </div>
           )}
@@ -306,13 +306,13 @@ export function AddressAutocomplete({
               key={index}
               type="button"
               className={cn(
-                'w-full px-4 py-3 text-left text-sm hover:bg-gray-50 flex items-start gap-2 border-none bg-transparent',
+                'flex w-full items-start gap-2 border-none bg-transparent px-4 py-3 text-left text-sm hover:bg-gray-50',
                 selectedIndex === index && 'bg-blue-50 text-blue-900'
               )}
               onClick={() => selectSuggestion(suggestion)}
               onMouseEnter={() => setSelectedIndex(index)}
             >
-              <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+              <MapPin className="mt-0.5 size-4 shrink-0 text-gray-400" />
               <span className="flex-1">
                 {highlightMatches(suggestion.displayName, suggestion.hl)}
               </span>

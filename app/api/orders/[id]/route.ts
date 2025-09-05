@@ -139,14 +139,18 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     }
   } catch (error) {
     console.error('Error updating order:', error);
+
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    const errorStack = error instanceof Error ? error.stack : undefined;
+
     console.error('Error details:', {
-      message: error.message,
-      stack: error.stack,
+      message: errorMessage,
+      stack: errorStack,
       orderUpdateData,
       items,
       id
     });
-    return new NextResponse(`Internal Server Error: ${error.message}`, { status: 500 });
+    return new NextResponse(`Internal Server Error: ${errorMessage}`, { status: 500 });
   }
 }
 

@@ -58,11 +58,11 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/50 px-4">
+    <div className="bg-muted/50 flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-            <Lock className="w-6 h-6 text-primary" />
+          <div className="bg-primary/10 mx-auto mb-4 flex size-12 items-center justify-center rounded-full">
+            <Lock className="text-primary size-6" />
           </div>
           <CardTitle className="text-2xl">Вход в админ-панель</CardTitle>
         </CardHeader>
@@ -77,7 +77,7 @@ export default function AdminLoginPage() {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Mail className="text-muted-foreground absolute left-3 top-3 size-4" />
                 <Input
                   id="email"
                   type="email"
@@ -93,7 +93,7 @@ export default function AdminLoginPage() {
             <div className="space-y-2">
               <Label htmlFor="password">Пароль</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Lock className="text-muted-foreground absolute left-3 top-3 size-4" />
                 <Input
                   id="password"
                   type="password"

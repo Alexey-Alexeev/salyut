@@ -37,7 +37,7 @@ export const ActiveFilters = React.memo<ActiveFiltersProps>(
     if (!hasActiveFilters) return null;
 
     return (
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="mb-4 flex flex-wrap gap-2">
         {selectedCategories.map(categorySlug => {
           const category = categories.find(c => c.slug === categorySlug);
           if (!category) return null;
@@ -46,7 +46,7 @@ export const ActiveFilters = React.memo<ActiveFiltersProps>(
             <Badge key={categorySlug} variant="secondary" className="gap-1">
               {category.name}
               <X
-                className="h-3 w-3 cursor-pointer"
+                className="size-3 cursor-pointer"
                 onClick={() => onRemoveCategory(categorySlug)}
               />
             </Badge>
@@ -56,7 +56,7 @@ export const ActiveFilters = React.memo<ActiveFiltersProps>(
         {(priceFrom || priceTo) && (
           <Badge variant="secondary" className="gap-1">
             Цена: {priceFrom || '0'} - {priceTo || '∞'} ₽
-            <X className="h-3 w-3 cursor-pointer" onClick={onClearPrice} />
+            <X className="size-3 cursor-pointer" onClick={onClearPrice} />
           </Badge>
         )}
 

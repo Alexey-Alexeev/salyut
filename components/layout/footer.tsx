@@ -13,15 +13,15 @@ export async function Footer() {
     console.error('Error loading categories in footer:', error);
   }
   return (
-    <footer className="bg-gray-50 border-t">
+    <footer className="border-t bg-gray-50">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-4">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">🎆</span>
+              <div className="flex size-8 items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-red-500">
+                <span className="text-sm font-bold text-white">🎆</span>
               </div>
-              <span className="font-bold text-xl text-gray-900">
+              <span className="text-xl font-bold text-gray-900">
                 КупитьСалюты
               </span>
             </Link>
@@ -90,18 +90,18 @@ export async function Footer() {
             <h3 className="font-semibold text-gray-900">Контакты</h3>
             <div className="space-y-2 text-sm text-gray-700">
               <div className="flex items-center space-x-2">
-                <Phone className="h-4 w-4" />
+                <Phone className="size-4" />
                 <span>+7 (977) 360-20-08</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="mt-12 flex flex-col items-center justify-between border-t pt-8 md:flex-row">
           <p className="text-sm text-gray-700">
             ©КупитьСалюты. Все права защищены.
           </p>
-          <div className="flex items-center space-x-4 mt-4 md:mt-0">
+          <div className="mt-4 flex items-center space-x-4 md:mt-0">
             <Link
               href="/privacy"
               className="text-sm text-gray-700 hover:text-orange-600"

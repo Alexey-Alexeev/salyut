@@ -16,19 +16,19 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
     <nav
       aria-label="Хлебные крошки"
-      className="flex items-center space-x-1 text-sm text-muted-foreground"
+      className="text-muted-foreground flex items-center space-x-1 text-sm"
     >
       <Link
         href="/"
-        className="flex items-center hover:text-foreground transition-colors"
+        className="hover:text-foreground flex items-center transition-colors"
         aria-label="Главная страница"
       >
-        <Home className="h-4 w-4" />
+        <Home className="size-4" />
       </Link>
 
       {items.map((item, index) => (
         <div key={index} className="flex items-center space-x-1">
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="size-4" />
           {item.href && index < items.length - 1 ? (
             <Link
               href={item.href}

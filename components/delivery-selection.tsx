@@ -264,7 +264,7 @@ export function DeliverySelection({
     <Card className={className}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Truck className="w-5 h-5" />
+          <Truck className="size-5" />
           Способ получения заказа
         </CardTitle>
       </CardHeader>
@@ -276,20 +276,20 @@ export function DeliverySelection({
               <RadioGroupItem value="delivery" id="delivery" />
               <Label
                 htmlFor="delivery"
-                className="flex items-center gap-2 cursor-pointer"
+                className="flex cursor-pointer items-center gap-2"
               >
-                <Truck className="w-4 h-4 text-blue-600" />
+                <Truck className="size-4 text-blue-600" />
                 <span className="font-medium">🚚 Доставка</span>
               </Label>
             </div>
 
             {method === 'delivery' && (
               <div className="ml-7 space-y-4 border-l-2 border-blue-100 pl-4">
-                <div className="bg-blue-50 p-4 rounded-lg space-y-3">
+                <div className="space-y-3 rounded-lg bg-blue-50 p-4">
                   <h4 className="font-medium text-blue-900">
                     Условия доставки:
                   </h4>
-                  <div className="text-sm text-blue-700 space-y-1">
+                  <div className="space-y-1 text-sm text-blue-700">
                     <p>
                       • Москва, Балашиха, Люберцы — <strong>500 ₽</strong>
                     </p>
@@ -313,7 +313,7 @@ export function DeliverySelection({
                     onChange={handleAddressChange}
                     placeholder="Введите адрес доставки..."
                   />
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     💡 Начните вводить — система предложит варианты. Адрес можно
                     оставить пустым — менеджер уточнит его при подтверждении
                     заказа
@@ -322,7 +322,7 @@ export function DeliverySelection({
 
                 <div className="space-y-3">
                   <Label>Расстояние от МКАД</Label>
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                  <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-3">
                     <p className="text-sm text-yellow-800">
                       {isCalculatingDistance ? (
                         <span className="text-blue-600">
@@ -351,11 +351,11 @@ export function DeliverySelection({
                 </div>
 
                 {deliveryResult && deliveryResult.method === 'delivery' && (
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <div className="rounded-lg border border-green-200 bg-green-50 p-3">
                     <p className="font-medium text-green-800">
                       {deliveryResult.description}
                     </p>
-                    <p className="text-lg font-bold text-green-900 mt-1">
+                    <p className="mt-1 text-lg font-bold text-green-900">
                       Стоимость: {formatDeliveryCost(deliveryResult.cost)}
                     </p>
                   </div>
@@ -370,11 +370,11 @@ export function DeliverySelection({
               <RadioGroupItem value="pickup" id="pickup" />
               <Label
                 htmlFor="pickup"
-                className="flex items-center gap-2 cursor-pointer"
+                className="flex cursor-pointer items-center gap-2"
               >
-                <Store className="w-4 h-4 text-green-600" />
+                <Store className="size-4 text-green-600" />
                 <span className="font-medium">🏬 Самовывоз</span>
-                <span className="text-sm text-green-600 font-medium">
+                <span className="text-sm font-medium text-green-600">
                   (бесплатно)
                 </span>
               </Label>
@@ -382,17 +382,17 @@ export function DeliverySelection({
 
             {method === 'pickup' && (
               <div className="ml-7 space-y-4 border-l-2 border-green-100 pl-4">
-                <div className="bg-green-50 p-4 rounded-lg space-y-3">
-                  <h4 className="font-medium text-green-900 flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
+                <div className="space-y-3 rounded-lg bg-green-50 p-4">
+                  <h4 className="flex items-center gap-2 font-medium text-green-900">
+                    <MapPin className="size-4" />
                     Адрес склада:
                   </h4>
                   <p className="text-green-800">
                     {pickupInfo.address.fullAddress}
                   </p>
-                  <div className="space-y-2 pt-2 border-t border-green-200">
+                  <div className="space-y-2 border-t border-green-200 pt-2">
                     <div className="flex items-center gap-2 text-sm text-green-700">
-                      <Phone className="w-4 h-4" />
+                      <Phone className="size-4" />
                       <span>{pickupInfo.phone}</span>
                     </div>
                   </div>
@@ -404,7 +404,7 @@ export function DeliverySelection({
 
         {deliveryResult && (
           <div className="border-t pt-4">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <span className="font-medium">
                 {deliveryResult.method === 'delivery'
                   ? 'Стоимость доставки:'

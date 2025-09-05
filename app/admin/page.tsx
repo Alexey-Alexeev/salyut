@@ -135,9 +135,9 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <div className="border-primary mx-auto mb-4 size-8 animate-spin rounded-full border-b-2"></div>
           <p>Загрузка...</p>
         </div>
       </div>
@@ -145,14 +145,14 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/50">
+    <div className="bg-muted/50 min-h-screen">
       {/* Header */}
-      <header className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
+      <header className="border-b bg-white">
+        <div className="container mx-auto p-4">
+          <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold">Админ-панель</h1>
             <Button variant="outline" onClick={handleLogout}>
-              <LogOut className="h-4 w-4 mr-2" />
+              <LogOut className="mr-2 size-4" />
               Выйти
             </Button>
           </div>
@@ -161,15 +161,15 @@ export default function AdminDashboard() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Товары</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
+              <Package className="text-muted-foreground size-4" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalProducts}</div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 Всего товаров в каталоге
               </p>
             </CardContent>
@@ -178,56 +178,56 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Заказы</CardTitle>
-              <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+              <ShoppingCart className="text-muted-foreground size-4" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalOrders}</div>
-              <p className="text-xs text-muted-foreground">Всего заказов</p>
+              <p className="text-muted-foreground text-xs">Всего заказов</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Выручка</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <DollarSign className="text-muted-foreground size-4" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
                 {stats.totalRevenue.toLocaleString('ru-RU')} ₽
               </div>
-              <p className="text-xs text-muted-foreground">Общая выручка</p>
+              <p className="text-muted-foreground text-xs">Общая выручка</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Ожидают</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <TrendingUp className="text-muted-foreground size-4" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.pendingOrders}</div>
-              <p className="text-xs text-muted-foreground">Новых заказов</p>
+              <p className="text-muted-foreground text-xs">Новых заказов</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
           <Button asChild className="h-20">
             <Link href="/admin/products">
-              <Plus className="h-6 w-6 mr-2" />
+              <Plus className="mr-2 size-6" />
               Добавить товар
             </Link>
           </Button>
           <Button asChild variant="outline" className="h-20">
             <Link href="/admin/orders">
-              <Eye className="h-6 w-6 mr-2" />
+              <Eye className="mr-2 size-6" />
               Просмотр заказов
             </Link>
           </Button>
           <Button asChild variant="outline" className="h-20">
             <Link href="/admin/categories">
-              <Edit className="h-6 w-6 mr-2" />
+              <Edit className="mr-2 size-6" />
               Управление категориями
             </Link>
           </Button>
@@ -243,11 +243,11 @@ export default function AdminDashboard() {
               {recentOrders.map(order => (
                 <div
                   key={order.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
+                  className="flex items-center justify-between rounded-lg border p-4"
                 >
                   <div>
                     <p className="font-medium">{order.customer_name}</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       {order.total_amount.toLocaleString('ru-RU')} ₽
                     </p>
                   </div>
@@ -255,7 +255,7 @@ export default function AdminDashboard() {
                     {getStatusBadge(order.status)}
                     <Button asChild size="sm" variant="outline">
                       <Link href={`/admin/orders/${order.id}`}>
-                        <Eye className="h-4 w-4" />
+                        <Eye className="size-4" />
                       </Link>
                     </Button>
                   </div>
@@ -263,7 +263,7 @@ export default function AdminDashboard() {
               ))}
 
               {recentOrders.length === 0 && (
-                <p className="text-center text-muted-foreground py-8">
+                <p className="text-muted-foreground py-8 text-center">
                   Заказов пока нет
                 </p>
               )}

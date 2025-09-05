@@ -267,9 +267,9 @@ export default function AdminOrdersPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <div className="border-primary mx-auto mb-4 size-8 animate-spin rounded-full border-b-2"></div>
           <p>Загрузка...</p>
         </div>
       </div>
@@ -277,11 +277,11 @@ export default function AdminOrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/50">
+    <div className="bg-muted/50 min-h-screen">
       {/* Header */}
-      <header className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
+      <header className="border-b bg-white">
+        <div className="container mx-auto p-4">
+          <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold">Управление заказами</h1>
             <Button asChild variant="outline">
               <Link href="/admin">← Назад к дашборду</Link>
@@ -299,9 +299,9 @@ export default function AdminOrdersPage() {
         {/* Filters */}
         <Card className="mb-6">
           <CardContent className="pt-6">
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Search className="text-muted-foreground absolute left-3 top-3 size-4" />
                 <Input
                   placeholder="Поиск по имени или телефону..."
                   value={searchTerm}
@@ -363,18 +363,18 @@ export default function AdminOrdersPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-muted-foreground" />
+                        <User className="text-muted-foreground size-4" />
                         {order.customer_name}
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <Phone className="h-4 w-4 text-muted-foreground" />
+                          <Phone className="text-muted-foreground size-4" />
                           {order.customer_phone}
                         </div>
                         {order.customer_contact && (
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-muted-foreground text-sm">
                             {order.contact_method === 'telegram' ? '📱' : '📞'}{' '}
                             {order.customer_contact}
                           </div>
@@ -385,11 +385,11 @@ export default function AdminOrdersPage() {
                       <div className="flex items-center gap-2">
                         {order.delivery_method === 'delivery' ? (
                           <>
-                            <Truck className="h-4 w-4 text-blue-600" />
+                            <Truck className="size-4 text-blue-600" />
                             <div>
                               <div className="font-medium">🚚 Доставка</div>
                               {order.delivery_address && (
-                                <div className="text-sm text-muted-foreground truncate max-w-32">
+                                <div className="text-muted-foreground max-w-32 truncate text-sm">
                                   {order.delivery_address}
                                 </div>
                               )}
@@ -397,7 +397,7 @@ export default function AdminOrdersPage() {
                           </>
                         ) : (
                           <>
-                            <Store className="h-4 w-4 text-green-600" />
+                            <Store className="size-4 text-green-600" />
                             <div className="font-medium">🏬 Самовывоз</div>
                           </>
                         )}
@@ -441,7 +441,7 @@ export default function AdminOrdersPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <Calendar className="text-muted-foreground size-4" />
                         {formatDate(order.created_at)}
                       </div>
                     </TableCell>
@@ -449,7 +449,7 @@ export default function AdminOrdersPage() {
                       <div className="flex justify-end gap-2">
                         <Button asChild size="sm" variant="outline">
                           <Link href={`/admin/orders/${order.id}`}>
-                            <Eye className="h-4 w-4" />
+                            <Eye className="size-4" />
                           </Link>
                         </Button>
                       </div>
@@ -460,7 +460,7 @@ export default function AdminOrdersPage() {
             </Table>
 
             {orders.length === 0 && (
-              <div className="text-center py-8">
+              <div className="py-8 text-center">
                 <p className="text-muted-foreground">Заказов не найдено</p>
               </div>
             )}

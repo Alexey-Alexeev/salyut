@@ -15,11 +15,11 @@ export function ConsultationCTA({ className = '' }: { className?: string }) {
         className={`container mx-auto px-4 ${className}`}
       >
         <Card className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
-          <CardContent className="p-6 md:p-12 text-center space-y-6">
-            <h2 className="text-2xl md:text-4xl font-bold">
+          <CardContent className="space-y-6 p-6 text-center md:p-12">
+            <h2 className="text-2xl font-bold md:text-4xl">
               Нужна помощь в выборе?
             </h2>
-            <p className="text-base md:text-lg text-white/90 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-base text-white/90 md:text-lg">
               Наши эксперты помогут подобрать идеальные фейерверки для вашего
               мероприятия
             </p>

@@ -78,7 +78,7 @@ export default async function AboutPage() {
 
       {/* Hero Section */}
       <section
-        className="relative min-h-[70vh] flex items-center justify-center overflow-hidden"
+        className="relative flex min-h-[70vh] items-center justify-center overflow-hidden"
         role="banner"
       >
         <div className="absolute inset-0 z-0">
@@ -95,11 +95,11 @@ export default async function AboutPage() {
           <div className="absolute inset-0 bg-black/60" />
         </div>
 
-        <div className="relative z-10 text-center text-white space-y-6 px-4 max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight text-white bg-black/40 p-4 rounded-lg">
+        <div className="relative z-10 mx-auto max-w-4xl space-y-6 px-4 text-center text-white">
+          <h1 className="rounded-lg bg-black/40 p-4 text-4xl font-bold leading-tight text-white md:text-6xl">
             О нашей <span className="text-orange-400">компании</span>
           </h1>
-          <p className="text-lg md:text-xl text-white bg-black/30 p-4 rounded-lg max-w-3xl mx-auto">
+          <p className="mx-auto max-w-3xl rounded-lg bg-black/30 p-4 text-lg text-white md:text-xl">
             Мы предлагаем качественную пиротехнику от лучших импортных
             производителей, создавая незабываемые праздники
           </p>
@@ -108,20 +108,20 @@ export default async function AboutPage() {
 
       {/* Company Story */}
       <section
-        className="container mx-auto px-4 mt-16 mb-16"
+        className="container mx-auto my-16 px-4"
         itemScope
         itemType="https://schema.org/Organization"
       >
-        <div className="max-w-4xl mx-auto space-y-12">
-          <header className="text-center space-y-4">
-            <h2 className="text-3xl md:text-4xl font-bold">Наша история</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+        <div className="mx-auto max-w-4xl space-y-12">
+          <header className="space-y-4 text-center">
+            <h2 className="text-3xl font-bold md:text-4xl">Наша история</h2>
+            <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
               Мы начали свой путь с простой идеи — делать праздники ярче и
               незабываемее
             </p>
           </header>
 
-          <article className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <article className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
             <div className="space-y-4">
               <h3 className="text-2xl font-semibold">
                 Импортные поставщики высшего класса
@@ -140,7 +140,7 @@ export default async function AboutPage() {
                 рынке пиротехники.
               </p>
             </div>
-            <figure className="aspect-video relative rounded-lg overflow-hidden">
+            <figure className="relative aspect-video overflow-hidden rounded-lg">
               <Image
                 src="../../images/hero-bg3.webp"
                 alt="Качественные фейерверки и салюты от импортных производителей"
@@ -155,27 +155,27 @@ export default async function AboutPage() {
 
       {/* Our Advantages */}
       <section
-        className="container mx-auto px-4 mb-16"
+        className="container mx-auto mb-16 px-4"
         aria-labelledby="advantages-heading"
       >
-        <header className="text-center space-y-4 mb-12">
+        <header className="mb-12 space-y-4 text-center">
           <h2
             id="advantages-heading"
-            className="text-3xl md:text-4xl font-bold"
+            className="text-3xl font-bold md:text-4xl"
           >
             Наши преимущества
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground mx-auto max-w-2xl">
             Почему клиенты выбирают именно нас
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8" role="list">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3" role="list">
           <article className="text-center" role="listitem">
             <Card>
-              <CardContent className="p-6 space-y-4">
+              <CardContent className="space-y-4 p-6">
                 <Shield
-                  className="h-16 w-16 text-orange-500 mx-auto"
+                  className="mx-auto size-16 text-orange-500"
                   aria-hidden="true"
                 />
                 <h3 className="text-xl font-semibold">Импортные поставщики</h3>
@@ -189,9 +189,9 @@ export default async function AboutPage() {
           </article>
           <article className="text-center" role="listitem">
             <Card>
-              <CardContent className="p-6 space-y-4">
+              <CardContent className="space-y-4 p-6">
                 <Heart
-                  className="h-16 w-16 text-orange-500 mx-auto"
+                  className="mx-auto size-16 text-orange-500"
                   aria-hidden="true"
                 />
                 <h3 className="text-xl font-semibold">Довольные клиенты</h3>
@@ -204,9 +204,9 @@ export default async function AboutPage() {
           </article>
           <article className="text-center" role="listitem">
             <Card>
-              <CardContent className="p-6 space-y-4">
+              <CardContent className="space-y-4 p-6">
                 <Award
-                  className="h-16 w-16 text-orange-500 mx-auto"
+                  className="mx-auto size-16 text-orange-500"
                   aria-hidden="true"
                 />
                 <h3 className="text-xl font-semibold">Экспертная поддержка</h3>
@@ -223,11 +223,11 @@ export default async function AboutPage() {
       {/* Video Reviews */}
       <section className="bg-muted py-16" aria-labelledby="reviews-heading">
         <div className="container mx-auto px-4">
-          <header className="text-center space-y-4 mb-12">
-            <h2 id="reviews-heading" className="text-3xl md:text-4xl font-bold">
+          <header className="mb-12 space-y-4 text-center">
+            <h2 id="reviews-heading" className="text-3xl font-bold md:text-4xl">
               Отзывы наших клиентов
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground mx-auto max-w-2xl">
               Смотрите, что говорят о нас наши покупатели и как выглядят наши
               фейерверки на их праздниках
             </p>
@@ -235,7 +235,7 @@ export default async function AboutPage() {
 
           {videoReviews.length > 0 ? (
             <div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
               role="list"
             >
               {videoReviews.map(video => (
@@ -245,7 +245,7 @@ export default async function AboutPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12">
+            <div className="py-12 text-center">
               <p className="text-muted-foreground">
                 Видео отзывы скоро появятся
               </p>

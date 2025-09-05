@@ -156,8 +156,8 @@ export default function CartPage() {
         <div className="mb-8">
           <Breadcrumb items={[{ label: 'Корзина' }]} />
         </div>
-        <h1 className="text-3xl font-bold mb-8">Корзина</h1>
-        <div className="text-center py-12">
+        <h1 className="mb-8 text-3xl font-bold">Корзина</h1>
+        <div className="py-12 text-center">
           <p className="text-muted-foreground">Загрузка...</p>
         </div>
       </div>
@@ -239,9 +239,9 @@ export default function CartPage() {
   if (orderComplete) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto text-center space-y-6">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-            <Check className="w-8 h-8 text-green-600" />
+        <div className="mx-auto max-w-2xl space-y-6 text-center">
+          <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-green-100">
+            <Check className="size-8 text-green-600" />
           </div>
           <h1 className="text-3xl font-bold">Заказ оформлен!</h1>
           <p className="text-muted-foreground">
@@ -262,25 +262,25 @@ export default function CartPage() {
         <Breadcrumb items={[{ label: 'Корзина' }]} />
       </div>
 
-      <h1 className="text-3xl font-bold mb-8">Корзина</h1>
+      <h1 className="mb-8 text-3xl font-bold">Корзина</h1>
 
       {items.length === 0 ? (
-        <div className="text-center py-12">
+        <div className="py-12 text-center">
           <p className="text-muted-foreground mb-4">Ваша корзина пуста</p>
           <Button asChild>
             <Link href="/catalog">Перейти в каталог</Link>
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="space-y-4 lg:col-span-2">
             {items.map(item => (
               <Card key={item.id}>
                 <CardContent className="p-4">
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-4">
-                      <div className="relative w-16 h-16 rounded-lg overflow-hidden">
+                      <div className="relative size-16 overflow-hidden rounded-lg">
                         <Image
                           src={item.image}
                           alt={item.name}
@@ -289,60 +289,60 @@ export default function CartPage() {
                         />
                       </div>
 
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-medium line-clamp-2 text-sm">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="line-clamp-2 text-sm font-medium">
                           {item.name}
                         </h3>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                           {item.price.toLocaleString('ru-RU')} ₽ / шт.
                         </p>
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <div className="flex items-center border rounded-md">
+                        <div className="flex items-center rounded-md border">
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0"
+                            className="size-8 p-0"
                             onClick={() =>
                               updateQuantity(item.id, item.quantity - 1)
                             }
                             disabled={item.quantity <= 1}
                           >
-                            <Minus className="h-3 w-3" />
+                            <Minus className="size-3" />
                           </Button>
-                          <span className="px-2 py-1 text-sm min-w-[2rem] text-center">
+                          <span className="min-w-[2rem] px-2 py-1 text-center text-sm">
                             {item.quantity}
                           </span>
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0"
+                            className="size-8 p-0"
                             onClick={() =>
                               updateQuantity(item.id, item.quantity + 1)
                             }
                           >
-                            <Plus className="h-3 w-3" />
+                            <Plus className="size-3" />
                           </Button>
                         </div>
 
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                          className="text-destructive hover:text-destructive size-8 p-0"
                           onClick={() => removeItem(item.id)}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="size-4" />
                         </Button>
                       </div>
                     </div>
 
                     {/* Цена на отдельной строке */}
-                    <div className="flex justify-between items-center border-t pt-2">
-                      <span className="text-sm text-muted-foreground">
+                    <div className="flex items-center justify-between border-t pt-2">
+                      <span className="text-muted-foreground text-sm">
                         Сумма:
                       </span>
-                      <p className="font-medium text-lg whitespace-nowrap">
+                      <p className="whitespace-nowrap text-lg font-medium">
                         {(item.price * item.quantity).toLocaleString('ru-RU')} ₽
                       </p>
                     </div>
@@ -392,7 +392,7 @@ export default function CartPage() {
                 </div>
 
                 {subtotal < DISCOUNT_THRESHOLD_1 && (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     До скидки 5% осталось{' '}
                     {(DISCOUNT_THRESHOLD_1 - subtotal).toLocaleString('ru-RU')}{' '}
                     ₽
@@ -401,7 +401,7 @@ export default function CartPage() {
 
                 {subtotal >= DISCOUNT_THRESHOLD_1 &&
                   subtotal < DISCOUNT_THRESHOLD_2 && (
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                       До скидки 10% осталось{' '}
                       {(DISCOUNT_THRESHOLD_2 - subtotal).toLocaleString(
                         'ru-RU'
@@ -427,7 +427,7 @@ export default function CartPage() {
                       placeholder="Введите ваше имя"
                     />
                     {errors.name && (
-                      <p className="text-sm text-destructive mt-1">
+                      <p className="text-destructive mt-1 text-sm">
                         {errors.name.message}
                       </p>
                     )}
@@ -441,7 +441,7 @@ export default function CartPage() {
                       placeholder="+7 (999) 123-45-67"
                     />
                     {errors.phone && (
-                      <p className="text-sm text-destructive mt-1">
+                      <p className="text-destructive mt-1 text-sm">
                         {errors.phone.message}
                       </p>
                     )}
@@ -482,7 +482,7 @@ export default function CartPage() {
                         }
                       />
                       {errors.contact && (
-                        <p className="text-sm text-destructive mt-1">
+                        <p className="text-destructive mt-1 text-sm">
                           {errors.contact.message}
                         </p>
                       )}
@@ -499,7 +499,7 @@ export default function CartPage() {
                   </div>
 
                   {/* Профессиональный запуск */}
-                  <div className="p-4 border rounded-lg bg-gradient-to-r from-orange-50 to-red-50">
+                  <div className="rounded-lg border bg-gradient-to-r from-orange-50 to-red-50 p-4">
                     <div className="flex items-start space-x-3">
                       <Checkbox
                         id="professionalLaunch"
@@ -510,18 +510,18 @@ export default function CartPage() {
                       <div className="flex-1">
                         <Label
                           htmlFor="professionalLaunch"
-                          className="text-sm font-medium leading-none cursor-pointer"
+                          className="cursor-pointer text-sm font-medium leading-none"
                         >
                           🎆 Профессиональный запуск салютов
                         </Label>
-                        <p className="text-xs text-muted-foreground mt-1">
+                        <p className="text-muted-foreground mt-1 text-xs">
                           Безопасно, качественно, с соблюдением всех норм.
                           Стоимость рассчитывается индивидуально.
                         </p>
                         <a
                           href="/services/launching"
                           target="_blank"
-                          className="text-xs text-orange-600 hover:text-orange-700 underline"
+                          className="text-xs text-orange-600 underline hover:text-orange-700"
                         >
                           Подробнее об услуге →
                         </a>
@@ -544,7 +544,7 @@ export default function CartPage() {
                     </Label>
                   </div>
                   {errors.ageConfirmed && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-destructive text-sm">
                       {errors.ageConfirmed.message}
                     </p>
                   )}
@@ -557,11 +557,11 @@ export default function CartPage() {
                     {isSubmitting ? 'Оформляется...' : 'Оформить заказ'}
                   </Button>
 
-                  <p className="text-xs text-muted-foreground text-center">
+                  <p className="text-muted-foreground text-center text-xs">
                     После оформления заказа с вами свяжется менеджер для
                     подтверждения деталей.
                     {watch('professionalLaunch') && (
-                      <span className="block mt-1 text-orange-600 font-medium">
+                      <span className="mt-1 block font-medium text-orange-600">
                         Менеджер обсудит с вами детали профессионального
                         запуска.
                       </span>

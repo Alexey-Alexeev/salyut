@@ -35,7 +35,7 @@ export function Header() {
 
   return (
     <>
-      <header className="supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
+      <header className="supports-[backdrop-filter]:bg-background/60 bg-background/95 sticky top-0 z-50 border-b backdrop-blur">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -43,7 +43,7 @@ export function Header() {
                 <div className="flex size-8 items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-red-500">
                   <span className="text-sm font-bold text-white">🎆</span>
                 </div>
-                <span className="text-xl font-bold text-primary">
+                <span className="text-primary text-xl font-bold">
                   КупитьСалюты
                 </span>
               </Link>
@@ -53,7 +53,7 @@ export function Header() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="text-sm font-medium transition-colors hover:text-primary"
+                    className="hover:text-primary text-sm font-medium transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -61,7 +61,7 @@ export function Header() {
                 {role === 'admin' && (
                   <Link
                     href="/admin"
-                    className="flex items-center text-sm font-medium transition-colors hover:text-primary"
+                    className="hover:text-primary flex items-center text-sm font-medium transition-colors"
                   >
                     <Shield className="mr-1 size-4" />
                     Админ
@@ -121,7 +121,7 @@ export function Header() {
                       <Link
                         key={item.href}
                         href={item.href}
-                        className="text-sm font-medium transition-colors hover:text-primary"
+                        className="hover:text-primary text-sm font-medium transition-colors"
                         onClick={() => setIsSheetOpen(false)}
                       >
                         {item.label}
@@ -130,7 +130,7 @@ export function Header() {
                     {role === 'admin' && (
                       <Link
                         href="/admin"
-                        className="flex items-center text-sm font-medium transition-colors hover:text-primary"
+                        className="hover:text-primary flex items-center text-sm font-medium transition-colors"
                         onClick={() => setIsSheetOpen(false)}
                       >
                         <Shield className="mr-2 size-4" />

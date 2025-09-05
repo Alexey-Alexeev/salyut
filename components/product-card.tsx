@@ -142,13 +142,13 @@ export function ProductCard({ product }: ProductCardProps) {
   if (!isMounted) {
     return (
       <Card className="overflow-hidden">
-        <div className="aspect-square relative bg-muted animate-pulse" />
+        <div className="bg-muted relative aspect-square animate-pulse" />
         <CardContent className="p-4">
-          <div className="h-4 bg-muted rounded animate-pulse mb-2" />
-          <div className="h-6 bg-muted rounded animate-pulse w-1/2" />
+          <div className="bg-muted mb-2 h-4 animate-pulse rounded" />
+          <div className="bg-muted h-6 w-1/2 animate-pulse rounded" />
         </CardContent>
         <CardFooter className="p-4 pt-0">
-          <div className="h-9 bg-muted rounded animate-pulse w-full" />
+          <div className="bg-muted h-9 w-full animate-pulse rounded" />
         </CardFooter>
       </Card>
     );
@@ -158,7 +158,7 @@ export function ProductCard({ product }: ProductCardProps) {
     <Card className="group overflow-hidden transition-all duration-200 hover:shadow-lg">
       <div className="relative">
         <Link href={`/product/${product.slug}`}>
-          <div className="aspect-square relative overflow-hidden bg-gray-100">
+          <div className="relative aspect-square overflow-hidden bg-gray-100">
             <Image
               src={product.images?.[0] || '/placeholder-product.jpg'}
               alt={product.name}
@@ -171,7 +171,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         </Link>
         {product.is_popular && (
-          <Badge className="absolute top-2 left-2 bg-orange-700 text-white font-semibold px-2 py-1 rounded shadow-md">
+          <Badge className="absolute left-2 top-2 rounded bg-orange-700 px-2 py-1 font-semibold text-white shadow-md">
             Популярный
           </Badge>
         )}
@@ -179,23 +179,23 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <CardContent className="p-4">
         <Link href={`/product/${product.slug}`}>
-          <h3 className="font-medium text-sm mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+          <h3 className="group-hover:text-primary mb-2 line-clamp-2 text-sm font-medium transition-colors">
             {product.name}
           </h3>
         </Link>
-        <p className="text-lg font-bold text-primary">
+        <p className="text-primary text-lg font-bold">
           {product.price.toLocaleString('ru-RU')} ₽
         </p>
       </CardContent>
 
       <CardFooter className="p-4 pt-0">
         {quantity > 0 ? (
-          <div className="flex items-center justify-between w-full gap-2">
+          <div className="flex w-full items-center justify-between gap-2">
             <Button
               variant="outline"
               size="sm"
               onClick={handleDecrease}
-              className="h-9 w-9 p-0"
+              className="size-9 p-0"
               aria-label={
                 quantity === 1
                   ? 'Удалить товар из корзины'
@@ -204,11 +204,11 @@ export function ProductCard({ product }: ProductCardProps) {
             >
               {quantity === 1 ? (
                 <Trash2
-                  className="h-4 w-4 text-destructive"
+                  className="text-destructive size-4"
                   aria-hidden="true"
                 />
               ) : (
-                <Minus className="h-4 w-4" aria-hidden="true" />
+                <Minus className="size-4" aria-hidden="true" />
               )}
             </Button>
 
@@ -218,7 +218,7 @@ export function ProductCard({ product }: ProductCardProps) {
               onChange={handleInputChange}
               onBlur={handleInputBlur}
               onKeyPress={handleInputKeyPress}
-              className="w-20 h-10 text-center text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="h-10 w-20 text-center text-base [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               inputMode="numeric"
               pattern="[0-9]*"
               aria-label="Количество товара"
@@ -228,10 +228,10 @@ export function ProductCard({ product }: ProductCardProps) {
               variant="outline"
               size="sm"
               onClick={handleIncrease}
-              className="h-9 w-9 p-0"
+              className="size-9 p-0"
               aria-label="Увеличить количество"
             >
-              <Plus className="h-4 w-4" aria-hidden="true" />
+              <Plus className="size-4" aria-hidden="true" />
             </Button>
           </div>
         ) : (
@@ -241,7 +241,7 @@ export function ProductCard({ product }: ProductCardProps) {
             size="sm"
             variant="default"
           >
-            <ShoppingCart className="h-4 w-4 mr-2" />В корзину
+            <ShoppingCart className="mr-2 size-4" />В корзину
           </Button>
         )}
       </CardFooter>

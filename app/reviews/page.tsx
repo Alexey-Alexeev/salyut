@@ -45,20 +45,20 @@ export default async function ReviewsPage() {
         <Breadcrumb items={[{ label: 'Отзывы' }]} />
       </div>
 
-      <div className="text-center space-y-4 mb-12">
-        <h1 className="text-3xl md:text-4xl font-bold">
+      <div className="mb-12 space-y-4 text-center">
+        <h1 className="text-3xl font-bold md:text-4xl">
           Наши фейерверки в действии
         </h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-muted-foreground mx-auto max-w-2xl">
           Посмотрите, как выглядят наши фейерверки на реальных праздниках наших
           клиентов
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {videoReviews.map(video => (
-          <Card key={video.id} className="overflow-hidden group cursor-pointer">
-            <div className="aspect-video relative">
+          <Card key={video.id} className="group cursor-pointer overflow-hidden">
+            <div className="relative aspect-video">
               <Image
                 src={
                   video.video_url ||
@@ -68,24 +68,24 @@ export default async function ReviewsPage() {
                 fill
                 className="object-cover transition-transform duration-200 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                  <div className="w-0 h-0 border-l-[12px] border-l-white border-y-[8px] border-y-transparent ml-1" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/20">
+                <div className="flex size-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                  <div className="ml-1 size-0 border-y-[8px] border-l-[12px] border-y-transparent border-l-white" />
                 </div>
               </div>
             </div>
             <CardContent className="p-4">
-              <h3 className="font-semibold mb-2">
+              <h3 className="mb-2 font-semibold">
                 Отзыв от {video.customer_name}
               </h3>
-              <p className="text-sm text-muted-foreground">Видео отзыв</p>
+              <p className="text-muted-foreground text-sm">Видео отзыв</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
       {videoReviews.length === 0 && (
-        <div className="text-center py-12">
+        <div className="py-12 text-center">
           <p className="text-muted-foreground mb-4">
             Пока нет отзывов. Будьте первым!
           </p>

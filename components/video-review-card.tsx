@@ -23,8 +23,8 @@ export function VideoReviewCard({ video }: VideoReviewCardProps) {
   };
 
   return (
-    <Card className="overflow-hidden group cursor-pointer">
-      <div className="aspect-video relative">
+    <Card className="group cursor-pointer overflow-hidden">
+      <div className="relative aspect-video">
         {!isPlaying ? (
           // Превью с кнопкой play
           <>
@@ -36,11 +36,11 @@ export function VideoReviewCard({ video }: VideoReviewCardProps) {
               onClick={handlePlay}
             />
             <div
-              className="absolute inset-0 bg-black/30 flex items-center justify-center"
+              className="absolute inset-0 flex items-center justify-center bg-black/30"
               onClick={handlePlay}
             >
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <div className="w-0 h-0 border-l-[12px] border-l-white border-y-[8px] border-y-transparent ml-1" />
+              <div className="flex size-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                <div className="ml-1 size-0 border-y-[8px] border-l-[12px] border-y-transparent border-l-white" />
               </div>
             </div>
           </>
@@ -48,7 +48,7 @@ export function VideoReviewCard({ video }: VideoReviewCardProps) {
           // Iframe с видео
           <iframe
             src={`${video.video_url}&autoplay=1`}
-            className="w-full h-full"
+            className="size-full"
             allow="autoplay; encrypted-media; fullscreen"
             allowFullScreen
             frameBorder="0"
@@ -56,7 +56,7 @@ export function VideoReviewCard({ video }: VideoReviewCardProps) {
         )}
       </div>
       <CardContent className="p-4">
-        <h3 className="font-semibold mb-2">Отзыв от {video.customer_name}</h3>
+        <h3 className="mb-2 font-semibold">Отзыв от {video.customer_name}</h3>
       </CardContent>
     </Card>
   );
