@@ -208,12 +208,12 @@ export default function CartPageClient() {
                 <Breadcrumb items={[{ label: 'Корзина' }]} />
             </div>
 
-            <div className="mx-auto max-w-6xl">
-                <h1 className="mb-8 text-3xl font-bold">Корзина - Оформление заказа фейерверков</h1>
+            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <h1 className="mb-8 text-2xl font-bold sm:text-3xl">Корзина - Оформление заказа</h1>
 
-                <div className="grid gap-8 lg:grid-cols-3">
+                <div className="grid gap-6 lg:gap-8 lg:grid-cols-5">
                     {/* Товары в корзине */}
-                    <div className="lg:col-span-2">
+                    <div className="lg:col-span-3 lg:order-1">
                         <Card>
                             <CardHeader>
                                 <CardTitle>Товары в корзине</CardTitle>
@@ -222,61 +222,72 @@ export default function CartPageClient() {
                                 {items.map(item => (
                                     <div
                                         key={item.id}
-                                        className="flex items-center gap-4 rounded-lg border p-4"
+                                        className="flex flex-col gap-3 rounded-lg border p-3 sm:gap-4 sm:p-4 sm:flex-row sm:items-center"
                                     >
-                                        <div className="relative h-20 w-20 shrink-0">
-                                            <Image
-                                                src={item.image || '/images/placeholder.jpg'}
-                                                alt={item.name}
-                                                fill
-                                                className="rounded-lg object-cover"
-                                                sizes="80px"
-                                            />
+                                        {/* Информация о товаре */}
+                                        <div className="flex items-center gap-3 flex-1 min-w-0 sm:gap-4">
+                                            <div className="relative h-14 w-14 shrink-0 sm:h-20 sm:w-20">
+                                                <Image
+                                                    src={item.image || '/images/placeholder.jpg'}
+                                                    alt={item.name}
+                                                    fill
+                                                    className="rounded-lg object-cover"
+                                                    sizes="(max-width: 640px) 56px, 80px"
+                                                />
+                                            </div>
+
+                                            <div className="flex-1 min-w-0">
+                                                <h3 className="font-semibold text-sm sm:text-base truncate">{item.name}</h3>
+                                                <p className="text-xs sm:text-sm text-gray-600">
+                                                    {item.price.toLocaleString('ru-RU')} ₽
+                                                </p>
+                                            </div>
                                         </div>
 
-                                        <div className="flex-1">
-                                            <h3 className="font-semibold">{item.name}</h3>
-                                            <p className="text-sm text-gray-600">
-                                                {item.price.toLocaleString('ru-RU')} ₽
-                                            </p>
-                                        </div>
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                                            {/* Элементы управления количеством */}
+                                            <div className="flex items-center gap-2">
+                                                <Button
+                                                    variant="outline"
+                                                    size="icon"
+                                                    onClick={() =>
+                                                        updateQuantity(item.id, item.quantity - 1)
+                                                    }
+                                                    disabled={item.quantity <= 1}
+                                                    className="h-8 w-8 flex items-center justify-center p-0 shrink-0"
+                                                >
+                                                    <Minus className="h-4 w-4" aria-hidden="true" style={{ transform: 'translateY(1px)' }} />
+                                                </Button>
+                                                <span className="w-8 text-center font-medium">{item.quantity}</span>
+                                                <Button
+                                                    variant="outline"
+                                                    size="icon"
+                                                    onClick={() =>
+                                                        updateQuantity(item.id, item.quantity + 1)
+                                                    }
+                                                    className="h-8 w-8 flex items-center justify-center p-0 shrink-0"
+                                                >
+                                                    <Plus className="h-4 w-4" aria-hidden="true" />
+                                                </Button>
+                                            </div>
 
-                                        <div className="flex items-center gap-2">
-                                            <Button
-                                                variant="outline"
-                                                size="icon"
-                                                onClick={() =>
-                                                    updateQuantity(item.id, item.quantity - 1)
-                                                }
-                                                disabled={item.quantity <= 1}
-                                            >
-                                                <Minus className="h-4 w-4" aria-hidden="true" />
-                                            </Button>
-                                            <span className="w-8 text-center">{item.quantity}</span>
-                                            <Button
-                                                variant="outline"
-                                                size="icon"
-                                                onClick={() =>
-                                                    updateQuantity(item.id, item.quantity + 1)
-                                                }
-                                            >
-                                                <Plus className="h-4 w-4" aria-hidden="true" />
-                                            </Button>
+                                            {/* Цена и кнопка удаления */}
+                                            <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 sm:ml-auto">
+                                                <div className="text-right sm:min-w-[120px]">
+                                                    <p className="font-semibold text-sm sm:text-base">
+                                                        {(item.price * item.quantity).toLocaleString('ru-RU')} ₽
+                                                    </p>
+                                                </div>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => removeItem(item.id)}
+                                                    className="text-red-500 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0 shrink-0"
+                                                >
+                                                    <Trash2 className="h-4 w-4" aria-hidden="true" />
+                                                </Button>
+                                            </div>
                                         </div>
-
-                                        <div className="text-right">
-                                            <p className="font-semibold">
-                                                {(item.price * item.quantity).toLocaleString('ru-RU')} ₽
-                                            </p>
-                                        </div>
-
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => removeItem(item.id)}
-                                        >
-                                            <Trash2 className="h-4 w-4" aria-hidden="true" />
-                                        </Button>
                                     </div>
                                 ))}
                             </CardContent>
@@ -284,17 +295,65 @@ export default function CartPageClient() {
                     </div>
 
                     {/* Форма заказа */}
-                    <div className="space-y-6">
-                        {/* Итоги заказа */}
+                    <div className="lg:col-span-2 lg:order-2 space-y-6">
+                        {/* Итого сумма товаров */}
                         <Card>
                             <CardHeader>
-                                <CardTitle>Итоги заказа</CardTitle>
+                                <CardTitle>Итого сумма товаров</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="flex justify-between">
                                     <span>Товары:</span>
                                     <span>{subtotal.toLocaleString('ru-RU')} ₽</span>
                                 </div>
+
+                                {subtotal < DISCOUNT_THRESHOLD_1 && (
+                                    <div className="rounded-lg bg-orange-50 p-3">
+                                        <div className="mb-2">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <span className="text-sm font-medium text-orange-800">
+                                                    До скидки 5%:
+                                                </span>
+                                                <span className="text-sm font-semibold text-orange-800">
+                                                    {Math.max(0, DISCOUNT_THRESHOLD_1 - subtotal).toLocaleString('ru-RU')} ₽
+                                                </span>
+                                            </div>
+                                            <div className="w-full bg-orange-200 rounded-full h-2">
+                                                <div
+                                                    className="bg-orange-500 h-2 rounded-full transition-all duration-300"
+                                                    style={{ width: `${Math.min(100, (subtotal / DISCOUNT_THRESHOLD_1) * 100)}%` }}
+                                                ></div>
+                                            </div>
+                                            <div className="text-xs text-orange-700 mt-1">
+                                                Вы набрали {subtotal.toLocaleString('ru-RU')} ₽ из {DISCOUNT_THRESHOLD_1.toLocaleString('ru-RU')} ₽
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {subtotal >= DISCOUNT_THRESHOLD_1 && subtotal < DISCOUNT_THRESHOLD_2 && (
+                                    <div className="rounded-lg bg-green-50 p-3">
+                                        <div className="mb-2">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <span className="text-sm font-medium text-green-800">
+                                                    До скидки 10%:
+                                                </span>
+                                                <span className="text-sm font-semibold text-green-800">
+                                                    {Math.max(0, DISCOUNT_THRESHOLD_2 - subtotal).toLocaleString('ru-RU')} ₽
+                                                </span>
+                                            </div>
+                                            <div className="w-full bg-green-200 rounded-full h-2">
+                                                <div
+                                                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                                                    style={{ width: `${Math.min(100, ((subtotal - DISCOUNT_THRESHOLD_1) / (DISCOUNT_THRESHOLD_2 - DISCOUNT_THRESHOLD_1)) * 100)}%` }}
+                                                ></div>
+                                            </div>
+                                            <div className="text-xs text-green-700 mt-1">
+                                                Вы набрали {subtotal.toLocaleString('ru-RU')} ₽ из {DISCOUNT_THRESHOLD_2.toLocaleString('ru-RU')} ₽
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {discount > 0 && (
                                     <div className="flex justify-between text-green-600">
@@ -303,11 +362,11 @@ export default function CartPageClient() {
                                     </div>
                                 )}
 
-                                <Separator />
-
-                                <div className="flex justify-between font-semibold">
-                                    <span>Итого:</span>
-                                    <span>{total.toLocaleString('ru-RU')} ₽</span>
+                                <div className="border-t pt-4">
+                                    <div className="flex justify-between font-semibold text-lg">
+                                        <span>Итого товары:</span>
+                                        <span>{(subtotal - discount).toLocaleString('ru-RU')} ₽</span>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
@@ -317,7 +376,7 @@ export default function CartPageClient() {
                             <CardHeader>
                                 <CardTitle>Оформление заказа</CardTitle>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className="px-4 sm:px-6">
                                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                                     {/* Контактная информация */}
                                     <div className="space-y-4">
@@ -330,7 +389,8 @@ export default function CartPageClient() {
                                             <Input
                                                 id="name"
                                                 {...register('name')}
-                                                className={errors.name ? 'border-red-500' : ''}
+                                                className={`w-full ${errors.name ? 'border-red-500' : ''}`}
+                                                placeholder="Введите ваше имя"
                                             />
                                             {errors.name && (
                                                 <p className="mt-1 text-sm text-red-500">
@@ -345,7 +405,8 @@ export default function CartPageClient() {
                                                 id="phone"
                                                 type="tel"
                                                 {...register('phone')}
-                                                className={errors.phone ? 'border-red-500' : ''}
+                                                className={`w-full ${errors.phone ? 'border-red-500' : ''}`}
+                                                placeholder="+7 (999) 123-45-67"
                                             />
                                             {errors.phone && (
                                                 <p className="mt-1 text-sm text-red-500">
@@ -441,44 +502,84 @@ export default function CartPageClient() {
                                         />
                                     </div>
 
-                                    {/* Подтверждение возраста */}
-                                    <div className="flex items-center space-x-2">
-                                        <Checkbox
-                                            id="ageConfirmed"
-                                            {...register('ageConfirmed')}
-                                        />
-                                        <Label htmlFor="ageConfirmed" className="text-sm">
-                                            Подтверждаю, что мне исполнилось 18 лет *
-                                        </Label>
-                                    </div>
-                                    {errors.ageConfirmed && (
-                                        <p className="text-sm text-red-500">
-                                            {errors.ageConfirmed.message}
-                                        </p>
-                                    )}
-
-                                    {/* Кнопка оформления заказа */}
-                                    <Button
-                                        type="submit"
-                                        className="w-full"
-                                        size="lg"
-                                        disabled={isSubmitting}
-                                    >
-                                        {isSubmitting ? (
-                                            'Оформляем заказ...'
-                                        ) : (
-                                            <>
-                                                <Check className="mr-2 h-4 w-4" aria-hidden="true" />
-                                                Оформить заказ
-                                            </>
+                                    {/* Подтверждение возраста и согласие на обработку данных */}
+                                    <div className="space-y-3">
+                                        <div className="flex items-center space-x-2">
+                                            <Checkbox
+                                                id="ageConfirmed"
+                                                {...register('ageConfirmed')}
+                                            />
+                                            <Label htmlFor="ageConfirmed" className="text-sm">
+                                                Подтверждаю, что мне исполнилось 18 лет *
+                                            </Label>
+                                        </div>
+                                        {errors.ageConfirmed && (
+                                            <p className="text-sm text-red-500">
+                                                {errors.ageConfirmed.message}
+                                            </p>
                                         )}
-                                    </Button>
+
+                                        <div className="text-xs text-gray-600">
+                                            Согласен на обработку персональных данных в соответствии с политикой конфиденциальности
+                                        </div>
+                                    </div>
+
                                 </form>
+                            </CardContent>
+                        </Card>
+
+                        {/* Итоги заказа */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Итоги заказа</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex justify-between">
+                                    <span>Товары:</span>
+                                    <span>{subtotal.toLocaleString('ru-RU')} ₽</span>
+                                </div>
+
+                                <div className="flex justify-between">
+                                    <span>Доставка:</span>
+                                    <span>{deliveryCost > 0 ? `${deliveryCost.toLocaleString('ru-RU')} ₽` : 'Бесплатно'}</span>
+                                </div>
+
+                                {discount > 0 && (
+                                    <div className="flex justify-between text-green-600">
+                                        <span>Скидка {discountPercent}%:</span>
+                                        <span>-{discount.toLocaleString('ru-RU')} ₽</span>
+                                    </div>
+                                )}
+
+                                <Separator />
+
+                                <div className="flex justify-between font-semibold text-lg">
+                                    <span>Итого к оплате:</span>
+                                    <span>{total.toLocaleString('ru-RU')} ₽</span>
+                                </div>
+
+                                <Button
+                                    type="button"
+                                    className="w-full"
+                                    size="lg"
+                                    disabled={isSubmitting}
+                                    onClick={handleSubmit(onSubmit)}
+                                >
+                                    {isSubmitting ? (
+                                        'Оформляем заказ...'
+                                    ) : (
+                                        <>
+                                            <Check className="mr-2 h-4 w-4" aria-hidden="true" />
+                                            Оформить заказ
+                                        </>
+                                    )}
+                                </Button>
                             </CardContent>
                         </Card>
                     </div>
                 </div>
             </div>
+
 
             {/* JSON-LD Structured Data */}
             <script

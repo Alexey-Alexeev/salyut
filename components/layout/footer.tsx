@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { db } from '@/lib/db';
 import { categories } from '@/db/schema';
@@ -18,8 +19,15 @@ export async function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-4">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="flex size-8 items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-red-500">
-                <span className="text-sm font-bold text-white">🎆</span>
+              <div className="flex size-8 items-center justify-center">
+                <Image
+                  src="/icons/icon_32.png"
+                  alt="СалютГрад"
+                  width={32}
+                  height={32}
+                  className="rounded-full"
+                  priority
+                />
               </div>
               <span className="text-xl font-bold text-gray-900">
                 СалютГрад

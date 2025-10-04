@@ -114,7 +114,7 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
       .toLowerCase()
       .replace(/[ёЁ]/g, 'е')
       .normalize('NFKD')
-      .replace(/\p{Diacritic}/gu, '')
+      .replace(/[\u0300-\u036f\u1ab0-\u1aff\u1dc0-\u1dff\u20d0-\u20ff\u2de0-\u2dff\ufe20-\ufe2f]/g, '')
       .trim();
 
   useEffect(() => {

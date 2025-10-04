@@ -2,6 +2,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu, Phone, Shield, ShoppingCart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -40,8 +41,15 @@ export function Header() {
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center space-x-4">
               <Link href="/" className="flex items-center space-x-2">
-                <div className="flex size-8 items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-red-500">
-                  <span className="text-sm font-bold text-white">🎆</span>
+                <div className="flex size-8 items-center justify-center">
+                  <Image
+                    src="/icons/icon_32.png"
+                    alt="СалютГрад"
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                    priority
+                  />
                 </div>
                 <span className="text-primary text-xl font-bold">
                   СалютГрад
