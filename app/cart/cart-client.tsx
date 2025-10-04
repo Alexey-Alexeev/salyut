@@ -97,13 +97,6 @@ export default function CartPageClient() {
         },
     });
 
-    // Отладочные логи для формы
-    console.log('📋 Ошибки формы:', errors);
-    const formValues = watch();
-    console.log('📋 Значения формы:', formValues);
-    console.log('📋 deliveryMethod:', formValues.deliveryMethod);
-    console.log('📋 deliveryAddress:', formValues.deliveryAddress);
-    console.log('📋 ageConfirmed:', formValues.ageConfirmed);
 
     const deliveryMethod = watch('deliveryMethod');
     const professionalLaunch = watch('professionalLaunch');
@@ -126,19 +119,15 @@ export default function CartPageClient() {
 
     const onDeliveryChange = useCallback(
         (result: DeliveryCalculationResult) => {
-            console.log('🚚 onDeliveryChange вызвана с результатом:', result);
             setDeliveryResult(result);
 
             // Синхронизируем метод доставки с формой
             setValue('deliveryMethod', result.method);
-            console.log('🚚 Устанавливаем метод доставки в форму:', result.method);
 
             // Синхронизируем адрес с формой
             if (result.address) {
-                console.log('📍 Устанавливаем адрес в форму:', result.address);
                 setValue('deliveryAddress', result.address);
             } else {
-                console.log('❌ Адрес не найден в результате доставки');
                 // Если метод доставки, но адреса нет - очищаем поле
                 if (result.method === 'delivery') {
                     setValue('deliveryAddress', '');
@@ -150,31 +139,23 @@ export default function CartPageClient() {
 
     // Функция для показа ошибок валидации
     const showValidationErrors = (errors: any) => {
-        console.log('🔍 showValidationErrors вызвана с ошибками:', errors);
         const errorMessages: string[] = [];
 
         if (errors.name) {
-            console.log('❌ Ошибка имени:', errors.name.message);
             errorMessages.push(`• ${errors.name.message}`);
         }
         if (errors.phone) {
-            console.log('❌ Ошибка телефона:', errors.phone.message);
             errorMessages.push(`• ${errors.phone.message}`);
         }
         if (errors.contact) {
-            console.log('❌ Ошибка контакта:', errors.contact.message);
             errorMessages.push(`• ${errors.contact.message}`);
         }
         if (errors.deliveryAddress) {
-            console.log('❌ Ошибка адреса доставки:', errors.deliveryAddress.message);
             errorMessages.push(`• ${errors.deliveryAddress.message}`);
         }
         if (errors.ageConfirmed) {
-            console.log('❌ Ошибка подтверждения возраста:', errors.ageConfirmed.message);
             errorMessages.push(`• ${errors.ageConfirmed.message}`);
         }
-
-        console.log('📝 Собранные сообщения об ошибках:', errorMessages);
 
         if (errorMessages.length > 0) {
             toast.error(
@@ -192,12 +173,7 @@ export default function CartPageClient() {
     };
 
     const onSubmit = async (data: OrderFormData) => {
-        console.log('🚀 onSubmit вызвана с данными:', data);
-        console.log('🚀 items.length:', items.length);
-        console.log('🚀 isSubmitting:', isSubmitting);
-
         if (items.length === 0) {
-            console.log('❌ Корзина пуста');
             toast.error(
                 <div>
                     <div className="font-semibold">🛒 Корзина пуста</div>
@@ -208,7 +184,6 @@ export default function CartPageClient() {
             return;
         }
 
-        console.log('✅ Начинаем оформление заказа');
         setIsSubmitting(true);
 
         try {
@@ -233,8 +208,6 @@ export default function CartPageClient() {
                 })),
             };
 
-            console.log('📦 Данные заказа:', orderData);
-
             const response = await fetch('/api/orders', {
                 method: 'POST',
                 headers: {
@@ -243,10 +216,7 @@ export default function CartPageClient() {
                 body: JSON.stringify(orderData),
             });
 
-            console.log('📡 Ответ сервера:', response.status, response.statusText);
-
             if (response.ok) {
-                console.log('✅ Заказ успешно оформлен');
                 toast.success(
                     <div>
                         <div className="font-semibold">🎉 Заказ успешно оформлен!</div>
@@ -259,7 +229,6 @@ export default function CartPageClient() {
                 router.push('/');
             } else {
                 const errorData = await response.json();
-                console.log('❌ Ошибка сервера:', errorData);
 
                 // Показываем детальные ошибки валидации с сервера
                 if (errorData.details && Array.isArray(errorData.details)) {
@@ -276,7 +245,6 @@ export default function CartPageClient() {
                 }
             }
         } catch (error) {
-            console.log('💥 Ошибка при оформлении заказа:', error);
             toast.error(
                 <div>
                     <div className="font-semibold">⚠️ Ошибка соединения</div>
@@ -285,7 +253,6 @@ export default function CartPageClient() {
                 { duration: 5000 }
             );
         } finally {
-            console.log('🏁 Завершение оформления заказа');
             setIsSubmitting(false);
         }
     };
@@ -718,18 +685,10 @@ export default function CartPageClient() {
                                     size="lg"
                                     disabled={isSubmitting}
                                     onClick={() => {
-                                        console.log('🖱️ Кнопка "Оформить заказ" нажата');
-                                        console.log('🖱️ isSubmitting:', isSubmitting);
-                                        console.log('🖱️ items.length:', items.length);
-
                                         const currentFormValues = watch();
-                                        console.log('🖱️ Текущие значения формы:', currentFormValues);
-                                        console.log('🖱️ Ошибки формы:', errors);
-                                        console.log('🖱️ Количество ошибок:', Object.keys(errors).length);
 
                                         // Проверяем ошибки валидации перед отправкой
                                         if (Object.keys(errors).length > 0) {
-                                            console.log('❌ Найдены ошибки валидации:', errors);
                                             showValidationErrors(errors);
                                             return;
                                         }
@@ -758,12 +717,10 @@ export default function CartPageClient() {
                                         }
 
                                         if (Object.keys(criticalErrors).length > 0) {
-                                            console.log('❌ Найдены критические ошибки:', criticalErrors);
                                             showValidationErrors(criticalErrors);
                                             return;
                                         }
 
-                                        console.log('✅ Ошибок валидации нет, отправляем форму');
                                         handleSubmit(onSubmit)();
                                     }}
                                 >
