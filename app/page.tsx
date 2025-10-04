@@ -403,9 +403,11 @@ export default async function HomePage() {
             "telephone": "+7 (977) 360-20-08",
             "address": {
               "@type": "PostalAddress",
-              "addressLocality": "Москва",
+              "streetAddress": "Рассветная улица, 4",
+              "addressLocality": "деревня Чёрное",
               "addressRegion": "Московская область",
-              "addressCountry": "RU"
+              "addressCountry": "RU",
+              "postalCode": "143921"
             },
             "geo": {
               "@type": "GeoCoordinates",
@@ -423,6 +425,7 @@ export default async function HomePage() {
               },
               "geoRadius": "50000"
             },
+            "areaServed": ["Москва", "Московская область"],
             "hasOfferCatalog": {
               "@type": "OfferCatalog",
               "name": "Каталог фейерверков и салютов",
@@ -436,7 +439,7 @@ export default async function HomePage() {
                 "position": index + 1
               }))
             },
-            "product": popularProducts.slice(0, 3).map(product => ({
+            "hasProduct": popularProducts.slice(0, 3).map(product => ({
               "@type": "Product",
               "name": product.name,
               "description": product.description || `Качественный ${product.name} для праздников`,
@@ -511,7 +514,10 @@ export default async function HomePage() {
               "name": video.title || "Видеоотзыв о фейерверках",
               "description": "Реальные отзывы клиентов о наших фейерверках",
               "thumbnailUrl": video.thumbnail_url || "https://салютград.рф/images/video-thumb.jpg",
-              "duration": "PT30S"
+              "duration": "PT30S",
+              "uploadDate": video.created_at || new Date().toISOString(),
+              "contentUrl": video.video_url || "https://салютград.рф/videos/review.mp4",
+              "embedUrl": video.embed_url || `https://салютград.рф/embed/${video.id}`
             }))
           })
         }}

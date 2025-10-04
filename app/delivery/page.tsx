@@ -17,13 +17,37 @@ import {
 import { DELIVERY_CONSTANTS, formatDeliveryCost } from '@/lib/delivery-utils';
 
 export const metadata: Metadata = {
-  title: 'Доставка и самовывоз | СалютГрад.рф',
+  title: 'Доставка фейерверков в Москве и МО | Самовывоз салютов | СалютГрад',
   description:
-    'Информация о доставке фейерверков по Москве и Московской области. Условия доставки, стоимость, адрес самовывоза.',
+    'Быстрая доставка фейерверков и салютов по Москве и Московской области. Самовывоз в Балашихе. Фиксированная стоимость доставки, профессиональная упаковка, гарантия качества.',
   keywords:
-    'доставка фейерверков, самовывоз салютов, доставка по москве, московская область',
+    'доставка фейерверков москва, купить салют с доставкой, самовывоз фейерверков балашиха, доставка пиротехники московская область',
+  openGraph: {
+    title: 'Доставка фейерверков в Москве и МО | СалютГрад',
+    description: 'Быстрая доставка фейерверков и салютов по Москве и Московской области. Самовывоз в Балашихе. Фиксированная стоимость, профессиональная упаковка.',
+    url: 'https://салютград.рф/delivery',
+    siteName: 'СалютГрад',
+    type: 'website',
+    locale: 'ru_RU',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Доставка фейерверков в Москве и МО | СалютГрад',
+    description: 'Быстрая доставка фейерверков и салютов по Москве и Московской области. Самовывоз в Балашихе.',
+  },
   alternates: {
     canonical: 'https://салютград.рф/delivery',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -36,9 +60,10 @@ export default function DeliveryPage() {
 
       <div className="mx-auto max-w-4xl space-y-8">
         <div className="space-y-4 text-center">
-          <h1 className="text-4xl font-bold">Доставка и самовывоз</h1>
+          <h1 className="text-4xl font-bold">Доставка фейерверков в Москве и МО</h1>
           <p className="text-muted-foreground text-xl">
-            Мы работаем только в Москве и Московской области
+            Быстрая доставка салютов и пиротехники по Москве и Московской области.
+            Самовывоз в Балашихе. Фиксированная стоимость, профессиональная упаковка.
           </p>
         </div>
 
@@ -53,15 +78,15 @@ export default function DeliveryPage() {
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-3">
                 <div className="rounded-lg bg-blue-100 p-2">
-                  <Truck className="size-6 text-blue-600" />
+                  <Truck className="size-6 text-blue-600" aria-hidden="true" />
                 </div>
-                🚚 Доставка
+                <span role="img" aria-label="доставка">🚚</span> Доставка
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
                 <div className="flex items-center gap-3 rounded-lg bg-green-50 p-3">
-                  <CheckCircle className="size-5 shrink-0 text-green-600" />
+                  <CheckCircle className="size-5 shrink-0 text-green-600" aria-hidden="true" />
                   <div>
                     <p className="font-medium text-green-900">
                       Москва, Балашиха, Люберцы
@@ -78,7 +103,7 @@ export default function DeliveryPage() {
                 </div>
 
                 <div className="flex items-center gap-3 rounded-lg bg-blue-50 p-3">
-                  <Calculator className="size-5 shrink-0 text-blue-600" />
+                  <Calculator className="size-5 shrink-0 text-blue-600" aria-hidden="true" />
                   <div>
                     <p className="font-medium text-blue-900">
                       Другие города Московской области
@@ -99,7 +124,7 @@ export default function DeliveryPage() {
 
               <div className="space-y-2">
                 <h4 className="flex items-center gap-2 font-medium">
-                  <Info className="size-4" />
+                  <Info className="size-4" aria-hidden="true" />
                   Условия доставки:
                 </h4>
                 <ul className="text-muted-foreground ml-6 space-y-1 text-sm">
@@ -125,15 +150,15 @@ export default function DeliveryPage() {
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-3">
                 <div className="rounded-lg bg-green-100 p-2">
-                  <Store className="size-6 text-green-600" />
+                  <Store className="size-6 text-green-600" aria-hidden="true" />
                 </div>
-                🏬 Самовывоз
+                <span role="img" aria-label="самовывоз">🏬</span> Самовывоз
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3 rounded-lg bg-green-50 p-4">
                 <div className="flex items-start gap-3">
-                  <MapPin className="mt-0.5 size-5 shrink-0 text-green-600" />
+                  <MapPin className="mt-0.5 size-5 shrink-0 text-green-600" aria-hidden="true" />
                   <div>
                     <h4 className="font-medium text-green-900">
                       Адрес склада:
@@ -145,7 +170,7 @@ export default function DeliveryPage() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <Phone className="size-5 shrink-0 text-green-600" />
+                  <Phone className="size-5 shrink-0 text-green-600" aria-hidden="true" />
                   <div>
                     <h4 className="font-medium text-green-900">Телефон:</h4>
                     <p className="text-sm text-green-800">+7 (977) 360-20-08</p>
@@ -157,7 +182,7 @@ export default function DeliveryPage() {
 
               <div className="space-y-2">
                 <h4 className="flex items-center gap-2 font-medium">
-                  <Info className="size-4" />
+                  <Info className="size-4" aria-hidden="true" />
                   Условия самовывоза:
                 </h4>
                 <ul className="text-muted-foreground ml-6 space-y-1 text-sm">
@@ -177,7 +202,7 @@ export default function DeliveryPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <div className="rounded-lg bg-slate-100 p-2">
-                <MapPin className="size-6 text-slate-600" />
+                <MapPin className="size-6 text-slate-600" aria-hidden="true" />
               </div>
               Расположение склада
             </CardTitle>
@@ -203,7 +228,9 @@ export default function DeliveryPage() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="space-y-3">
-                <h3 className="text-lg font-medium">🎆 Безопасность</h3>
+                <h3 className="text-lg font-medium">
+                  <span role="img" aria-label="фейерверк">🎆</span> Безопасность
+                </h3>
                 <ul className="text-muted-foreground space-y-1 text-sm">
                   <li>• Продажа только лицам старше 18 лет</li>
                   <li>• Соблюдение правил перевозки пиротехники</li>
@@ -212,7 +239,9 @@ export default function DeliveryPage() {
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-medium">📞 Поддержка</h3>
+                <h3 className="text-lg font-medium">
+                  <span role="img" aria-label="поддержка">📞</span> Поддержка
+                </h3>
                 <ul className="text-muted-foreground space-y-1 text-sm">
                   <li>• Консультации по выбору товаров</li>
                   <li>• Помощь с расчетом доставки</li>
@@ -225,7 +254,7 @@ export default function DeliveryPage() {
 
             <div className="rounded-lg bg-gradient-to-r from-orange-50 to-red-50 p-6 text-center">
               <h3 className="mb-2 text-lg font-medium">
-                💫 Хотите особенное шоу?
+                <span role="img" aria-label="звезда">💫</span> Хотите особенное шоу?
               </h3>
               <p className="text-muted-foreground mb-4">
                 Закажите профессиональный запуск салютов! Безопасно, эффектно,
@@ -241,6 +270,100 @@ export default function DeliveryPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": ["LocalBusiness", "Store"],
+            "name": "СалютГрад",
+            "description": "Доставка фейерверков и салютов по Москве и Московской области",
+            "url": "https://салютград.рф/delivery",
+            "telephone": "+7 (977) 360-20-08",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "деревня Чёрное",
+              "addressRegion": "Московская область",
+              "addressCountry": "RU",
+              "streetAddress": "Рассветная улица, 4",
+              "postalCode": "143921"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "55.740401",
+              "longitude": "38.051908"
+            },
+            "openingHours": "Mo-Su 09:00-21:00",
+            "areaServed": [
+              {
+                "@type": "City",
+                "name": "Москва"
+              },
+              {
+                "@type": "City",
+                "name": "Балашиха"
+              },
+              {
+                "@type": "City",
+                "name": "Люберцы"
+              }
+            ],
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Услуги доставки",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Доставка фейерверков по Москве",
+                    "description": "Фиксированная стоимость доставки фейерверков по Москве, Балашихе, Люберцам"
+                  },
+                  "price": "500",
+                  "priceCurrency": "RUB",
+                  "priceValidUntil": "2025-12-31",
+                  "eligibleRegion": "RU-MOW",
+                  "availability": "https://schema.org/InStock"
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Доставка фейерверков по МО",
+                    "description": "Доставка фейерверков по Московской области с расчетом по километражу"
+                  },
+                  "price": "100",
+                  "priceCurrency": "RUB",
+                  "priceValidUntil": "2025-12-31",
+                  "eligibleRegion": "RU-MOS",
+                  "priceSpecification": {
+                    "@type": "UnitPriceSpecification",
+                    "price": "100",
+                    "priceCurrency": "RUB",
+                    "unitText": "за километр от МКАД"
+                  },
+                  "availability": "https://schema.org/InStock"
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Самовывоз фейерверков",
+                    "description": "Бесплатный самовывоз фейерверков со склада в Балашихе"
+                  },
+                  "price": "0",
+                  "priceCurrency": "RUB",
+                  "priceValidUntil": "2025-12-31",
+                  "eligibleRegion": "RU-MOS",
+                  "availability": "https://schema.org/InStock"
+                }
+              ]
+            }
+          })
+        }}
+      />
     </div>
   );
 }
