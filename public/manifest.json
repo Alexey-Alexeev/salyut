@@ -1,0 +1,106 @@
+{
+    "name": "СалютГрад - Фейерверки и салюты в Москве",
+    "short_name": "СалютГрад",
+    "description": "Лучшие фейерверки, салюты и пиротехника в Москве. Быстрая доставка, профессиональный запуск салютов.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#f97316",
+    "orientation": "portrait",
+    "scope": "/",
+    "lang": "ru",
+    "icons": [
+        {
+            "src": "/icons/icon_16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon_32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon_48.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon_64.png",
+            "sizes": "64x64",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon_72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon_128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon_192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/icon_256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon_512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/maskable_icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/icons/splash_screen.png",
+            "sizes": "1024x1024",
+            "type": "image/png",
+            "form_factor": "wide"
+        }
+    ],
+    "categories": [
+        "shopping",
+        "entertainment",
+        "lifestyle"
+    ],
+    "shortcuts": [
+        {
+            "name": "Каталог фейерверков",
+            "short_name": "Каталог",
+            "description": "Просмотр каталога фейерверков и салютов",
+            "url": "/catalog",
+            "icons": [
+                {
+                    "src": "/icons/icon_192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Корзина",
+            "short_name": "Корзина",
+            "description": "Оформление заказа",
+            "url": "/cart",
+            "icons": [
+                {
+                    "src": "/icons/icon_192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ]
+}
