@@ -51,9 +51,7 @@ export function AddressAutocomplete({
 
   // Yandex Suggest API больше не доступен, используем Geocoder API
   useEffect(() => {
-    console.log(
-      'Address autocomplete: using Yandex Geocoder API for suggestions'
-    );
+    // Yandex Geocoder API for suggestions
   }, []);
 
   // Функция получения подсказок через Yandex Geocoder API

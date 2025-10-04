@@ -18,10 +18,6 @@ const getCleanSlug = (originalSlug: string): string => {
 export async function generateStaticParams() {
   try {
     const rows = await db.select({ slug: products.slug }).from(products);
-    console.log(
-      'Available slugs for static generation:',
-      rows.map(r => r.slug)
-    );
     return rows.map(r => ({ slug: r.slug })); // ✅ просто slug
   } catch (error) {
     console.error('Error generating static params:', error);
@@ -33,7 +29,6 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   try {
     const cleanSlug = getCleanSlug(params.slug);
-    console.log('Generating metadata for clean slug:', cleanSlug);
     const product = await db
       .select()
       .from(products)
@@ -41,7 +36,6 @@ export async function generateMetadata({
       .limit(1);
 
     if (!product[0]) {
-      console.log('Product not found for metadata generation:', cleanSlug);
       return {};
     }
 
@@ -72,11 +66,9 @@ export async function generateMetadata({
 }
 export default async function ProductPage({ params }: PageProps) {
   try {
-    console.log('Loading product page for slug:', params.slug);
 
     // ✅ Используем clean slug для поиска
     const cleanSlug = getCleanSlug(params.slug);
-    console.log('Searching for clean slug:', cleanSlug);
 
     const product = await db
       .select()
@@ -85,7 +77,6 @@ export default async function ProductPage({ params }: PageProps) {
       .limit(1);
 
     if (!product[0]) {
-      console.log('Product not found for clean slug:', cleanSlug);
       return (
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
@@ -105,11 +96,6 @@ export default async function ProductPage({ params }: PageProps) {
     }
 
     const productData = product[0];
-    console.log('Found product:', {
-      id: productData.id,
-      name: productData.name,
-      slug: productData.slug,
-    });
 
     // Загружаем связанные данные
     let categoryData = null;
@@ -123,7 +109,6 @@ export default async function ProductPage({ params }: PageProps) {
           .where(eq(categories.id, productData.category_id))
           .limit(1);
         categoryData = category[0] || null;
-        console.log('Loaded category:', categoryData?.name);
       } catch (error) {
         console.error('Error loading category:', error);
       }
@@ -137,7 +122,6 @@ export default async function ProductPage({ params }: PageProps) {
           .where(eq(manufacturers.id, productData.manufacturer_id))
           .limit(1);
         manufacturerData = manufacturer[0] || null;
-        console.log('Loaded manufacturer:', manufacturerData?.name);
       } catch (error) {
         console.error('Error loading manufacturer:', error);
       }

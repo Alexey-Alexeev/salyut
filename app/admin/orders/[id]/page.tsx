@@ -94,9 +94,7 @@ export default function OrderDetailPage() {
   };
 
   const handleStatusChange = (newStatus: string) => {
-    console.log("handleStatusChange called with:", newStatus);
     if (newStatus === 'completed') {
-      console.log("setting isModalOpen to true");
       setIsModalOpen(true);
     } else {
       updateOrderStatus(newStatus);

@@ -34,16 +34,12 @@ const orderSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('=== Начало создания заказа ===');
 
     const body = await request.json();
-    console.log('Полученные данные:', JSON.stringify(body, null, 2));
 
     const validatedData = orderSchema.parse(body);
-    console.log('Данные прошли валидацию:', validatedData);
 
     // Создаем заказ
-    console.log('Создаем заказ в базе данных...');
 
     const orderData = {
       customer_name: validatedData.customer_name,
@@ -62,7 +58,6 @@ export async function POST(request: NextRequest) {
       distance_from_mkad: validatedData.distance_from_mkad || null,
     };
 
-    console.log('Данные для вставки:', orderData);
 
     let order;
     try {
@@ -82,17 +77,14 @@ export async function POST(request: NextRequest) {
       `);
 
       order = result[0] as any;
-      console.log('✅ Заказ создан успешно!', order);
     } catch (insertError) {
       console.error('❌ Ошибка при вставке заказа:', insertError);
       throw insertError;
     }
 
-    console.log('Заказ создан с ID:', order.id);
 
     // Создаем элементы заказа
     if (order && validatedData.items.length > 0) {
-      console.log(`Создаем ${validatedData.items.length} элементов заказа...`);
 
       // Use raw SQL for order items as well
       for (const item of validatedData.items) {
@@ -102,11 +94,9 @@ export async function POST(request: NextRequest) {
         `);
       }
 
-      console.log('Элементы заказа созданы');
     }
 
     // Получаем информацию о товарах для уведомления
-    console.log('Получаем информацию о товарах...');
     const orderItemsWithProducts = await Promise.all(
       validatedData.items.map(async item => {
         try {
@@ -130,11 +120,8 @@ export async function POST(request: NextRequest) {
       })
     );
 
-    console.log('Информация о товарах получена:', orderItemsWithProducts);
 
     // Отправляем уведомление в Telegram
-    console.log('Отправляем уведомление в Telegram...');
-    console.log('validatedData', validatedData);
     try {
       await sendTelegramNotification({
         orderId: order.id as string,
@@ -152,14 +139,11 @@ export async function POST(request: NextRequest) {
         deliveryCost: validatedData.delivery_cost,
         distanceFromMKAD: validatedData.distance_from_mkad || undefined,
       });
-      console.log('Уведомление в Telegram отправлено');
     } catch (telegramError) {
       console.error('Ошибка при отправке Telegram уведомления:', telegramError);
       // Не прерываем процесс из-за ошибки Telegram
-      console.log('Заказ создан успешно, но уведомление не отправлено');
     }
 
-    console.log('Заказ успешно создан!');
 
     return NextResponse.json(
       {

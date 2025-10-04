@@ -168,7 +168,6 @@ export default function AdminOrdersPage() {
         }
 
         const orderWithItems = await response.json();
-        console.log('order with items data', orderWithItems);
 
         setSelectedOrder({ ...order, items: orderWithItems.items });
         setIsModalOpen(true);
@@ -184,7 +183,6 @@ export default function AdminOrdersPage() {
   const updateOrder = async (values: any) => {
     if (!selectedOrder) return;
 
-    console.log("Updating order with values:", values);
 
     try {
       const response = await fetch(`/api/orders/${selectedOrder.id}`, {

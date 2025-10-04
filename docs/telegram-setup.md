@@ -22,7 +22,10 @@
 # After sending /start to your bot, run:
 fetch('https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates')
   .then(r => r.json())
-  .then(data => console.log('Your Chat ID:', data.result[0].message.chat.id))
+  .then(data => {
+    // Your Chat ID will be in: data.result[0].message.chat.id
+    return data.result[0].message.chat.id;
+  })
 ```
 
 ### 3. Environment Variables (reg.ru hosting)

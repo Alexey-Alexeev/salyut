@@ -13,7 +13,7 @@ try {
   await new Promise(resolve => setTimeout(resolve, 2000))
 
   // Here you would normally send the order to your API  ← Только комментарий!
-  console.log('Order data:', { ...data })
+  // Order data: { ...data }
 
   clearCart()
   setOrderComplete(true)

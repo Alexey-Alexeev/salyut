@@ -9,16 +9,11 @@ export async function GET(
 ) {
   try {
     const decodedSlug = decodeURIComponent(params.slug);
-    console.log('Searching for product with slug:', decodedSlug);
 
     // Сначала проверим, есть ли товары вообще
     const allProducts = await db
       .select({ slug: products.slug, name: products.name })
       .from(products);
-    console.log(
-      'Available products:',
-      allProducts.map(p => ({ slug: p.slug, name: p.name }))
-    );
 
     // Ищем товар по slug
     const product = await db
@@ -28,16 +23,10 @@ export async function GET(
       .limit(1);
 
     if (!product[0]) {
-      console.log('Product not found for slug:', decodedSlug);
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
     const productData = product[0];
-    console.log('Found product:', {
-      id: productData.id,
-      name: productData.name,
-      slug: productData.slug,
-    });
 
     // Загружаем связанные данные
     let categoryData = null;

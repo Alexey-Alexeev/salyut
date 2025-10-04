@@ -102,9 +102,9 @@ export function DeliverySelection({
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((lat1 * Math.PI) / 180) *
-        Math.cos((lat2 * Math.PI) / 180) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
@@ -199,12 +199,6 @@ export function DeliverySelection({
       const estimatedRoadDistance = minStraightDistanceKm * 1.35;
       const finalDistance = Math.ceil(estimatedRoadDistance);
 
-      console.log('📏 Расчет расстояния:', {
-        straight: minStraightDistanceKm.toFixed(2),
-        // coefficient,
-        estimated: estimatedRoadDistance.toFixed(2),
-        final: finalDistance,
-      });
 
       setDistanceFromMKAD(finalDistance);
     } catch (error) {
@@ -218,12 +212,6 @@ export function DeliverySelection({
   // Пересчёт при изменении
   useEffect(() => {
     const city = extractCityFromAddress(address);
-    console.log('🔍 DeliverySelection useEffect - Адрес:', address);
-    console.log('🔍 DeliverySelection useEffect - Город:', city);
-    console.log(
-      '🔍 DeliverySelection useEffect - Расстояние от МКАД:',
-      distanceFromMKAD
-    );
 
     const result = calculateDelivery({
       method,
@@ -232,7 +220,6 @@ export function DeliverySelection({
       distanceFromMKAD: method === 'delivery' ? distanceFromMKAD : undefined,
     });
 
-    console.log('🔍 DeliverySelection useEffect - Результат расчета:', result);
 
     setDeliveryResult(result);
     onDeliveryChange(result);
@@ -247,15 +234,12 @@ export function DeliverySelection({
   };
 
   const handleAddressChange = (value: string) => {
-    console.log('📝 handleAddressChange вызвана с адресом:', value);
     setAddress(value);
     if (value && value.length > 10) {
-      console.log('⏰ Запускаем таймер для расчета расстояния...');
       setTimeout(() => {
         calculateDistanceFromMKAD(value);
       }, 1000);
     } else {
-      console.log('💯 Адрес слишком короткий, сбрасываем расстояние');
       setDistanceFromMKAD(undefined);
     }
   };

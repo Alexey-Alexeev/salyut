@@ -68,7 +68,6 @@ export default function ProductClient({
   };
 
   const images = product.images || [];
-  console.log('product', product);
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -98,11 +97,10 @@ export default function ProductClient({
               {images.map((image, index) => (
                 <button
                   key={index}
-                  className={`relative size-20 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
-                    selectedImage === index
+                  className={`relative size-20 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${selectedImage === index
                       ? 'border-primary'
                       : 'border-border hover:border-primary/50'
-                  }`}
+                    }`}
                   onClick={() => setSelectedImage(index)}
                 >
                   <Image
@@ -212,7 +210,7 @@ export default function ProductClient({
             <Card>
               <CardContent className="pt-6">
                 {product.characteristics &&
-                Object.keys(product.characteristics).length > 0 ? (
+                  Object.keys(product.characteristics).length > 0 ? (
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     {Object.entries(product.characteristics).map(
                       ([key, value]) => (

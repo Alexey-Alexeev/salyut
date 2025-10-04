@@ -60,7 +60,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   const body = await request.json();
   const { status, items, ...orderUpdateData } = body;
 
-  console.log('PATCH request data:', { id, status, items, orderUpdateData });
 
   try {
     // First, get the current order to check its status
@@ -100,10 +99,8 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
       // Insert completed order items
       if (items && Array.isArray(items) && items.length > 0) {
-        console.log('Raw items received:', items);
 
         const completedOrderItemsData = items.map(item => {
-          console.log('Processing item:', item);
           return {
             completed_order_id: completedOrder.id,
             product_id: item.product_id || item.product?.id, // Handle both possible structures
@@ -112,7 +109,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
           };
         });
 
-        console.log('Inserting completed order items:', completedOrderItemsData);
         await db.insert(completedOrderItems).values(completedOrderItemsData);
       }
 
@@ -126,7 +122,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
         .where(eq(orders.id, id))
         .returning();
 
-      console.log('Order completed successfully:', updatedOrder);
       return NextResponse.json({
         ...updatedOrder,
         completedOrderId: completedOrder.id,
@@ -149,7 +144,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
         return new NextResponse('Order not found', { status: 404 });
       }
 
-      console.log('Order status updated:', updatedOrder);
       return NextResponse.json(updatedOrder);
     }
   } catch (error) {
