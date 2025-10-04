@@ -471,24 +471,38 @@ export default function CartPageClient() {
                                             Дополнительные услуги
                                         </h3>
 
-                                        <div className="flex items-center space-x-2">
-                                            <Checkbox
-                                                id="professionalLaunch"
-                                                {...register('professionalLaunch')}
-                                            />
-                                            <Label htmlFor="professionalLaunch">
-                                                Профессиональный запуск салютов
-                                            </Label>
-                                        </div>
-
-                                        {professionalLaunch && (
-                                            <div className="rounded-lg bg-orange-50 p-4">
-                                                <p className="text-sm text-orange-800">
-                                                    Наш менеджер свяжется с вами для обсуждения деталей
-                                                    профессионального запуска и расчета стоимости.
-                                                </p>
+                                        {/* Профессиональный запуск */}
+                                        <div className="rounded-lg border bg-gradient-to-r from-orange-50 to-red-50 p-4">
+                                            <div className="flex items-start space-x-3">
+                                                <Checkbox
+                                                    id="professionalLaunch"
+                                                    {...register('professionalLaunch')}
+                                                />
+                                                <div className="flex-1">
+                                                    <div className="flex items-center space-x-2 mb-2">
+                                                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-100">
+                                                            <span className="text-sm">🎆</span>
+                                                        </div>
+                                                        <Label
+                                                            htmlFor="professionalLaunch"
+                                                            className="cursor-pointer text-sm font-medium leading-none"
+                                                        >
+                                                            Профессиональный запуск салютов
+                                                        </Label>
+                                                    </div>
+                                                    <p className="text-muted-foreground text-xs leading-relaxed">
+                                                        Безопасно, качественно, с соблюдением всех норм.<br />
+                                                        Стоимость рассчитывается индивидуально.
+                                                    </p>
+                                                    <Link
+                                                        href="/services/launching"
+                                                        className="text-xs text-orange-600 underline hover:text-orange-700 mt-2 inline-block"
+                                                    >
+                                                        Подробнее об услуге →
+                                                    </Link>
+                                                </div>
                                             </div>
-                                        )}
+                                        </div>
                                     </div>
 
                                     {/* Комментарий */}
