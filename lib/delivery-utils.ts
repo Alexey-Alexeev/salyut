@@ -139,12 +139,13 @@ export function calculateDeliveryCost(
   city: string,
   distanceFromMKAD?: number
 ): number {
-  // Если это город с фиксированной стоимостью (внутри МКАД или основные города)
+  // Если это город с фиксированной стоимостью (Москва, Балашиха, Люберцы)
+  // ВАЖНО: Проверяем это ПЕРВЫМ, независимо от расстояния от МКАД
   if (city && isFixedDeliveryCity(city)) {
     return DELIVERY_CONSTANTS.MOSCOW_DELIVERY_COST;
   }
 
-  // Если указано расстояние от МКАД, используем его (независимо от того, определен ли город)
+  // Если указано расстояние от МКАД, используем его (только для НЕ фиксированных городов)
   if (distanceFromMKAD !== undefined) {
     if (distanceFromMKAD <= 0) {
       // Внутри МКАД - фиксированная стоимость
@@ -184,7 +185,7 @@ export function calculateDelivery(
   let description = '';
   if (city && isFixedDeliveryCity(city)) {
     const formattedCity = formatCityName(city);
-    description = `Доставка: ${cost} ₽`;
+    description = `Доставка в ${formattedCity}: ${cost} ₽ (фиксированная стоимость)`;
   } else if (data.distanceFromMKAD !== undefined) {
     if (data.distanceFromMKAD <= 0) {
       description = `Доставка: ${cost} ₽`;
@@ -250,6 +251,15 @@ export function extractCityFromAddress(address: string): string {
       'i'
     );
     if (cityRegex.test(normalized)) {
+      return city;
+    }
+
+    // Дополнительная проверка: ищем город в составе фраз типа "городской округ Балашиха"
+    const cityInPhraseRegex = new RegExp(
+      `(?:городской\\s+округ|муниципальный\\s+округ|г\\.?|город)\\s+${city.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`,
+      'i'
+    );
+    if (cityInPhraseRegex.test(normalized)) {
       return city;
     }
   }

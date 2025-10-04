@@ -211,7 +211,9 @@ export function DeliverySelection({
 
   // Пересчёт при изменении
   useEffect(() => {
+    console.log('🔄 useEffect пересчета доставки:', { method, address, distanceFromMKAD });
     const city = extractCityFromAddress(address);
+    console.log('🏙️ Извлеченный город:', city);
 
     const result = calculateDelivery({
       method,
@@ -220,7 +222,7 @@ export function DeliverySelection({
       distanceFromMKAD: method === 'delivery' ? distanceFromMKAD : undefined,
     });
 
-
+    console.log('📊 Результат расчета доставки:', result);
     setDeliveryResult(result);
     onDeliveryChange(result);
   }, [method, address, distanceFromMKAD]);
@@ -234,6 +236,7 @@ export function DeliverySelection({
   };
 
   const handleAddressChange = (value: string) => {
+    console.log('🏠 handleAddressChange вызвана с адресом:', value);
     setAddress(value);
     if (value && value.length > 10) {
       setTimeout(() => {
