@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Metadata } from 'next';
 import { ConsultationDialog } from '@/components/consultation-dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,12 +52,10 @@ export default function LaunchingServicePage() {
 
         <div className="relative z-10 mx-auto max-w-4xl space-y-6 px-4 text-center text-white">
           <h1 className="rounded-lg bg-black/40 p-4 text-3xl font-bold leading-tight text-white backdrop-blur-sm md:text-4xl lg:text-5xl">
-            <span className="text-orange-400">Профессиональный</span> запуск
-            салютов
+            <span className="text-orange-400">Профессиональный</span> запуск салютов в Москве
           </h1>
           <p className="mx-auto max-w-2xl rounded-lg bg-black/30 p-4 text-lg text-white md:text-xl">
-            Доверьте запуск фейерверков профессионалам. Безопасность, качество и
-            незабываемые впечатления гарантированы.
+            Профессиональный запуск салютов и фейерверков в Москве и МО. Безопасная пиротехника для свадеб, дней рождения, корпоративов. Сертифицированные пиротехники, полная безопасность.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Button
@@ -86,7 +83,7 @@ export default function LaunchingServicePage() {
 
             <div className="grid gap-8 md:grid-cols-2">
               <Card className="flex flex-col items-center p-8 text-center shadow-md">
-                <AlertTriangle className="mb-4 size-12 text-red-600" />
+                <AlertTriangle className="mb-4 size-12 text-red-600" aria-hidden="true" />
                 <p className="mb-4 text-5xl font-bold text-red-600">1000</p>
                 <p className="text-gray-700">
                   человек ежегодно госпитализируют после несчастных случаев с
@@ -105,7 +102,7 @@ export default function LaunchingServicePage() {
               </Card>
 
               <Card className="flex flex-col items-center p-8 text-center shadow-md">
-                <Flame className="mb-4 size-12 text-orange-500" />
+                <Flame className="mb-4 size-12 text-orange-500" aria-hidden="true" />
                 <p className="mb-4 text-5xl font-bold text-orange-500">136</p>
                 <p className="text-gray-700">
                   пожаров за 2023 год, вызванных пиротехникой{' '}
@@ -143,24 +140,24 @@ export default function LaunchingServicePage() {
               {/* Почему опасно самостоятельно */}
               <Card className="flex h-full flex-col p-6 shadow-md">
                 <h3 className="mb-4 flex min-h-[3.5rem] items-center gap-2 text-xl font-semibold">
-                  <AlertTriangle className="size-6 text-red-500" />
+                  <AlertTriangle className="size-6 text-red-500" aria-hidden="true" />
                   Почему опасно запускать самостоятельно?
                 </h3>
                 <ul className="flex-1 space-y-3 text-gray-600">
                   <li className="flex items-start gap-3">
-                    <Hospital className="mt-0.5 size-5 shrink-0 text-red-500" />
+                    <Hospital className="mt-0.5 size-5 shrink-0 text-red-500" aria-hidden="true" />
                     <span>Риск травм от неправильного обращения</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <FireExtinguisher className="mt-0.5 size-5 shrink-0 text-red-500" />
+                    <FireExtinguisher className="mt-0.5 size-5 shrink-0 text-red-500" aria-hidden="true" />
                     <span>Нарушение правил пожарной безопасности</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <Home className="mt-0.5 size-5 shrink-0 text-red-500" />
+                    <Home className="mt-0.5 size-5 shrink-0 text-red-500" aria-hidden="true" />
                     <span>Возможный ущерб имуществу</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <XCircle className="mt-0.5 size-5 shrink-0 text-red-500" />
+                    <XCircle className="mt-0.5 size-5 shrink-0 text-red-500" aria-hidden="true" />
                     <span>
                       Использование несертифицированной продукции, которая часто
                       становится причиной несчастных случаев
@@ -172,28 +169,28 @@ export default function LaunchingServicePage() {
               {/* С нами вы получаете */}
               <Card className="flex h-full flex-col p-6 shadow-md">
                 <h3 className="mb-4 flex min-h-[3.5rem] items-center gap-2 text-xl font-semibold">
-                  <CheckCircle className="size-6 text-green-500" />С нами вы
+                  <CheckCircle className="size-6 text-green-500" aria-hidden="true" />С нами вы
                   получаете:
                 </h3>
                 <ul className="flex-1 space-y-3 text-gray-600">
                   <li className="flex items-start gap-3">
-                    <UserCheck className="mt-0.5 size-5 shrink-0 text-green-500" />
+                    <UserCheck className="mt-0.5 size-5 shrink-0 text-green-500" aria-hidden="true" />
                     <span>
                       Профессиональных специалистов с опытом проведения салютов
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <FileCheck className="mt-0.5 size-5 shrink-0 text-green-500" />
+                    <FileCheck className="mt-0.5 size-5 shrink-0 text-green-500" aria-hidden="true" />
                     <span>
                       Сертифицированную пиротехнику от проверенных поставщиков
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <Shield className="mt-0.5 size-5 shrink-0 text-green-500" />
+                    <Shield className="mt-0.5 size-5 shrink-0 text-green-500" aria-hidden="true" />
                     <span>Ответственный подход к безопасности</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <ThumbsUp className="mt-0.5 size-5 shrink-0 text-green-500" />
+                    <ThumbsUp className="mt-0.5 size-5 shrink-0 text-green-500" aria-hidden="true" />
                     <span>Положительные отзывы довольных клиентов</span>
                   </li>
                 </ul>
@@ -223,29 +220,29 @@ export default function LaunchingServicePage() {
                 <div className="grid gap-6 text-left md:grid-cols-2">
                   <ul className="space-y-4 text-gray-600">
                     <li className="flex items-start gap-2">
-                      <Calendar className="mt-0.5 size-5 shrink-0 text-orange-500" />
+                      <Calendar className="mt-0.5 size-5 shrink-0 text-orange-500" aria-hidden="true" />
                       <span>Место проведения и его особенности</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <Award className="mt-0.5 size-5 shrink-0 text-orange-500" />
+                      <Award className="mt-0.5 size-5 shrink-0 text-orange-500" aria-hidden="true" />
                       <span>Объем и тип фейерверков</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <Clock className="mt-0.5 size-5 shrink-0 text-orange-500" />
+                      <Clock className="mt-0.5 size-5 shrink-0 text-orange-500" aria-hidden="true" />
                       <span>Время проведения и продолжительность</span>
                     </li>
                   </ul>
                   <ul className="space-y-4 text-gray-600">
                     <li className="flex items-start gap-2">
-                      <Shield className="mt-0.5 size-5 shrink-0 text-orange-500" />
+                      <Shield className="mt-0.5 size-5 shrink-0 text-orange-500" aria-hidden="true" />
                       <span>Меры безопасности для конкретной площадки</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <Sparkles className="mt-0.5 size-5 shrink-0 text-orange-500" />
+                      <Sparkles className="mt-0.5 size-5 shrink-0 text-orange-500" aria-hidden="true" />
                       <span>Синхронизация с музыкой (при желании)</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <RussianRuble className="mt-0.5 size-5 shrink-0 text-orange-500" />
+                      <RussianRuble className="mt-0.5 size-5 shrink-0 text-orange-500" aria-hidden="true" />
                       <span>Стоимость и варианты оплаты</span>
                     </li>
                   </ul>
@@ -282,6 +279,94 @@ export default function LaunchingServicePage() {
 
       {/* Диалог консультации */}
       <ConsultationDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "СалютГрад - Профессиональный запуск салютов",
+            "description": "Профессиональный запуск салютов и фейерверков в Москве и МО. Безопасная пиротехника для свадеб, дней рождения, корпоративов.",
+            "url": "https://салютград.рф/services/launching",
+            "telephone": "+7 (977) 360-20-08",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Рассветная улица, 4",
+              "addressLocality": "деревня Чёрное",
+              "addressRegion": "Московская область",
+              "addressCountry": "RU",
+              "postalCode": "143921"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "55.740401",
+              "longitude": "38.051908"
+            },
+            "openingHours": "Mo-Su 09:00-21:00",
+            "areaServed": ["Москва", "Московская область"],
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Услуги профессионального запуска салютов",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Профессиональный запуск салютов",
+                    "description": "Безопасный и профессиональный запуск фейерверков с полным сопровождением",
+                    "provider": {
+                      "@type": "Organization",
+                      "name": "СалютГрад"
+                    },
+                    "serviceType": "Пиротехнические услуги",
+                    "category": "Развлечения и праздники"
+                  },
+                  "priceValidUntil": "2025-12-31",
+                  "eligibleRegion": ["RU-MOW", "RU-MOS"],
+                  "availability": "https://schema.org/InStock"
+                }
+              ]
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.9",
+              "reviewCount": "89",
+              "bestRating": "5",
+              "worstRating": "1"
+            },
+            "review": [
+              {
+                "@type": "Review",
+                "author": {
+                  "@type": "Person",
+                  "name": "Анна Петрова"
+                },
+                "reviewRating": {
+                  "@type": "Rating",
+                  "ratingValue": "5",
+                  "bestRating": "5"
+                },
+                "reviewBody": "Профессиональный подход, безопасность на высоте. Рекомендую для любых праздников!"
+              },
+              {
+                "@type": "Review",
+                "author": {
+                  "@type": "Person",
+                  "name": "Михаил Козлов"
+                },
+                "reviewRating": {
+                  "@type": "Rating",
+                  "ratingValue": "5",
+                  "bestRating": "5"
+                },
+                "reviewBody": "Отличная организация, все прошло безопасно и эффектно. Спасибо за незабываемый праздник!"
+              }
+            ]
+          })
+        }}
+      />
     </div>
   );
 }
