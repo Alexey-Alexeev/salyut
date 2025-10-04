@@ -1,4 +1,4 @@
-# 🎆 КупитьСалюты - Order Management System via Telegram
+# 🎆 СалютГрад - Order Management System via Telegram
 
 ## 📋 Overview
 
@@ -72,7 +72,7 @@ Customer Order → Supabase DB → Next.js API → Telegram Bot → Your Phone/C
 ```bash
 # Message @BotFather on Telegram:
 1. Send: /newbot
-2. Bot name: "КупитьСалюты Orders Bot"
+2. Bot name: "СалютГрад Orders Bot"
 3. Username: "kupitsalyuty_orders_bot"
 4. Save the TOKEN
 ```

@@ -40,12 +40,12 @@ export function YandexMap({
           zoom: zoom,
           controls: showControls
             ? [
-                'zoomControl',
-                'searchControl',
-                'typeSelector',
-                'fullscreenControl',
-                'routeButtonControl',
-              ]
+              'zoomControl',
+              'searchControl',
+              'typeSelector',
+              'fullscreenControl',
+              'routeButtonControl',
+            ]
             : [],
         });
 
@@ -55,7 +55,7 @@ export function YandexMap({
             DELIVERY_CONSTANTS.PICKUP_ADDRESS.coordinates.lng,
           ],
           {
-            balloonContentHeader: 'КупитьСалюты.рф - Склад фейерверков',
+            balloonContentHeader: 'СалютГрад.рф - Склад фейерверков',
             balloonContentBody: `
                             <div style="font-size: 14px; line-height: 1.4;">
                                 <p><strong>Адрес:</strong><br/>${DELIVERY_CONSTANTS.PICKUP_ADDRESS.fullAddress}</p>
@@ -64,8 +64,8 @@ export function YandexMap({
                                 <p style="color: #666; font-size: 12px;">💡 Предварительно позвоните для уточнения готовности заказа</p>
                             </div>
                         `,
-            balloonContentFooter: '<small>КупитьСалюты.рф © 2025</small>',
-            hintContent: 'Склад КупитьСалюты.рф - Самовывоз фейерверков',
+            balloonContentFooter: '<small>СалютГрад.рф © 2025</small>',
+            hintContent: 'Склад СалютГрад.рф - Самовывоз фейерверков',
           },
           {
             preset: 'islands#redDotIcon',

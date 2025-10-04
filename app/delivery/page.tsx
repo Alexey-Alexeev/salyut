@@ -17,11 +17,14 @@ import {
 import { DELIVERY_CONSTANTS, formatDeliveryCost } from '@/lib/delivery-utils';
 
 export const metadata: Metadata = {
-  title: 'Доставка и самовывоз | КупитьСалюты.рф',
+  title: 'Доставка и самовывоз | СалютГрад.рф',
   description:
     'Информация о доставке фейерверков по Москве и Московской области. Условия доставки, стоимость, адрес самовывоза.',
   keywords:
     'доставка фейерверков, самовывоз салютов, доставка по москве, московская область',
+  alternates: {
+    canonical: 'https://салютград.рф/delivery',
+  },
 };
 
 export default function DeliveryPage() {

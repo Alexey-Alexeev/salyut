@@ -7,7 +7,7 @@
 ```bash
 # 1. Message @BotFather on Telegram
 # 2. Send: /newbot
-# 3. Choose bot name: "КупитьСалюты Orders Bot"
+# 3. Choose bot name: "СалютГрад Orders Bot"
 # 4. Choose username: "kupitsalyuty_orders_bot" (or similar)
 # 5. Save the TOKEN you receive
 ```

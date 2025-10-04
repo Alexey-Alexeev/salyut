@@ -22,7 +22,7 @@ export async function Footer() {
                 <span className="text-sm font-bold text-white">🎆</span>
               </div>
               <span className="text-xl font-bold text-gray-900">
-                КупитьСалюты
+                СалютГрад
               </span>
             </Link>
             <p className="text-sm text-gray-700">
@@ -36,12 +36,12 @@ export async function Footer() {
               {(categoriesData.length > 0
                 ? categoriesData
                 : [
-                    { slug: 'firecrackers', name: 'Петарды' },
-                    { slug: 'rockets', name: 'Ракеты' },
-                    { slug: 'fountains', name: 'Фонтаны' },
-                    { slug: 'roman-candles', name: 'Римские свечи' },
-                    { slug: 'sparklers', name: 'Бенгальские огни' },
-                  ]
+                  { slug: 'firecrackers', name: 'Петарды' },
+                  { slug: 'rockets', name: 'Ракеты' },
+                  { slug: 'fountains', name: 'Фонтаны' },
+                  { slug: 'roman-candles', name: 'Римские свечи' },
+                  { slug: 'sparklers', name: 'Бенгальские огни' },
+                ]
               ).map(cat => (
                 <li key={cat.slug}>
                   <Link
@@ -99,7 +99,7 @@ export async function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between border-t pt-8 md:flex-row">
           <p className="text-sm text-gray-700">
-            ©КупитьСалюты. Все права защищены.
+            ©СалютГрад. Все права защищены.
           </p>
           <div className="mt-4 flex items-center space-x-4 md:mt-0">
             <Link

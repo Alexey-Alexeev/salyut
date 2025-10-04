@@ -9,13 +9,29 @@ import { Toaster } from '@/components/ui/sonner';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'КупитьСалюты - Фейерверки и салюты',
+  title: {
+    default: 'СалютГрад - Фейерверки и салюты в Москве',
+    template: '%s | СалютГрад'
+  },
   description:
-    'Качественные фейерверки, петарды, салюты и пиротехника для незабываемых праздников. Быстрая доставка по всей России.',
+    'Лучшие фейерверки, салюты и пиротехника в Москве. Быстрая доставка по Москве и МО, профессиональный запуск салютов. Качественная пиротехника для незабываемых праздников!',
   keywords:
-    'фейерверки, салюты, петарды, пиротехника, праздник, новый год, купить',
-  robots: 'index, follow',
+    'фейерверки москва, салюты купить, пиротехника, петарды, ракеты, фонтаны, новый год, день рождения, свадьба, профессиональный запуск салютов, доставка москва',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   viewport: 'width=device-width, initial-scale=1',
+  verification: {
+    google: 'your-google-verification-code', // Замените на реальный код
+  },
 };
 
 export default function RootLayout({
@@ -27,10 +43,16 @@ export default function RootLayout({
     <html lang="ru">
       <head>
         <link rel="icon" href="/favicon.ico" />
-        <link rel="canonical" href="https://купитьсалюты.рф" />
-        <meta property="og:site_name" content="КупитьСалюты" />
+        <link rel="canonical" href="https://салютград.рф" />
+        <meta property="og:site_name" content="СалютГрад" />
         <meta property="og:type" content="website" />
+        <meta property="og:locale" content="ru_RU" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@салютград" />
+        <meta name="geo.region" content="RU-MOW" />
+        <meta name="geo.placename" content="Москва" />
+        <meta name="geo.position" content="55.7558;37.6176" />
+        <meta name="ICBM" content="55.7558, 37.6176" />
       </head>
       <body className={inter.className}>
         <div className="flex min-h-screen flex-col">

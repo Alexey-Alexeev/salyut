@@ -44,7 +44,7 @@ export function Header() {
                   <span className="text-sm font-bold text-white">🎆</span>
                 </div>
                 <span className="text-primary text-xl font-bold">
-                  КупитьСалюты
+                  СалютГрад
                 </span>
               </Link>
 
