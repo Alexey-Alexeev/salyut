@@ -194,7 +194,7 @@ export function ConsultationDialog({
                 }
                 type={
                   formData.contactMethod === 'phone' ||
-                  formData.contactMethod === 'whatsapp'
+                    formData.contactMethod === 'whatsapp'
                     ? 'tel'
                     : 'text'
                 }
@@ -210,7 +210,7 @@ export function ConsultationDialog({
               onChange={e =>
                 setFormData({ ...formData, message: e.target.value })
               }
-              placeholder="Опишите, какие фейерверки вас интересуют..."
+              placeholder="Опишите, какой вопрос вас интересует..."
               rows={3}
             />
           </div>
