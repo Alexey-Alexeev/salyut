@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { ShoppingCart, Minus, Plus, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { useCartStore } from '@/lib/cart-store';
@@ -98,8 +97,8 @@ export default function ProductClient({
                 <button
                   key={index}
                   className={`relative size-20 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${selectedImage === index
-                      ? 'border-primary'
-                      : 'border-border hover:border-primary/50'
+                    ? 'border-primary'
+                    : 'border-border hover:border-primary/50'
                     }`}
                   onClick={() => setSelectedImage(index)}
                 >
@@ -123,12 +122,13 @@ export default function ProductClient({
               )}
             </div>
 
-            <h1 className="mb-4 text-2xl font-bold lg:text-3xl">
-              {product.name}
-            </h1>
-
-            <div className="text-primary mb-6 text-3xl font-bold">
-              {product.price.toLocaleString('ru-RU')} ₽
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <h1 className="text-2xl font-bold lg:text-3xl">
+                {product.name}
+              </h1>
+              <div className="text-primary text-3xl font-bold">
+                {product.price.toLocaleString('ru-RU')} ₽
+              </div>
             </div>
           </div>
 
@@ -162,79 +162,67 @@ export default function ProductClient({
               Добавить в корзину •{' '}
               {(product.price * quantity).toLocaleString('ru-RU')} ₽
             </Button>
-
-            {product.short_description && (
-              <div className="text-muted-foreground text-sm">
-                {product.short_description}
-              </div>
-            )}
-
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              {manufacturer && (
-                <div>
-                  <span className="text-muted-foreground">Производитель:</span>
-                  <br />
-                  <span className="font-medium">{manufacturer.name}</span>
-                </div>
-              )}
-              {category && (
-                <div>
-                  <span className="text-muted-foreground">Категория:</span>
-                  <br />
-                  <span className="font-medium">{category.name}</span>
-                </div>
-              )}
-            </div>
           </div>
-        </div>
-      </div>
 
-      <div className="mt-16">
-        <Tabs defaultValue="description" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="description">Описание</TabsTrigger>
-            <TabsTrigger value="characteristics">Характеристики</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="description" className="mt-6">
-            <Card>
-              <CardContent className="pt-6">
+          {/* Блок описания */}
+          <Card>
+            <CardContent className="pt-6">
+              <h3 className="mb-4 text-lg font-semibold">Описание</h3>
+              <div className="space-y-4">
                 <p className="text-muted-foreground leading-relaxed">
                   {product.description || 'Описание товара отсутствует.'}
                 </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
-          <TabsContent value="characteristics" className="mt-6">
+                {product.short_description && (
+                  <div className="text-muted-foreground text-sm">
+                    {product.short_description}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
+                  {manufacturer && (
+                    <div>
+                      <span className="text-muted-foreground">Производитель:</span>
+                      <br />
+                      <span className="font-medium">{manufacturer.name}</span>
+                    </div>
+                  )}
+                  {category && (
+                    <div>
+                      <span className="text-muted-foreground">Категория:</span>
+                      <br />
+                      <span className="font-medium">{category.name}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Блок характеристик */}
+          {product.characteristics && Object.keys(product.characteristics).length > 0 && (
             <Card>
               <CardContent className="pt-6">
-                {product.characteristics &&
-                  Object.keys(product.characteristics).length > 0 ? (
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    {Object.entries(product.characteristics).map(
-                      ([key, value]) => (
-                        <div
-                          key={key}
-                          className="border-border/50 flex justify-between border-b py-2"
-                        >
-                          <span className="font-medium">{key}:</span>
-                          <span className="text-muted-foreground">
-                            {String(value)}
-                          </span>
-                        </div>
-                      )
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground">
-                    Характеристики товара отсутствуют.
-                  </p>
-                )}
+                <h3 className="mb-4 text-lg font-semibold">Характеристики</h3>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  {Object.entries(product.characteristics).map(
+                    ([key, value]) => (
+                      <div
+                        key={key}
+                        className="border-border/50 flex justify-between border-b py-2"
+                      >
+                        <span className="font-medium">{key}:</span>
+                        <span className="text-muted-foreground">
+                          {String(value)}
+                        </span>
+                      </div>
+                    )
+                  )}
+                </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          )}
+        </div>
       </div>
     </div>
   );
