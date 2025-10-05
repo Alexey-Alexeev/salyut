@@ -16,8 +16,10 @@ interface ActiveFiltersProps {
   selectedCategories: string[];
   priceFrom: string;
   priceTo: string;
+  search: string;
   onRemoveCategory: (categorySlug: string) => void;
   onClearPrice: () => void;
+  onClearSearch: () => void;
   onClearAll: () => void;
 }
 
@@ -27,12 +29,14 @@ export const ActiveFilters = React.memo<ActiveFiltersProps>(
     selectedCategories,
     priceFrom,
     priceTo,
+    search,
     onRemoveCategory,
     onClearPrice,
+    onClearSearch,
     onClearAll,
   }) => {
     const hasActiveFilters =
-      selectedCategories.length > 0 || priceFrom || priceTo;
+      selectedCategories.length > 0 || priceFrom || priceTo || search;
 
     if (!hasActiveFilters) return null;
 
@@ -52,6 +56,13 @@ export const ActiveFilters = React.memo<ActiveFiltersProps>(
             </Badge>
           );
         })}
+
+        {search && (
+          <Badge variant="secondary" className="gap-1">
+            Поиск: "{search}"
+            <X className="size-3 cursor-pointer" onClick={onClearSearch} />
+          </Badge>
+        )}
 
         {(priceFrom || priceTo) && (
           <Badge variant="secondary" className="gap-1">

@@ -155,7 +155,7 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <Card className="group overflow-hidden transition-all duration-200 hover:shadow-lg">
+    <Card className="group flex h-full flex-col overflow-hidden transition-all duration-200 hover:shadow-lg">
       <div className="relative">
         <Link href={`/product/${product.slug}`}>
           <div className="relative aspect-square overflow-hidden bg-gray-100">
@@ -177,15 +177,17 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
 
-      <CardContent className="p-4">
+      <CardContent className="flex flex-1 flex-col p-4">
         <Link href={`/product/${product.slug}`}>
-          <h3 className="group-hover:text-primary mb-2 line-clamp-2 text-sm font-medium transition-colors">
+          <h3 className="group-hover:text-primary mb-2 min-h-[2.5rem] line-clamp-2 text-sm font-medium transition-colors">
             {product.name}
           </h3>
         </Link>
-        <p className="text-primary text-lg font-bold">
-          {product.price.toLocaleString('ru-RU')} ₽
-        </p>
+        <div className="mt-auto">
+          <p className="text-primary text-lg font-bold">
+            {product.price.toLocaleString('ru-RU')} ₽
+          </p>
+        </div>
       </CardContent>
 
       <CardFooter className="p-4 pt-0">

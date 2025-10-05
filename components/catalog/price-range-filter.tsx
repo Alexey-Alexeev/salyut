@@ -11,7 +11,7 @@ interface PriceRangeFilterProps {
   minPrice: number;
   maxPrice: number;
   onPriceChange: (from: string, to: string) => void;
-  onApplyFilter: () => void;
+  onApplyFilter?: () => void;
   onMobileFilterClose?: () => void;
 }
 
@@ -55,7 +55,9 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
 
       setValidationError('');
       onPriceChange(fromValue, toValue);
-      onApplyFilter();
+      if (onApplyFilter) {
+        onApplyFilter();
+      }
       // Закрываем мобильный фильтр при применении
       if (onMobileFilterClose) {
         onMobileFilterClose();
