@@ -39,7 +39,8 @@ export function Header() {
       <header className="supports-[backdrop-filter]:bg-background/60 bg-background/95 sticky top-0 z-50 border-b backdrop-blur">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center space-x-4">
+            {/* Логотип */}
+            <div className="flex items-center">
               <Link href="/" className="flex items-center space-x-2">
                 <div className="flex size-8 items-center justify-center">
                   <Image
@@ -55,28 +56,29 @@ export function Header() {
                   СалютГрад
                 </span>
               </Link>
-
-              <nav className="hidden items-center space-x-6 md:flex">
-                {navItems.map(item => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="hover:text-primary text-sm font-medium transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                {role === 'admin' && (
-                  <Link
-                    href="/admin"
-                    className="hover:text-primary flex items-center text-sm font-medium transition-colors"
-                  >
-                    <Shield className="mr-1 size-4" />
-                    Админ
-                  </Link>
-                )}
-              </nav>
             </div>
+
+            {/* Навигация по центру */}
+            <nav className="hidden items-center space-x-6 md:flex">
+              {navItems.map(item => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="hover:text-primary text-sm font-medium transition-colors"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              {role === 'admin' && (
+                <Link
+                  href="/admin"
+                  className="hover:text-primary flex items-center text-sm font-medium transition-colors"
+                >
+                  <Shield className="mr-1 size-4" />
+                  Админ
+                </Link>
+              )}
+            </nav>
 
             <div className="flex items-center space-x-4">
               {/* Кнопка "Консультация" в хедере */}

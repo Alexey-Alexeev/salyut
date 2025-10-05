@@ -381,7 +381,7 @@ function CatalogContent() {
 
       {/* Поиск */}
       <div className="mb-6">
-        <div className="relative max-w-md">
+        <div className="relative w-full lg:w-64">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
