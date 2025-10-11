@@ -11,12 +11,32 @@ import { useCartStore } from '@/lib/cart-store';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 
+// Функция для извлечения ID видео из Rutube
+function getRutubeVideoId(url: string): string | null {
+  if (!url) return null;
+
+  // Поддерживаем различные форматы Rutube URL
+  const patterns = [
+    /rutube\.ru\/video\/([a-zA-Z0-9]+)/,
+    /rutube\.ru\/play\/embed\/([a-zA-Z0-9]+)/,
+    /rutube\.ru\/video\/private\/([a-zA-Z0-9]+)/
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+
+  return null;
+}
+
 interface Product {
   id: string;
   name: string;
   slug: string;
   price: number;
   images: string[] | null;
+  video_url?: string | null;
   is_popular?: boolean | null;
 }
 
@@ -159,15 +179,35 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="relative">
         <Link href={`/product/${product.slug}`}>
           <div className="relative aspect-square overflow-hidden bg-gray-100">
-            <Image
-              src={product.images?.[0] || '/placeholder-product.jpg'}
-              alt={product.name}
-              fill
-              className="object-cover transition-transform duration-200 group-hover:scale-105"
-              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-              placeholder="blur"
-              blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmM2Y0ZjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU3ZWIiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFkKSIvPjwvc3ZnPg=="
-            />
+            {product.images && product.images.length > 0 ? (
+              <Image
+                src={product.images[0]}
+                alt={product.name}
+                fill
+                className="object-cover transition-transform duration-200 group-hover:scale-105"
+                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                placeholder="blur"
+                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmM2Y0ZjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU3ZWIiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFkKSIvPjwvc3ZnPg=="
+              />
+            ) : product.video_url ? (
+              <iframe
+                src={`https://rutube.ru/play/embed/${getRutubeVideoId(product.video_url)}`}
+                title={product.name}
+                className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <Image
+                src="/placeholder-product.jpg"
+                alt={product.name}
+                fill
+                className="object-cover transition-transform duration-200 group-hover:scale-105"
+                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                placeholder="blur"
+                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmM2Y0ZjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU3ZWIiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFkKSIvPjwvc3ZnPg=="
+              />
+            )}
           </div>
         </Link>
         {product.is_popular && (

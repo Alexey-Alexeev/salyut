@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ShoppingCart, Minus, Plus, Star } from 'lucide-react';
+import { ShoppingCart, Minus, Plus, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,12 +10,32 @@ import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { useCartStore } from '@/lib/cart-store';
 import { toast } from 'sonner';
 
+// Функция для извлечения ID видео из Rutube
+function getRutubeVideoId(url: string): string | null {
+  if (!url) return null;
+
+  // Поддерживаем различные форматы Rutube URL
+  const patterns = [
+    /rutube\.ru\/video\/([a-zA-Z0-9]+)/,
+    /rutube\.ru\/play\/embed\/([a-zA-Z0-9]+)/,
+    /rutube\.ru\/video\/private\/([a-zA-Z0-9]+)/
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+
+  return null;
+}
+
 type Product = {
   id: string;
   name: string;
   slug: string;
   price: number;
   images: string[] | null;
+  video_url?: string | null;
   description: string | null;
   short_description?: string | null;
   characteristics: Record<string, any> | null;
@@ -67,6 +87,40 @@ export default function ProductClient({
   };
 
   const images = product.images || [];
+  const hasVideo = !!product.video_url;
+
+  // Создаем массив медиа-контента: сначала изображения, потом видео
+  const mediaItems = [
+    ...images.map((image, index) => ({ type: 'image', src: image, index })),
+    ...(hasVideo ? [{ type: 'video', src: product.video_url, index: images.length }] : [])
+  ];
+
+  // Функции для навигации по карусели
+  const goToPrevious = () => {
+    setSelectedImage(prev => prev > 0 ? prev - 1 : mediaItems.length - 1);
+  };
+
+  const goToNext = () => {
+    setSelectedImage(prev => prev < mediaItems.length - 1 ? prev + 1 : 0);
+  };
+
+  // Навигация с клавиатуры
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (mediaItems.length <= 1) return;
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        goToPrevious();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        goToNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mediaItems.length]);
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -80,20 +134,63 @@ export default function ProductClient({
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
         <div className="space-y-4">
-          <div className="relative aspect-square overflow-hidden rounded-lg border">
-            {images[0] && (
+          <div className="relative aspect-square overflow-hidden rounded-lg border group">
+            {mediaItems[selectedImage]?.type === 'video' ? (
+              <iframe
+                src={`https://rutube.ru/play/embed/${getRutubeVideoId(mediaItems[selectedImage].src)}`}
+                title={product.name}
+                className="h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : mediaItems[selectedImage]?.type === 'image' ? (
               <Image
-                src={images[selectedImage]}
+                src={mediaItems[selectedImage].src}
+                alt={product.name}
+                fill
+                className="object-cover"
+                priority
+              />
+            ) : (
+              <Image
+                src="/placeholder-product.jpg"
                 alt={product.name}
                 fill
                 className="object-cover"
                 priority
               />
             )}
+
+            {/* Стрелочки навигации */}
+            {mediaItems.length > 1 && (
+              <>
+                <button
+                  onClick={goToPrevious}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200 hover:bg-black/70"
+                  aria-label="Предыдущее изображение"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={goToNext}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200 hover:bg-black/70"
+                  aria-label="Следующее изображение"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </>
+            )}
+
+            {/* Индикатор текущего элемента */}
+            {mediaItems.length > 1 && (
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 text-white px-2 py-1 rounded text-sm">
+                {selectedImage + 1} / {mediaItems.length}
+              </div>
+            )}
           </div>
-          {images.length > 1 && (
+          {mediaItems.length > 1 && (
             <div className="flex gap-2 overflow-x-auto pb-2">
-              {images.map((image, index) => (
+              {mediaItems.map((item, index) => (
                 <button
                   key={index}
                   className={`relative size-20 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${selectedImage === index
@@ -102,12 +199,21 @@ export default function ProductClient({
                     }`}
                   onClick={() => setSelectedImage(index)}
                 >
-                  <Image
-                    src={image}
-                    alt={`${product.name} ${index + 1}`}
-                    fill
-                    className="object-cover"
-                  />
+                  {item.type === 'video' ? (
+                    <div className="flex h-full w-full items-center justify-center bg-gray-100">
+                      <div className="text-center">
+                        <div className="mb-1 text-2xl">🎬</div>
+                        <div className="text-xs font-medium">Видео</div>
+                      </div>
+                    </div>
+                  ) : (
+                    <Image
+                      src={item.src}
+                      alt={`${product.name} ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
                 </button>
               ))}
             </div>

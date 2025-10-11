@@ -66,6 +66,7 @@ export const products = pgTable('products', {
     onDelete: 'set null',
   }),
   images: jsonb('images').$type<string[]>(),
+  video_url: text('video_url'), // ссылка на видео Rutube
   description: text('description'),
   short_description: text('short_description'),
   characteristics: jsonb('characteristics').$type<Record<string, any>>(),
