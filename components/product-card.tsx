@@ -198,15 +198,15 @@ export function ProductCard({ product }: ProductCardProps) {
                 allowFullScreen
               />
             ) : (
-              <Image
-                src="/placeholder-product.jpg"
-                alt={product.name}
-                fill
-                className="object-cover transition-transform duration-200 group-hover:scale-105"
-                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                placeholder="blur"
-                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmM2Y0ZjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU3ZWIiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFkKSIvPjwvc3ZnPg=="
-              />
+              <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-4 text-center">
+                <div className="mb-3 text-4xl opacity-50">📷</div>
+                <div className="text-sm font-medium text-gray-600 line-clamp-2">
+                  {product.name}
+                </div>
+                <div className="mt-1 text-xs text-gray-500">
+                  Фото отсутствует
+                </div>
+              </div>
             )}
           </div>
         </Link>

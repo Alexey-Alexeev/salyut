@@ -152,13 +152,15 @@ export default function ProductClient({
                 priority
               />
             ) : (
-              <Image
-                src="/placeholder-product.jpg"
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-              />
+              <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-8 text-center">
+                <div className="mb-4 text-6xl opacity-50">📷</div>
+                <div className="text-lg font-medium text-gray-600 line-clamp-3">
+                  {product.name}
+                </div>
+                <div className="mt-2 text-sm text-gray-500">
+                  Фото отсутствует
+                </div>
+              </div>
             )}
 
             {/* Стрелочки навигации */}

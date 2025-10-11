@@ -9,7 +9,7 @@ export async function Footer() {
   let categoriesData: any[] = [];
 
   try {
-    categoriesData = await db.select().from(categories).limit(5);
+    categoriesData = await db.select().from(categories);
   } catch (error) {
     console.error('Error loading categories in footer:', error);
   }

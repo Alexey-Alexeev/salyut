@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ProductCard } from '@/components/product-card';
+import { CategoryCard } from '@/components/category-card';
 import { db } from '@/lib/db';
 import { categories, products, reviews } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
@@ -223,31 +224,12 @@ export default async function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-5">
+        <div className={`grid gap-4 md:gap-6 ${categoriesData.length === 7
+            ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 xl:justify-center'
+            : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
+          }`}>
           {categoriesData.map(category => (
-            <Link key={category.id} href={`/catalog?category=${category.slug}`}>
-              <Card className="group cursor-pointer overflow-hidden transition-all duration-200 hover:shadow-lg">
-                <div className="relative aspect-square">
-                  <Image
-                    src={
-                      category.image ||
-                      'https://images.pexels.com/photos/1387174/pexels-photo-1387174.jpeg?auto=compress&cs=tinysrgb&w=400'
-                    }
-                    alt={`${category.name} - фейерверки и пиротехника`}
-                    fill
-                    className="object-cover transition-transform duration-200 group-hover:scale-105"
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/30 transition-colors group-hover:bg-black/20" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <h3 className="px-2 text-center text-sm font-semibold text-white md:text-base">
-                      {category.name}
-                    </h3>
-                  </div>
-                </div>
-              </Card>
-            </Link>
+            <CategoryCard key={category.id} category={category} />
           ))}
         </div>
       </section>
