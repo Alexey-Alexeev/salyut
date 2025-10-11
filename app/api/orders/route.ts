@@ -11,9 +11,8 @@ export const runtime = 'nodejs';
 
 const orderSchema = z.object({
   customer_name: z.string().min(2),
-  customer_phone: z.string().min(10),
   customer_contact: z.string().optional().nullable(),
-  contact_method: z.enum(['telegram', 'whatsapp']).optional().nullable(),
+  contact_method: z.enum(['phone', 'telegram', 'whatsapp']).optional().nullable(),
   comment: z.string().optional().nullable(),
   total_amount: z.number().positive(),
   delivery_cost: z.number().min(0),
@@ -41,10 +40,15 @@ export async function POST(request: NextRequest) {
 
     // Создаем заказ
 
+    // Автоматически добавляем @ для Telegram контактов
+    let processedContact = validatedData.customer_contact || null;
+    if (validatedData.contact_method === 'telegram' && processedContact && !processedContact.startsWith('@')) {
+      processedContact = '@' + processedContact;
+    }
+
     const orderData = {
       customer_name: validatedData.customer_name,
-      customer_phone: validatedData.customer_phone,
-      customer_contact: validatedData.customer_contact || null,
+      customer_contact: processedContact,
       contact_method: validatedData.contact_method || null,
       comment: validatedData.comment || null,
       total_amount: Math.round(validatedData.total_amount),
@@ -64,12 +68,12 @@ export async function POST(request: NextRequest) {
       // Use raw SQL to avoid parameter concatenation issues
       const result = await db.execute(sql`
         INSERT INTO orders (
-          customer_name, customer_phone, customer_contact, 
+          customer_name, customer_contact, 
           contact_method, comment, total_amount, 
           delivery_cost, discount_amount, age_confirmed, professional_launch_requested,
           delivery_method, delivery_address, distance_from_mkad
         ) VALUES (
-          ${orderData.customer_name}, ${orderData.customer_phone}, ${orderData.customer_contact},
+          ${orderData.customer_name}, ${orderData.customer_contact},
           ${orderData.contact_method}, ${orderData.comment}, ${orderData.total_amount},
           ${orderData.delivery_cost}, ${orderData.discount_amount}, ${orderData.age_confirmed}, ${orderData.professional_launch_requested},
           ${orderData.delivery_method}, ${orderData.delivery_address}, ${orderData.distance_from_mkad}
@@ -126,12 +130,11 @@ export async function POST(request: NextRequest) {
       await sendTelegramNotification({
         orderId: order.id as string,
         customerName: validatedData.customer_name,
-        customerPhone: validatedData.customer_phone,
+        customerContact: processedContact || undefined,
+        contactMethod: validatedData.contact_method || undefined,
         totalAmount: validatedData.total_amount,
         items: orderItemsWithProducts,
         comment: validatedData.comment || undefined,
-        contactMethod: validatedData.contact_method || undefined,
-        customerContact: validatedData.customer_contact || undefined,
         professionalLaunchRequested:
           validatedData.professional_launch_requested || false,
         deliveryMethod: validatedData.delivery_method,

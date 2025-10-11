@@ -31,10 +31,10 @@ import * as z from 'zod';
 const orderSchema = z
     .object({
         name: z.string().min(2, 'Имя должно содержать минимум 2 символа'),
-        phone: z.string()
-            .min(10, 'Введите корректный номер телефона')
-            .regex(/^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/, 'Введите корректный номер телефона (например: +7 999 123-45-67)'),
-        contactMethod: z.enum(['telegram', 'whatsapp']).optional(),
+        contactMethod: z.string().min(1, 'Выберите способ связи').refine(
+            val => ['phone', 'telegram', 'whatsapp'].includes(val),
+            { message: 'Выберите способ связи' }
+        ),
         contact: z.string().optional(),
         comment: z.string().optional(),
         professionalLaunch: z.boolean().optional(),
@@ -46,28 +46,19 @@ const orderSchema = z
     })
     .refine(
         data => {
-            if (data.contactMethod && (!data.contact || data.contact.trim() === '')) {
+            if (!data.contactMethod) {
+                return true; // Не валидируем contact если не выбран способ связи
+            }
+            if (!data.contact || data.contact.trim().length === 0) {
                 return false;
             }
             return true;
         },
         {
-            message: 'Укажите контакт для связи',
+            message: 'Укажите контактную информацию',
             path: ['contact'],
         }
     )
-    .refine(
-        data => {
-            if (data.deliveryMethod === 'delivery' && (!data.deliveryAddress || data.deliveryAddress.trim() === '')) {
-                return false;
-            }
-            return true;
-        },
-        {
-            message: 'Укажите адрес доставки',
-            path: ['deliveryAddress'],
-        }
-    );
 
 type OrderFormData = z.infer<typeof orderSchema>;
 
@@ -81,6 +72,7 @@ export default function CartPageClient() {
     const [deliveryResult, setDeliveryResult] =
         useState<DeliveryCalculationResult | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [hasValidationAttempted, setHasValidationAttempted] = useState(false);
     const router = useRouter();
 
     const {
@@ -88,7 +80,7 @@ export default function CartPageClient() {
         handleSubmit,
         watch,
         setValue,
-        formState: { errors },
+        formState: { errors, ...formState },
     } = useForm<OrderFormData>({
         resolver: zodResolver(orderSchema),
         defaultValues: {
@@ -144,14 +136,11 @@ export default function CartPageClient() {
         if (errors.name) {
             errorMessages.push(`• ${errors.name.message}`);
         }
-        if (errors.phone) {
-            errorMessages.push(`• ${errors.phone.message}`);
+        if (errors.contactMethod) {
+            errorMessages.push(`• ${errors.contactMethod.message}`);
         }
         if (errors.contact) {
             errorMessages.push(`• ${errors.contact.message}`);
-        }
-        if (errors.deliveryAddress) {
-            errorMessages.push(`• ${errors.deliveryAddress.message}`);
         }
         if (errors.ageConfirmed) {
             errorMessages.push(`• ${errors.ageConfirmed.message}`);
@@ -184,14 +173,25 @@ export default function CartPageClient() {
             return;
         }
 
+        // Проверяем ошибки валидации
+        if (Object.keys(errors).length > 0) {
+            showValidationErrors(errors);
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {
+            // Автоматически добавляем @ для Telegram контактов
+            let processedContact = data.contact || null;
+            if (data.contactMethod === 'telegram' && processedContact && !processedContact.startsWith('@')) {
+                processedContact = '@' + processedContact;
+            }
+
             const orderData = {
                 customer_name: data.name,
-                customer_phone: data.phone,
-                customer_contact: data.contact || null,
-                contact_method: data.contactMethod || null,
+                customer_contact: processedContact,
+                contact_method: data.contactMethod,
                 comment: data.comment || null,
                 total_amount: Math.round(total),
                 delivery_cost: Math.round(deliveryCost),
@@ -476,12 +476,12 @@ export default function CartPageClient() {
                                             Контактная информация
                                         </h3>
 
-                                        <div>
-                                            <Label htmlFor="name">Имя *</Label>
+                                        <div className={`p-2 rounded-md ${(errors.name || (!watch('name') && hasValidationAttempted)) ? 'bg-red-50 border border-red-200' : ''}`}>
+                                            <Label htmlFor="name" className={`${(errors.name || (!watch('name') && hasValidationAttempted)) ? 'text-red-600' : ''}`}>Имя *</Label>
                                             <Input
                                                 id="name"
                                                 {...register('name')}
-                                                className={`w-full ${errors.name ? 'border-red-500' : ''}`}
+                                                className={`w-full ${(errors.name || (!watch('name') && hasValidationAttempted)) ? 'border-red-500 bg-red-50' : ''}`}
                                                 placeholder="Введите ваше имя"
                                             />
                                             {errors.name && (
@@ -491,39 +491,30 @@ export default function CartPageClient() {
                                             )}
                                         </div>
 
-                                        <div>
-                                            <Label htmlFor="phone">Телефон *</Label>
-                                            <Input
-                                                id="phone"
-                                                type="tel"
-                                                {...register('phone')}
-                                                className={`w-full ${errors.phone ? 'border-red-500' : ''}`}
-                                                placeholder="+7 (999) 123-45-67"
-                                            />
-                                            {errors.phone && (
-                                                <p className="mt-1 text-sm text-red-500">
-                                                    {errors.phone.message}
-                                                </p>
-                                            )}
-                                        </div>
-
-                                        <div>
-                                            <Label htmlFor="contactMethod">
-                                                Способ связи (необязательно)
+                                        <div className={`p-2 rounded-md ${(errors.contactMethod || (!watch('contactMethod') && hasValidationAttempted)) ? 'bg-red-50 border border-red-200' : ''}`}>
+                                            <Label htmlFor="contactMethod" className={`${(errors.contactMethod || (!watch('contactMethod') && hasValidationAttempted)) ? 'text-red-600' : ''}`}>
+                                                Способ связи *
                                             </Label>
                                             <Select
+                                                value={watch('contactMethod') || ''}
                                                 onValueChange={value =>
-                                                    setValue('contactMethod', value as 'telegram' | 'whatsapp')
+                                                    setValue('contactMethod', value as 'phone' | 'telegram' | 'whatsapp')
                                                 }
                                             >
-                                                <SelectTrigger>
+                                                <SelectTrigger className={(errors.contactMethod || (!watch('contactMethod') && hasValidationAttempted)) ? 'border-red-500 bg-red-50' : ''}>
                                                     <SelectValue placeholder="Выберите способ связи" />
                                                 </SelectTrigger>
                                                 <SelectContent>
+                                                    <SelectItem value="phone">Телефон</SelectItem>
                                                     <SelectItem value="telegram">Telegram</SelectItem>
                                                     <SelectItem value="whatsapp">WhatsApp</SelectItem>
                                                 </SelectContent>
                                             </Select>
+                                            {errors.contactMethod && (
+                                                <p className="mt-1 text-sm text-red-500">
+                                                    {errors.contactMethod.message}
+                                                </p>
+                                            )}
                                         </div>
 
                                         {watch('contactMethod') && (
@@ -535,9 +526,38 @@ export default function CartPageClient() {
                                                     placeholder={
                                                         watch('contactMethod') === 'telegram'
                                                             ? '@username'
-                                                            : '+7 (999) 123-45-67'
+                                                            : watch('contactMethod') === 'whatsapp'
+                                                                ? '+7 (999) 123-45-67'
+                                                                : '+7 (999) 123-45-67'
                                                     }
-                                                    className={errors.contact ? 'border-red-500' : ''}
+                                                    className={errors.contact ? 'border-red-500 bg-red-50' : ''}
+                                                    onKeyDown={(e) => {
+                                                        // Разрешаем только цифры, +, -, (, ), пробел для телефона и WhatsApp
+                                                        if (watch('contactMethod') === 'phone' || watch('contactMethod') === 'whatsapp') {
+                                                            const allowedKeys = [
+                                                                'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
+                                                                'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+                                                                'Home', 'End'
+                                                            ];
+                                                            const allowedChars = /[0-9+\-() ]/;
+
+                                                            if (!allowedKeys.includes(e.key) && !allowedChars.test(e.key)) {
+                                                                e.preventDefault();
+                                                            }
+                                                        }
+                                                    }}
+                                                    onInput={(e) => {
+                                                        // Дополнительная проверка для очистки недопустимых символов
+                                                        if (watch('contactMethod') === 'phone' || watch('contactMethod') === 'whatsapp') {
+                                                            const target = e.target as HTMLInputElement;
+                                                            const value = target.value;
+                                                            const cleanedValue = value.replace(/[^0-9+\-() ]/g, '');
+                                                            if (value !== cleanedValue) {
+                                                                target.value = cleanedValue;
+                                                                setValue('contact', cleanedValue);
+                                                            }
+                                                        }
+                                                    }}
                                                 />
                                                 {errors.contact && (
                                                     <p className="mt-1 text-sm text-red-500">
@@ -562,12 +582,6 @@ export default function CartPageClient() {
                                             {...register('deliveryAddress')}
                                         />
 
-                                        {/* Отображение ошибки адреса доставки */}
-                                        {errors.deliveryAddress && (
-                                            <p className="text-sm text-red-500">
-                                                {errors.deliveryAddress.message}
-                                            </p>
-                                        )}
                                     </div>
 
                                     {/* Дополнительные услуги */}
@@ -624,13 +638,14 @@ export default function CartPageClient() {
 
                                     {/* Подтверждение возраста и согласие на обработку данных */}
                                     <div className="space-y-3">
-                                        <div className="flex items-center space-x-2">
+                                        <div className={`flex items-center space-x-2 p-2 rounded-md ${(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'bg-red-50 border border-red-200' : ''}`}>
                                             <Checkbox
                                                 id="ageConfirmed"
                                                 checked={watch('ageConfirmed')}
                                                 onCheckedChange={(checked) => setValue('ageConfirmed', checked as boolean)}
+                                                className={(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'border-red-500' : ''}
                                             />
-                                            <Label htmlFor="ageConfirmed" className="text-sm">
+                                            <Label htmlFor="ageConfirmed" className={`text-sm ${(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'text-red-600' : ''}`}>
                                                 Подтверждаю, что мне исполнилось 18 лет *
                                             </Label>
                                         </div>
@@ -685,6 +700,7 @@ export default function CartPageClient() {
                                     size="lg"
                                     disabled={isSubmitting}
                                     onClick={() => {
+                                        setHasValidationAttempted(true);
                                         const currentFormValues = watch();
 
                                         // Проверяем ошибки валидации перед отправкой
@@ -700,12 +716,8 @@ export default function CartPageClient() {
                                             criticalErrors.name = { message: 'Имя должно содержать минимум 2 символа' };
                                         }
 
-                                        if (!currentFormValues.phone || currentFormValues.phone.trim().length < 10) {
-                                            criticalErrors.phone = { message: 'Введите корректный номер телефона' };
-                                        }
-
-                                        if (currentFormValues.deliveryMethod === 'delivery' && (!currentFormValues.deliveryAddress || currentFormValues.deliveryAddress.trim() === '')) {
-                                            criticalErrors.deliveryAddress = { message: 'Укажите адрес доставки' };
+                                        if (!currentFormValues.contactMethod) {
+                                            criticalErrors.contactMethod = { message: 'Выберите способ связи' };
                                         }
 
                                         if (!currentFormValues.ageConfirmed) {

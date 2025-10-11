@@ -9,7 +9,8 @@ interface TelegramConsultationNotification {
 interface TelegramNotification {
   orderId: string;
   customerName: string;
-  customerPhone: string;
+  customerContact?: string;
+  contactMethod?: 'phone' | 'telegram' | 'whatsapp';
   totalAmount: number;
   items: Array<{
     name: string;
@@ -17,8 +18,6 @@ interface TelegramNotification {
     price: number;
   }>;
   comment?: string;
-  contactMethod?: 'telegram' | 'whatsapp';
-  customerContact?: string;
   professionalLaunchRequested?: boolean;
   deliveryMethod: 'delivery' | 'pickup';
   deliveryAddress?: string;
@@ -111,10 +110,9 @@ export async function sendTelegramNotification(order: TelegramNotification) {
     )
     .join('\n');
 
-  const contactInfo =
-    order.contactMethod && order.customerContact
-      ? `\n📱 ${order.contactMethod === 'telegram' ? 'Telegram' : 'WhatsApp'}: ${order.customerContact}`
-      : '';
+  const contactMethodText = order.contactMethod
+    ? `\n📱 Способ связи: ${order.contactMethod === 'telegram' ? 'Telegram' : order.contactMethod === 'whatsapp' ? 'WhatsApp' : 'Телефон'}: ${order.customerContact || 'Не указан'}`
+    : '';
 
   const commentText = order.comment ? `\n💬 Комментарий: ${order.comment}` : '';
 
@@ -136,7 +134,7 @@ export async function sendTelegramNotification(order: TelegramNotification) {
 
 🆔 Заказ: #${order.orderId.slice(0, 8)}
 👤 Клиент: ${order.customerName}
-📞 Телефон: ${order.customerPhone}${contactInfo}
+${contactMethodText}
 
 🛒 *Товары:*
 ${itemsText}
