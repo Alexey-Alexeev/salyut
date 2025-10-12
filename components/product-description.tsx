@@ -18,59 +18,64 @@ export function ProductDescription({
         );
     }
 
-    // Функция для парсинга описания
+    // Функция для парсинга описания с поддержкой абзацев
     const parseDescription = (text: string) => {
-        const lines = text.split('\n').filter(line => line.trim());
+        // Разделяем текст по специальным маркерам абзацев
+        const paragraphs = text.split(/\n\s*\n|\|\|\|/).filter(p => p.trim());
         const elements: React.ReactNode[] = [];
-        let currentList: string[] = [];
-        let currentParagraph = '';
 
-        const flushList = () => {
-            if (currentList.length > 0) {
-                elements.push(
-                    <ul key={`list-${elements.length}`} className="list-disc list-inside space-y-1 mb-4">
-                        {currentList.map((item, index) => (
-                            <li key={index} className="text-muted-foreground">
-                                {item.replace(/^-\s*/, '')}
-                            </li>
-                        ))}
-                    </ul>
-                );
-                currentList = [];
-            }
-        };
+        paragraphs.forEach((paragraph, paragraphIndex) => {
+            const lines = paragraph.split('\n').filter(line => line.trim());
+            let currentList: string[] = [];
+            let currentParagraph = '';
 
-        const flushParagraph = () => {
-            if (currentParagraph.trim()) {
-                elements.push(
-                    <p key={`paragraph-${elements.length}`} className="text-muted-foreground leading-relaxed mb-4">
-                        {currentParagraph.trim()}
-                    </p>
-                );
-                currentParagraph = '';
-            }
-        };
-
-        lines.forEach((line, index) => {
-            const trimmedLine = line.trim();
-
-            // Проверяем, является ли строка элементом списка
-            if (trimmedLine.startsWith('-') || trimmedLine.match(/^\d+\./)) {
-                flushParagraph();
-                currentList.push(trimmedLine);
-            } else if (trimmedLine) {
-                flushList();
-                if (currentParagraph) {
-                    currentParagraph += ' ' + trimmedLine;
-                } else {
-                    currentParagraph = trimmedLine;
+            const flushList = () => {
+                if (currentList.length > 0) {
+                    elements.push(
+                        <ul key={`list-${elements.length}`} className="list-disc list-inside space-y-1 mb-4">
+                            {currentList.map((item, index) => (
+                                <li key={index} className="text-muted-foreground">
+                                    {item.replace(/^-\s*/, '')}
+                                </li>
+                            ))}
+                        </ul>
+                    );
+                    currentList = [];
                 }
-            }
-        });
+            };
 
-        // Обрабатываем оставшиеся элементы
-        flushList();
-        flushParagraph();
+            const flushParagraph = () => {
+                if (currentParagraph.trim()) {
+                    elements.push(
+                        <p key={`paragraph-${elements.length}`} className="text-muted-foreground leading-relaxed mb-4">
+                            {currentParagraph.trim()}
+                        </p>
+                    );
+                    currentParagraph = '';
+                }
+            };
+
+            lines.forEach((line) => {
+                const trimmedLine = line.trim();
+
+                // Проверяем, является ли строка элементом списка
+                if (trimmedLine.startsWith('-') || trimmedLine.match(/^\d+\./)) {
+                    flushParagraph();
+                    currentList.push(trimmedLine);
+                } else if (trimmedLine) {
+                    flushList();
+                    if (currentParagraph) {
+                        currentParagraph += ' ' + trimmedLine;
+                    } else {
+                        currentParagraph = trimmedLine;
+                    }
+                }
+            });
+
+            // Обрабатываем оставшиеся элементы в абзаце
+            flushList();
+            flushParagraph();
+        });
 
         return elements;
     };
@@ -90,7 +95,6 @@ export function ProductDescription({
                     </p>
                 </div>
             )}
-
 
             {/* Основное описание */}
             <div>

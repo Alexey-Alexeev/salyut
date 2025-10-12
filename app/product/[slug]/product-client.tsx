@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ShoppingCart, Minus, Plus, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import { ShoppingCart, Minus, Plus, Star, ChevronLeft, ChevronRight, FileText, Shield, AlertTriangle, ExternalLink, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCartStore } from '@/lib/cart-store';
 import { ProductDescription } from '@/components/product-description';
 import { toast } from 'sonner';
@@ -273,31 +275,111 @@ export default function ProductClient({
             </Button>
           </div>
 
-          {/* Блок описания */}
+          {/* Блок с вкладками */}
           <Card>
             <CardContent className="pt-6">
-              <h3 className="mb-4 text-lg font-semibold">Описание</h3>
-              <ProductDescription
-                description={product.description}
-                shortDescription={product.short_description}
-              />
+              <Tabs defaultValue="description" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="description" className="flex items-center gap-2">
+                    <FileText className="size-4" />
+                    Описание
+                  </TabsTrigger>
+                  {(category?.name === 'Салюты' || category?.name === 'Веерные салюты') && (
+                    <TabsTrigger value="safety" className="flex items-center gap-2">
+                      <Shield className="size-4" />
+                      Безопасность
+                    </TabsTrigger>
+                  )}
+                </TabsList>
 
-              <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2 mt-6">
-                {manufacturer && (
-                  <div>
-                    <span className="text-muted-foreground">Производитель:</span>
-                    <br />
-                    <span className="font-medium">{manufacturer.name}</span>
+                <TabsContent value="description" className="mt-6">
+                  <ProductDescription
+                    description={product.description}
+                    shortDescription={product.short_description}
+                  />
+
+                  <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2 mt-6">
+                    {manufacturer && (
+                      <div>
+                        <span className="text-muted-foreground">Производитель:</span>
+                        <br />
+                        <span className="font-medium">{manufacturer.name}</span>
+                      </div>
+                    )}
+                    {category && (
+                      <div>
+                        <span className="text-muted-foreground">Категория:</span>
+                        <br />
+                        <span className="font-medium">{category.name}</span>
+                      </div>
+                    )}
                   </div>
+                </TabsContent>
+
+                {(category?.name === 'Салюты' || category?.name === 'Веерные салюты') && (
+                  <TabsContent value="safety" className="mt-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 mb-4">
+                        <AlertTriangle className="size-5 text-orange-600" />
+                        <h3 className="text-lg font-semibold text-orange-600">Важно! Правила безопасности:</h3>
+                      </div>
+
+                      <div className="space-y-3 text-sm">
+                        <div className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p>Храните в сухом, прохладном месте, вдали от нагревательных приборов и источников огня.</p>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p>Не допускайте падений и повреждений упаковки.</p>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p>Перед запуском внимательно ознакомьтесь с инструкцией на упаковке.</p>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p>Запускайте фейерверк на открытом, безопасном пространстве, в безветренную погоду.</p>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p>Зрители должны находиться на расстоянии не менее 50-70 метров.</p>
+                        </div>
+                      </div>
+
+                      {/* Ссылка на услугу профессионального запуска */}
+                      <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-lg p-4 mt-6">
+                        <div className="flex items-start gap-3">
+                          <div className="flex-shrink-0">
+                            <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                              <Sparkles className="size-5 text-white" />
+                            </div>
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="text-orange-800 font-semibold mb-2 flex items-center gap-2">
+                              🎆 Доверьте запуск профессионалам!
+                            </h4>
+                            <p className="text-orange-700 text-sm mb-3">
+                              Мы обеспечим полную безопасность, соблюдение всех норм и незабываемое шоу.
+                              <strong> Не рискуйте безопасностью — оставьте всё профессионалам!</strong>
+                            </p>
+                            <Link
+                              href="/services/launching"
+                              className="text-orange-600 underline hover:text-orange-700 mt-2 inline-block"
+                            >
+                              Подробнее об услуге →
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
                 )}
-                {category && (
-                  <div>
-                    <span className="text-muted-foreground">Категория:</span>
-                    <br />
-                    <span className="font-medium">{category.name}</span>
-                  </div>
-                )}
-              </div>
+              </Tabs>
             </CardContent>
           </Card>
 
