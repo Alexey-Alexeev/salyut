@@ -35,7 +35,7 @@ export default function LaunchingServicePage() {
   return (
     <div className="min-h-screen">
       {/* Hero секция с изображением */}
-      <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden">
+      <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden py-12 sm:py-16">
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/services-bg.webp"
