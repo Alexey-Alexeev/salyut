@@ -137,7 +137,7 @@ export default function ProductClient({
           <div className="relative aspect-square overflow-hidden rounded-lg border group">
             {mediaItems[selectedImage]?.type === 'video' ? (
               <iframe
-                src={`https://rutube.ru/play/embed/${getRutubeVideoId(mediaItems[selectedImage].src)}`}
+                src={`https://rutube.ru/play/embed/${getRutubeVideoId(mediaItems[selectedImage]?.src || '')}`}
                 title={product.name}
                 className="h-full w-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -145,7 +145,7 @@ export default function ProductClient({
               />
             ) : mediaItems[selectedImage]?.type === 'image' ? (
               <Image
-                src={mediaItems[selectedImage].src}
+                src={mediaItems[selectedImage]?.src || ''}
                 alt={product.name}
                 fill
                 className="object-cover"
@@ -210,7 +210,7 @@ export default function ProductClient({
                     </div>
                   ) : (
                     <Image
-                      src={item.src}
+                      src={item.src || ''}
                       alt={`${product.name} ${index + 1}`}
                       fill
                       className="object-cover"

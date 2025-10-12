@@ -191,7 +191,7 @@ export function ProductCard({ product }: ProductCardProps) {
               />
             ) : product.video_url ? (
               <iframe
-                src={`https://rutube.ru/play/embed/${getRutubeVideoId(product.video_url)}`}
+                src={`https://rutube.ru/play/embed/${getRutubeVideoId(product.video_url || '')}`}
                 title={product.name}
                 className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
