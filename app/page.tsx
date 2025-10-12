@@ -13,11 +13,11 @@ import { ConsultationCTA } from '@/components/consultation-cta';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'СалютГрад - Фейерверки и салюты в Москве | Качественная пиротехника',
-  description: 'Купить фейерверки в Москве с доставкой. Профессиональный запуск салюта на свадьбу и день рождения. Лучшие салюты и пиротехника от проверенных производителей!',
+  title: 'СалютГрад - Фейерверки и салюты в Москве и МО | Качественная пиротехника',
+  description: 'Купить фейерверки в Москве и МО с доставкой. Профессиональный запуск салюта на свадьбу и день рождения. Лучшие салюты и пиротехника от проверенных производителей!',
   keywords: 'купить фейерверки в москве с доставкой, профессиональный запуск салюта на свадьбу, салюты на день рождения, пиротехника москва, петарды, ракеты, фонтаны, новый год, качественные фейерверки',
   openGraph: {
-    title: 'СалютГрад - Фейерверки и салюты в Москве',
+    title: 'СалютГрад - Фейерверки и салюты в Москве и МО',
     description: 'Купить фейерверки в Москве с доставкой. Профессиональный запуск салюта на свадьбу и день рождения. Лучшие салюты и пиротехника!',
     url: 'https://салютград.рф',
     siteName: 'СалютГрад',
@@ -34,8 +34,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'СалютГрад - Фейерверки и салюты в Москве',
-    description: 'Купить фейерверки в Москве с доставкой. Профессиональный запуск салюта на свадьбу и день рождения.',
+    title: 'СалютГрад - Фейерверки и салюты в Москве и МО',
+    description: 'Купить фейерверки в Москве и МО с доставкой. Профессиональный запуск салюта на свадьбу и день рождения.',
     images: ['https://салютград.рф/images/hero-bg.webp'],
   },
   alternates: {
@@ -225,8 +225,8 @@ export default async function HomePage() {
         </div>
 
         <div className={`grid gap-4 md:gap-6 ${categoriesData.length === 7
-            ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 xl:justify-center'
-            : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
+          ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 xl:justify-center'
+          : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
           }`}>
           {categoriesData.map(category => (
             <CategoryCard key={category.id} category={category} />

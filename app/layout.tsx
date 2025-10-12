@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
-    default: 'СалютГрад - Фейерверки и салюты в Москве',
+    default: 'СалютГрад - Фейерверки и салюты в Москве и МО',
     template: '%s | СалютГрад'
   },
   description:

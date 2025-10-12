@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { useCartStore } from '@/lib/cart-store';
+import { ProductDescription } from '@/components/product-description';
 import { toast } from 'sonner';
 
 // Функция для извлечения ID видео из Rutube
@@ -276,33 +277,26 @@ export default function ProductClient({
           <Card>
             <CardContent className="pt-6">
               <h3 className="mb-4 text-lg font-semibold">Описание</h3>
-              <div className="space-y-4">
-                <p className="text-muted-foreground leading-relaxed">
-                  {product.description || 'Описание товара отсутствует.'}
-                </p>
+              <ProductDescription
+                description={product.description}
+                shortDescription={product.short_description}
+              />
 
-                {product.short_description && (
-                  <div className="text-muted-foreground text-sm">
-                    {product.short_description}
+              <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2 mt-6">
+                {manufacturer && (
+                  <div>
+                    <span className="text-muted-foreground">Производитель:</span>
+                    <br />
+                    <span className="font-medium">{manufacturer.name}</span>
                   </div>
                 )}
-
-                <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
-                  {manufacturer && (
-                    <div>
-                      <span className="text-muted-foreground">Производитель:</span>
-                      <br />
-                      <span className="font-medium">{manufacturer.name}</span>
-                    </div>
-                  )}
-                  {category && (
-                    <div>
-                      <span className="text-muted-foreground">Категория:</span>
-                      <br />
-                      <span className="font-medium">{category.name}</span>
-                    </div>
-                  )}
-                </div>
+                {category && (
+                  <div>
+                    <span className="text-muted-foreground">Категория:</span>
+                    <br />
+                    <span className="font-medium">{category.name}</span>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
