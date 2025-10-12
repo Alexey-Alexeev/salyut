@@ -42,6 +42,8 @@ interface Product {
   category_id: string | null;
   images: string[] | null;
   is_popular: boolean | null;
+  characteristics?: Record<string, any> | null;
+  short_description?: string | null;
 }
 
 interface FilterState {
