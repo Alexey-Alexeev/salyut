@@ -11,15 +11,15 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title:
-    'О нас - Качественная пиротехника от лучших импортных производителей | СалютГрад',
+    'О нас - Качественная пиротехника с гарантией безопасности | СалютГрад',
   description:
-    'Узнайте о нашей компании: работаем с ведущими зарубежными производителями пиротехники, предлагаем качественные фейерверки и салюты с гарантией безопасности.',
+    'Узнайте о нашей компании: профессиональный запуск салютов, доставка по Москве и МО, самовывоз в Балашихе. Качественные фейерверки с гарантией безопасности.',
   keywords:
-    'о компании, импортная пиротехника, качественные фейерверки, зарубежные производители, салюты, безопасность',
+    'о компании, профессиональный запуск салютов, доставка пиротехники москва, самовывоз балашиха, качественные фейерверки, безопасность',
   openGraph: {
-    title: 'О нас - Качественная пиротехника от импортных производителей',
+    title: 'О нас - Качественная пиротехника с гарантией безопасности',
     description:
-      'Работаем с ведущими зарубежными производителями пиротехники. Качественные фейерверки и салюты с гарантией безопасности.',
+      'Профессиональный запуск салютов, доставка по Москве и МО, самовывоз в Балашихе. Качественные фейерверки с гарантией безопасности.',
     type: 'website',
     locale: 'ru_RU',
   },
@@ -49,7 +49,7 @@ export default async function AboutPage() {
             '@type': 'Organization',
             name: 'СалютГрад',
             description:
-              'Качественная пиротехника от лучших импортных производителей',
+              'Качественная пиротехника с гарантией безопасности и профессиональным запуском',
             url: 'https://your-domain.com/about',
             foundingDate: '2020',
             areaServed: 'RU',
@@ -100,123 +100,129 @@ export default async function AboutPage() {
             О нашей <span className="text-orange-400">компании</span>
           </h1>
           <p className="mx-auto max-w-3xl rounded-lg bg-black/30 p-4 text-lg text-white md:text-xl">
-            Мы предлагаем качественную пиротехнику от лучших импортных
-            производителей, создавая незабываемые праздники
+            Мы предлагаем качественную пиротехнику с гарантией безопасности,
+            создавая незабываемые праздники для вас и ваших близких
           </p>
         </div>
       </section>
 
       {/* Company Story */}
       <section
-        className="container mx-auto my-16 px-4"
+        className="bg-gradient-to-br from-orange-50 to-red-50 py-16"
         itemScope
         itemType="https://schema.org/Organization"
       >
-        <div className="mx-auto max-w-4xl space-y-12">
-          <header className="space-y-4 text-center">
-            <h2 className="text-3xl font-bold md:text-4xl">Наша история</h2>
-            <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-              Мы начали свой путь с простой идеи — делать праздники ярче и
-              незабываемее
-            </p>
-          </header>
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <h2 className="text-3xl font-bold md:text-4xl">Наша история</h2>
+                  <p className="text-muted-foreground text-lg">
+                    Мы начали свой путь с простой идеи — делать праздники ярче и
+                    незабываемее
+                  </p>
+                </div>
 
-          <article className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
-            <div className="space-y-4">
-              <h3 className="text-2xl font-semibold">
-                Импортные поставщики высшего класса
-              </h3>
-              <p className="text-muted-foreground" itemProp="description">
-                Мы работаем исключительно с ведущими зарубежными производителями
-                пиротехники. Наши импортные поставщики используют передовые
-                технологии и высококачественные материалы, что гарантирует
-                яркие, безопасные и незабываемые фейерверки.
-              </p>
-              <p className="text-muted-foreground">
-                Каждый товар в нашем ассортименте проходит строгий контроль
-                качества и имеет все необходимые сертификаты. Мы гордимся тем,
-                что предлагаем только проверенную продукцию от надежных
-                международных брендов, которые зарекомендовали себя на мировом
-                рынке пиротехники.
-              </p>
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-semibold">Наша миссия</h3>
+                  <p className="text-muted-foreground" itemProp="description">
+                    Мы гарантируем полную безопасность каждого фейерверка. Все товары
+                    проходят строгий контроль качества и имеют необходимые сертификаты.
+                    Наша продукция соответствует всем требованиям безопасности и
+                    обеспечивает яркие, незабываемые впечатления.
+                  </p>
+                  <p className="text-muted-foreground">
+                    Каждый товар в нашем ассортименте тщательно отобран и проверен.
+                    Мы гордимся тем, что предлагаем только качественную продукцию,
+                    которая подарит вам и вашим близким незабываемые моменты радости
+                    и восторга.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-center lg:justify-end">
+                <figure className="relative w-full max-w-md aspect-video overflow-hidden rounded-lg shadow-lg">
+                  <Image
+                    src="../../images/hero-bg3.webp"
+                    alt="Качественные фейерверки и салюты с гарантией безопасности"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </figure>
+              </div>
             </div>
-            <figure className="relative aspect-video overflow-hidden rounded-lg">
-              <Image
-                src="../../images/hero-bg3.webp"
-                alt="Качественные фейерверки и салюты от импортных производителей"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </figure>
-          </article>
+          </div>
         </div>
       </section>
 
       {/* Our Advantages */}
       <section
-        className="container mx-auto mb-16 px-4"
+        className="bg-gradient-to-br from-blue-50 to-indigo-50 py-16"
         aria-labelledby="advantages-heading"
       >
-        <header className="mb-12 space-y-4 text-center">
-          <h2
-            id="advantages-heading"
-            className="text-3xl font-bold md:text-4xl"
-          >
-            Наши преимущества
-          </h2>
-          <p className="text-muted-foreground mx-auto max-w-2xl">
-            Почему клиенты выбирают именно нас
-          </p>
-        </header>
+        <div className="container mx-auto px-4">
+          <header className="mb-12 space-y-4 text-center">
+            <h2
+              id="advantages-heading"
+              className="text-3xl font-bold md:text-4xl"
+            >
+              Наши преимущества
+            </h2>
+            <p className="text-muted-foreground mx-auto max-w-2xl">
+              Почему клиенты выбирают именно нас
+            </p>
+          </header>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3" role="list">
-          <article className="text-center" role="listitem">
-            <Card>
-              <CardContent className="space-y-4 p-6">
-                <Shield
-                  className="mx-auto size-16 text-orange-500"
-                  aria-hidden="true"
-                />
-                <h3 className="text-xl font-semibold">Импортные поставщики</h3>
-                <p className="text-muted-foreground">
-                  Работаем исключительно с ведущими зарубежными производителями,
-                  которые используют передовые технологии и высококачественные
-                  материалы
-                </p>
-              </CardContent>
-            </Card>
-          </article>
-          <article className="text-center" role="listitem">
-            <Card>
-              <CardContent className="space-y-4 p-6">
-                <Heart
-                  className="mx-auto size-16 text-orange-500"
-                  aria-hidden="true"
-                />
-                <h3 className="text-xl font-semibold">Довольные клиенты</h3>
-                <p className="text-muted-foreground">
-                  Тысячи положительных отзывов и высокие оценки от наших
-                  покупателей — лучшее подтверждение качества
-                </p>
-              </CardContent>
-            </Card>
-          </article>
-          <article className="text-center" role="listitem">
-            <Card>
-              <CardContent className="space-y-4 p-6">
-                <Award
-                  className="mx-auto size-16 text-orange-500"
-                  aria-hidden="true"
-                />
-                <h3 className="text-xl font-semibold">Экспертная поддержка</h3>
-                <p className="text-muted-foreground">
-                  Наши специалисты помогут выбрать подходящие фейерверки и
-                  ответят на все ваши вопросы
-                </p>
-              </CardContent>
-            </Card>
-          </article>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3" role="list">
+            <article className="text-center h-full" role="listitem">
+              <Card className="h-full">
+                <CardContent className="flex flex-col space-y-4 p-6 h-full">
+                  <Shield
+                    className="mx-auto size-16 text-orange-500"
+                    aria-hidden="true"
+                  />
+                  <h3 className="text-xl font-semibold">Профессиональный запуск</h3>
+                  <p className="text-muted-foreground flex-grow">
+                    Доверьте запуск профессионалам! Мы обеспечим полную безопасность,
+                    соблюдение всех норм и незабываемое шоу. Не рискуйте — оставьте всё профессионалам!
+                  </p>
+                </CardContent>
+              </Card>
+            </article>
+            <article className="text-center h-full" role="listitem">
+              <Card className="h-full">
+                <CardContent className="flex flex-col space-y-4 p-6 h-full">
+                  <Heart
+                    className="mx-auto size-16 text-orange-500"
+                    aria-hidden="true"
+                  />
+                  <h3 className="text-xl font-semibold">Доставка по Москве и МО</h3>
+                  <p className="text-muted-foreground flex-grow">
+                    Быстрая и надежная доставка по всей Москве и Московской области.
+                    Также доступен самовывоз в Балашихе. Удобно, быстро, безопасно!
+                  </p>
+                </CardContent>
+              </Card>
+            </article>
+            <article className="text-center h-full" role="listitem">
+              <Card className="h-full">
+                <CardContent className="flex flex-col space-y-4 p-6 h-full">
+                  <Award
+                    className="mx-auto size-16 text-orange-500"
+                    aria-hidden="true"
+                  />
+                  <h3 className="text-xl font-semibold">Гарантия качества</h3>
+                  <p className="text-muted-foreground flex-grow">
+                    Все товары проходят строгий контроль качества и имеют
+                    необходимые сертификаты безопасности. Тысячи довольных клиентов —
+                    лучшее подтверждение нашего качества!
+                  </p>
+                </CardContent>
+              </Card>
+            </article>
+          </div>
         </div>
       </section>
 
