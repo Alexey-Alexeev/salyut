@@ -92,8 +92,8 @@ export function VideoReviewCard({ video }: VideoReviewCardProps) {
   const videoInfo = getVideoInfo(video.video_url);
 
   return (
-    <Card className="group cursor-pointer overflow-hidden">
-      <div className="relative aspect-video">
+    <Card className="group cursor-pointer overflow-hidden p-2">
+      <div className="relative aspect-[2/1]">
         {!isPlaying ? (
           // Превью с кнопкой play
           <>
@@ -137,8 +137,8 @@ export function VideoReviewCard({ video }: VideoReviewCardProps) {
           )
         )}
       </div>
-      <CardContent className="p-4">
-        <h3 className="mb-2 font-semibold">Отзыв от {video.customer_name}</h3>
+      <CardContent className="p-2">
+        <h3 className="mb-1 text-sm font-semibold">Отзыв от {video.customer_name}</h3>
       </CardContent>
     </Card>
   );
