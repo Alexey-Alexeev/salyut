@@ -1,6 +1,5 @@
-import Image from 'next/image';
-import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
+import { VideoReviewCard } from '@/components/video-review-card';
 import { db } from '@/lib/db';
 import { reviews } from '@/db/schema';
 import { eq, desc } from 'drizzle-orm';
@@ -21,20 +20,26 @@ export default async function ReviewsPage() {
       {
         id: '1',
         customer_name: 'Алексей М.',
-        video_url:
-          'https://images.pexels.com/photos/1387178/pexels-photo-1387178.jpeg?auto=compress&cs=tinysrgb&w=600',
+        video_url: 'https://rutube.ru/video/1234567890abcdef/',
+        thumbnail_url: 'https://images.pexels.com/photos/1387178/pexels-photo-1387178.jpeg?auto=compress&cs=tinysrgb&w=600',
       },
       {
         id: '2',
         customer_name: 'Марина К.',
-        video_url:
-          'https://images.pexels.com/photos/1387174/pexels-photo-1387174.jpeg?auto=compress&cs=tinysrgb&w=600',
+        video_url: 'https://vk.com/video-123456789_456789123',
+        thumbnail_url: 'https://images.pexels.com/photos/1387174/pexels-photo-1387174.jpeg?auto=compress&cs=tinysrgb&w=600',
       },
       {
         id: '3',
         customer_name: 'Дмитрий Л.',
-        video_url:
-          'https://images.pexels.com/photos/1387172/pexels-photo-1387172.jpeg?auto=compress&cs=tinysrgb&w=600',
+        video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        thumbnail_url: 'https://images.pexels.com/photos/1387172/pexels-photo-1387172.jpeg?auto=compress&cs=tinysrgb&w=600',
+      },
+      {
+        id: '4',
+        customer_name: 'Елена С.',
+        video_url: 'https://rutube.ru/video/7e23e3c805dd8eb4b298b790357e3e89/',
+        thumbnail_url: 'https://images.pexels.com/photos/1387176/pexels-photo-1387176.jpeg?auto=compress&cs=tinysrgb&w=600',
       },
     ];
   }
@@ -54,32 +59,9 @@ export default async function ReviewsPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         {videoReviews.map(video => (
-          <Card key={video.id} className="group cursor-pointer overflow-hidden">
-            <div className="relative aspect-video">
-              <Image
-                src={
-                  video.video_url ||
-                  'https://images.pexels.com/photos/1387174/pexels-photo-1387174.jpeg?auto=compress&cs=tinysrgb&w=600'
-                }
-                alt={video.customer_name}
-                fill
-                className="object-cover transition-transform duration-200 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-black/20">
-                <div className="flex size-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-                  <div className="ml-1 size-0 border-y-[8px] border-l-[12px] border-y-transparent border-l-white" />
-                </div>
-              </div>
-            </div>
-            <CardContent className="p-4">
-              <h3 className="mb-2 font-semibold">
-                Отзыв от {video.customer_name}
-              </h3>
-              <p className="text-muted-foreground text-sm">Видео отзыв</p>
-            </CardContent>
-          </Card>
+          <VideoReviewCard key={video.id} video={video} />
         ))}
       </div>
 

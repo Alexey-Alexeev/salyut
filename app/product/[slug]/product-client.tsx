@@ -29,9 +29,9 @@ function getVideoInfo(url: string): VideoInfo {
 
   // Rutube
   const rutubePatterns = [
-    /rutube\.ru\/video\/([a-zA-Z0-9]+)/,
-    /rutube\.ru\/play\/embed\/([a-zA-Z0-9]+)/,
-    /rutube\.ru\/video\/private\/([a-zA-Z0-9]+)/
+    /rutube\.ru\/video\/([a-zA-Z0-9]+)(?:\/.*)?/,
+    /rutube\.ru\/play\/embed\/([a-zA-Z0-9]+)(?:\/.*)?/,
+    /rutube\.ru\/video\/private\/([a-zA-Z0-9]+)(?:\/.*)?/
   ];
 
   for (const pattern of rutubePatterns) {
@@ -196,8 +196,10 @@ export default function ProductClient({
                   src={videoInfo.embedUrl}
                   title={product.name}
                   className="h-full w-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="clipboard-write; autoplay"
                   allowFullScreen
+                  frameBorder="0"
+                  style={{ border: 'none' }}
                 />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-8 text-center">

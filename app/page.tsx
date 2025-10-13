@@ -7,6 +7,7 @@ import { ProductCard } from '@/components/product-card';
 import { CategoryCard } from '@/components/category-card';
 import { db } from '@/lib/db';
 import { categories, products, reviews } from '@/db/schema';
+import { desc } from 'drizzle-orm';
 import { eq, and } from 'drizzle-orm';
 import { VideoReviewCard } from '@/components/video-review-card';
 import { ConsultationCTA } from '@/components/consultation-cta';
@@ -73,7 +74,11 @@ export default async function HomePage() {
   }
 
   try {
-    videoReviews = await db.select().from(reviews).limit(3);
+    videoReviews = await db
+      .select()
+      .from(reviews)
+      .orderBy(desc(reviews.created_at))
+      .limit(4);
   } catch (error) {
     console.error('Error loading reviews:', error);
   }
@@ -361,7 +366,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             {videoReviews.map(video => (
               <VideoReviewCard key={video.id} video={video} />
             ))}
@@ -491,7 +496,7 @@ export default async function HomePage() {
                 "reviewBody": "Профессиональный подход, безопасность на высоте. Рекомендую для любых праздников!"
               }
             ],
-            "video": videoReviews.slice(0, 3).map(video => ({
+            "video": videoReviews.slice(0, 4).map(video => ({
               "@type": "VideoObject",
               "name": video.title || "Видеоотзыв о фейерверках",
               "description": "Реальные отзывы клиентов о наших фейерверках",

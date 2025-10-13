@@ -6,6 +6,7 @@ import { VideoReviewCard } from '@/components/video-review-card';
 import { ConsultationCTA } from '@/components/consultation-cta';
 import { db } from '@/lib/db';
 import { reviews } from '@/db/schema';
+import { desc } from 'drizzle-orm';
 import { Shield, Heart, Award } from 'lucide-react';
 import { Metadata } from 'next';
 
@@ -33,7 +34,11 @@ export default async function AboutPage() {
   let videoReviews: any[] = [];
 
   try {
-    videoReviews = await db.select().from(reviews).limit(6);
+    videoReviews = await db
+      .select()
+      .from(reviews)
+      .orderBy(desc(reviews.created_at))
+      .limit(8);
   } catch (error) {
     console.error('Error loading reviews:', error);
   }
@@ -241,7 +246,7 @@ export default async function AboutPage() {
 
           {videoReviews.length > 0 ? (
             <div
-              className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+              className="grid grid-cols-1 gap-6 sm:grid-cols-2"
               role="list"
             >
               {videoReviews.map(video => (

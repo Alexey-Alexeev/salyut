@@ -15,12 +15,81 @@ interface VideoReviewCardProps {
   video: VideoReview;
 }
 
+type VideoPlatform = 'rutube' | 'vk' | 'youtube' | 'unknown';
+
+interface VideoInfo {
+  platform: VideoPlatform;
+  videoId: string | null;
+  embedUrl: string | null;
+}
+
+function getVideoInfo(url: string): VideoInfo {
+  if (!url) return { platform: 'unknown', videoId: null, embedUrl: null };
+
+  // Rutube
+  const rutubePatterns = [
+    /rutube\.ru\/video\/([a-zA-Z0-9]+)(?:\/.*)?/,
+    /rutube\.ru\/play\/embed\/([a-zA-Z0-9]+)(?:\/.*)?/,
+    /rutube\.ru\/video\/private\/([a-zA-Z0-9]+)(?:\/.*)?/
+  ];
+
+  for (const pattern of rutubePatterns) {
+    const match = url.match(pattern);
+    if (match) {
+      return {
+        platform: 'rutube',
+        videoId: match[1],
+        embedUrl: `https://rutube.ru/play/embed/${match[1]}`
+      };
+    }
+  }
+
+  // VK Video
+  const vkPatterns = [
+    /vk\.com\/video(-?\d+_\d+)/,
+    /vkvideo\.ru\/video(-?\d+_\d+)/,
+    /vk\.com\/video\?z=video(-?\d+_\d+)/
+  ];
+
+  for (const pattern of vkPatterns) {
+    const match = url.match(pattern);
+    if (match) {
+      return {
+        platform: 'vk',
+        videoId: match[1],
+        embedUrl: `https://vk.com/video_ext.php?oid=${match[1].split('_')[0]}&id=${match[1].split('_')[1]}&hd=2`
+      };
+    }
+  }
+
+  // YouTube
+  const youtubePatterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/,
+    /youtube\.com\/v\/([a-zA-Z0-9_-]+)/
+  ];
+
+  for (const pattern of youtubePatterns) {
+    const match = url.match(pattern);
+    if (match) {
+      return {
+        platform: 'youtube',
+        videoId: match[1],
+        embedUrl: `https://www.youtube.com/embed/${match[1]}`
+      };
+    }
+  }
+
+  return { platform: 'unknown', videoId: null, embedUrl: null };
+}
+
 export function VideoReviewCard({ video }: VideoReviewCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const handlePlay = () => {
     setIsPlaying(true);
   };
+
+  const videoInfo = getVideoInfo(video.video_url);
 
   return (
     <Card className="group cursor-pointer overflow-hidden">
@@ -46,13 +115,26 @@ export function VideoReviewCard({ video }: VideoReviewCardProps) {
           </>
         ) : (
           // Iframe с видео
-          <iframe
-            src={`${video.video_url}&autoplay=1`}
-            className="size-full"
-            allow="autoplay; encrypted-media; fullscreen"
-            allowFullScreen
-            frameBorder="0"
-          />
+          videoInfo.embedUrl ? (
+            <iframe
+              src={videoInfo.embedUrl}
+              className="size-full"
+              allow="clipboard-write; autoplay"
+              allowFullScreen
+              frameBorder="0"
+              style={{ border: 'none' }}
+            />
+          ) : (
+            <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-8 text-center">
+              <div className="mb-4 text-6xl opacity-50">🎬</div>
+              <div className="text-lg font-medium text-gray-600 line-clamp-3">
+                Отзыв от {video.customer_name}
+              </div>
+              <div className="mt-2 text-sm text-gray-500">
+                Видео недоступно
+              </div>
+            </div>
+          )
         )}
       </div>
       <CardContent className="p-4">

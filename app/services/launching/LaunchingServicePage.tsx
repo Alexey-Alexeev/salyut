@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ConsultationDialog } from '@/components/consultation-dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { VideoReviewCard } from '@/components/video-review-card';
 import {
   Shield,
   Award,
@@ -30,8 +31,20 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function LaunchingServicePage() {
+interface VideoReview {
+  id: string;
+  customer_name: string;
+  video_url: string;
+  thumbnail_url?: string;
+}
+
+interface LaunchingServicePageProps {
+  videoReviews: VideoReview[];
+}
+
+export default function LaunchingServicePage({ videoReviews }: LaunchingServicePageProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   return (
     <div className="min-h-screen">
       {/* Hero секция с изображением */}
@@ -249,6 +262,27 @@ export default function LaunchingServicePage() {
                 </div>
               </Card>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Video Reviews */}
+      <section className="bg-muted py-16">
+        <div className="container mx-auto px-4">
+          <div className="mb-12 space-y-4 text-center">
+            <h2 className="text-3xl font-bold md:text-4xl">
+              Наши салюты в действии
+            </h2>
+            <p className="text-muted-foreground mx-auto max-w-2xl">
+              Посмотрите, как выглядят наши фейерверки на реальных праздниках наших
+              клиентов
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {videoReviews?.map(video => (
+              <VideoReviewCard key={video.id} video={video} />
+            ))}
           </div>
         </div>
       </section>
