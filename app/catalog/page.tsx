@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense, useCallback } from 'react';
+import React, { useState, useEffect, Suspense, useCallback, useMemo, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ProductCard } from '@/components/product-card';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
@@ -63,6 +63,8 @@ function CatalogContent() {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const isLoadingRef = useRef(false);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 20,
@@ -87,8 +89,21 @@ function CatalogContent() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
+  // Стабилизируем список товаров для предотвращения лишних рендеров
+  const stableProducts = useMemo(() => {
+    return filteredProducts;
+  }, [filteredProducts.length, filteredProducts.map(p => p.id).join(',')]);
+
   // Загрузка данных
   useEffect(() => {
+    if (hasLoaded || isLoadingRef.current) {
+      // console.log('⏭️ [CATALOG] Пропускаем загрузку - данные уже загружены или загружаются');
+      return; // Предотвращаем повторную загрузку
+    }
+
+    // console.log('🔄 [CATALOG] Начинаем загрузку данных...');
+    isLoadingRef.current = true;
+
     const fetchData = async () => {
       try {
         const [categoriesRes, productsRes] = await Promise.all([
@@ -102,38 +117,41 @@ function CatalogContent() {
             productsRes.json(),
           ]);
 
-          setCategories(categoriesData);
-
-          // Если API вернул пагинированные данные
-          if (productsResponse.products) {
-            setProducts(productsResponse.products);
-            setPagination(productsResponse.pagination);
-          } else {
-            // Fallback для старого формата API
-            setProducts(productsResponse);
-          }
-
           // Определяем диапазон цен
           const allProducts = productsResponse.products || productsResponse;
           const prices = allProducts.map((p: Product) => p.price);
           const maxPrice = prices.length > 0 ? Math.max(...prices) : 10000;
 
+          // console.log('📦 [CATALOG] Загружено товаров:', allProducts.length);
+          // console.log('📦 [CATALOG] Первые 3 товара:', allProducts.slice(0, 3).map((p: Product) => p.name));
+
+          // Обновляем все состояние одновременно, чтобы избежать промежуточных рендеров
+          setCategories(categoriesData);
+          setProducts(allProducts);
+          setFilteredProducts(allProducts);
           setFilters(prev => ({
             ...prev,
             priceMax: maxPrice,
           }));
 
-          setFilteredProducts(allProducts);
+          if (productsResponse.pagination) {
+            setPagination(productsResponse.pagination);
+          }
+
+          setHasLoaded(true);
+          // console.log('✅ [CATALOG] Данные загружены и состояние обновлено');
         }
       } catch (error) {
-        console.error('Error loading data:', error);
+        console.error('❌ [CATALOG] Ошибка загрузки данных:', error);
       } finally {
         setLoading(false);
+        isLoadingRef.current = false;
+        // console.log('🏁 [CATALOG] Загрузка завершена, loading = false');
       }
     };
 
     fetchData();
-  }, []);
+  }, [hasLoaded]);
 
   // Инициализация фильтров из URL
   useEffect(() => {
@@ -152,6 +170,19 @@ function CatalogContent() {
   // Применение всех фильтров (поиск + категории + цена + сортировка)
   useEffect(() => {
     const applyAllFilters = async () => {
+      // console.log('🔍 [FILTER] Применение фильтров...', {
+      //   hasLoaded,
+      //   productsCount: products.length,
+      //   sortBy,
+      //   filters
+      // });
+
+      // Не применяем фильтры, если данные еще не готовы
+      if (!hasLoaded || products.length === 0) {
+        // console.log('⏳ [FILTER] Пропускаем фильтрацию - данные не готовы');
+        return;
+      }
+
       let productsToFilter = [...products];
 
       // Поиск по названию - делаем запрос к API с пагинацией
@@ -196,22 +227,25 @@ function CatalogContent() {
       productsToFilter.sort((a, b) => {
         switch (sortBy) {
           case 'price-asc':
-            return a.price - b.price;
+            return a.price - b.price || a.id.localeCompare(b.id);
           case 'price-desc':
-            return b.price - a.price;
+            return b.price - a.price || a.id.localeCompare(b.id);
           case 'popular':
-            return (b.is_popular ? 1 : 0) - (a.is_popular ? 1 : 0);
+            return (b.is_popular ? 1 : 0) - (a.is_popular ? 1 : 0) || a.id.localeCompare(b.id);
           default:
-            return a.name.localeCompare(b.name, 'ru');
+            return a.name.localeCompare(b.name, 'ru') || a.id.localeCompare(b.id);
         }
       });
 
+      // console.log('📋 [FILTER] Результат фильтрации:', productsToFilter.slice(0, 3).map((p: Product) => p.name));
       setFilteredProducts(productsToFilter);
     };
 
-    const timeoutId = setTimeout(applyAllFilters, 300); // debounce 300ms
-    return () => clearTimeout(timeoutId);
-  }, [products, categories, filters, sortBy, pagination]);
+    // Применяем фильтры только если данные готовы
+    if (hasLoaded) {
+      applyAllFilters();
+    }
+  }, [products, categories, filters, sortBy, hasLoaded]);
 
   // Обработчики событий
   const handleCategoryChange = useCallback(
@@ -551,9 +585,19 @@ function CatalogContent() {
               }`}
             style={{ gridAutoRows: '1fr' }}
           >
-            {filteredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {loading ? (
+              Array.from({ length: 8 }).map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <div className="bg-muted aspect-square rounded-lg mb-2" />
+                  <div className="bg-muted h-4 rounded mb-2" />
+                  <div className="bg-muted h-6 w-1/2 rounded" />
+                </div>
+              ))
+            ) : (
+              stableProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            )}
           </div>
 
           {/* Пагинация */}

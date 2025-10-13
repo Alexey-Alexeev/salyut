@@ -16,6 +16,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export function Header() {
   const totalItems = useCartStore(state => state.getTotalItems());
+  const isInitialized = useCartStore(state => state.isInitialized);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -102,7 +103,7 @@ export function Header() {
                   aria-label="Перейти в корзину"
                 >
                   <ShoppingCart className="size-4" />
-                  {isHydrated && totalItems > 0 && (
+                  {isHydrated && isInitialized && totalItems > 0 && (
                     <Badge
                       variant="destructive"
                       className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full p-0 text-xs"

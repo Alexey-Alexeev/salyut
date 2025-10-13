@@ -13,6 +13,7 @@ export interface CartItem {
 
 interface CartStore {
   items: CartItem[];
+  isInitialized: boolean;
   addItem: (product: Omit<CartItem, 'quantity'>) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
@@ -25,6 +26,7 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
+      isInitialized: false,
       addItem: product => {
         const items = get().items;
         const existingItem = items.find(item => item.id === product.id);
@@ -71,6 +73,11 @@ export const useCartStore = create<CartStore>()(
     }),
     {
       name: 'cart-storage',
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.isInitialized = true;
+        }
+      },
     }
   )
 );

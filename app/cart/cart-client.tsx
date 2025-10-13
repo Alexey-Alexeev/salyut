@@ -67,13 +67,19 @@ const DISCOUNT_THRESHOLD_1 = 10000; // 5% discount
 const DISCOUNT_THRESHOLD_2 = 15000; // 10% discount
 
 export default function CartPageClient() {
-    const { items, updateQuantity, removeItem, clearCart, getTotalPrice } =
+    const { items, updateQuantity, removeItem, clearCart, getTotalPrice, isInitialized } =
         useCartStore();
     const [deliveryResult, setDeliveryResult] =
         useState<DeliveryCalculationResult | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [hasValidationAttempted, setHasValidationAttempted] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
     const router = useRouter();
+
+    // Hydration check to prevent server-client mismatch
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const {
         register,
@@ -256,6 +262,30 @@ export default function CartPageClient() {
             setIsSubmitting(false);
         }
     };
+
+    // Не рендерим до монтирования и инициализации store, чтобы избежать hydration mismatch
+    if (!isMounted || !isInitialized) {
+        return (
+            <div className="container mx-auto px-4 py-8">
+                <div className="mb-8">
+                    <Breadcrumb
+                        items={[
+                            { href: '/catalog', label: 'Каталог' },
+                            { label: 'Корзина' },
+                        ]}
+                    />
+                </div>
+                <div className="flex h-64 items-center justify-center">
+                    <div className="text-center">
+                        <div className="mb-4 text-6xl opacity-50">🛒</div>
+                        <div className="text-lg font-medium text-gray-600">
+                            Загрузка корзины...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (items.length === 0) {
         return (

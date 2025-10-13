@@ -147,6 +147,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const [isMounted, setIsMounted] = useState(false);
 
   const items = useCartStore(state => state.items);
+  const isInitialized = useCartStore(state => state.isInitialized);
   const addItem = useCartStore(state => state.addItem);
   const updateQuantity = useCartStore(state => state.updateQuantity);
   const removeItem = useCartStore(state => state.removeItem);
@@ -255,8 +256,8 @@ export function ProductCard({ product }: ProductCardProps) {
     toast.info('Товар удален из корзины');
   };
 
-  // Не рендерим до монтирования, чтобы избежать hydration mismatch
-  if (!isMounted) {
+  // Не рендерим до монтирования и инициализации store, чтобы избежать hydration mismatch
+  if (!isMounted || !isInitialized) {
     return (
       <Card className="overflow-hidden">
         <div className="bg-muted relative aspect-square animate-pulse" />

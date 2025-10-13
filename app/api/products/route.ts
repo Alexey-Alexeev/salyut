@@ -32,7 +32,7 @@ export async function GET(request: Request) {
       .where(and(...conditions))
       .limit(limit)
       .offset(offset)
-      .orderBy(products.name);
+      .orderBy(products.name, products.id);
 
     const [totalCountResult, productsData] = await Promise.all([
       totalCountQuery,
