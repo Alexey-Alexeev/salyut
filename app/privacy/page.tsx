@@ -267,61 +267,61 @@ export default function PrivacyPage() {
                 </div>
 
                 {/* Section 4 */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-200">
-                    <div className="flex items-start space-x-4">
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-8 mb-6 sm:mb-8 border border-gray-200">
+                    <div className="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-4">
                         <div className="flex-shrink-0">
-                            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                                <span className="text-red-600 font-bold text-lg">4</span>
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                <span className="text-red-600 font-bold text-base sm:text-lg">4</span>
                             </div>
                         </div>
                         <div className="flex-1">
-                            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Условия обработки и передачи данных</h2>
+                            <h2 className="text-lg sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">Условия обработки и передачи данных</h2>
 
-                            <div className="space-y-6">
-                                <div className="bg-gradient-to-r from-red-50 to-pink-50 rounded-lg p-6 border border-red-200">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                        <span className="w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-sm font-bold mr-3">4.1</span>
-                                        Конфиденциальность
+                            <div className="space-y-4 sm:space-y-6">
+                                <div className="bg-gradient-to-r from-red-50 to-pink-50 rounded-lg p-4 sm:p-6 border border-red-200">
+                                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-4 flex items-start sm:items-center">
+                                        <span className="w-5 h-5 sm:w-6 sm:h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0 mt-0.5 sm:mt-0">4.1</span>
+                                        <span className="break-words">Конфиденциальность</span>
                                     </h3>
-                                    <p className="text-gray-700 leading-relaxed">
+                                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed break-words">
                                         В отношении персональной информации Пользователя сохраняется ее конфиденциальность, кроме случаев добровольного предоставления Пользователем информации о себе для общего доступа неограниченному кругу лиц.
                                     </p>
                                 </div>
 
-                                <div className="bg-gray-50 rounded-lg p-6">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                        <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold mr-3">4.2</span>
-                                        Передача данных третьим лицам
+                                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-4 flex items-start sm:items-center">
+                                        <span className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0 mt-0.5 sm:mt-0">4.2</span>
+                                        <span className="break-words">Передача данных третьим лицам</span>
                                     </h3>
-                                    <p className="text-gray-700 mb-4">Сайт вправе передать персональную информацию Пользователя третьим лицам в следующих случаях:</p>
+                                    <p className="text-sm sm:text-base text-gray-700 mb-3 sm:mb-4 break-words">Сайт вправе передать персональную информацию Пользователя третьим лицам в следующих случаях:</p>
 
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        <div className="space-y-3">
-                                            <div className="flex items-start space-x-3">
-                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                                                <p className="text-sm text-gray-700">Пользователь выразил согласие на такие действия</p>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                        <div className="space-y-2 sm:space-y-3">
+                                            <div className="flex items-start space-x-2 sm:space-x-3">
+                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                                                <p className="text-xs sm:text-sm text-gray-700 break-words">Пользователь выразил согласие на такие действия</p>
                                             </div>
-                                            <div className="flex items-start space-x-3">
-                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                                                <p className="text-sm text-gray-700">Передача необходима для использования Пользователем определенного сервиса</p>
+                                            <div className="flex items-start space-x-2 sm:space-x-3">
+                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                                                <p className="text-xs sm:text-sm text-gray-700 break-words">Передача необходима для использования Пользователем определенного сервиса</p>
                                             </div>
-                                            <div className="flex items-start space-x-3">
-                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                                                <p className="text-sm text-gray-700">Передача необходима для функционирования и работоспособности самого Сайта</p>
+                                            <div className="flex items-start space-x-2 sm:space-x-3">
+                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                                                <p className="text-xs sm:text-sm text-gray-700 break-words">Передача необходима для функционирования и работоспособности самого Сайта</p>
                                             </div>
                                         </div>
-                                        <div className="space-y-3">
-                                            <div className="flex items-start space-x-3">
-                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                                                <p className="text-sm text-gray-700">Передача предусмотрена российским законодательством</p>
+                                        <div className="space-y-2 sm:space-y-3">
+                                            <div className="flex items-start space-x-2 sm:space-x-3">
+                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                                                <p className="text-xs sm:text-sm text-gray-700 break-words">Передача предусмотрена российским законодательством</p>
                                             </div>
-                                            <div className="flex items-start space-x-3">
-                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                                                <p className="text-sm text-gray-700">В рамках продажи или иной передачи бизнеса</p>
+                                            <div className="flex items-start space-x-2 sm:space-x-3">
+                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                                                <p className="text-xs sm:text-sm text-gray-700 break-words">В рамках продажи или иной передачи бизнеса</p>
                                             </div>
-                                            <div className="flex items-start space-x-3">
-                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                                                <p className="text-sm text-gray-700">В целях обеспечения возможности защиты прав и законных интересов</p>
+                                            <div className="flex items-start space-x-2 sm:space-x-3">
+                                                <div className="w-2 h-2 bg-blue-400 rounded-full mt-1.5 sm:mt-2 flex-shrink-0"></div>
+                                                <p className="text-xs sm:text-sm text-gray-700 break-words">В целях обеспечения возможности защиты прав и законных интересов</p>
                                             </div>
                                         </div>
                                     </div>
@@ -440,22 +440,22 @@ export default function PrivacyPage() {
                 </div>
 
                 {/* Section 8 */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-200">
-                    <div className="flex items-start space-x-4">
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-8 mb-6 sm:mb-8 border border-gray-200">
+                    <div className="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-4">
                         <div className="flex-shrink-0">
-                            <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
-                                <span className="text-amber-600 font-bold text-lg">8</span>
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-100 rounded-lg flex items-center justify-center">
+                                <span className="text-amber-600 font-bold text-base sm:text-lg">8</span>
                             </div>
                         </div>
                         <div className="flex-1">
-                            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Изменение Политики конфиденциальности</h2>
+                            <h2 className="text-lg sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">Изменение Политики конфиденциальности</h2>
 
-                            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg p-6 border border-amber-200">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                    <span className="w-6 h-6 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-sm font-bold mr-3">8.1</span>
-                                    Право на изменения
+                            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg p-4 sm:p-6 border border-amber-200">
+                                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-4 flex items-start sm:items-center">
+                                    <span className="w-5 h-5 sm:w-6 sm:h-6 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0 mt-0.5 sm:mt-0">8.1</span>
+                                    <span className="break-words">Право на изменения</span>
                                 </h3>
-                                <p className="text-gray-700 leading-relaxed">
+                                <p className="text-sm sm:text-base text-gray-700 leading-relaxed break-words">
                                     Сайт имеет право вносить изменения в настоящую Политику конфиденциальности. При внесении изменений в актуальной редакции указывается дата последнего обновления. Новая редакция Политики вступает в силу с момента ее размещения, если иное не предусмотрено новой редакцией Политики. Действующая редакция постоянно доступна на странице по адресу <strong className="text-orange-600">https://салютград.рф/privacy</strong>.
                                 </p>
                             </div>
