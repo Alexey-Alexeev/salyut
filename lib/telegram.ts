@@ -23,6 +23,8 @@ interface TelegramNotification {
   deliveryAddress?: string;
   deliveryCost: number;
   distanceFromMKAD?: number; // расстояние от МКАД в км
+  discountAmount?: number; // сумма скидки
+  subtotalAmount?: number; // сумма товаров без скидки
 }
 
 export async function sendConsultationNotification(
@@ -129,6 +131,20 @@ export async function sendTelegramNotification(order: TelegramNotification) {
     ? `\n🚗 Расстояние от МКАД: ${order.distanceFromMKAD} км`
     : '';
 
+  // Определяем тип скидки/подарка
+  let discountInfo = '';
+  if (order.subtotalAmount) {
+    const subtotal = order.subtotalAmount;
+
+    if (subtotal >= 60000) {
+      discountInfo = `\n🎁 *Бонусы:* 10% скидка + подарок включены`;
+    } else if (subtotal >= 40000) {
+      discountInfo = `\n🎁 *Бонусы:* 5% скидка + подарок включены`;
+    } else if (subtotal >= 10000) {
+      discountInfo = `\n🎁 *Бонусы:* подарок включен`;
+    }
+  }
+
   const message = `
 🎆 *Новый заказ!*
 
@@ -139,7 +155,9 @@ ${contactMethodText}
 🛒 *Товары:*
 ${itemsText}
 
-💰 *Итого: ${order.totalAmount.toLocaleString('ru-RU')} ₽*${deliveryText}${distanceFromMKADText}${commentText}${professionalLaunchText}
+${deliveryText}${distanceFromMKADText}${discountInfo}${commentText}${professionalLaunchText}
+
+💰 *Итого: ${order.totalAmount.toLocaleString('ru-RU')} ₽*
 
 ⏰ Время: ${new Date().toLocaleString('ru-RU')}
   `.trim();

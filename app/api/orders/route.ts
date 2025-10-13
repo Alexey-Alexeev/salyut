@@ -127,6 +127,9 @@ export async function POST(request: NextRequest) {
 
     // Отправляем уведомление в Telegram
     try {
+      // Рассчитываем сумму товаров без скидки для определения типа бонуса
+      const subtotalAmount = orderItemsWithProducts.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
       await sendTelegramNotification({
         orderId: order.id as string,
         customerName: validatedData.customer_name,
@@ -141,6 +144,8 @@ export async function POST(request: NextRequest) {
         deliveryAddress: validatedData.delivery_address || undefined,
         deliveryCost: validatedData.delivery_cost,
         distanceFromMKAD: validatedData.distance_from_mkad || undefined,
+        discountAmount: validatedData.discount_amount,
+        subtotalAmount: subtotalAmount,
       });
     } catch (telegramError) {
       console.error('Ошибка при отправке Telegram уведомления:', telegramError);
