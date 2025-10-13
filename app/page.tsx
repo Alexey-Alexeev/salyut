@@ -385,7 +385,7 @@ export default async function HomePage() {
             "telephone": "+7 (977) 360-20-08",
             "address": {
               "@type": "PostalAddress",
-              "streetAddress": "Рассветная улица, 4",
+              "streetAddress": "Рассветная улица, 14",
               "addressLocality": "деревня Чёрное",
               "addressRegion": "Московская область",
               "addressCountry": "RU",
@@ -393,8 +393,8 @@ export default async function HomePage() {
             },
             "geo": {
               "@type": "GeoCoordinates",
-              "latitude": "55.740401",
-              "longitude": "38.051908"
+              "latitude": "55.740340",
+              "longitude": "38.054064"
             },
             "openingHours": "Mo-Su 09:00-21:00",
             "priceRange": "₽₽",
@@ -402,8 +402,8 @@ export default async function HomePage() {
               "@type": "GeoCircle",
               "geoMidpoint": {
                 "@type": "GeoCoordinates",
-                "latitude": "55.740401",
-                "longitude": "38.051908"
+                "latitude": "55.740340",
+                "longitude": "38.054064"
               },
               "geoRadius": "50000"
             },

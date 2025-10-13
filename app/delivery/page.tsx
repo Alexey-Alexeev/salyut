@@ -287,13 +287,13 @@ export default function DeliveryPage() {
               "addressLocality": "деревня Чёрное",
               "addressRegion": "Московская область",
               "addressCountry": "RU",
-              "streetAddress": "Рассветная улица, 4",
+              "streetAddress": "Рассветная улица, 14",
               "postalCode": "143921"
             },
             "geo": {
               "@type": "GeoCoordinates",
-              "latitude": "55.740401",
-              "longitude": "38.051908"
+              "latitude": "55.740340",
+              "longitude": "38.054064"
             },
             "openingHours": "Mo-Su 09:00-21:00",
             "areaServed": [

@@ -11,23 +11,74 @@ import { useCartStore } from '@/lib/cart-store';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 
-// Функция для извлечения ID видео из Rutube
-function getRutubeVideoId(url: string): string | null {
-  if (!url) return null;
+// Типы поддерживаемых видео платформ
+type VideoPlatform = 'rutube' | 'vk' | 'youtube' | 'unknown';
 
-  // Поддерживаем различные форматы Rutube URL
-  const patterns = [
+// Интерфейс для информации о видео
+interface VideoInfo {
+  platform: VideoPlatform;
+  videoId: string | null;
+  embedUrl: string | null;
+}
+
+// Универсальная функция для определения типа видео и извлечения ID
+function getVideoInfo(url: string): VideoInfo {
+  if (!url) return { platform: 'unknown', videoId: null, embedUrl: null };
+
+  // Rutube
+  const rutubePatterns = [
     /rutube\.ru\/video\/([a-zA-Z0-9]+)/,
     /rutube\.ru\/play\/embed\/([a-zA-Z0-9]+)/,
     /rutube\.ru\/video\/private\/([a-zA-Z0-9]+)/
   ];
 
-  for (const pattern of patterns) {
+  for (const pattern of rutubePatterns) {
     const match = url.match(pattern);
-    if (match) return match[1];
+    if (match) {
+      return {
+        platform: 'rutube',
+        videoId: match[1],
+        embedUrl: `https://rutube.ru/play/embed/${match[1]}`
+      };
+    }
   }
 
-  return null;
+  // VK Video
+  const vkPatterns = [
+    /vk\.com\/video(-?\d+_\d+)/,
+    /vkvideo\.ru\/video(-?\d+_\d+)/,
+    /vk\.com\/video\?z=video(-?\d+_\d+)/
+  ];
+
+  for (const pattern of vkPatterns) {
+    const match = url.match(pattern);
+    if (match) {
+      return {
+        platform: 'vk',
+        videoId: match[1],
+        embedUrl: `https://vk.com/video_ext.php?oid=${match[1].split('_')[0]}&id=${match[1].split('_')[1]}&hd=2`
+      };
+    }
+  }
+
+  // YouTube
+  const youtubePatterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/,
+    /youtube\.com\/v\/([a-zA-Z0-9_-]+)/
+  ];
+
+  for (const pattern of youtubePatterns) {
+    const match = url.match(pattern);
+    if (match) {
+      return {
+        platform: 'youtube',
+        videoId: match[1],
+        embedUrl: `https://www.youtube.com/embed/${match[1]}`
+      };
+    }
+  }
+
+  return { platform: 'unknown', videoId: null, embedUrl: null };
 }
 
 // Функция для извлечения ключевых характеристик с названиями
@@ -235,15 +286,28 @@ export function ProductCard({ product }: ProductCardProps) {
                 placeholder="blur"
                 blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmM2Y0ZjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU3ZWIiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFkKSIvPjwvc3ZnPg=="
               />
-            ) : product.video_url ? (
-              <iframe
-                src={`https://rutube.ru/play/embed/${getRutubeVideoId(product.video_url || '')}`}
-                title={product.name}
-                className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            ) : (
+            ) : product.video_url ? (() => {
+              const videoInfo = getVideoInfo(product.video_url);
+              return videoInfo.embedUrl ? (
+                <iframe
+                  src={videoInfo.embedUrl}
+                  title={product.name}
+                  className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-4 text-center">
+                  <div className="mb-3 text-4xl opacity-50">🎬</div>
+                  <div className="text-sm font-medium text-gray-600 line-clamp-2">
+                    {product.name}
+                  </div>
+                  <div className="mt-1 text-xs text-gray-500">
+                    Видео недоступно
+                  </div>
+                </div>
+              );
+            })() : (
               <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-4 text-center">
                 <div className="mb-3 text-4xl opacity-50">📷</div>
                 <div className="text-sm font-medium text-gray-600 line-clamp-2">

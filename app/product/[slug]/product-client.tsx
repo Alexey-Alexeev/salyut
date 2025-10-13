@@ -13,23 +13,74 @@ import { useCartStore } from '@/lib/cart-store';
 import { ProductDescription } from '@/components/product-description';
 import { toast } from 'sonner';
 
-// Функция для извлечения ID видео из Rutube
-function getRutubeVideoId(url: string): string | null {
-  if (!url) return null;
+// Типы поддерживаемых видео платформ
+type VideoPlatform = 'rutube' | 'vk' | 'youtube' | 'unknown';
 
-  // Поддерживаем различные форматы Rutube URL
-  const patterns = [
+// Интерфейс для информации о видео
+interface VideoInfo {
+  platform: VideoPlatform;
+  videoId: string | null;
+  embedUrl: string | null;
+}
+
+// Универсальная функция для определения типа видео и извлечения ID
+function getVideoInfo(url: string): VideoInfo {
+  if (!url) return { platform: 'unknown', videoId: null, embedUrl: null };
+
+  // Rutube
+  const rutubePatterns = [
     /rutube\.ru\/video\/([a-zA-Z0-9]+)/,
     /rutube\.ru\/play\/embed\/([a-zA-Z0-9]+)/,
     /rutube\.ru\/video\/private\/([a-zA-Z0-9]+)/
   ];
 
-  for (const pattern of patterns) {
+  for (const pattern of rutubePatterns) {
     const match = url.match(pattern);
-    if (match) return match[1];
+    if (match) {
+      return {
+        platform: 'rutube',
+        videoId: match[1],
+        embedUrl: `https://rutube.ru/play/embed/${match[1]}`
+      };
+    }
   }
 
-  return null;
+  // VK Video
+  const vkPatterns = [
+    /vk\.com\/video(-?\d+_\d+)/,
+    /vkvideo\.ru\/video(-?\d+_\d+)/,
+    /vk\.com\/video\?z=video(-?\d+_\d+)/
+  ];
+
+  for (const pattern of vkPatterns) {
+    const match = url.match(pattern);
+    if (match) {
+      return {
+        platform: 'vk',
+        videoId: match[1],
+        embedUrl: `https://vk.com/video_ext.php?oid=${match[1].split('_')[0]}&id=${match[1].split('_')[1]}&hd=2`
+      };
+    }
+  }
+
+  // YouTube
+  const youtubePatterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/,
+    /youtube\.com\/v\/([a-zA-Z0-9_-]+)/
+  ];
+
+  for (const pattern of youtubePatterns) {
+    const match = url.match(pattern);
+    if (match) {
+      return {
+        platform: 'youtube',
+        videoId: match[1],
+        embedUrl: `https://www.youtube.com/embed/${match[1]}`
+      };
+    }
+  }
+
+  return { platform: 'unknown', videoId: null, embedUrl: null };
 }
 
 type Product = {
@@ -138,15 +189,28 @@ export default function ProductClient({
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
         <div className="space-y-4">
           <div className="relative aspect-square overflow-hidden rounded-lg border group">
-            {mediaItems[selectedImage]?.type === 'video' ? (
-              <iframe
-                src={`https://rutube.ru/play/embed/${getRutubeVideoId(mediaItems[selectedImage]?.src || '')}`}
-                title={product.name}
-                className="h-full w-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            ) : mediaItems[selectedImage]?.type === 'image' ? (
+            {mediaItems[selectedImage]?.type === 'video' ? (() => {
+              const videoInfo = getVideoInfo(mediaItems[selectedImage]?.src || '');
+              return videoInfo.embedUrl ? (
+                <iframe
+                  src={videoInfo.embedUrl}
+                  title={product.name}
+                  className="h-full w-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-8 text-center">
+                  <div className="mb-4 text-6xl opacity-50">🎬</div>
+                  <div className="text-lg font-medium text-gray-600 line-clamp-3">
+                    {product.name}
+                  </div>
+                  <div className="mt-2 text-sm text-gray-500">
+                    Видео недоступно
+                  </div>
+                </div>
+              );
+            })() : mediaItems[selectedImage]?.type === 'image' ? (
               <Image
                 src={mediaItems[selectedImage]?.src || ''}
                 alt={product.name}

@@ -122,7 +122,7 @@ export async function sendTelegramNotification(order: TelegramNotification) {
 
   const deliveryText =
     order.deliveryMethod === 'pickup'
-      ? '\n🏬 **Самовывоз** (бесплатно)\n📍 Рассветная ул., 4, д. Чёрное, Балашиха'
+      ? '\n🏬 **Самовывоз** (бесплатно)\n📍 Рассветная ул., 14, д. Чёрное, Балашиха'
       : `\n🚚 **Доставка** - ${order.deliveryCost.toLocaleString('ru-RU')} ₽${order.deliveryAddress ? `\n📍 ${order.deliveryAddress}` : '\n📍 _Адрес не указан. Необходимо уточнить_'}`;
 
   const distanceFromMKADText = order.distanceFromMKAD
