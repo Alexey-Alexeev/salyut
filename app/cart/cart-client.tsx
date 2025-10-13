@@ -315,7 +315,7 @@ export default function CartPageClient() {
                         <p className="mb-8 text-gray-600">
                             Добавьте товары в корзину, чтобы оформить заказ фейерверков и салютов
                         </p>
-                        <Link href="/">
+                        <Link href="/catalog">
                             <Button size="lg">Перейти к каталогу</Button>
                         </Link>
                     </div>
