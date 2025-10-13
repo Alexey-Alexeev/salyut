@@ -144,7 +144,6 @@ export function DeliverySelection({
 
     const apiKey = process.env.NEXT_PUBLIC_YANDEX_API_KEY;
     if (!apiKey) {
-      console.warn('🚫 Нет Yandex API key');
       setDistanceFromMKAD(undefined);
       return;
     }
@@ -159,7 +158,6 @@ export function DeliverySelection({
       const data = await response.json();
       const geoObjects = data.response?.GeoObjectCollection?.featureMember;
       if (!geoObjects?.length) {
-        console.warn('🚫 Адрес не найден в Yandex Geocoder');
         setDistanceFromMKAD(undefined);
         return;
       }
@@ -169,7 +167,6 @@ export function DeliverySelection({
       const deliveryLat = parseFloat(latStr);
 
       if (!isFinite(deliveryLat) || !isFinite(deliveryLng)) {
-        console.warn('🚫 Некорректные координаты');
         setDistanceFromMKAD(undefined);
         return;
       }
@@ -202,7 +199,6 @@ export function DeliverySelection({
 
       setDistanceFromMKAD(finalDistance);
     } catch (error) {
-      console.error('🚨 Ошибка при расчете расстояния:', error);
       setDistanceFromMKAD(undefined);
     } finally {
       setIsCalculatingDistance(false);
@@ -211,9 +207,7 @@ export function DeliverySelection({
 
   // Пересчёт при изменении
   useEffect(() => {
-    console.log('🔄 useEffect пересчета доставки:', { method, address, distanceFromMKAD });
     const city = extractCityFromAddress(address);
-    console.log('🏙️ Извлеченный город:', city);
 
     const result = calculateDelivery({
       method,
@@ -222,7 +216,6 @@ export function DeliverySelection({
       distanceFromMKAD: method === 'delivery' ? distanceFromMKAD : undefined,
     });
 
-    console.log('📊 Результат расчета доставки:', result);
     setDeliveryResult(result);
     onDeliveryChange(result);
   }, [method, address, distanceFromMKAD]);
@@ -236,7 +229,6 @@ export function DeliverySelection({
   };
 
   const handleAddressChange = (value: string) => {
-    console.log('🏠 handleAddressChange вызвана с адресом:', value);
     setAddress(value);
     if (value && value.length > 10) {
       setTimeout(() => {

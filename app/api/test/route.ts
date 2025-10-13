@@ -6,7 +6,6 @@ import { count } from 'drizzle-orm';
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 Начало диагностики API...');
 
     // Проверяем переменные окружения
     const envCheck = {
@@ -17,7 +16,6 @@ export async function GET(request: NextRequest) {
       SUPABASE_KEY: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     };
 
-    console.log('📋 Переменные окружения:', envCheck);
 
     // Проверяем подключение к базе данных
     let dbStatus = 'disconnected';
@@ -40,7 +38,6 @@ export async function GET(request: NextRequest) {
         categories: categoriesCount.count,
       };
 
-      console.log('✅ База данных подключена:', tablesInfo);
     } catch (dbError) {
       console.error('❌ Ошибка базы данных:', dbError);
       dbStatus = `error: ${dbError instanceof Error ? dbError.message : 'Unknown error'}`;
@@ -64,7 +61,6 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    console.log('📱 Статус Telegram:', telegramStatus);
 
     return NextResponse.json({
       status: 'success',

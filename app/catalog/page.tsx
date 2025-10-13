@@ -97,11 +97,9 @@ function CatalogContent() {
   // Загрузка данных
   useEffect(() => {
     if (hasLoaded || isLoadingRef.current) {
-      // console.log('⏭️ [CATALOG] Пропускаем загрузку - данные уже загружены или загружаются');
       return; // Предотвращаем повторную загрузку
     }
 
-    // console.log('🔄 [CATALOG] Начинаем загрузку данных...');
     isLoadingRef.current = true;
 
     const fetchData = async () => {
@@ -122,8 +120,6 @@ function CatalogContent() {
           const prices = allProducts.map((p: Product) => p.price);
           const maxPrice = prices.length > 0 ? Math.max(...prices) : 10000;
 
-          // console.log('📦 [CATALOG] Загружено товаров:', allProducts.length);
-          // console.log('📦 [CATALOG] Первые 3 товара:', allProducts.slice(0, 3).map((p: Product) => p.name));
 
           // Обновляем все состояние одновременно, чтобы избежать промежуточных рендеров
           setCategories(categoriesData);
@@ -139,14 +135,12 @@ function CatalogContent() {
           }
 
           setHasLoaded(true);
-          // console.log('✅ [CATALOG] Данные загружены и состояние обновлено');
         }
       } catch (error) {
         console.error('❌ [CATALOG] Ошибка загрузки данных:', error);
       } finally {
         setLoading(false);
         isLoadingRef.current = false;
-        // console.log('🏁 [CATALOG] Загрузка завершена, loading = false');
       }
     };
 
@@ -170,16 +164,9 @@ function CatalogContent() {
   // Применение всех фильтров (поиск + категории + цена + сортировка)
   useEffect(() => {
     const applyAllFilters = async () => {
-      // console.log('🔍 [FILTER] Применение фильтров...', {
-      //   hasLoaded,
-      //   productsCount: products.length,
-      //   sortBy,
-      //   filters
-      // });
 
       // Не применяем фильтры, если данные еще не готовы
       if (!hasLoaded || products.length === 0) {
-        // console.log('⏳ [FILTER] Пропускаем фильтрацию - данные не готовы');
         return;
       }
 
@@ -237,7 +224,6 @@ function CatalogContent() {
         }
       });
 
-      // console.log('📋 [FILTER] Результат фильтрации:', productsToFilter.slice(0, 3).map((p: Product) => p.name));
       setFilteredProducts(productsToFilter);
     };
 

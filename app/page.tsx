@@ -192,15 +192,26 @@ export default async function HomePage() {
               Чем больше заказ, тем больше экономия — скидки применяются
               автоматически
             </p>
-            <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-3">
+              <Card className="border-white/20 bg-white/20 backdrop-blur">
+                <CardContent className="p-6 text-center">
+                  <div className="mb-2 text-4xl font-bold text-yellow-300">
+                    🎁
+                  </div>
+                  <div className="mb-1 text-lg font-semibold">подарок</div>
+                  <div className="text-sm text-white/90">
+                    при заказе от 10 000 ₽
+                  </div>
+                </CardContent>
+              </Card>
               <Card className="border-white/20 bg-white/20 backdrop-blur">
                 <CardContent className="p-6 text-center">
                   <div className="mb-2 text-4xl font-bold text-yellow-300">
                     5%
                   </div>
-                  <div className="mb-1 text-lg font-semibold">скидка</div>
+                  <div className="mb-1 text-lg font-semibold">скидка + подарок</div>
                   <div className="text-sm text-white/90">
-                    при заказе от 7 000 ₽
+                    при заказе от 40 000 ₽
                   </div>
                 </CardContent>
               </Card>
@@ -209,9 +220,9 @@ export default async function HomePage() {
                   <div className="mb-2 text-4xl font-bold text-yellow-300">
                     10%
                   </div>
-                  <div className="mb-1 text-lg font-semibold">скидка</div>
+                  <div className="mb-1 text-lg font-semibold">скидка + подарок</div>
                   <div className="text-sm text-white/90">
-                    при заказе от 15 000 ₽
+                    при заказе от 60 000 ₽
                   </div>
                 </CardContent>
               </Card>

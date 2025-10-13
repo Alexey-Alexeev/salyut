@@ -89,8 +89,9 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const productsListRef = useRef<HTMLDivElement | null>(null);
 
-  const DISCOUNT_THRESHOLD_1 = 7000;
-  const DISCOUNT_THRESHOLD_2 = 15000;
+  const DISCOUNT_THRESHOLD_1 = 40000; // 5% discount + подарок
+  const DISCOUNT_THRESHOLD_2 = 60000; // 10% discount + подарок
+  const GIFT_THRESHOLD = 10000; // подарок от 10000
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -567,11 +568,13 @@ export function EditOrderDialog({ order, isOpen, onOpenChange, onSave }: EditOrd
                     )}
                     {!hasManualDiscount && automaticDiscountRate === 0 && subtotalAmount > 0 && (
                       <div className="text-muted-foreground text-sm">
-                        {subtotalAmount < DISCOUNT_THRESHOLD_1
-                          ? `До скидки 5% осталось ${(DISCOUNT_THRESHOLD_1 - subtotalAmount).toLocaleString('ru-RU')} ₽`
-                          : subtotalAmount < DISCOUNT_THRESHOLD_2
-                            ? `До скидки 10% осталось ${(DISCOUNT_THRESHOLD_2 - subtotalAmount).toLocaleString('ru-RU')} ₽`
-                            : null}
+                        {subtotalAmount < GIFT_THRESHOLD
+                          ? `До подарка осталось ${(GIFT_THRESHOLD - subtotalAmount).toLocaleString('ru-RU')} ₽`
+                          : subtotalAmount < DISCOUNT_THRESHOLD_1
+                            ? `До скидки 5% осталось ${(DISCOUNT_THRESHOLD_1 - subtotalAmount).toLocaleString('ru-RU')} ₽`
+                            : subtotalAmount < DISCOUNT_THRESHOLD_2
+                              ? `До скидки 10% осталось ${(DISCOUNT_THRESHOLD_2 - subtotalAmount).toLocaleString('ru-RU')} ₽`
+                              : null}
                       </div>
                     )}
                     <Separator className="my-2" />

@@ -63,8 +63,9 @@ const orderSchema = z
 type OrderFormData = z.infer<typeof orderSchema>;
 
 // Пороги для скидок
-const DISCOUNT_THRESHOLD_1 = 10000; // 5% discount
-const DISCOUNT_THRESHOLD_2 = 15000; // 10% discount
+const DISCOUNT_THRESHOLD_1 = 40000; // 5% discount + подарок
+const DISCOUNT_THRESHOLD_2 = 60000; // 10% discount + подарок
+const GIFT_THRESHOLD = 10000; // подарок от 10000
 
 export default function CartPageClient() {
     const { items, updateQuantity, removeItem, clearCart, getTotalPrice, isInitialized } =
@@ -103,13 +104,18 @@ export default function CartPageClient() {
     const subtotal = getTotalPrice();
     let discount = 0;
     let discountPercent = 0;
+    let hasGift = false;
 
     if (subtotal >= DISCOUNT_THRESHOLD_2) {
         discountPercent = 10;
         discount = Math.round(subtotal * 0.1);
+        hasGift = true;
     } else if (subtotal >= DISCOUNT_THRESHOLD_1) {
         discountPercent = 5;
         discount = Math.round(subtotal * 0.05);
+        hasGift = true;
+    } else if (subtotal >= GIFT_THRESHOLD) {
+        hasGift = true;
     }
 
     const deliveryCost = deliveryResult?.cost || 0;
@@ -439,24 +445,48 @@ export default function CartPageClient() {
                                     <span className="font-medium">{subtotal.toLocaleString('ru-RU')} ₽</span>
                                 </div>
 
-                                {subtotal < DISCOUNT_THRESHOLD_1 && (
+                                {subtotal < GIFT_THRESHOLD && (
                                     <div className="rounded-lg bg-orange-50 p-2.5 sm:p-3">
                                         <div className="mb-2">
                                             <div className="flex items-center justify-between mb-1 flex-wrap gap-1">
                                                 <span className="text-xs sm:text-sm font-medium text-orange-800">
-                                                    До скидки 5%:
+                                                    До подарка:
                                                 </span>
                                                 <span className="text-xs sm:text-sm font-semibold text-orange-800">
-                                                    {Math.max(0, DISCOUNT_THRESHOLD_1 - subtotal).toLocaleString('ru-RU')} ₽
+                                                    {Math.max(0, GIFT_THRESHOLD - subtotal).toLocaleString('ru-RU')} ₽
                                                 </span>
                                             </div>
                                             <div className="w-full bg-orange-200 rounded-full h-2">
                                                 <div
                                                     className="bg-orange-500 h-2 rounded-full transition-all duration-300"
-                                                    style={{ width: `${Math.min(100, (subtotal / DISCOUNT_THRESHOLD_1) * 100)}%` }}
+                                                    style={{ width: `${Math.min(100, (subtotal / GIFT_THRESHOLD) * 100)}%` }}
                                                 ></div>
                                             </div>
                                             <div className="text-[10px] sm:text-xs text-orange-700 mt-1">
+                                                Вы набрали {subtotal.toLocaleString('ru-RU')} ₽ из {GIFT_THRESHOLD.toLocaleString('ru-RU')} ₽
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {subtotal >= GIFT_THRESHOLD && subtotal < DISCOUNT_THRESHOLD_1 && (
+                                    <div className="rounded-lg bg-blue-50 p-2.5 sm:p-3">
+                                        <div className="mb-2">
+                                            <div className="flex items-center justify-between mb-1 flex-wrap gap-1">
+                                                <span className="text-xs sm:text-sm font-medium text-blue-800">
+                                                    До скидки 5%:
+                                                </span>
+                                                <span className="text-xs sm:text-sm font-semibold text-blue-800">
+                                                    {Math.max(0, DISCOUNT_THRESHOLD_1 - subtotal).toLocaleString('ru-RU')} ₽
+                                                </span>
+                                            </div>
+                                            <div className="w-full bg-blue-200 rounded-full h-2">
+                                                <div
+                                                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                                                    style={{ width: `${Math.min(100, ((subtotal - GIFT_THRESHOLD) / (DISCOUNT_THRESHOLD_1 - GIFT_THRESHOLD)) * 100)}%` }}
+                                                ></div>
+                                            </div>
+                                            <div className="text-[10px] sm:text-xs text-blue-700 mt-1">
                                                 Вы набрали {subtotal.toLocaleString('ru-RU')} ₽ из {DISCOUNT_THRESHOLD_1.toLocaleString('ru-RU')} ₽
                                             </div>
                                         </div>
@@ -484,6 +514,13 @@ export default function CartPageClient() {
                                                 Вы набрали {subtotal.toLocaleString('ru-RU')} ₽ из {DISCOUNT_THRESHOLD_2.toLocaleString('ru-RU')} ₽
                                             </div>
                                         </div>
+                                    </div>
+                                )}
+
+                                {hasGift && (
+                                    <div className="flex justify-between text-purple-600 text-sm sm:text-base">
+                                        <span>🎁 Подарок:</span>
+                                        <span className="font-medium">Включен</span>
                                     </div>
                                 )}
 
@@ -728,6 +765,13 @@ export default function CartPageClient() {
                                     <span>Доставка:</span>
                                     <span className="font-medium">{deliveryCost > 0 ? `${deliveryCost.toLocaleString('ru-RU')} ₽` : 'Бесплатно'}</span>
                                 </div>
+
+                                {hasGift && (
+                                    <div className="flex justify-between text-purple-600 text-sm sm:text-base">
+                                        <span>🎁 Подарок:</span>
+                                        <span className="font-medium">Включен</span>
+                                    </div>
+                                )}
 
                                 {discount > 0 && (
                                     <div className="flex justify-between text-green-600 text-sm sm:text-base">
