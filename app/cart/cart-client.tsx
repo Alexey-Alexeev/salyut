@@ -697,7 +697,15 @@ export default function CartPageClient() {
                                         )}
 
                                         <div className="text-[10px] sm:text-xs text-gray-600 leading-relaxed">
-                                            Согласен на обработку персональных данных в соответствии с политикой конфиденциальности
+                                            Согласен на обработку персональных данных в соответствии с{' '}
+                                            <Link
+                                                href="/privacy"
+                                                className="text-orange-600 hover:text-orange-700 underline"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                политикой конфиденциальности
+                                            </Link>
                                         </div>
                                     </div>
 
