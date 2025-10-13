@@ -221,7 +221,7 @@ export default async function AboutPage() {
                   <h3 className="text-xl font-semibold">Гарантия качества</h3>
                   <p className="text-muted-foreground flex-grow">
                     Все товары проходят строгий контроль качества и имеют
-                    необходимые сертификаты безопасности. Тысячи довольных клиентов —
+                    необходимые сертификаты безопасности. Десятки довольных клиентов —
                     лучшее подтверждение нашего качества!
                   </p>
                 </CardContent>
