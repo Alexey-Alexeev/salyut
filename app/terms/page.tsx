@@ -229,7 +229,7 @@ export default function TermsPage() {
                                                 </div>
                                                 <h4 className="font-semibold text-gray-900">Способы оплаты</h4>
                                             </div>
-                                            <p className="text-gray-700 text-sm">Наличными при получении, банковской картой, электронными деньгами</p>
+                                            <p className="text-gray-700 text-sm">Наличными при получении, банковской картой</p>
                                         </div>
 
                                         <div className="bg-white rounded-lg p-4 border border-gray-200">

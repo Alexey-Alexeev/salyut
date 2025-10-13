@@ -12,38 +12,38 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-            <div className="container mx-auto px-4 py-8 max-w-5xl">
+            <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-5xl">
                 {/* Header */}
-                <div className="text-center mb-12">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-6">
-                        <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="text-center mb-8 sm:mb-12">
+                    <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-orange-100 rounded-full mb-4 sm:mb-6">
+                        <svg className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
                     </div>
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">Политика конфиденциальности</h1>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                    <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Политика конфиденциальности</h1>
+                    <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
                         Защита ваших персональных данных — наш приоритет
                     </p>
                 </div>
 
                 {/* Introduction */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-200">
-                    <div className="flex items-start space-x-4">
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-8 mb-6 sm:mb-8 border border-gray-200">
+                    <div className="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-4">
                         <div className="flex-shrink-0">
-                            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
                         </div>
                         <div className="flex-1">
-                            <h2 className="text-xl font-semibold text-gray-900 mb-4">Введение</h2>
-                            <div className="space-y-4 text-gray-700 leading-relaxed">
-                                <p>
+                            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">Введение</h2>
+                            <div className="space-y-3 sm:space-y-4 text-sm sm:text-base text-gray-700 leading-relaxed">
+                                <p className="break-words">
                                     Настоящий документ «Политика конфиденциальности» (далее – по тексту – «Политика») представляет собой правила использования сайтом <strong className="text-orange-600">салютград.рф</strong> [ИП Владимиров А.] (далее – Оператор) персональной информации Пользователя, которую Оператор, включая всех лиц, входящих в одну группу с Оператором, могут получить о Пользователе во время использования им любого из сайтов, сервисов, служб, программ, продуктов или услуг Оператора (далее – Сайт) и в ходе исполнения Оператором любых соглашений и договоров с Пользователем.
                                 </p>
-                                <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
-                                    <p className="text-amber-800 font-medium">
+                                <div className="bg-amber-50 border-l-4 border-amber-400 p-3 sm:p-4 rounded-r-lg">
+                                    <p className="text-amber-800 font-medium text-sm sm:text-base">
                                         Использование Сайта означает безоговорочное согласие Пользователя с настоящей Политикой и указанными в ней условиями обработки его персональной информации; в случае несогласия с этими условиями Пользователь должен воздержаться от использования Сайта.
                                     </p>
                                 </div>
@@ -53,53 +53,53 @@ export default function PrivacyPage() {
                 </div>
 
                 {/* Section 1 */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-200">
-                    <div className="flex items-start space-x-4">
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-8 mb-6 sm:mb-8 border border-gray-200">
+                    <div className="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-4">
                         <div className="flex-shrink-0">
-                            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                                <span className="text-green-600 font-bold text-lg">1</span>
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <span className="text-green-600 font-bold text-base sm:text-lg">1</span>
                             </div>
                         </div>
                         <div className="flex-1">
-                            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Общие положения политики</h2>
+                            <h2 className="text-lg sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">Общие положения политики</h2>
 
-                            <div className="space-y-6">
-                                <div className="bg-gray-50 rounded-lg p-6">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                                        <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold mr-3">1.1</span>
-                                        Правовая основа
+                            <div className="space-y-4 sm:space-y-6">
+                                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3 flex items-start sm:items-center">
+                                        <span className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0 mt-0.5 sm:mt-0">1.1</span>
+                                        <span className="break-words">Правовая основа</span>
                                     </h3>
-                                    <p className="text-gray-700 leading-relaxed">
+                                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed break-words">
                                         Настоящая Политика является неотъемлемой частью Публичной оферты (далее – «Оферта»), размещенной и/или доступной в сети Интернет по адресу: <strong className="text-orange-600">https://салютград.рф</strong>, а также иных заключаемых с Пользователем договоров, когда это прямо предусмотрено их условиями.
                                     </p>
                                 </div>
 
-                                <div className="bg-gray-50 rounded-lg p-6">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                                        <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold mr-3">1.2</span>
-                                        Соответствие законодательству
+                                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3 flex items-start sm:items-center">
+                                        <span className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0 mt-0.5 sm:mt-0">1.2</span>
+                                        <span className="break-words">Соответствие законодательству</span>
                                     </h3>
-                                    <p className="text-gray-700 leading-relaxed">
+                                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed break-words">
                                         Настоящая Политика составлена в соответствии с Федеральным законом «О персональных данных» № 152-ФЗ от 27 июля 2006 г., а также иными нормативно-правовыми актами Российской Федерации в области защиты и обработки персональных данных и действует в отношении всех персональных данных, которые Оператор может получить от Пользователя, являющегося стороной по гражданско-правовому договору.
                                     </p>
                                 </div>
 
-                                <div className="bg-gray-50 rounded-lg p-6">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                                        <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold mr-3">1.3</span>
-                                        Изменения в политике
+                                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3 flex items-start sm:items-center">
+                                        <span className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0 mt-0.5 sm:mt-0">1.3</span>
+                                        <span className="break-words">Изменения в политике</span>
                                     </h3>
-                                    <p className="text-gray-700 leading-relaxed">
+                                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed break-words">
                                         Оператор имеет право вносить изменения в настоящую Политику. При внесении изменений в заголовке Политики указывается дата последнего обновления редакции. Новая редакция Политики вступает в силу с момента ее размещения на сайте, если иное не предусмотрено новой редакцией Политики.
                                     </p>
                                 </div>
 
-                                <div className="bg-gray-50 rounded-lg p-6">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                                        <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold mr-3">1.4</span>
-                                        Применимое право
+                                <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3 flex items-start sm:items-center">
+                                        <span className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0 mt-0.5 sm:mt-0">1.4</span>
+                                        <span className="break-words">Применимое право</span>
                                     </h3>
-                                    <p className="text-gray-700 leading-relaxed">
+                                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed break-words">
                                         К настоящей Политике, включая толкование ее положений и порядок принятия, исполнения, изменения и прекращения, подлежит применению законодательство Российской Федерации.
                                     </p>
                                 </div>
@@ -109,15 +109,15 @@ export default function PrivacyPage() {
                 </div>
 
                 {/* Section 2 */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-200">
-                    <div className="flex items-start space-x-4">
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-8 mb-6 sm:mb-8 border border-gray-200">
+                    <div className="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-4">
                         <div className="flex-shrink-0">
-                            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                                <span className="text-purple-600 font-bold text-lg">2</span>
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <span className="text-purple-600 font-bold text-base sm:text-lg">2</span>
                             </div>
                         </div>
                         <div className="flex-1">
-                            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Персональная информация Пользователей</h2>
+                            <h2 className="text-lg sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">Персональная информация Пользователей</h2>
 
                             <div className="space-y-6">
                                 <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 border border-purple-200">
@@ -211,53 +211,53 @@ export default function PrivacyPage() {
                                         Цели обработки персональной информации
                                     </h3>
 
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        <div className="bg-white rounded-lg p-4 border border-gray-200">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                        <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
                                             <div className="flex items-center mb-2">
-                                                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                                                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                                                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                                     </svg>
                                                 </div>
-                                                <h4 className="font-semibold text-gray-900">Идентификация</h4>
+                                                <h4 className="font-semibold text-gray-900 text-sm sm:text-base break-words">Идентификация</h4>
                                             </div>
-                                            <p className="text-gray-700 text-sm">идентификация стороны в рамках сервисов, соглашений и договоров с Сайтом</p>
+                                            <p className="text-gray-700 text-xs sm:text-sm break-words">идентификация стороны в рамках сервисов, соглашений и договоров с Сайтом</p>
                                         </div>
 
-                                        <div className="bg-white rounded-lg p-4 border border-gray-200">
+                                        <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
                                             <div className="flex items-center mb-2">
-                                                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                                                    <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                                                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                     </svg>
                                                 </div>
-                                                <h4 className="font-semibold text-gray-900">Предоставление услуг</h4>
+                                                <h4 className="font-semibold text-gray-900 text-sm sm:text-base break-words">Предоставление услуг</h4>
                                             </div>
-                                            <p className="text-gray-700 text-sm">предоставление Пользователю персонализированных сервисов и услуг, а также исполнение соглашений и договоров</p>
+                                            <p className="text-gray-700 text-xs sm:text-sm break-words">предоставление Пользователю персонализированных сервисов и услуг, а также исполнение соглашений и договоров</p>
                                         </div>
 
-                                        <div className="bg-white rounded-lg p-4 border border-gray-200">
+                                        <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
                                             <div className="flex items-center mb-2">
-                                                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                                                    <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                                                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5-5-5h5v-5a7.5 7.5 0 00-15 0v5h5l-5 5-5-5h5v-5a7.5 7.5 0 0115 0v5z" />
                                                     </svg>
                                                 </div>
-                                                <h4 className="font-semibold text-gray-900">Уведомления</h4>
+                                                <h4 className="font-semibold text-gray-900 text-sm sm:text-base break-words">Уведомления</h4>
                                             </div>
-                                            <p className="text-gray-700 text-sm">направление уведомлений, запросов и информации, касающихся использования Сайта</p>
+                                            <p className="text-gray-700 text-xs sm:text-sm break-words">направление уведомлений, запросов и информации, касающихся использования Сайта</p>
                                         </div>
 
-                                        <div className="bg-white rounded-lg p-4 border border-gray-200">
+                                        <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
                                             <div className="flex items-center mb-2">
-                                                <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
-                                                    <svg className="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-yellow-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                                                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                                     </svg>
                                                 </div>
-                                                <h4 className="font-semibold text-gray-900">Улучшение качества</h4>
+                                                <h4 className="font-semibold text-gray-900 text-sm sm:text-base break-words">Улучшение качества</h4>
                                             </div>
-                                            <p className="text-gray-700 text-sm">улучшение качества работы Сайта, удобства его использования для Пользователя</p>
+                                            <p className="text-gray-700 text-xs sm:text-sm break-words">улучшение качества работы Сайта, удобства его использования для Пользователя</p>
                                         </div>
                                     </div>
                                 </div>
@@ -483,26 +483,26 @@ export default function PrivacyPage() {
                                     Все предложения, вопросы, запросы и иные обращения по поводу настоящей Политики и использования своих персональных данных Пользователь вправе направлять Сайту:
                                 </p>
 
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    <div className="bg-gray-50 rounded-lg p-4 text-center">
-                                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                                    <div className="bg-gray-50 rounded-lg p-3 sm:p-4 text-center">
+                                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                                            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                             </svg>
                                         </div>
-                                        <h4 className="font-semibold text-gray-900 mb-2">Телефон</h4>
-                                        <p className="text-sm text-gray-700">+7 (977) 360-20-08</p>
+                                        <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Телефон</h4>
+                                        <p className="text-xs sm:text-sm text-gray-700 break-words">+7 (977) 360-20-08</p>
                                     </div>
 
-                                    <div className="bg-gray-50 rounded-lg p-4 text-center">
-                                        <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                            <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="bg-gray-50 rounded-lg p-3 sm:p-4 text-center">
+                                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                                            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                             </svg>
                                         </div>
-                                        <h4 className="font-semibold text-gray-900 mb-2">Адрес</h4>
-                                        <p className="text-sm text-gray-700">143921, Московская область, деревня Чёрное, Рассветная улица, 14</p>
+                                        <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Адрес</h4>
+                                        <p className="text-xs sm:text-sm text-gray-700 break-words">143921, Московская область, деревня Чёрное, Рассветная улица, 14</p>
                                     </div>
                                 </div>
                             </div>

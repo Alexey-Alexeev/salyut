@@ -716,15 +716,24 @@ export default function CartPageClient() {
 
                                     {/* Подтверждение возраста и согласие на обработку данных */}
                                     <div className="space-y-2 sm:space-y-3">
-                                        <div className={`flex items-center gap-2 p-2 rounded-md ${(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'bg-red-50 border border-red-200' : ''}`}>
+                                        <div className={`flex items-start gap-2 p-2 rounded-md ${(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'bg-red-50 border border-red-200' : ''}`}>
                                             <Checkbox
                                                 id="ageConfirmed"
                                                 checked={watch('ageConfirmed')}
                                                 onCheckedChange={(checked) => setValue('ageConfirmed', checked as boolean)}
-                                                className={(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'border-red-500 mt-0.5 shrink-0' : 'mt-0.5 shrink-0'}
+                                                className={(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'border-red-500 mt-1 shrink-0' : 'mt-1 shrink-0'}
                                             />
                                             <Label htmlFor="ageConfirmed" className={`text-xs sm:text-sm leading-tight ${(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'text-red-600' : ''}`}>
-                                                Подтверждаю, что мне исполнилось 18 лет *
+                                                Подтверждаю, что мне исполнилось 18 лет и согласен на обработку персональных данных в соответствии с{' '}
+                                                <Link
+                                                    href="/privacy"
+                                                    className="text-orange-600 hover:text-orange-700 underline"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    политикой конфиденциальности
+                                                </Link>
+                                                {' '}*
                                             </Label>
                                         </div>
                                         {errors.ageConfirmed && (
@@ -732,18 +741,6 @@ export default function CartPageClient() {
                                                 {errors.ageConfirmed.message}
                                             </p>
                                         )}
-
-                                        <div className="text-[10px] sm:text-xs text-gray-600 leading-relaxed">
-                                            Согласен на обработку персональных данных в соответствии с{' '}
-                                            <Link
-                                                href="/privacy"
-                                                className="text-orange-600 hover:text-orange-700 underline"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                политикой конфиденциальности
-                                            </Link>
-                                        </div>
                                     </div>
 
                                 </form>
