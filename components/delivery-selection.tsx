@@ -249,68 +249,68 @@ export function DeliverySelection({
 
   return (
     <Card className={className}>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Truck className="size-5" />
+      <CardHeader className="p-3 sm:p-6">
+        <CardTitle className="flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base">
+          <Truck className="size-4 sm:size-5 shrink-0" />
           Способ получения заказа
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4 sm:space-y-6 p-3 sm:p-6">
         <RadioGroup value={method} onValueChange={handleMethodChange}>
           {/* Доставка */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <RadioGroupItem value="delivery" id="delivery" />
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <RadioGroupItem value="delivery" id="delivery" className="shrink-0" />
               <Label
                 htmlFor="delivery"
-                className="flex cursor-pointer items-center gap-2"
+                className="flex cursor-pointer items-center gap-1.5 sm:gap-2"
               >
-                <Truck className="size-4 text-blue-600" />
-                <span className="font-medium">🚚 Доставка</span>
+                <Truck className="size-3.5 sm:size-4 text-blue-600 shrink-0" />
+                <span className="font-medium text-sm sm:text-base">🚚 Доставка</span>
               </Label>
             </div>
 
             {method === 'delivery' && (
-              <div className="ml-7 space-y-4 border-l-2 border-blue-100 pl-4">
-                <div className="space-y-3 rounded-lg bg-blue-50 p-4">
-                  <h4 className="font-medium text-blue-900">
+              <div className="ml-5 sm:ml-7 space-y-3 sm:space-y-4 border-l-2 border-blue-100 pl-3 sm:pl-4">
+                <div className="space-y-2 sm:space-y-3 rounded-lg bg-blue-50 p-2.5 sm:p-4">
+                  <h4 className="font-medium text-blue-900 text-xs sm:text-sm">
                     Условия доставки:
                   </h4>
-                  <div className="space-y-1 text-sm text-blue-700">
+                  <div className="space-y-1 text-xs sm:text-sm text-blue-700">
                     <p>
                       • Москва, Балашиха, Люберцы — <strong>500 ₽</strong>
                     </p>
                     <p>
                       • За МКАД —{' '}
                       <strong>
-                        500 ₽ базовая стоимость + 100 ₽ за каждый км
+                        500 ₽ базовая + 100 ₽/км
                       </strong>
                     </p>
                     <p>
-                      • Минимальная стоимость доставки — <strong>500 ₽</strong>
+                      • Минимум — <strong>500 ₽</strong>
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <Label htmlFor="address">Адрес доставки</Label>
+                <div className="space-y-2 sm:space-y-3">
+                  <Label htmlFor="address" className="text-xs sm:text-sm">Адрес доставки</Label>
                   <AddressAutocomplete
                     id="address"
                     value={address}
                     onChange={handleAddressChange}
                     placeholder="Введите адрес доставки..."
                   />
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-muted-foreground text-[10px] sm:text-sm leading-relaxed">
                     💡 Начните вводить — система предложит варианты. Адрес можно
                     оставить пустым — менеджер уточнит его при подтверждении
                     заказа
                   </p>
                 </div>
 
-                <div className="space-y-3">
-                  <Label>Расстояние от МКАД</Label>
-                  <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-3">
-                    <p className="text-sm text-yellow-800">
+                <div className="space-y-2 sm:space-y-3">
+                  <Label className="text-xs sm:text-sm">Расстояние от МКАД</Label>
+                  <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-2 sm:p-3">
+                    <p className="text-xs sm:text-sm text-yellow-800">
                       {isCalculatingDistance ? (
                         <span className="text-blue-600">
                           🔄 Рассчитываем...
@@ -323,14 +323,12 @@ export function DeliverySelection({
                         ) : (
                           <span className="text-green-600">
                             ✅ Примерно: <strong>{distanceFromMKAD} км</strong>{' '}
-                            от МКАД (если вы считаете, что расстояние указано
-                            неверно — сообщите в комментарии или при общении с
-                            менеджером)
+                            от МКАД (если расстояние неверно — сообщите в комментарии)
                           </span>
                         )
                       ) : (
                         <span className="text-gray-600">
-                          📍 Будет рассчитано автоматически.{' '}
+                          📍 Будет рассчитано автоматически
                         </span>
                       )}
                     </p>
@@ -338,11 +336,11 @@ export function DeliverySelection({
                 </div>
 
                 {deliveryResult && deliveryResult.method === 'delivery' && (
-                  <div className="rounded-lg border border-green-200 bg-green-50 p-3">
-                    <p className="font-medium text-green-800">
+                  <div className="rounded-lg border border-green-200 bg-green-50 p-2.5 sm:p-3">
+                    <p className="font-medium text-green-800 text-xs sm:text-sm">
                       {deliveryResult.description}
                     </p>
-                    <p className="mt-1 text-lg font-bold text-green-900">
+                    <p className="mt-1 text-base sm:text-lg font-bold text-green-900">
                       Стоимость: {formatDeliveryCost(deliveryResult.cost)}
                     </p>
                   </div>
@@ -352,34 +350,34 @@ export function DeliverySelection({
           </div>
 
           {/* Самовывоз */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <RadioGroupItem value="pickup" id="pickup" />
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+              <RadioGroupItem value="pickup" id="pickup" className="shrink-0" />
               <Label
                 htmlFor="pickup"
-                className="flex cursor-pointer items-center gap-2"
+                className="flex cursor-pointer items-center gap-1.5 sm:gap-2 flex-wrap"
               >
-                <Store className="size-4 text-green-600" />
-                <span className="font-medium">🏬 Самовывоз</span>
-                <span className="text-sm font-medium text-green-600">
+                <Store className="size-3.5 sm:size-4 text-green-600 shrink-0" />
+                <span className="font-medium text-sm sm:text-base">🏬 Самовывоз</span>
+                <span className="text-xs sm:text-sm font-medium text-green-600">
                   (бесплатно)
                 </span>
               </Label>
             </div>
 
             {method === 'pickup' && (
-              <div className="ml-7 space-y-4 border-l-2 border-green-100 pl-4">
-                <div className="space-y-3 rounded-lg bg-green-50 p-4">
-                  <h4 className="flex items-center gap-2 font-medium text-green-900">
-                    <MapPin className="size-4" />
+              <div className="ml-5 sm:ml-7 space-y-3 sm:space-y-4 border-l-2 border-green-100 pl-3 sm:pl-4">
+                <div className="space-y-2 sm:space-y-3 rounded-lg bg-green-50 p-2.5 sm:p-4">
+                  <h4 className="flex items-center gap-1.5 sm:gap-2 font-medium text-green-900 text-xs sm:text-sm">
+                    <MapPin className="size-3.5 sm:size-4 shrink-0" />
                     Адрес склада:
                   </h4>
-                  <p className="text-green-800">
+                  <p className="text-green-800 text-xs sm:text-sm">
                     {pickupInfo.address.fullAddress}
                   </p>
                   <div className="space-y-2 border-t border-green-200 pt-2">
-                    <div className="flex items-center gap-2 text-sm text-green-700">
-                      <Phone className="size-4" />
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-green-700">
+                      <Phone className="size-3.5 sm:size-4 shrink-0" />
                       <span>{pickupInfo.phone}</span>
                     </div>
                   </div>
@@ -390,14 +388,14 @@ export function DeliverySelection({
         </RadioGroup>
 
         {deliveryResult && (
-          <div className="border-t pt-4">
-            <div className="flex items-center justify-between">
-              <span className="font-medium">
+          <div className="border-t pt-3 sm:pt-4">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <span className="font-medium text-sm sm:text-base">
                 {deliveryResult.method === 'delivery'
                   ? 'Стоимость доставки:'
                   : 'Самовывоз:'}
               </span>
-              <span className="text-lg font-bold">
+              <span className="text-base sm:text-lg font-bold">
                 {formatDeliveryCost(deliveryResult.cost)}
               </span>
             </div>

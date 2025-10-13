@@ -325,50 +325,60 @@ export default function CartPageClient() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="mb-8">
+        <div className="container mx-auto px-2 py-4 sm:px-4 sm:py-8">
+            <div className="mb-4 sm:mb-8 px-2 sm:px-0">
                 <Breadcrumb items={[{ label: 'Корзина' }]} />
             </div>
 
-            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                <h1 className="mb-8 text-2xl font-bold sm:text-3xl">Корзина - Оформление заказа</h1>
+            <div className="mx-auto max-w-6xl px-0 sm:px-6 lg:px-8">
+                <h1 className="mb-4 sm:mb-8 text-xl font-bold sm:text-2xl lg:text-3xl px-2 sm:px-0">Корзина - Оформление заказа</h1>
 
-                <div className="grid gap-6 lg:gap-8 lg:grid-cols-5">
+                <div className="grid gap-3 sm:gap-6 lg:gap-8 lg:grid-cols-5">
                     {/* Товары в корзине */}
                     <div className="lg:col-span-3 lg:order-1">
                         <Card>
-                            <CardHeader>
-                                <CardTitle>Товары в корзине</CardTitle>
+                            <CardHeader className="p-3 sm:p-6">
+                                <CardTitle className="text-base sm:text-lg">Товары в корзине</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
+                            <CardContent className="space-y-3 p-3 sm:p-6 sm:space-y-4">
                                 {items.map(item => (
                                     <div
                                         key={item.id}
-                                        className="flex flex-col gap-3 rounded-lg border p-3 sm:gap-4 sm:p-4 sm:flex-row sm:items-center"
+                                        className="relative flex flex-col gap-2 rounded-lg border p-2 sm:gap-4 sm:p-4 sm:flex-row sm:items-center"
                                     >
                                         {/* Информация о товаре */}
-                                        <div className="flex items-center gap-3 flex-1 min-w-0 sm:gap-4">
-                                            <div className="relative h-14 w-14 shrink-0 sm:h-20 sm:w-20">
+                                        <div className="flex items-start gap-2 flex-1 min-w-0 sm:gap-4 sm:items-center">
+                                            <div className="relative h-16 w-16 shrink-0 sm:h-20 sm:w-20">
                                                 <Image
                                                     src={item.image || '/images/placeholder.jpg'}
                                                     alt={item.name}
                                                     fill
                                                     className="rounded-lg object-cover"
-                                                    sizes="(max-width: 640px) 56px, 80px"
+                                                    sizes="(max-width: 640px) 64px, 80px"
                                                 />
                                             </div>
 
-                                            <div className="flex-1 min-w-0">
-                                                <h3 className="font-semibold text-sm sm:text-base truncate">{item.name}</h3>
+                                            <div className="flex-1 min-w-0 pr-8 sm:pr-0">
+                                                <h3 className="font-semibold text-sm leading-tight mb-1 sm:text-base sm:mb-0">{item.name}</h3>
                                                 <p className="text-xs sm:text-sm text-gray-600">
-                                                    {item.price.toLocaleString('ru-RU')} ₽
+                                                    {item.price.toLocaleString('ru-RU')} ₽ за шт.
                                                 </p>
                                             </div>
+
+                                            {/* Кнопка удаления (мобильная - в правом верхнем углу) */}
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => removeItem(item.id)}
+                                                className="text-red-500 hover:text-red-700 hover:bg-red-50 h-7 w-7 p-0 shrink-0 absolute right-2 top-2 sm:hidden"
+                                            >
+                                                <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                                            </Button>
                                         </div>
 
-                                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                                        <div className="flex items-center justify-between gap-2 sm:flex-row sm:gap-4 sm:items-center">
                                             {/* Элементы управления количеством */}
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex items-center gap-1.5 sm:gap-2">
                                                 <Button
                                                     variant="outline"
                                                     size="icon"
@@ -376,39 +386,39 @@ export default function CartPageClient() {
                                                         updateQuantity(item.id, item.quantity - 1)
                                                     }
                                                     disabled={item.quantity <= 1}
-                                                    className="h-8 w-8 flex items-center justify-center p-0 shrink-0"
+                                                    className="h-7 w-7 sm:h-8 sm:w-8 flex items-center justify-center p-0 shrink-0"
                                                 >
-                                                    <Minus className="h-4 w-4" aria-hidden="true" style={{ transform: 'translateY(1px)' }} />
+                                                    <Minus className="h-3 w-3 sm:h-4 sm:w-4" aria-hidden="true" style={{ transform: 'translateY(1px)' }} />
                                                 </Button>
-                                                <span className="w-8 text-center font-medium">{item.quantity}</span>
+                                                <span className="w-6 sm:w-8 text-center font-medium text-sm sm:text-base">{item.quantity}</span>
                                                 <Button
                                                     variant="outline"
                                                     size="icon"
                                                     onClick={() =>
                                                         updateQuantity(item.id, item.quantity + 1)
                                                     }
-                                                    className="h-8 w-8 flex items-center justify-center p-0 shrink-0"
+                                                    className="h-7 w-7 sm:h-8 sm:w-8 flex items-center justify-center p-0 shrink-0"
                                                 >
-                                                    <Plus className="h-4 w-4" aria-hidden="true" />
+                                                    <Plus className="h-3 w-3 sm:h-4 sm:w-4" aria-hidden="true" />
                                                 </Button>
                                             </div>
 
-                                            {/* Цена и кнопка удаления */}
-                                            <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 sm:ml-auto">
-                                                <div className="text-right sm:min-w-[120px]">
-                                                    <p className="font-semibold text-sm sm:text-base">
-                                                        {(item.price * item.quantity).toLocaleString('ru-RU')} ₽
-                                                    </p>
-                                                </div>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() => removeItem(item.id)}
-                                                    className="text-red-500 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0 shrink-0"
-                                                >
-                                                    <Trash2 className="h-4 w-4" aria-hidden="true" />
-                                                </Button>
+                                            {/* Цена */}
+                                            <div className="text-right min-w-[80px] sm:min-w-[100px]">
+                                                <p className="font-semibold text-sm sm:text-base whitespace-nowrap">
+                                                    {(item.price * item.quantity).toLocaleString('ru-RU')} ₽
+                                                </p>
                                             </div>
+
+                                            {/* Кнопка удаления (десктоп) */}
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => removeItem(item.id)}
+                                                className="text-red-500 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0 shrink-0 hidden sm:flex"
+                                            >
+                                                <Trash2 className="h-4 w-4" aria-hidden="true" />
+                                            </Button>
                                         </div>
                                     </div>
                                 ))}
@@ -417,26 +427,26 @@ export default function CartPageClient() {
                     </div>
 
                     {/* Форма заказа */}
-                    <div className="lg:col-span-2 lg:order-2 space-y-6">
+                    <div className="lg:col-span-2 lg:order-2 space-y-3 sm:space-y-6">
                         {/* Итого сумма товаров */}
                         <Card>
-                            <CardHeader>
-                                <CardTitle>Итого сумма товаров</CardTitle>
+                            <CardHeader className="p-3 sm:p-6">
+                                <CardTitle className="text-base sm:text-lg">Итого сумма товаров</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex justify-between">
+                            <CardContent className="space-y-3 sm:space-y-4 p-3 sm:p-6">
+                                <div className="flex justify-between text-sm sm:text-base">
                                     <span>Товары:</span>
-                                    <span>{subtotal.toLocaleString('ru-RU')} ₽</span>
+                                    <span className="font-medium">{subtotal.toLocaleString('ru-RU')} ₽</span>
                                 </div>
 
                                 {subtotal < DISCOUNT_THRESHOLD_1 && (
-                                    <div className="rounded-lg bg-orange-50 p-3">
+                                    <div className="rounded-lg bg-orange-50 p-2.5 sm:p-3">
                                         <div className="mb-2">
-                                            <div className="flex items-center justify-between mb-1">
-                                                <span className="text-sm font-medium text-orange-800">
+                                            <div className="flex items-center justify-between mb-1 flex-wrap gap-1">
+                                                <span className="text-xs sm:text-sm font-medium text-orange-800">
                                                     До скидки 5%:
                                                 </span>
-                                                <span className="text-sm font-semibold text-orange-800">
+                                                <span className="text-xs sm:text-sm font-semibold text-orange-800">
                                                     {Math.max(0, DISCOUNT_THRESHOLD_1 - subtotal).toLocaleString('ru-RU')} ₽
                                                 </span>
                                             </div>
@@ -446,7 +456,7 @@ export default function CartPageClient() {
                                                     style={{ width: `${Math.min(100, (subtotal / DISCOUNT_THRESHOLD_1) * 100)}%` }}
                                                 ></div>
                                             </div>
-                                            <div className="text-xs text-orange-700 mt-1">
+                                            <div className="text-[10px] sm:text-xs text-orange-700 mt-1">
                                                 Вы набрали {subtotal.toLocaleString('ru-RU')} ₽ из {DISCOUNT_THRESHOLD_1.toLocaleString('ru-RU')} ₽
                                             </div>
                                         </div>
@@ -454,13 +464,13 @@ export default function CartPageClient() {
                                 )}
 
                                 {subtotal >= DISCOUNT_THRESHOLD_1 && subtotal < DISCOUNT_THRESHOLD_2 && (
-                                    <div className="rounded-lg bg-green-50 p-3">
+                                    <div className="rounded-lg bg-green-50 p-2.5 sm:p-3">
                                         <div className="mb-2">
-                                            <div className="flex items-center justify-between mb-1">
-                                                <span className="text-sm font-medium text-green-800">
+                                            <div className="flex items-center justify-between mb-1 flex-wrap gap-1">
+                                                <span className="text-xs sm:text-sm font-medium text-green-800">
                                                     До скидки 10%:
                                                 </span>
-                                                <span className="text-sm font-semibold text-green-800">
+                                                <span className="text-xs sm:text-sm font-semibold text-green-800">
                                                     {Math.max(0, DISCOUNT_THRESHOLD_2 - subtotal).toLocaleString('ru-RU')} ₽
                                                 </span>
                                             </div>
@@ -470,7 +480,7 @@ export default function CartPageClient() {
                                                     style={{ width: `${Math.min(100, ((subtotal - DISCOUNT_THRESHOLD_1) / (DISCOUNT_THRESHOLD_2 - DISCOUNT_THRESHOLD_1)) * 100)}%` }}
                                                 ></div>
                                             </div>
-                                            <div className="text-xs text-green-700 mt-1">
+                                            <div className="text-[10px] sm:text-xs text-green-700 mt-1">
                                                 Вы набрали {subtotal.toLocaleString('ru-RU')} ₽ из {DISCOUNT_THRESHOLD_2.toLocaleString('ru-RU')} ₽
                                             </div>
                                         </div>
@@ -478,14 +488,14 @@ export default function CartPageClient() {
                                 )}
 
                                 {discount > 0 && (
-                                    <div className="flex justify-between text-green-600">
+                                    <div className="flex justify-between text-green-600 text-sm sm:text-base">
                                         <span>Скидка {discountPercent}%:</span>
-                                        <span>-{discount.toLocaleString('ru-RU')} ₽</span>
+                                        <span className="font-medium">-{discount.toLocaleString('ru-RU')} ₽</span>
                                     </div>
                                 )}
 
-                                <div className="border-t pt-4">
-                                    <div className="flex justify-between font-semibold text-lg">
+                                <div className="border-t pt-3 sm:pt-4">
+                                    <div className="flex justify-between font-semibold text-base sm:text-lg">
                                         <span>Итого товары:</span>
                                         <span>{(subtotal - discount).toLocaleString('ru-RU')} ₽</span>
                                     </div>
@@ -495,14 +505,14 @@ export default function CartPageClient() {
 
                         {/* Форма оформления заказа */}
                         <Card>
-                            <CardHeader>
-                                <CardTitle>Оформление заказа</CardTitle>
+                            <CardHeader className="p-3 sm:p-6">
+                                <CardTitle className="text-base sm:text-lg">Оформление заказа</CardTitle>
                             </CardHeader>
-                            <CardContent className="px-4 sm:px-6">
-                                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                            <CardContent className="px-3 sm:px-6 py-3 sm:py-6">
+                                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
                                     {/* Контактная информация */}
-                                    <div className="space-y-4">
-                                        <h3 className="text-lg font-semibold">
+                                    <div className="space-y-3 sm:space-y-4">
+                                        <h3 className="text-base sm:text-lg font-semibold">
                                             Контактная информация
                                         </h3>
 
@@ -599,8 +609,8 @@ export default function CartPageClient() {
                                     </div>
 
                                     {/* Доставка */}
-                                    <div className="space-y-4">
-                                        <h3 className="text-lg font-semibold">Доставка</h3>
+                                    <div className="space-y-3 sm:space-y-4">
+                                        <h3 className="text-base sm:text-lg font-semibold">Доставка</h3>
 
                                         <DeliverySelection
                                             onDeliveryChange={onDeliveryChange}
@@ -615,38 +625,39 @@ export default function CartPageClient() {
                                     </div>
 
                                     {/* Дополнительные услуги */}
-                                    <div className="space-y-4">
-                                        <h3 className="text-lg font-semibold">
+                                    <div className="space-y-3 sm:space-y-4">
+                                        <h3 className="text-base sm:text-lg font-semibold">
                                             Дополнительные услуги
                                         </h3>
 
                                         {/* Профессиональный запуск */}
-                                        <div className="rounded-lg border bg-gradient-to-r from-orange-50 to-red-50 p-4">
-                                            <div className="flex items-start space-x-3">
+                                        <div className="rounded-lg border bg-gradient-to-r from-orange-50 to-red-50 p-3 sm:p-4">
+                                            <div className="flex items-start gap-2 sm:gap-3">
                                                 <Checkbox
                                                     id="professionalLaunch"
                                                     checked={watch('professionalLaunch') === true}
                                                     onCheckedChange={(checked) => setValue('professionalLaunch', checked as boolean)}
+                                                    className="mt-0.5"
                                                 />
-                                                <div className="flex-1">
-                                                    <div className="flex items-center space-x-2 mb-2">
-                                                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-100">
-                                                            <span className="text-sm">🎆</span>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
+                                                        <div className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-purple-100 shrink-0">
+                                                            <span className="text-xs sm:text-sm">🎆</span>
                                                         </div>
                                                         <Label
                                                             htmlFor="professionalLaunch"
-                                                            className="cursor-pointer text-sm font-medium leading-none"
+                                                            className="cursor-pointer text-xs sm:text-sm font-medium leading-tight"
                                                         >
                                                             Профессиональный запуск салютов
                                                         </Label>
                                                     </div>
-                                                    <p className="text-muted-foreground text-xs leading-relaxed">
+                                                    <p className="text-muted-foreground text-[10px] sm:text-xs leading-relaxed">
                                                         Безопасно, качественно, с соблюдением всех норм.<br />
                                                         Стоимость рассчитывается индивидуально.
                                                     </p>
                                                     <Link
                                                         href="/services/launching"
-                                                        className="text-xs text-orange-600 underline hover:text-orange-700 mt-2 inline-block"
+                                                        className="text-[10px] sm:text-xs text-orange-600 underline hover:text-orange-700 mt-1.5 sm:mt-2 inline-block"
                                                     >
                                                         Подробнее об услуге →
                                                     </Link>
@@ -667,25 +678,25 @@ export default function CartPageClient() {
                                     </div>
 
                                     {/* Подтверждение возраста и согласие на обработку данных */}
-                                    <div className="space-y-3">
-                                        <div className={`flex items-center space-x-2 p-2 rounded-md ${(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'bg-red-50 border border-red-200' : ''}`}>
+                                    <div className="space-y-2 sm:space-y-3">
+                                        <div className={`flex items-center gap-2 p-2 rounded-md ${(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'bg-red-50 border border-red-200' : ''}`}>
                                             <Checkbox
                                                 id="ageConfirmed"
                                                 checked={watch('ageConfirmed')}
                                                 onCheckedChange={(checked) => setValue('ageConfirmed', checked as boolean)}
-                                                className={(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'border-red-500' : ''}
+                                                className={(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'border-red-500 mt-0.5 shrink-0' : 'mt-0.5 shrink-0'}
                                             />
-                                            <Label htmlFor="ageConfirmed" className={`text-sm ${(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'text-red-600' : ''}`}>
+                                            <Label htmlFor="ageConfirmed" className={`text-xs sm:text-sm leading-tight ${(errors.ageConfirmed || (!watch('ageConfirmed') && hasValidationAttempted)) ? 'text-red-600' : ''}`}>
                                                 Подтверждаю, что мне исполнилось 18 лет *
                                             </Label>
                                         </div>
                                         {errors.ageConfirmed && (
-                                            <p className="text-sm text-red-500">
+                                            <p className="text-xs sm:text-sm text-red-500">
                                                 {errors.ageConfirmed.message}
                                             </p>
                                         )}
 
-                                        <div className="text-xs text-gray-600">
+                                        <div className="text-[10px] sm:text-xs text-gray-600 leading-relaxed">
                                             Согласен на обработку персональных данных в соответствии с политикой конфиденциальности
                                         </div>
                                     </div>
@@ -696,37 +707,37 @@ export default function CartPageClient() {
 
                         {/* Итоги заказа */}
                         <Card>
-                            <CardHeader>
-                                <CardTitle>Итоги заказа</CardTitle>
+                            <CardHeader className="p-3 sm:p-6">
+                                <CardTitle className="text-base sm:text-lg">Итоги заказа</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex justify-between">
+                            <CardContent className="space-y-3 sm:space-y-4 p-3 sm:p-6">
+                                <div className="flex justify-between text-sm sm:text-base">
                                     <span>Товары:</span>
-                                    <span>{subtotal.toLocaleString('ru-RU')} ₽</span>
+                                    <span className="font-medium">{subtotal.toLocaleString('ru-RU')} ₽</span>
                                 </div>
 
-                                <div className="flex justify-between">
+                                <div className="flex justify-between text-sm sm:text-base">
                                     <span>Доставка:</span>
-                                    <span>{deliveryCost > 0 ? `${deliveryCost.toLocaleString('ru-RU')} ₽` : 'Бесплатно'}</span>
+                                    <span className="font-medium">{deliveryCost > 0 ? `${deliveryCost.toLocaleString('ru-RU')} ₽` : 'Бесплатно'}</span>
                                 </div>
 
                                 {discount > 0 && (
-                                    <div className="flex justify-between text-green-600">
+                                    <div className="flex justify-between text-green-600 text-sm sm:text-base">
                                         <span>Скидка {discountPercent}%:</span>
-                                        <span>-{discount.toLocaleString('ru-RU')} ₽</span>
+                                        <span className="font-medium">-{discount.toLocaleString('ru-RU')} ₽</span>
                                     </div>
                                 )}
 
                                 <Separator />
 
-                                <div className="flex justify-between font-semibold text-lg">
+                                <div className="flex justify-between font-semibold text-base sm:text-lg">
                                     <span>Итого к оплате:</span>
                                     <span>{total.toLocaleString('ru-RU')} ₽</span>
                                 </div>
 
                                 <Button
                                     type="button"
-                                    className="w-full"
+                                    className="w-full text-sm sm:text-base"
                                     size="lg"
                                     disabled={isSubmitting}
                                     onClick={() => {
@@ -770,7 +781,7 @@ export default function CartPageClient() {
                                         'Оформляем заказ...'
                                     ) : (
                                         <>
-                                            <Check className="mr-2 h-4 w-4" aria-hidden="true" />
+                                            <Check className="mr-1.5 sm:mr-2 h-4 w-4" aria-hidden="true" />
                                             Оформить заказ
                                         </>
                                     )}
