@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { VideoReviewCard } from '@/components/video-review-card';
 import { ConsultationCTA } from '@/components/consultation-cta';
+import { CitiesList } from '@/components/cities-list';
 import { db } from '@/lib/db';
 import { reviews } from '@/db/schema';
 import { desc } from 'drizzle-orm';
@@ -229,6 +230,11 @@ export default async function AboutPage() {
             </article>
           </div>
         </div>
+      </section>
+
+      {/* Cities List */}
+      <section className="container mx-auto px-4 py-16">
+        <CitiesList />
       </section>
 
       {/* Video Reviews */}

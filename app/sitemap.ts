@@ -1,7 +1,9 @@
 import { MetadataRoute } from 'next';
+import { moscowRegionCities, transliterate } from '@/lib/cities';
+import { getBaseUrl } from '@/lib/domains';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://салютград.рф';
+  const baseUrl = getBaseUrl();
 
   // Static pages
   const staticPages = [
@@ -18,6 +20,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     changeFrequency: route === '' ? ('daily' as const) : ('weekly' as const),
     priority: route === '' ? 1 : 0.8,
+  }));
+
+  // City pages for local SEO (new SEO-friendly URLs)
+  const cityPages = moscowRegionCities.slice(0, 20).map(city => ({
+    url: `${baseUrl}/${transliterate(city)}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
   }));
 
   // Category pages
@@ -47,5 +57,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...categories, ...products];
+  return [...staticPages, ...cityPages, ...categories, ...products];
 }

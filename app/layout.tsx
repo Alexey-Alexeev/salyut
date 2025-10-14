@@ -78,6 +78,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon_512.png" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="canonical" href="https://салютград.рф" />
+        <link rel="alternate" href="https://salutgrad.ru" hrefLang="ru" />
         <meta property="og:site_name" content="СалютГрад" />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="ru_RU" />

@@ -55,6 +55,7 @@ export const metadata: Metadata = {
   },
 };
 
+
 export default async function HomePage() {
   let categoriesData: any[] = [];
   let popularProducts: any[] = [];
@@ -103,13 +104,11 @@ export default async function HomePage() {
 
         <div className="relative z-10 mx-auto max-w-4xl space-y-4 px-4 text-center">
           <h1 className="rounded-lg bg-black/40 p-4 text-4xl font-bold leading-tight text-white md:text-6xl">
-            Незабываемые <span className="text-orange-400">салюты</span> для
-            ваших праздников
+            Незабываемые <span className="text-orange-400">салюты</span> для ваших праздников
           </h1>
 
           <p className="mx-auto max-w-2xl rounded-lg bg-black/30 p-4 text-lg text-white md:text-xl">
-            Качественная пиротехника от проверенных производителей. Создайте
-            магию праздника вместе с нами!
+            Качественная пиротехника от проверенных производителей. Создайте магию праздника вместе с нами!
           </p>
 
           <div className="mt-6 flex flex-col justify-center gap-4 sm:flex-row">
