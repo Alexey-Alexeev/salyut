@@ -88,6 +88,10 @@ function CatalogContent() {
   const [sortBy, setSortBy] = useState('name');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [isFiltering, setIsFiltering] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastPageRef = useRef(1);
 
   // Стабилизируем список товаров для предотвращения лишних рендеров
   const stableProducts = useMemo(() => {
@@ -104,30 +108,27 @@ function CatalogContent() {
 
     const fetchData = async () => {
       try {
-        const [categoriesRes, productsRes] = await Promise.all([
+        const [categoriesRes, productsRes, statsRes] = await Promise.all([
           fetch('/api/categories'),
-          fetch('/api/products?limit=1000'), // Загружаем больше товаров для фильтров
+          fetch('/api/products?limit=20&page=1'), // Загружаем только первую страницу
+          fetch('/api/products/stats'), // Получаем статистику для фильтров
         ]);
 
-        if (categoriesRes.ok && productsRes.ok) {
-          const [categoriesData, productsResponse] = await Promise.all([
+        if (categoriesRes.ok && productsRes.ok && statsRes.ok) {
+          const [categoriesData, productsResponse, statsData] = await Promise.all([
             categoriesRes.json(),
             productsRes.json(),
+            statsRes.json(),
           ]);
-
-          // Определяем диапазон цен
-          const allProducts = productsResponse.products || productsResponse;
-          const prices = allProducts.map((p: Product) => p.price);
-          const maxPrice = prices.length > 0 ? Math.max(...prices) : 10000;
-
 
           // Обновляем все состояние одновременно, чтобы избежать промежуточных рендеров
           setCategories(categoriesData);
-          setProducts(allProducts);
-          setFilteredProducts(allProducts);
+          setProducts(productsResponse.products || []);
+          setFilteredProducts(productsResponse.products || []);
           setFilters(prev => ({
             ...prev,
-            priceMax: maxPrice,
+            priceMin: statsData.minPrice || 0,
+            priceMax: statsData.maxPrice || 10000,
           }));
 
           if (productsResponse.pagination) {
@@ -153,89 +154,99 @@ function CatalogContent() {
     const searchParam = searchParams.get('search');
 
     if (categoryParam || searchParam) {
+      // Сбрасываем страницу на 1 при инициализации из URL
+      setPagination(prev => ({
+        ...prev,
+        page: 1,
+      }));
+
       setFilters(prev => ({
         ...prev,
         categories: categoryParam ? [categoryParam] : prev.categories,
         search: searchParam || '',
       }));
+
+      // Устанавливаем значение поиска в поле ввода
+      if (searchParam) {
+        setSearchValue(searchParam);
+      }
     }
   }, [searchParams]);
 
-  // Применение всех фильтров (поиск + категории + цена + сортировка)
+  // Применение всех фильтров через серверные запросы
   useEffect(() => {
     const applyAllFilters = async () => {
-
       // Не применяем фильтры, если данные еще не готовы
-      if (!hasLoaded || products.length === 0) {
+      if (!hasLoaded) {
         return;
       }
 
-      let productsToFilter = [...products];
+      // Не применяем фильтры при смене страницы (это делает отдельный useEffect)
+      if (pagination.page !== lastPageRef.current) {
+        return;
+      }
 
-      // Поиск по названию - делаем запрос к API с пагинацией
-      if (filters.search.trim()) {
-        try {
-          const response = await fetch(
-            `/api/products?search=${encodeURIComponent(filters.search)}&limit=1000`
-          );
-          if (response.ok) {
-            const searchResponse = await response.json();
-            productsToFilter = searchResponse.products || searchResponse;
-            setPagination(searchResponse.pagination || pagination);
+      setIsFiltering(true);
+
+      try {
+        // Строим URL с параметрами фильтрации
+        const params = new URLSearchParams();
+        params.set('page', pagination.page.toString());
+        params.set('limit', '20');
+        params.set('sortBy', sortBy);
+
+        // Добавляем поиск
+        if (filters.search.trim()) {
+          params.set('search', filters.search.trim());
+        }
+
+        // Добавляем фильтр по категориям
+        if (filters.categories.length > 0) {
+          const categoryIds = categories
+            .filter(cat => filters.categories.includes(cat.slug))
+            .map(cat => cat.id);
+          if (categoryIds.length > 0) {
+            params.set('categoryId', categoryIds[0]); // Пока поддерживаем одну категорию
           }
-        } catch (error) {
-          console.error('Error searching products:', error);
         }
-      }
 
-      // Фильтр по категориям
-      if (filters.categories.length > 0) {
-        const categoryIds = categories
-          .filter(cat => filters.categories.includes(cat.slug))
-          .map(cat => cat.id);
-        productsToFilter = productsToFilter.filter(product =>
-          categoryIds.includes(product.category_id || '')
-        );
-      }
-
-      // Фильтр по цене
-      const minPrice = filters.priceFrom
-        ? parseInt(filters.priceFrom)
-        : filters.priceMin;
-      const maxPrice = filters.priceTo
-        ? parseInt(filters.priceTo)
-        : filters.priceMax;
-
-      productsToFilter = productsToFilter.filter(
-        product => product.price >= minPrice && product.price <= maxPrice
-      );
-
-      // Сортировка
-      productsToFilter.sort((a, b) => {
-        switch (sortBy) {
-          case 'price-asc':
-            return a.price - b.price || a.id.localeCompare(b.id);
-          case 'price-desc':
-            return b.price - a.price || a.id.localeCompare(b.id);
-          case 'popular':
-            return (b.is_popular ? 1 : 0) - (a.is_popular ? 1 : 0) || a.id.localeCompare(b.id);
-          default:
-            return a.name.localeCompare(b.name, 'ru') || a.id.localeCompare(b.id);
+        // Добавляем фильтр по цене
+        if (filters.priceFrom) {
+          params.set('minPrice', filters.priceFrom);
         }
-      });
+        if (filters.priceTo) {
+          params.set('maxPrice', filters.priceTo);
+        }
 
-      setFilteredProducts(productsToFilter);
+        const response = await fetch(`/api/products?${params.toString()}`);
+
+        if (response.ok) {
+          const data = await response.json();
+          setFilteredProducts(data.products || []);
+          setPagination(data.pagination || pagination);
+        }
+      } catch (error) {
+        console.error('Error applying filters:', error);
+      } finally {
+        setIsFiltering(false);
+      }
     };
 
     // Применяем фильтры только если данные готовы
     if (hasLoaded) {
       applyAllFilters();
     }
-  }, [products, categories, filters, sortBy, hasLoaded]);
+  }, [filters, sortBy, hasLoaded, categories]); // Убрали pagination.page из зависимостей
 
   // Обработчики событий
   const handleCategoryChange = useCallback(
     (categorySlug: string, checked: boolean) => {
+      // Сбрасываем страницу на 1 при изменении категории
+      setPagination(prev => ({
+        ...prev,
+        page: 1,
+      }));
+
       setFilters(prev => ({
         ...prev,
         categories: checked
@@ -247,6 +258,12 @@ function CatalogContent() {
   );
 
   const handlePriceChange = useCallback((from: string, to: string) => {
+    // Сбрасываем страницу на 1 при изменении цены
+    setPagination(prev => ({
+      ...prev,
+      page: 1,
+    }));
+
     setFilters(prev => ({
       ...prev,
       priceFrom: from,
@@ -255,6 +272,12 @@ function CatalogContent() {
   }, []);
 
   const handleRemoveCategory = useCallback((categorySlug: string) => {
+    // Сбрасываем страницу на 1 при удалении категории
+    setPagination(prev => ({
+      ...prev,
+      page: 1,
+    }));
+
     setFilters(prev => ({
       ...prev,
       categories: prev.categories.filter(slug => slug !== categorySlug),
@@ -262,6 +285,12 @@ function CatalogContent() {
   }, []);
 
   const handleClearPrice = useCallback(() => {
+    // Сбрасываем страницу на 1 при очистке цены
+    setPagination(prev => ({
+      ...prev,
+      page: 1,
+    }));
+
     setFilters(prev => ({
       ...prev,
       priceFrom: '',
@@ -270,20 +299,57 @@ function CatalogContent() {
   }, []);
 
   const handleSearchChange = useCallback((value: string) => {
-    setFilters(prev => ({
-      ...prev,
-      search: value,
-    }));
+    setSearchValue(value);
+
+    // Очищаем предыдущий таймаут
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Устанавливаем новый таймаут для debouncing
+    searchTimeoutRef.current = setTimeout(() => {
+      // Сбрасываем страницу на 1 при поиске
+      setPagination(prev => ({
+        ...prev,
+        page: 1,
+      }));
+
+      setFilters(prev => ({
+        ...prev,
+        search: value,
+      }));
+    }, 500); // 500ms задержка
   }, []);
 
   const handleClearSearch = useCallback(() => {
+    setSearchValue('');
+
+    // Сбрасываем страницу на 1 при очистке поиска
+    setPagination(prev => ({
+      ...prev,
+      page: 1,
+    }));
+
     setFilters(prev => ({
       ...prev,
       search: '',
     }));
+
+    // Очищаем таймаут
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
   }, []);
 
   const handleClearAllFilters = useCallback(() => {
+    setSearchValue('');
+
+    // Сбрасываем страницу на 1 при очистке всех фильтров
+    setPagination(prev => ({
+      ...prev,
+      page: 1,
+    }));
+
     setFilters(prev => ({
       ...prev,
       categories: [],
@@ -291,6 +357,11 @@ function CatalogContent() {
       priceTo: '',
       search: '',
     }));
+
+    // Очищаем таймаут
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
   }, []);
 
   const handlePageChange = useCallback((page: number) => {
@@ -298,6 +369,76 @@ function CatalogContent() {
       ...prev,
       page,
     }));
+  }, []);
+
+  // Сброс страницы при изменении сортировки
+  useEffect(() => {
+    if (pagination.page > 1) {
+      setPagination(prev => ({
+        ...prev,
+        page: 1,
+      }));
+    }
+  }, [sortBy]);
+
+  // Отдельный useEffect для смены страницы
+  useEffect(() => {
+    if (hasLoaded && pagination.page !== lastPageRef.current) {
+      const fetchPage = async () => {
+        setIsFiltering(true);
+
+        try {
+          const params = new URLSearchParams();
+          params.set('page', pagination.page.toString());
+          params.set('limit', '20');
+          params.set('sortBy', sortBy);
+
+          if (filters.search.trim()) {
+            params.set('search', filters.search.trim());
+          }
+
+          if (filters.categories.length > 0) {
+            const categoryIds = categories
+              .filter(cat => filters.categories.includes(cat.slug))
+              .map(cat => cat.id);
+            if (categoryIds.length > 0) {
+              params.set('categoryId', categoryIds[0]);
+            }
+          }
+
+          if (filters.priceFrom) {
+            params.set('minPrice', filters.priceFrom);
+          }
+          if (filters.priceTo) {
+            params.set('maxPrice', filters.priceTo);
+          }
+
+          const response = await fetch(`/api/products?${params.toString()}`);
+
+          if (response.ok) {
+            const data = await response.json();
+            setFilteredProducts(data.products || []);
+            setPagination(data.pagination || pagination);
+          }
+        } catch (error) {
+          console.error('Error fetching page:', error);
+        } finally {
+          setIsFiltering(false);
+        }
+      };
+
+      fetchPage();
+      lastPageRef.current = pagination.page;
+    }
+  }, [pagination.page]); // Только при изменении страницы
+
+  // Очистка таймаута при размонтировании
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
   }, []);
 
   if (loading) {
@@ -408,7 +549,7 @@ function CatalogContent() {
           <Input
             type="text"
             placeholder="Поиск по названию товара..."
-            value={filters.search}
+            value={searchValue}
             onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-10 pr-10"
           />
@@ -563,6 +704,29 @@ function CatalogContent() {
             onClearAll={handleClearAllFilters}
           />
 
+          {/* Пагинация сверху */}
+          {filteredProducts.length > 0 && pagination.totalPages > 1 && (
+            <div className="mb-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-sm text-muted-foreground">
+                  Страница {pagination.page} из {pagination.totalPages}
+                  {pagination.totalCount > 0 && (
+                    <span className="ml-2">
+                      ({pagination.totalCount} товаров)
+                    </span>
+                  )}
+                </div>
+                <Pagination
+                  currentPage={pagination.page}
+                  totalPages={pagination.totalPages}
+                  hasNextPage={pagination.hasNextPage}
+                  hasPrevPage={pagination.hasPrevPage}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            </div>
+          )}
+
           {/* Сетка товаров */}
           <div
             className={`grid gap-4 ${viewMode === 'grid'
@@ -571,7 +735,7 @@ function CatalogContent() {
               }`}
             style={{ gridAutoRows: '1fr' }}
           >
-            {loading ? (
+            {loading || isFiltering ? (
               Array.from({ length: 8 }).map((_, index) => (
                 <div key={index} className="animate-pulse">
                   <div className="bg-muted aspect-square rounded-lg mb-2" />
@@ -586,16 +750,21 @@ function CatalogContent() {
             )}
           </div>
 
-          {/* Пагинация */}
-          {filteredProducts.length > 0 && (
+          {/* Пагинация снизу */}
+          {filteredProducts.length > 0 && pagination.totalPages > 1 && (
             <div className="mt-8">
-              <Pagination
-                currentPage={pagination.page}
-                totalPages={pagination.totalPages}
-                hasNextPage={pagination.hasNextPage}
-                hasPrevPage={pagination.hasPrevPage}
-                onPageChange={handlePageChange}
-              />
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-sm text-muted-foreground">
+                  Страница {pagination.page} из {pagination.totalPages}
+                </div>
+                <Pagination
+                  currentPage={pagination.page}
+                  totalPages={pagination.totalPages}
+                  hasNextPage={pagination.hasNextPage}
+                  hasPrevPage={pagination.hasPrevPage}
+                  onPageChange={handlePageChange}
+                />
+              </div>
             </div>
           )}
 
