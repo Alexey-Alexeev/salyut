@@ -702,7 +702,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     }
 
     return (
-        <div className="container mx-auto px-4 py-8 animate-in fade-in duration-300">
+        <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24 py-8 animate-in fade-in duration-300">
             {/* Breadcrumb */}
             <div className="mb-6">
                 <Breadcrumb items={[{ label: 'Каталог товаров' }]} />
