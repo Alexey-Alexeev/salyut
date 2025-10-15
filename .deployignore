@@ -1,0 +1,45 @@
+# Документация и отчеты
+CHANGES.md
+CITY_PAGES_README.md
+IMPLEMENTATION_REPORT.md
+SUMMARY.md
+DEPLOYMENT.md
+PERFORMANCE_OPTIMIZATION.md
+TELEGRAM_SETUP.md
+README.md
+HOSTING_CHECKLIST.md
+docs/
+
+# Тестовые и отладочные файлы
+test-autocomplete-component.tsx
+scripts/
+
+# Конфигурация разработки
+.eslintrc.json
+.prettierrc
+components.json
+drizzle.config.ts
+postcss.config.js
+tailwind.config.ts
+tsconfig.json
+next.config.js
+package.json
+package-lock.json
+
+# Системные файлы и папки
+.git/
+.vscode/
+.idea/
+.bolt/
+node_modules/
+.next/
+.env
+.env.local
+.env.example
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# Временные файлы
+*.log
+*.tmp
+*.temp
