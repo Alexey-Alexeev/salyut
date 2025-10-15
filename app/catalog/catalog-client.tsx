@@ -149,6 +149,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     // Мемоизируем функцию сброса страницы
     const resetPage = useCallback(() => {
         setPagination(prev => ({ ...prev, page: 1 }));
+        
+        // Автоматическая прокрутка наверх в мобильной версии при сбросе страницы
+        if (window.innerWidth < 768) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
     }, []);
 
     // Функция для обновления URL с фильтрами
@@ -331,6 +339,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
                 setFilteredProducts(data.products || []);
                 setPagination(data.pagination || pagination);
+                
+                // Автоматическая прокрутка наверх в мобильной версии при применении фильтров
+                if (window.innerWidth < 768) {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
             } catch (error) {
                 console.error('Error applying filters:', error);
             } finally {
@@ -589,6 +605,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             ...prev,
             page,
         }));
+        
+        // Автоматическая прокрутка наверх в мобильной версии
+        if (window.innerWidth < 768) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
     }, []);
 
     // Сброс страницы при изменении сортировки
@@ -622,6 +646,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
                     setFilteredProducts(data.products || []);
                     setPagination(data.pagination || pagination);
+                    
+                    // Автоматическая прокрутка наверх в мобильной версии при смене страницы
+                    if (window.innerWidth < 768) {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }
                 } catch (error) {
                     console.error('Error fetching page:', error);
                 } finally {
