@@ -11,15 +11,17 @@ export function ServicesHeroSection({ onConsultationClick }: ServicesHeroSection
     return (
         <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden py-12 sm:py-16">
             <div className="absolute inset-0 z-0">
+                {/* CSS gradient placeholder */}
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black" />
                 <Image
                     src="/images/services-bg.webp"
                     alt="Профессиональный запуск салютов, пиротехника на празднике"
                     fill
-                    className="object-cover"
+                    className="object-cover transition-opacity duration-500"
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     placeholder="blur"
-                    blurDataURL="/images/services-bg.webp"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
                 <div className="absolute inset-0 bg-black/50" />
             </div>

@@ -10,11 +10,13 @@ export function HeroSection({ cityName }: HeroSectionProps) {
     return (
         <section className="relative flex min-h-[50vh] items-center justify-center overflow-hidden py-12 sm:py-16 md:min-h-[70vh]">
             <div className="absolute inset-0 z-0">
+                {/* CSS gradient placeholder */}
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black" />
                 <Image
                     src="/images/hero-bg.webp"
                     alt="Красивые фейерверки и салюты в ночном небе - СалютГрад"
                     fill
-                    className="object-cover"
+                    className="object-cover transition-opacity duration-500"
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     placeholder="blur"

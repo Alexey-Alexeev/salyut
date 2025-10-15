@@ -7,15 +7,17 @@ export function AboutHeroSection() {
             role="banner"
         >
             <div className="absolute inset-0 z-0">
+                {/* CSS gradient placeholder */}
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black" />
                 <Image
-                    src="../../images/hero-bg2.webp"
+                    src="/images/hero-bg2.webp"
                     alt="О компании - качественные фейерверки и салюты"
                     fill
-                    className="object-cover"
+                    className="object-cover transition-opacity duration-500"
                     priority
                     sizes="100vw"
                     placeholder="blur"
-                    blurDataURL="../../images/hero-bg2.webp"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />
                 <div className="absolute inset-0 bg-black/60" />
             </div>
