@@ -96,6 +96,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
     const [isFiltering, setIsFiltering] = useState(false);
     const [isInitializing, setIsInitializing] = useState(true);
+    const [isPaginationLoading, setIsPaginationLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [priceFromValue, setPriceFromValue] = useState('');
     const [priceToValue, setPriceToValue] = useState('');
@@ -149,14 +150,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     // Мемоизируем функцию сброса страницы
     const resetPage = useCallback(() => {
         setPagination(prev => ({ ...prev, page: 1 }));
-        
-        // Автоматическая прокрутка наверх в мобильной версии при сбросе страницы
-        if (window.innerWidth < 768) {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
     }, []);
 
     // Функция для обновления URL с фильтрами
@@ -339,14 +332,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
                 setFilteredProducts(data.products || []);
                 setPagination(data.pagination || pagination);
-                
-                // Автоматическая прокрутка наверх в мобильной версии при применении фильтров
-                if (window.innerWidth < 768) {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                }
             } catch (error) {
                 console.error('Error applying filters:', error);
             } finally {
@@ -606,12 +591,9 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             page,
         }));
         
-        // Автоматическая прокрутка наверх в мобильной версии
+        // Показываем loader в мобильной версии вместо скролла
         if (window.innerWidth < 768) {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            setIsPaginationLoading(true);
         }
     }, []);
 
@@ -646,18 +628,11 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
                     setFilteredProducts(data.products || []);
                     setPagination(data.pagination || pagination);
-                    
-                    // Автоматическая прокрутка наверх в мобильной версии при смене страницы
-                    if (window.innerWidth < 768) {
-                        window.scrollTo({
-                            top: 0,
-                            behavior: 'smooth'
-                        });
-                    }
                 } catch (error) {
                     console.error('Error fetching page:', error);
                 } finally {
                     setIsFiltering(false);
+                    setIsPaginationLoading(false);
                 }
             };
 
@@ -824,6 +799,16 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                                 pagination={pagination}
                                 onPageChange={handlePageChange}
                             />
+                        </div>
+                    )}
+
+                    {/* Loader для пагинации в мобильной версии */}
+                    {isPaginationLoading && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm md:hidden">
+                            <div className="flex flex-col items-center gap-4">
+                                <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-200 border-t-orange-600"></div>
+                                <p className="text-sm font-medium text-gray-700">Загружаем товары...</p>
+                            </div>
                         </div>
                     )}
 
