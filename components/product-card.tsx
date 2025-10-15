@@ -81,48 +81,22 @@ function getVideoInfo(url: string): VideoInfo {
   return { platform: 'unknown', videoId: null, embedUrl: null };
 }
 
-// Функция для извлечения ключевых характеристик с названиями
+// Функция для извлечения характеристик
 function getKeyCharacteristics(characteristics: Record<string, any> | null): Array<{ label: string, value: string }> {
   if (!characteristics) return [];
 
-  // Приоритетные поля с их весами
-  const priorityFields = [
-    { pattern: /залпов?|выстрелов?/i, weight: 10 },
-    { pattern: /секунд?|длительность/i, weight: 9 },
-    { pattern: /эффектов?/i, weight: 8 },
-    { pattern: /калибр/i, weight: 7 },
-    { pattern: /размер/i, weight: 6 },
-    { pattern: /вес/i, weight: 5 },
-    { pattern: /тип/i, weight: 4 },
-    { pattern: /высота/i, weight: 3 },
-    { pattern: /диаметр/i, weight: 3 },
-    { pattern: /цвет/i, weight: 2 },
-    { pattern: /материал/i, weight: 2 }
-  ];
-
-  const highlights: Array<{ label: string; value: string; weight: number }> = [];
+  const result: Array<{ label: string; value: string }> = [];
 
   for (const [key, value] of Object.entries(characteristics)) {
     if (value && typeof value === 'string' && value.trim()) {
-      // Находим приоритет для этого поля
-      const priority = priorityFields.find(field =>
-        field.pattern.test(key)
-      );
-
-      if (priority) {
-        highlights.push({
-          label: key,
-          value: value.trim(),
-          weight: priority.weight
-        });
-      }
+      result.push({
+        label: key,
+        value: value.trim()
+      });
     }
   }
 
-  // Сортируем по приоритету и возвращаем все характеристики
-  return highlights
-    .sort((a, b) => b.weight - a.weight)
-    .map(item => ({ label: item.label, value: item.value }));
+  return result;
 }
 
 interface Product {
@@ -332,7 +306,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <CardContent className="flex flex-1 flex-col p-4">
         <Link href={`/product/${product.slug}`}>
-          <h3 className="group-hover:text-primary mb-2 min-h-[2.5rem] line-clamp-2 text-sm font-medium transition-colors">
+          <h3 className="group-hover:text-primary mb-2 min-h-[2.5rem] line-clamp-2 text-sm md:text-xl font-medium transition-colors">
             {product.name}
           </h3>
         </Link>
@@ -344,14 +318,14 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="mb-3">
               <div className="max-h-32 overflow-y-auto space-y-1 pr-1">
                 {characteristics.map((char, index) => (
-                  <div key={index} className="flex justify-between items-center text-xs">
+                  <div key={index} className="flex justify-between items-center text-[11px] md:text-base">
                     <span className="text-gray-600 font-medium truncate mr-2">{char.label}:</span>
                     <span className="text-gray-900 font-semibold flex-shrink-0">{char.value}</span>
                   </div>
                 ))}
               </div>
               {characteristics.length > 4 && (
-                <div className="text-xs text-gray-500 mt-1 text-center">
+                <div className="text-xs md:text-base text-gray-500 mt-1 text-center">
                   +{characteristics.length - 4} характеристик
                 </div>
               )}
