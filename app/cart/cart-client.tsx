@@ -718,7 +718,8 @@ export default function CartPageClient() {
                                                     </div>
                                                     <p className="text-muted-foreground text-[10px] sm:text-xs leading-relaxed">
                                                         Безопасно, качественно, с соблюдением всех норм.<br />
-                                                        Стоимость рассчитывается индивидуально.
+                                                        Стоимость рассчитывается индивидуально.<br />
+                                                        Как правило, от 1 000₽ до 10 000₽ в зависимости от местоположения.
                                                     </p>
                                                     <Link
                                                         href="/services/launching"
