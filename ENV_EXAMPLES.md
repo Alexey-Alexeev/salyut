@@ -18,7 +18,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 DATABASE_URL=postgresql://user:password@host:port/database
 TELEGRAM_BOT_TOKEN=1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
 TELEGRAM_CHAT_ID=123456789
-YANDEX_MAPS_API_KEY=your-maps-api-key
+NEXT_PUBLIC_YANDEX_API_KEY=your-maps-api-key
 GOOGLE_SITE_VERIFICATION=your-verification-code
 ```
 
@@ -105,7 +105,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 DATABASE_URL=your-database-url
 TELEGRAM_BOT_TOKEN=your-bot-token
 TELEGRAM_CHAT_ID=your-chat-id
-YANDEX_MAPS_API_KEY=your-maps-key
+NEXT_PUBLIC_YANDEX_API_KEY=your-maps-key
 ```
 
 ### **Локальная разработка (.env.local):**
@@ -120,7 +120,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 DATABASE_URL=your-database-url
 TELEGRAM_BOT_TOKEN=your-bot-token
 TELEGRAM_CHAT_ID=your-chat-id
-YANDEX_MAPS_API_KEY=your-maps-key
+NEXT_PUBLIC_YANDEX_API_KEY=your-maps-key
 ```
 
 ---

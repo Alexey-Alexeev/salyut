@@ -25,7 +25,7 @@ TELEGRAM_CHAT_ID=your-chat-id
 
 ### 🗺️ **Yandex Maps:**
 ```
-YANDEX_MAPS_API_KEY=your-maps-api-key
+NEXT_PUBLIC_YANDEX_API_KEY=your-maps-api-key
 ```
 
 ### 📊 **Google Analytics (опционально):**
@@ -57,7 +57,7 @@ GOOGLE_SITE_VERIFICATION=your-verification-code
 ✅ DATABASE_URL
 ✅ TELEGRAM_BOT_TOKEN
 ✅ TELEGRAM_CHAT_ID
-✅ YANDEX_MAPS_API_KEY
+✅ NEXT_PUBLIC_YANDEX_API_KEY
 ✅ FTP_SERVER
 ✅ FTP_USERNAME
 ✅ FTP_PASSWORD
@@ -81,7 +81,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 DATABASE_URL=your-database-url
 TELEGRAM_BOT_TOKEN=your-bot-token
 TELEGRAM_CHAT_ID=your-chat-id
-YANDEX_MAPS_API_KEY=your-maps-key
+NEXT_PUBLIC_YANDEX_API_KEY=your-maps-key
 ```
 
 ### 3. **Перезапустите сервер разработки:**

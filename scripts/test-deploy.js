@@ -10,7 +10,7 @@ const requiredEnvVars = [
   'NEXT_PUBLIC_SUPABASE_ANON_KEY',
   'SUPABASE_SERVICE_ROLE_KEY',
   'DATABASE_URL',
-  'YANDEX_MAPS_API_KEY'
+  'NEXT_PUBLIC_YANDEX_API_KEY'
 ];
 
 // Проверка на опасные переменные

@@ -24,7 +24,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
 DATABASE_URL=your-database-url
 TELEGRAM_BOT_TOKEN=your-telegram-bot-token
 TELEGRAM_CHAT_ID=your-telegram-chat-id
-YANDEX_MAPS_API_KEY=your-yandex-maps-api-key
+NEXT_PUBLIC_YANDEX_API_KEY=your-yandex-maps-api-key
 ```
 
 ## 🛠️ Получение FTP данных в РЕГ.РУ
