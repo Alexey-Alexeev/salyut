@@ -49,8 +49,9 @@ export function Header() {
                     alt="СалютГрад"
                     width={32}
                     height={32}
-                    className="rounded-full"
+                    className="rounded-full logo-image"
                     priority
+                    sizes="32px"
                   />
                 </div>
                 <span className="text-primary text-xl font-bold">
