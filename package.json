@@ -11,7 +11,9 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:seed": "tsx scripts/seed.ts"
+    "db:seed": "tsx scripts/seed.ts",
+    "test:deploy": "node scripts/test-deploy.js",
+    "test:cities": "node scripts/test-cities.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -86,6 +88,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-tailwindcss": "^3.18.2",
     "prettier": "^3.6.2",
+    "supabase": "^2.51.0",
     "tsx": "^4.7.0"
   }
 }

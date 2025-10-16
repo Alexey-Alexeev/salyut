@@ -1,0 +1,139 @@
+# 🔐 Настройка переменных окружения
+
+## 📋 Список необходимых переменных
+
+### 🌐 **Supabase (обязательно):**
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+### 🗄️ **База данных:**
+```
+DATABASE_URL=postgresql://user:password@host:port/database
+```
+
+### 🤖 **Telegram Bot (только серверные переменные!):**
+```
+TELEGRAM_BOT_TOKEN=your-bot-token
+TELEGRAM_CHAT_ID=your-chat-id
+```
+
+**⚠️ ВАЖНО:** НЕ используйте `NEXT_PUBLIC_` для Telegram токенов!
+Токены должны быть только на сервере, иначе они попадут в браузер пользователя.
+
+### 🗺️ **Yandex Maps:**
+```
+YANDEX_MAPS_API_KEY=your-maps-api-key
+```
+
+### 📊 **Google Analytics (опционально):**
+```
+NEXT_PUBLIC_GA_ID=your-ga-id
+```
+
+### 🔍 **Google Search Console (опционально):**
+```
+GOOGLE_SITE_VERIFICATION=your-verification-code
+```
+
+## 🛠️ Настройка в GitHub Secrets
+
+### 1. **Перейдите в настройки репозитория:**
+- GitHub → Settings → Secrets and variables → Actions
+
+### 2. **Добавьте каждую переменную:**
+- Нажмите "New repository secret"
+- Введите имя переменной (например, `NEXT_PUBLIC_SUPABASE_URL`)
+- Введите значение
+- Нажмите "Add secret"
+
+### 3. **Проверьте список секретов:**
+```
+✅ NEXT_PUBLIC_SUPABASE_URL
+✅ NEXT_PUBLIC_SUPABASE_ANON_KEY
+✅ SUPABASE_SERVICE_ROLE_KEY
+✅ DATABASE_URL
+✅ TELEGRAM_BOT_TOKEN
+✅ TELEGRAM_CHAT_ID
+✅ YANDEX_MAPS_API_KEY
+✅ FTP_SERVER
+✅ FTP_USERNAME
+✅ FTP_PASSWORD
+✅ FTP_SERVER_DIR
+```
+
+## 🔧 Локальная разработка
+
+### 1. **Создайте файл `.env.local`:**
+```bash
+# В корне проекта salyut/
+touch .env.local
+```
+
+### 2. **Добавьте переменные:**
+```bash
+# .env.local
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+DATABASE_URL=your-database-url
+TELEGRAM_BOT_TOKEN=your-bot-token
+TELEGRAM_CHAT_ID=your-chat-id
+YANDEX_MAPS_API_KEY=your-maps-key
+```
+
+### 3. **Перезапустите сервер разработки:**
+```bash
+npm run dev
+```
+
+## 🚨 Безопасность
+
+### ❌ **НЕ делайте:**
+- Не коммитьте `.env.local` в Git
+- Не публикуйте секреты в коде
+- Не делитесь секретами в чатах
+
+### ✅ **Делайте:**
+- Используйте GitHub Secrets для CI/CD
+- Храните секреты в безопасном месте
+- Регулярно меняйте пароли
+- Используйте разные секреты для dev/prod
+
+## 🔍 Проверка переменных
+
+### **В коде:**
+```typescript
+// Проверка переменной
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+  throw new Error('NEXT_PUBLIC_SUPABASE_URL is not defined');
+}
+```
+
+### **В консоли:**
+```bash
+# Проверка переменных
+echo $NEXT_PUBLIC_SUPABASE_URL
+```
+
+## 📞 Получение значений
+
+### **Supabase:**
+1. Перейдите в проект Supabase
+2. Settings → API
+3. Скопируйте URL и ключи
+
+### **Telegram Bot:**
+1. Напишите @BotFather в Telegram
+2. Создайте нового бота
+3. Получите токен
+
+### **Yandex Maps:**
+1. Перейдите в Yandex Cloud
+2. Создайте API ключ
+3. Скопируйте ключ
+
+---
+**Важно:** Все переменные должны быть настроены до первого деплоя!

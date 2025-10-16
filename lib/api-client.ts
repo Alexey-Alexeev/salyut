@@ -195,99 +195,23 @@ export async function createOrder(orderData: CreateOrderData) {
     }
 }
 
-// Вспомогательная функция для отправки уведомлений в Telegram
+// Вспомогательная функция для отправки уведомлений в Telegram через Supabase Edge Function
 async function sendTelegramNotification(order: any, items: any[]) {
-    // Получаем токены только из переменных окружения
-    const TELEGRAM_BOT_TOKEN = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
-    const TELEGRAM_CHAT_ID = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
-
-    console.log('Telegram credentials check:', {
-        hasToken: !!TELEGRAM_BOT_TOKEN,
-        hasChatId: !!TELEGRAM_CHAT_ID,
-        tokenLength: TELEGRAM_BOT_TOKEN?.length || 0,
-        chatId: TELEGRAM_CHAT_ID
-    });
-
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-        console.warn('Telegram credentials not configured');
-        return;
-    }
-
-    // Формируем сообщение в старом формате
-    const shortId = order.id.slice(0, 8);
-    const contactMethodText = order.contact_method && order.customer_contact
-        ? `\n📱 ${order.contact_method === 'telegram' ? 'Telegram' : order.contact_method === 'whatsapp' ? 'WhatsApp' : 'Телефон'}: ${order.customer_contact}`
-        : '';
-
-    const commentText = order.comment ? `\n💬 Комментарий: ${order.comment}` : '';
-
-    const professionalLaunchText = order.professional_launch_requested
-        ? '\n🎆 Запуск салютов: *Да* \n⚠️ Обсудить детали и стоимость запуска салютов'
-        : '';
-
-    const deliveryText = order.delivery_method === 'pickup'
-        ? '\n🏬 **Самовывоз** (бесплатно)\n📍 Рассветная ул., 14, д. Чёрное, Балашиха'
-        : `\n🚚 **Доставка** - ${order.delivery_cost.toLocaleString('ru-RU')} ₽${order.delivery_address ? `\n📍 ${order.delivery_address}` : '\n📍 _Адрес не указан. Необходимо уточнить_'}`;
-
-    const distanceFromMKADText = order.distance_from_mkad
-        ? `\n🚗 Расстояние от МКАД: ${order.distance_from_mkad} км`
-        : '';
-
-    // Определяем тип скидки/подарка
-    let discountInfo = '';
-    const subtotal = order.total_amount - order.discount_amount;
-    if (subtotal >= 60000) {
-        discountInfo = `\n🎁 *Бонусы:* 10% скидка + подарок включены`;
-    } else if (subtotal >= 40000) {
-        discountInfo = `\n🎁 *Бонусы:* 5% скидка + подарок включены`;
-    } else if (subtotal >= 10000) {
-        discountInfo = `\n🎁 *Бонусы:* подарок включен`;
-    }
-
-    const itemsText = items
-        .map(item => `• ${item.name} - ${item.quantity} шт. × ${item.price.toLocaleString('ru-RU')} ₽`)
-        .join('\n');
-
-    const message = `
-🎆 *Новый заказ!*
-
-🆔 Заказ: #${shortId}
-👤 Клиент: ${order.customer_name}${contactMethodText}
-
-🛒 *Товары:*
-${itemsText}
-
-${deliveryText}${distanceFromMKADText}${discountInfo}${commentText}${professionalLaunchText}
-
-💰 *Итого: ${order.total_amount.toLocaleString('ru-RU')} ₽*
-
-⏰ Время: ${new Date().toLocaleString('ru-RU')}
-    `.trim();
-
-    // Отправляем в Telegram
     try {
-        console.log('Sending telegram notification:', { chatId: TELEGRAM_CHAT_ID, messageLength: message.length });
-
-        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: message,
-                parse_mode: 'Markdown',
-            }),
+        const { data, error } = await supabase.functions.invoke('send-telegram-notification', {
+            body: {
+                type: 'order',
+                data: { order, items }
+            }
         });
 
-        const result = await response.json();
-        console.log('Telegram response:', result);
-
-        if (!response.ok) {
-            console.error('Telegram API error:', result);
+        if (error) {
+            console.error('Failed to send Telegram notification:', error);
+        } else {
+            console.log('Telegram notification sent successfully');
         }
     } catch (error) {
-        console.error('Failed to send telegram message:', error);
+        console.error('Error sending Telegram notification:', error);
     }
 }
 
@@ -331,52 +255,21 @@ export async function createConsultation(data: CreateConsultationData) {
 }
 
 async function sendConsultationTelegramNotification(consultation: any) {
-    // Получаем токены только из переменных окружения
-    const TELEGRAM_BOT_TOKEN = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
-    const TELEGRAM_CHAT_ID = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
-
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-        console.warn('Telegram credentials not configured');
-        return;
-    }
-
-    // Формируем сообщение в старом формате
-    const shortId = consultation.id.slice(0, 8);
-    const contactMethodMap: Record<string, string> = {
-        phone: '📞 Телефон',
-        telegram: '📱 Telegram',
-        whatsapp: '📱 WhatsApp',
-    };
-    const contactMethodText = contactMethodMap[consultation.contact_method] || '📞 Контакт';
-
-    const messageText = consultation.message
-        ? `\n\n💬 Комментарий: ${consultation.message}`
-        : '';
-
-    const message = `
-🎆 *Новая заявка на консультацию!*
-
-🆔 ID: #${shortId}
-👤 Имя: ${consultation.name}
-${contactMethodText}: ${consultation.contact_info}${messageText}
-
-⏰ Время: ${new Date().toLocaleString('ru-RU')}
-    `.trim();
-
     try {
-        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: message,
-                parse_mode: 'Markdown',
-            }),
+        const { data, error } = await supabase.functions.invoke('send-telegram-notification', {
+            body: {
+                type: 'consultation',
+                data: { consultation }
+            }
         });
+
+        if (error) {
+            console.error('Failed to send Telegram notification:', error);
+        } else {
+            console.log('Telegram notification sent successfully');
+        }
     } catch (error) {
-        console.error('Failed to send telegram message:', error);
+        console.error('Error sending Telegram notification:', error);
     }
 }
 
