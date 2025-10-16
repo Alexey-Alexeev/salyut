@@ -122,7 +122,7 @@ export function ConsultationDialog({
       <DialogContent className="sm:max-w-md w-full mx-0 sm:mx-0 max-h-[95vh] overflow-y-auto focus:outline-none">
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl font-bold">
-            Получить консультацию
+            Получить бесплатную консультацию
           </DialogTitle>
         </DialogHeader>
 
