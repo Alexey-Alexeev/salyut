@@ -6,10 +6,16 @@ const nextConfig = {
   // Статический экспорт для хостинга
   output: 'export',
   trailingSlash: true,
-  // Исключаем папку supabase из сборки Next.js
+  // Исключаем папку edge-functions из сборки Next.js
   webpack: (config) => {
     config.module.rules.push({
-      test: /supabase\/.*\.ts$/,
+      test: /edge-functions\/.*\.ts$/,
+      use: 'ignore-loader',
+    });
+    // Также исключаем все файлы с Deno импортами
+    config.module.rules.push({
+      test: /.*\.ts$/,
+      include: /edge-functions/,
       use: 'ignore-loader',
     });
     return config;
