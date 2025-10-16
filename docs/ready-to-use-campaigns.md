@@ -4,7 +4,7 @@
 
 ### 1. Москва
 
-**URL страницы:** `https://салютград.рф/moskva`
+**URL страницы:** `https://salutgrad.ru/moskva`
 
 **Ключевые слова:**
 ```
@@ -30,7 +30,7 @@
 Текст: Профессиональный запуск на праздник. Качественная пиротехника. 
 Гарантия безопасности. Консультация бесплатно!
 
-URL: https://салютград.рф/moskva?utm_source=yandex&utm_medium=cpc&utm_campaign=moskva_main&utm_content=ad1
+URL: https://salutgrad.ru/moskva?utm_source=yandex&utm_medium=cpc&utm_campaign=moskva_main&utm_content=ad1
 
 Быстрые ссылки:
 - Каталог → /catalog
@@ -46,14 +46,14 @@ URL: https://салютград.рф/moskva?utm_source=yandex&utm_medium=cpc&utm
 Текст: Создадим незабываемое шоу для вашего праздника! 
 Безопасность и красота гарантированы.
 
-URL: https://салютград.рф/moskva?utm_source=yandex&utm_medium=cpc&utm_campaign=moskva_wedding&utm_content=ad2
+URL: https://salutgrad.ru/moskva?utm_source=yandex&utm_medium=cpc&utm_campaign=moskva_wedding&utm_content=ad2
 ```
 
 ---
 
 ### 2. Балашиха
 
-**URL страницы:** `https://салютград.рф/balashiha`
+**URL страницы:** `https://salutgrad.ru/balashiha`
 
 **Ключевые слова:**
 ```
@@ -77,7 +77,7 @@ URL: https://салютград.рф/moskva?utm_source=yandex&utm_medium=cpc&utm
 Текст: Доставка по Балашихе за 1-2 часа. Качественная пиротехника. 
 Профессиональный запуск на любой праздник!
 
-URL: https://салютград.рф/balashiha?utm_source=yandex&utm_medium=cpc&utm_campaign=balashiha_main
+URL: https://salutgrad.ru/balashiha?utm_source=yandex&utm_medium=cpc&utm_campaign=balashiha_main
 
 Быстрые ссылки:
 - Каталог → /catalog
@@ -88,7 +88,7 @@ URL: https://салютград.рф/balashiha?utm_source=yandex&utm_medium=cpc&
 
 ### 3. Подольск
 
-**URL страницы:** `https://салютград.рф/podolsk`
+**URL страницы:** `https://salutgrad.ru/podolsk`
 
 **Ключевые слова:**
 ```
@@ -111,14 +111,14 @@ URL: https://салютград.рф/balashiha?utm_source=yandex&utm_medium=cpc&
 Текст: Фейерверки от проверенных производителей. Доставка по Подольску. 
 Профессиональный запуск на свадьбу, день рождения!
 
-URL: https://салютград.рф/podolsk?utm_source=yandex&utm_medium=cpc&utm_campaign=podolsk_main
+URL: https://salutgrad.ru/podolsk?utm_source=yandex&utm_medium=cpc&utm_campaign=podolsk_main
 ```
 
 ---
 
 ### 4. Химки
 
-**URL страницы:** `https://салютград.рф/himki`
+**URL страницы:** `https://salutgrad.ru/himki`
 
 **Ключевые слова:**
 ```
@@ -140,14 +140,14 @@ URL: https://салютград.рф/podolsk?utm_source=yandex&utm_medium=cpc&ut
 Текст: Качественные фейерверки с доставкой в Химки. 
 Профессиональный запуск. Безопасность гарантируем!
 
-URL: https://салютград.рф/himki?utm_source=yandex&utm_medium=cpc&utm_campaign=himki_main
+URL: https://salutgrad.ru/himki?utm_source=yandex&utm_medium=cpc&utm_campaign=himki_main
 ```
 
 ---
 
 ### 5. Мытищи
 
-**URL страницы:** `https://салютград.рф/mytishchi`
+**URL страницы:** `https://salutgrad.ru/mytishchi`
 
 **Ключевые слова:**
 ```
@@ -169,7 +169,7 @@ URL: https://салютград.рф/himki?utm_source=yandex&utm_medium=cpc&utm_
 Текст: Фейерверки и салюты для любого праздника! 
 Доставка в Мытищи. Профессиональный запуск.
 
-URL: https://салютград.рф/mytishchi?utm_source=yandex&utm_medium=cpc&utm_campaign=mytishchi_main
+URL: https://salutgrad.ru/mytishchi?utm_source=yandex&utm_medium=cpc&utm_campaign=mytishchi_main
 ```
 
 ---
@@ -177,63 +177,63 @@ URL: https://салютград.рф/mytishchi?utm_source=yandex&utm_medium=cpc&
 ## Остальные 15 городов (вторая волна)
 
 ### Королёв
-- **URL:** `https://салютград.рф/korolev`
+- **URL:** `https://salutgrad.ru/korolev`
 - **Основные запросы:** купить салюты в королёве, фейерверки королёв
 
 ### Люберцы
-- **URL:** `https://салютград.рф/lyubertsy`
+- **URL:** `https://salutgrad.ru/lyubertsy`
 - **Основные запросы:** купить салюты в люберцах, фейерверки люберцы
 
 ### Красногорск
-- **URL:** `https://салютград.рф/krasnogorsk`
+- **URL:** `https://salutgrad.ru/krasnogorsk`
 - **Основные запросы:** купить салюты в красногорске, фейерверки красногорск
 
 ### Одинцово
-- **URL:** `https://салютград.рф/odincovo`
+- **URL:** `https://salutgrad.ru/odincovo`
 - **Основные запросы:** купить салюты в одинцово, фейерверки одинцово
 
 ### Пушкино
-- **URL:** `https://салютград.рф/pushkino`
+- **URL:** `https://salutgrad.ru/pushkino`
 - **Основные запросы:** купить салюты в пушкино, фейерверки пушкино
 
 ### Щёлково
-- **URL:** `https://салютград.рф/shchelkovo`
+- **URL:** `https://salutgrad.ru/shchelkovo`
 - **Основные запросы:** купить салюты в щёлково, фейерверки щёлково
 
 ### Домодедово
-- **URL:** `https://салютград.рф/domodedovo`
+- **URL:** `https://salutgrad.ru/domodedovo`
 - **Основные запросы:** купить салюты в домодедово, фейерверки домодедово
 
 ### Серпухов
-- **URL:** `https://салютград.рф/serpuhov`
+- **URL:** `https://salutgrad.ru/serpuhov`
 - **Основные запросы:** купить салюты в серпухове, фейерверки серпухов
 
 ### Орехово-Зуево
-- **URL:** `https://салютград.рф/orekhovo-zuevo`
+- **URL:** `https://salutgrad.ru/orekhovo-zuevo`
 - **Основные запросы:** купить салюты в орехово-зуево, фейерверки орехово-зуево
 
 ### Реутов
-- **URL:** `https://салютград.рф/reutov`
+- **URL:** `https://salutgrad.ru/reutov`
 - **Основные запросы:** купить салюты в реутове, фейерверки реутов
 
 ### Железнодорожный
-- **URL:** `https://салютград.рф/zheleznodorozhny`
+- **URL:** `https://salutgrad.ru/zheleznodorozhny`
 - **Основные запросы:** купить салюты в железнодорожном, фейерверки железнодорожный
 
 ### Коломна
-- **URL:** `https://салютград.рф/kolomna`
+- **URL:** `https://salutgrad.ru/kolomna`
 - **Основные запросы:** купить салюты в коломне, фейерверки коломна
 
 ### Электросталь
-- **URL:** `https://салютград.рф/elektrostal`
+- **URL:** `https://salutgrad.ru/elektrostal`
 - **Основные запросы:** купить салюты в электростали, фейерверки электросталь
 
 ### Жуковский
-- **URL:** `https://салютград.рф/zhukovskiy`
+- **URL:** `https://salutgrad.ru/zhukovskiy`
 - **Основные запросы:** купить салюты в жуковском, фейерверки жуковский
 
 ### Ногинск
-- **URL:** `https://салютград.рф/noginsk`
+- **URL:** `https://salutgrad.ru/noginsk`
 - **Основные запросы:** купить салюты в ногинске, фейерверки ногинск
 
 ---

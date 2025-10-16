@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getAllCitySlugs } from '@/lib/cities';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://салютград.рф';
+  const baseUrl = 'https://salutgrad.ru';
 
   // Static pages
   const staticPages = [

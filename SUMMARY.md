@@ -51,26 +51,26 @@ app/sitemap.ts                          # Добавлены городские 
 
 После деплоя будут работать следующие страницы:
 
-1. https://салютград.рф/moskva
-2. https://салютград.рф/balashiha
-3. https://салютград.рф/podolsk
-4. https://салютград.рф/himki
-5. https://салютград.рф/mytishchi
-6. https://салютград.рф/korolev
-7. https://салютград.рф/lyubertsy
-8. https://салютград.рф/krasnogorsk
-9. https://салютград.рф/odincovo
-10. https://салютград.рф/pushkino
-11. https://салютград.рф/shchelkovo
-12. https://салютград.рф/domodedovo
-13. https://салютград.рф/serpuhov
-14. https://салютград.рф/orekhovo-zuevo
-15. https://салютград.рф/reutov
-16. https://салютград.рф/zheleznodorozhny
-17. https://салютград.рф/kolomna
-18. https://салютград.рф/elektrostal
-19. https://салютград.рф/zhukovskiy
-20. https://салютград.рф/noginsk
+1. https://salutgrad.ru/moskva
+2. https://salutgrad.ru/balashiha
+3. https://salutgrad.ru/podolsk
+4. https://salutgrad.ru/himki
+5. https://salutgrad.ru/mytishchi
+6. https://salutgrad.ru/korolev
+7. https://salutgrad.ru/lyubertsy
+8. https://salutgrad.ru/krasnogorsk
+9. https://salutgrad.ru/odincovo
+10. https://salutgrad.ru/pushkino
+11. https://salutgrad.ru/shchelkovo
+12. https://salutgrad.ru/domodedovo
+13. https://salutgrad.ru/serpuhov
+14. https://salutgrad.ru/orekhovo-zuevo
+15. https://salutgrad.ru/reutov
+16. https://salutgrad.ru/zheleznodorozhny
+17. https://salutgrad.ru/kolomna
+18. https://salutgrad.ru/elektrostal
+19. https://salutgrad.ru/zhukovskiy
+20. https://salutgrad.ru/noginsk
 
 ---
 
@@ -100,8 +100,8 @@ app/sitemap.ts                          # Добавлены городские 
 
 1. **Создать отдельные кампании/группы объявлений** для каждого города
 2. **Вручную указать URL** в настройках объявления:
-   - Для Москвы: `https://салютград.рф/moskva`
-   - Для Балашихи: `https://салютград.рф/balashiha`
+   - Для Москвы: `https://salutgrad.ru/moskva`
+   - Для Балашихи: `https://salutgrad.ru/balashiha`
    - И так далее для каждого города
 
 3. **Настроить гео-таргетинг** в Яндекс Директ:
@@ -139,7 +139,7 @@ app/sitemap.ts                          # Добавлены городские 
 1. ✅ Запустить `npm run build` для генерации всех страниц
 2. ✅ Задеплоить на продакшен
 3. ✅ Проверить, что все страницы открываются
-4. ✅ Проверить sitemap: https://салютград.рф/sitemap.xml
+4. ✅ Проверить sitemap: https://salutgrad.ru/sitemap.xml
 
 ### В течение недели:
 5. 📝 Создать кампании в Яндекс Директ для топ-5 городов

@@ -33,11 +33,11 @@
 
 После деплоя будут доступны следующие страницы:
 
-- `https://салютград.рф/moskva` - Москва
-- `https://салютград.рф/balashiha` - Балашиха
-- `https://салютград.рф/podolsk` - Подольск
-- `https://салютград.рф/himki` - Химки
-- `https://салютград.рф/lyubertsy` - Люберцы
+- `https://salutgrad.ru/moskva` - Москва
+- `https://salutgrad.ru/balashiha` - Балашиха
+- `https://salutgrad.ru/podolsk` - Подольск
+- `https://salutgrad.ru/himki` - Химки
+- `https://salutgrad.ru/lyubertsy` - Люберцы
 - И еще 15 городов...
 
 Полный список смотрите в `lib/cities.ts`.
@@ -91,8 +91,8 @@ npm run build
 
 1. **Создать отдельные кампании/группы для каждого города**
 2. **Указать в настройках объявления прямую ссылку:**
-   - Для Москвы: `https://салютград.рф/moskva`
-   - Для Балашихи: `https://салютград.рф/balashiha`
+   - Для Москвы: `https://salutgrad.ru/moskva`
+   - Для Балашихи: `https://salutgrad.ru/balashiha`
    - И т.д.
 
 3. **Настроить гео-таргетинг** в Яндекс Директ:
@@ -118,7 +118,7 @@ npm run dev
 1. Открываются ли все страницы городов
 2. Корректно ли склоняются названия в H1
 3. Уникальны ли title и description
-4. Доступен ли sitemap: `https://салютград.рф/sitemap.xml`
+4. Доступен ли sitemap: `https://salutgrad.ru/sitemap.xml`
 
 ## Аналитика
 

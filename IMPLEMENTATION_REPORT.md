@@ -124,8 +124,8 @@
 Необходимо:
 1. Создать отдельные кампании для каждого города
 2. Вручную указать URL в каждом объявлении:
-   - Москва → `https://салютград.рф/moskva`
-   - Балашиха → `https://салютград.рф/balashiha`
+   - Москва → `https://salutgrad.ru/moskva`
+   - Балашиха → `https://salutgrad.ru/balashiha`
 3. Настроить гео-таргетинг на конкретный город
 
 **Подробно описано в:** `docs/yandex-direct-setup.md`
@@ -185,7 +185,7 @@ salyut/
 
 4. ✅ Проверить sitemap:
    ```
-   https://салютград.рф/sitemap.xml
+   https://salutgrad.ru/sitemap.xml
    ```
 
 ### Для маркетолога:
@@ -262,9 +262,9 @@ salyut/
 
 ### Открыть страницу города:
 ```
-https://салютград.рф/moskva
-https://салютград.рф/balashiha
-https://салютград.рф/[slug]
+https://salutgrad.ru/moskva
+https://salutgrad.ru/balashiha
+https://salutgrad.ru/[slug]
 ```
 
 ### Добавить новый город:

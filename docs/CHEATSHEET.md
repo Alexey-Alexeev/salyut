@@ -62,7 +62,7 @@ node scripts/test-cities.js
 Заголовок: Купить салюты в [Городе]
 Подзаголовок: Доставка за 1 час | От 500₽
 Текст: Профессиональный запуск. Качественная пиротехника.
-URL: https://салютград.рф/[slug]?utm_source=yandex&utm_medium=cpc&utm_campaign=[город]_main
+URL: https://salutgrad.ru/[slug]?utm_source=yandex&utm_medium=cpc&utm_campaign=[город]_main
 Гео: [Город]
 ```
 

@@ -49,7 +49,7 @@
      ├─ Объявление 1
      │  ├─ Заголовок: "Купить салюты в Москве"
      │  ├─ Текст: "Быстрая доставка. Профессиональный запуск..."
-     │  └─ URL: https://салютград.рф/moskva
+     │  └─ URL: https://salutgrad.ru/moskva
      └─ Ключевые слова:
         ├─ купить салюты в москве
         ├─ заказать фейерверки москва
@@ -60,7 +60,7 @@
      ├─ Объявление 1
      │  ├─ Заголовок: "Купить салюты в Балашихе"
      │  ├─ Текст: "Быстрая доставка в Балашиху..."
-     │  └─ URL: https://салютград.рф/balashiha
+     │  └─ URL: https://salutgrad.ru/balashiha
      └─ Ключевые слова:
         ├─ купить салюты в балашихе
         ├─ заказать фейерверки балашиха
@@ -81,11 +81,11 @@
 ```
 Кампания: "Салюты - Все города МО"
   ├─ Группа: "Москва"
-  │  └─ URL: https://салютград.рф/moskva
+  │  └─ URL: https://salutgrad.ru/moskva
   ├─ Группа: "Балашиха"
-  │  └─ URL: https://салютград.рф/balashiha
+  │  └─ URL: https://salutgrad.ru/balashiha
   └─ Группа: "Подольск"
-     └─ URL: https://салютград.рф/podolsk
+     └─ URL: https://salutgrad.ru/podolsk
 ```
 
 ### Настройка гео-таргетинга
@@ -143,7 +143,7 @@
 Рекомендуется добавлять UTM-метки к URL:
 
 ```
-https://салютград.рф/moskva?utm_source=yandex&utm_medium=cpc&utm_campaign=moskva_fireworks&utm_content=ad1
+https://salutgrad.ru/moskva?utm_source=yandex&utm_medium=cpc&utm_campaign=moskva_fireworks&utm_content=ad1
 ```
 
 Пример для разных городов:
@@ -215,9 +215,9 @@ https://салютград.рф/moskva?utm_source=yandex&utm_medium=cpc&utm_camp
 Текст: Профессиональный запуск на праздник. Качественная пиротехника. 
 Гарантия безопасности. Консультация бесплатно!
 
-URL: https://салютград.рф/balashiha?utm_source=yandex&utm_medium=cpc&utm_campaign=balashiha
+URL: https://salutgrad.ru/balashiha?utm_source=yandex&utm_medium=cpc&utm_campaign=balashiha
 
-Отображаемая ссылка: салютград.рф/Балашиха
+Отображаемая ссылка: salutgrad.ru/Балашиха
 
 Быстрые ссылки:
 - Каталог → /catalog

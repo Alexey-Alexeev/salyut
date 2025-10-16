@@ -15,19 +15,19 @@ export const metadata: Metadata = {
     title: 'Профессиональный запуск салютов',
     description:
       'Профессиональный запуск салютов и фейерверков в Москве и МО. Безопасная пиротехника для свадеб, дней рождения, корпоративов и ваших праздников.',
-    url: 'https://салютград.рф/services/launching',
+    url: 'https://salutgrad.ru/services/launching',
     siteName: 'СалютГрад',
     type: 'website',
     locale: 'ru_RU',
     images: [
       {
-        url: 'https://салютград.рф/images/services-bg.webp',
+        url: 'https://salutgrad.ru/images/services-bg.webp',
         width: 1200,
         height: 630,
         alt: 'Профессиональный запуск салютов - СалютГрад',
       },
       {
-        url: 'https://салютград.рф/images/services-bg.jpg',
+        url: 'https://salutgrad.ru/images/services-bg.jpg',
         width: 1200,
         height: 630,
         alt: 'Профессиональный запуск салютов - СалютГрад',
@@ -39,10 +39,10 @@ export const metadata: Metadata = {
     title: 'Профессиональный запуск салютов',
     description:
       'Профессиональный запуск салютов и фейерверков в Москве и МО. Безопасная пиротехника для свадеб, дней рождения, корпоративов и ваших праздников.',
-    images: ['https://салютград.рф/images/services-bg.webp', 'https://салютград.рф/images/services-bg.jpg'],
+    images: ['https://salutgrad.ru/images/services-bg.webp', 'https://salutgrad.ru/images/services-bg.jpg'],
   },
   alternates: {
-    canonical: 'https://салютград.рф/services/launching',
+    canonical: 'https://salutgrad.ru/services/launching',
   },
   robots: {
     index: true,

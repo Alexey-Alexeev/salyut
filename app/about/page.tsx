@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     locale: 'ru_RU',
   },
   alternates: {
-    canonical: 'https://салютград.рф/about',
+    canonical: 'https://salutgrad.ru/about',
   },
 };
 

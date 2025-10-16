@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: {
     default: 'СалютГрад - Фейерверки и салюты в Москве и МО',
-    template: '%s | СалютГрад.рф'
+    template: '%s | СалютГрад'
   },
   description:
     'Лучшие фейерверки, салюты и пиротехника в Москве. Быстрая доставка по Москве и МО, профессиональный запуск салютов. Качественная пиротехника для незабываемых праздников!',
@@ -77,7 +77,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="256x256" href="/icons/icon_256.png" />
         <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon_512.png" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="canonical" href="https://салютград.рф" />
+        <link rel="canonical" href="https://salutgrad.ru" />
         {/* Preload critical hero images */}
         <link rel="preload" as="image" href="/images/hero-bg.webp" />
         <link rel="preload" as="image" href="/images/hero-bg2.webp" />
@@ -85,12 +85,12 @@ export default function RootLayout({
         <meta property="og:site_name" content="СалютГрад" />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="ru_RU" />
-        <meta property="og:image" content="https://салютград.рф/icons/og_image.png" />
+        <meta property="og:image" content="https://salutgrad.ru/icons/og_image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@салютград" />
-        <meta name="twitter:image" content="https://салютград.рф/icons/twitter_card.png" />
+        <meta name="twitter:image" content="https://salutgrad.ru/icons/twitter_card.png" />
         <meta name="geo.region" content="RU-MOW" />
         <meta name="geo.placename" content="Москва" />
         <meta name="geo.position" content="55.7558;37.6176" />

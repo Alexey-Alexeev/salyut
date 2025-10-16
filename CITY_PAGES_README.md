@@ -59,7 +59,7 @@ npm start
 
 После сборки проверьте sitemap:
 - Локально: http://localhost:3000/sitemap.xml
-- На проде: https://салютград.рф/sitemap.xml
+- На проде: https://salutgrad.ru/sitemap.xml
 
 ## 📁 Структура файлов
 
@@ -94,8 +94,8 @@ scripts/
 
 1. **Создать отдельные кампании** для каждого города
 2. **Вручную указать URL** в каждом объявлении:
-   - Москва → `https://салютград.рф/moskva`
-   - Балашиха → `https://салютград.рф/balashiha`
+   - Москва → `https://salutgrad.ru/moskva`
+   - Балашиха → `https://salutgrad.ru/balashiha`
 3. **Настроить гео-таргетинг** на конкретный город
 
 ### Пример объявления для Балашихи
@@ -107,7 +107,7 @@ scripts/
 Текст: Профессиональный запуск. Качественная пиротехника. 
 Гарантия безопасности!
 
-URL: https://салютград.рф/balashiha
+URL: https://salutgrad.ru/balashiha
 ```
 
 **📖 Подробная инструкция:** `docs/yandex-direct-setup.md`
@@ -176,8 +176,8 @@ node scripts/test-cities.js
 ### UTM-метки для отслеживания:
 
 ```
-https://салютград.рф/moskva?utm_source=yandex&utm_medium=cpc&utm_campaign=moskva_fireworks
-https://салютград.рф/balashiha?utm_source=yandex&utm_medium=cpc&utm_campaign=balashiha_fireworks
+https://salutgrad.ru/moskva?utm_source=yandex&utm_medium=cpc&utm_campaign=moskva_fireworks
+https://salutgrad.ru/balashiha?utm_source=yandex&utm_medium=cpc&utm_campaign=balashiha_fireworks
 ```
 
 ## 🎨 Что видит пользователь

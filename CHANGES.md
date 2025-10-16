@@ -118,29 +118,29 @@ node scripts/test-cities.js
 ## Что будет работать после деплоя
 
 **20 новых URL:**
-- https://салютград.рф/moskva
-- https://салютград.рф/balashiha
-- https://салютград.рф/podolsk
-- https://салютград.рф/himki
-- https://салютград.рф/mytishchi
-- https://салютград.рф/korolev
-- https://салютград.рф/lyubertsy
-- https://салютград.рф/krasnogorsk
-- https://салютград.рф/odincovo
-- https://салютград.рф/pushkino
-- https://салютград.рф/shchelkovo
-- https://салютград.рф/domodedovo
-- https://салютград.рф/serpuhov
-- https://салютград.рф/orekhovo-zuevo
-- https://салютград.рф/reutov
-- https://салютград.рф/zheleznodorozhny
-- https://салютград.рф/kolomna
-- https://салютград.рф/elektrostal
-- https://салютград.рф/zhukovskiy
-- https://салютград.рф/noginsk
+- https://salutgrad.ru/moskva
+- https://salutgrad.ru/balashiha
+- https://salutgrad.ru/podolsk
+- https://salutgrad.ru/himki
+- https://salutgrad.ru/mytishchi
+- https://salutgrad.ru/korolev
+- https://salutgrad.ru/lyubertsy
+- https://salutgrad.ru/krasnogorsk
+- https://salutgrad.ru/odincovo
+- https://salutgrad.ru/pushkino
+- https://salutgrad.ru/shchelkovo
+- https://salutgrad.ru/domodedovo
+- https://salutgrad.ru/serpuhov
+- https://salutgrad.ru/orekhovo-zuevo
+- https://salutgrad.ru/reutov
+- https://salutgrad.ru/zheleznodorozhny
+- https://salutgrad.ru/kolomna
+- https://salutgrad.ru/elektrostal
+- https://salutgrad.ru/zhukovskiy
+- https://salutgrad.ru/noginsk
 
 **Обновленный sitemap:**
-- https://салютград.рф/sitemap.xml
+- https://salutgrad.ru/sitemap.xml
 
 ---
 

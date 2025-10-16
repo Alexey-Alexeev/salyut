@@ -46,11 +46,11 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
         openGraph: {
             title,
             description,
-            url: `https://салютград.рф/${params.city}`,
+            url: `https://salutgrad.ru/${params.city}`,
             siteName: 'СалютГрад',
             images: [
                 {
-                    url: 'https://салютград.рф/images/hero-bg.webp',
+                    url: 'https://salutgrad.ru/images/hero-bg.webp',
                     width: 1200,
                     height: 630,
                     alt: `Фейерверки и салюты в ${cityData.nameLocative} - СалютГрад`,
@@ -63,10 +63,10 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
             card: 'summary_large_image',
             title,
             description,
-            images: ['https://салютград.рф/images/hero-bg.webp'],
+            images: ['https://salutgrad.ru/images/hero-bg.webp'],
         },
         alternates: {
-            canonical: `https://салютград.рф/${params.city}`,
+            canonical: `https://salutgrad.ru/${params.city}`,
         },
         robots: {
             index: true,
@@ -147,7 +147,7 @@ export default async function CityPage({ params }: CityPageProps) {
                         "@type": ["LocalBusiness", "Store"],
                         "name": `СалютГрад - ${cityData.name}`,
                         "description": `Лучшие фейерверки, салюты и пиротехника в ${cityData.nameLocative}. Быстрая доставка, профессиональный запуск, гарантия качества.`,
-                        "url": `https://салютград.рф/${params.city}`,
+                        "url": `https://salutgrad.ru/${params.city}`,
                         "telephone": "+7 (977) 360-20-08",
                         "address": {
                             "@type": "PostalAddress",
@@ -189,7 +189,7 @@ export default async function CityPage({ params }: CityPageProps) {
                             "@type": "Product",
                             "name": product.name,
                             "description": product.description || `Качественный ${product.name} для праздников в ${cityData.nameLocative}`,
-                            "image": product.images?.[0] || "https://салютград.рф/images/product-placeholder.jpg",
+                            "image": product.images?.[0] || "https://salutgrad.ru/images/product-placeholder.jpg",
                             "brand": {
                                 "@type": "Brand",
                                 "name": "СалютГрад"
@@ -204,7 +204,7 @@ export default async function CityPage({ params }: CityPageProps) {
                                     "@type": "Organization",
                                     "name": "СалютГрад"
                                 },
-                                "url": `https://салютград.рф/product/${product.slug}`,
+                                "url": `https://salutgrad.ru/product/${product.slug}`,
                                 "areaServed": {
                                     "@type": "City",
                                     "name": cityData.name
@@ -250,11 +250,11 @@ export default async function CityPage({ params }: CityPageProps) {
                             "@type": "VideoObject",
                             "name": video.title || `Видеоотзыв о фейерверках в ${cityData.nameLocative}`,
                             "description": `Реальные отзывы клиентов о наших фейерверках в ${cityData.nameLocative}`,
-                            "thumbnailUrl": video.thumbnail_url || "https://салютград.рф/images/video-thumb.jpg",
+                            "thumbnailUrl": video.thumbnail_url || "https://salutgrad.ru/images/video-thumb.jpg",
                             "duration": "PT30S",
                             "uploadDate": video.created_at || new Date().toISOString(),
-                            "contentUrl": video.video_url || "https://салютград.рф/videos/review.mp4",
-                            "embedUrl": video.embed_url || `https://салютград.рф/embed/${video.id}`
+                            "contentUrl": video.video_url || "https://salutgrad.ru/videos/review.mp4",
+                            "embedUrl": video.embed_url || `https://salutgrad.ru/embed/${video.id}`
                         }))
                     })
                 }}

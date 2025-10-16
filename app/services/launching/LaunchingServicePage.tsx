@@ -49,7 +49,7 @@ export default function LaunchingServicePage({ videoReviews }: LaunchingServiceP
             "@type": "LocalBusiness",
             "name": "СалютГрад - Профессиональный запуск салютов",
             "description": "Профессиональный запуск салютов и фейерверков в Москве и МО. Безопасная пиротехника для свадеб, дней рождения, корпоративов.",
-            "url": "https://салютград.рф/services/launching",
+            "url": "https://salutgrad.ru/services/launching",
             "telephone": "+7 (977) 360-20-08",
             "address": {
               "@type": "PostalAddress",

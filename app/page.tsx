@@ -19,11 +19,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Фейерверки и салюты в Москве и МО',
     description: 'Купить фейерверки в Москве с доставкой. Профессиональный запуск салюта на свадьбу и день рождения. Лучшие салюты и пиротехника!',
-    url: 'https://салютград.рф',
+    url: 'https://salutgrad.ru',
     siteName: 'СалютГрад',
     images: [
       {
-        url: 'https://салютград.рф/images/hero-bg.webp',
+        url: 'https://salutgrad.ru/images/hero-bg.webp',
         width: 1200,
         height: 630,
         alt: 'Фейерверки и салюты - СалютГрад',
@@ -36,10 +36,10 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Фейерверки и салюты в Москве и МО',
     description: 'Купить фейерверки в Москве и МО с доставкой. Профессиональный запуск салюта на свадьбу и день рождения.',
-    images: ['https://салютград.рф/images/hero-bg.webp'],
+    images: ['https://salutgrad.ru/images/hero-bg.webp'],
   },
   alternates: {
-    canonical: 'https://салютград.рф',
+    canonical: 'https://salutgrad.ru',
   },
   robots: {
     index: true,
@@ -110,7 +110,7 @@ export default async function HomePage() {
             "@type": ["LocalBusiness", "Store"],
             "name": "СалютГрад",
             "description": "Лучшие фейерверки, салюты и пиротехника в Москве и МО. Быстрая доставка, профессиональный запуск, гарантия качества.",
-            "url": "https://салютград.рф",
+            "url": "https://salutgrad.ru",
             "telephone": "+7 (977) 360-20-08",
             "address": {
               "@type": "PostalAddress",
@@ -154,7 +154,7 @@ export default async function HomePage() {
               "@type": "Product",
               "name": product.name,
               "description": product.description || `Качественный ${product.name} для праздников`,
-              "image": product.images?.[0] || "https://салютград.рф/images/product-placeholder.jpg",
+              "image": product.images?.[0] || "https://salutgrad.ru/images/product-placeholder.jpg",
               "brand": {
                 "@type": "Brand",
                 "name": "СалютГрад"
@@ -169,7 +169,7 @@ export default async function HomePage() {
                   "@type": "Organization",
                   "name": "СалютГрад"
                 },
-                "url": `https://салютград.рф/product/${product.slug}`
+                "url": `https://salutgrad.ru/product/${product.slug}`
               }
             })),
             "aggregateRating": {
@@ -224,11 +224,11 @@ export default async function HomePage() {
               "@type": "VideoObject",
               "name": video.title || "Видеоотзыв о фейерверках",
               "description": "Реальные отзывы клиентов о наших фейерверках",
-              "thumbnailUrl": video.thumbnail_url || "https://салютград.рф/images/video-thumb.jpg",
+              "thumbnailUrl": video.thumbnail_url || "https://salutgrad.ru/images/video-thumb.jpg",
               "duration": "PT30S",
               "uploadDate": video.created_at || new Date().toISOString(),
-              "contentUrl": video.video_url || "https://салютград.рф/videos/review.mp4",
-              "embedUrl": video.embed_url || `https://салютград.рф/embed/${video.id}`
+              "contentUrl": video.video_url || "https://salutgrad.ru/videos/review.mp4",
+              "embedUrl": video.embed_url || `https://salutgrad.ru/embed/${video.id}`
             }))
           })
         }}

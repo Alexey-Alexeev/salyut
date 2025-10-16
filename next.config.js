@@ -21,6 +21,8 @@ const nextConfig = {
   generateBuildId: async () => {
     return 'build-' + Date.now()
   },
+  // Redirects are handled at DNS/hosting level
+  // No application-level redirects needed
 };
 
 module.exports = nextConfig;

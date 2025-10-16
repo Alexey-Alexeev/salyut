@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: 'Корзина - Фейерверки и салюты',
     description:
       'Оформление заказа фейерверков и салютов. Быстрая доставка по Москве и МО. Профессиональный запуск салютов.',
-    url: 'https://салютград.рф/cart',
+    url: 'https://salutgrad.ru/cart',
     siteName: 'СалютГрад',
     type: 'website',
     locale: 'ru_RU',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
       'Оформление заказа фейерверков и салютов. Быстрая доставка по Москве и МО.',
   },
   alternates: {
-    canonical: 'https://салютград.рф/cart',
+    canonical: 'https://salutgrad.ru/cart',
   },
   robots: {
     index: false,

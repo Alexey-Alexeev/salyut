@@ -879,7 +879,7 @@ export default function CartPageClient() {
                         "@type": "WebPage",
                         "name": "Корзина - Фейерверки и салюты",
                         "description": "Оформление заказа фейерверков и салютов. Быстрая доставка по Москве и МО. Профессиональный запуск салютов.",
-                        "url": "https://салютград.рф/cart",
+                        "url": "https://salutgrad.ru/cart",
                         "breadcrumb": {
                             "@type": "BreadcrumbList",
                             "itemListElement": [
@@ -887,13 +887,13 @@ export default function CartPageClient() {
                                     "@type": "ListItem",
                                     "position": 1,
                                     "name": "Главная",
-                                    "item": "https://салютград.рф"
+                                    "item": "https://salutgrad.ru"
                                 },
                                 {
                                     "@type": "ListItem",
                                     "position": 2,
                                     "name": "Корзина",
-                                    "item": "https://салютград.рф/cart"
+                                    "item": "https://salutgrad.ru/cart"
                                 }
                             ]
                         },
@@ -904,7 +904,7 @@ export default function CartPageClient() {
                             "merchant": {
                                 "@type": "Organization",
                                 "name": "СалютГрад",
-                                "url": "https://салютград.рф",
+                                "url": "https://salutgrad.ru",
                                 "telephone": "+7 (977) 360-20-08",
                                 "address": {
                                     "@type": "PostalAddress",
@@ -929,7 +929,7 @@ export default function CartPageClient() {
                                     "@type": "Product",
                                     "name": item.name,
                                     "description": `Фейерверк ${item.name}`,
-                                    "image": item.image || "https://салютград.рф/images/product-placeholder.jpg",
+                                    "image": item.image || "https://salutgrad.ru/images/product-placeholder.jpg",
                                     "offers": {
                                         "@type": "Offer",
                                         "price": item.price,
@@ -945,7 +945,7 @@ export default function CartPageClient() {
                             "potentialAction": [
                                 {
                                     "@type": "BuyAction",
-                                    "target": "https://салютград.рф/cart",
+                                    "target": "https://salutgrad.ru/cart",
                                     "priceSpecification": {
                                         "@type": "PriceSpecification",
                                         "priceCurrency": "RUB",

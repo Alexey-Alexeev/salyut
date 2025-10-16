@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Доставка фейерверков в Москве и МО',
     description: 'Быстрая доставка фейерверков и салютов по Москве и Московской области. Самовывоз в Балашихе. Фиксированная стоимость, профессиональная упаковка.',
-    url: 'https://салютград.рф/delivery',
+    url: 'https://salutgrad.ru/delivery',
     siteName: 'СалютГрад',
     type: 'website',
     locale: 'ru_RU',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: 'Быстрая доставка фейерверков и салютов по Москве и Московской области. Самовывоз в Балашихе.',
   },
   alternates: {
-    canonical: 'https://салютград.рф/delivery',
+    canonical: 'https://salutgrad.ru/delivery',
   },
   robots: {
     index: true,
@@ -66,7 +66,7 @@ export default function DeliveryPage() {
             "@type": ["LocalBusiness", "Store"],
             "name": "СалютГрад",
             "description": "Доставка фейерверков и салютов по Москве и Московской области",
-            "url": "https://салютград.рф/delivery",
+            "url": "https://salutgrad.ru/delivery",
             "telephone": "+7 (977) 360-20-08",
             "address": {
               "@type": "PostalAddress",
