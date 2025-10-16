@@ -21,17 +21,15 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path: salyut/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('salyut/package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        working-directory: salyut
         run: npm ci
 
       - name: Build project
-        working-directory: salyut
         run: npm run build && npm run export
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -47,7 +45,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          local-dir: ./salyut/out/
+          local-dir: ./out/
           exclude: |
             **/.git*
             **/.git**
