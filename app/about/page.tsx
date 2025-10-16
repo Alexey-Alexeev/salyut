@@ -54,7 +54,9 @@ export default async function AboutPage() {
             name: 'СалютГрад',
             description:
               'Качественная пиротехника с гарантией безопасности и профессиональным запуском',
-            url: 'https://your-domain.com/about',
+            url: 'https://salutgrad.ru/about',
+            email: 'info@salutgrad.ru',
+            telephone: '+7 (977) 360-20-08',
             foundingDate: '2020',
             areaServed: 'RU',
             hasOfferCatalog: {

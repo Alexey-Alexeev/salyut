@@ -376,7 +376,7 @@ export default function TermsPage() {
                                         По всем вопросам, связанным с настоящим Соглашением, вы можете обращаться к Администрации:
                                     </p>
 
-                                    <div className="grid md:grid-cols-2 gap-6">
+                                    <div className="grid md:grid-cols-3 gap-6">
                                         <div className="bg-white rounded-lg p-4 text-center">
                                             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                                                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -385,6 +385,16 @@ export default function TermsPage() {
                                             </div>
                                             <h4 className="font-semibold text-gray-900 mb-2">Телефон</h4>
                                             <p className="text-sm text-gray-700">+7 (977) 360-20-08</p>
+                                        </div>
+
+                                        <div className="bg-white rounded-lg p-4 text-center">
+                                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                            <h4 className="font-semibold text-gray-900 mb-2">Email</h4>
+                                            <p className="text-sm text-gray-700">info@salutgrad.ru</p>
                                         </div>
 
                                         <div className="bg-white rounded-lg p-4 text-center">

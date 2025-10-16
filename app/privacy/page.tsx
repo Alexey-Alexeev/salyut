@@ -486,7 +486,7 @@ export default function PrivacyPage() {
                                     Все предложения, вопросы, запросы и иные обращения по поводу настоящей Политики и использования своих персональных данных Пользователь вправе направлять Сайту:
                                 </p>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                                     <div className="bg-gray-50 rounded-lg p-3 sm:p-4 text-center">
                                         <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
                                             <svg className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -495,6 +495,16 @@ export default function PrivacyPage() {
                                         </div>
                                         <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Телефон</h4>
                                         <p className="text-xs sm:text-sm text-gray-700 break-words">+7 (977) 360-20-08</p>
+                                    </div>
+
+                                    <div className="bg-gray-50 rounded-lg p-3 sm:p-4 text-center">
+                                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                                            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                        <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Email</h4>
+                                        <p className="text-xs sm:text-sm text-gray-700 break-words">info@salutgrad.ru</p>
                                     </div>
 
                                     <div className="bg-gray-50 rounded-lg p-3 sm:p-4 text-center">

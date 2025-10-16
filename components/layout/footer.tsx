@@ -109,6 +109,17 @@ export async function Footer() {
                 </a>
               </div>
 
+              {/* Email - кликабельный */}
+              <div className="flex items-center space-x-2">
+                <Mail className="size-4 text-orange-600" />
+                <a
+                  href="mailto:info@salutgrad.ru"
+                  className="text-orange-600 hover:text-orange-700 font-medium transition-colors"
+                >
+                  info@salutgrad.ru
+                </a>
+              </div>
+
               {/* Кнопки мессенджеров */}
               <div className="flex flex-col gap-2">
                 <p className="text-xs text-gray-600 mb-1">Связаться с нами:</p>

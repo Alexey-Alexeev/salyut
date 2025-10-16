@@ -48,6 +48,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://salutgrad.ru',
   },
+  other: {
+    'contact:email': 'info@salutgrad.ru',
+    'contact:phone_number': '+7 (977) 360-20-08',
+  },
   robots: {
     index: true,
     follow: true,
