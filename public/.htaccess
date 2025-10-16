@@ -68,8 +68,7 @@ Header always set X-Frame-Options "SAMEORIGIN"
 # Безопасная политика Referer
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
-# Canonical-домен (для SEO)
-Header always set Link "<https://salutgrad.ru/>; rel=\"canonical\""
+# Canonical-домен убран - Next.js сам управляет canonical URL
 
 # Запрещаем индексацию системных файлов
 <FilesMatch "(\.(env|git|htaccess|xml|json|lock|config|log|sh|sql))$">
