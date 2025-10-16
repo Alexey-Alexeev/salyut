@@ -113,9 +113,11 @@ interface Product {
 
 interface ProductCardProps {
   product: Product;
+  isFirst?: boolean;
+  isAboveFold?: boolean;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, isFirst = false, isAboveFold = false }: ProductCardProps) {
   const [quantity, setQuantity] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [isMounted, setIsMounted] = useState(false);
@@ -125,6 +127,9 @@ export function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore(state => state.addItem);
   const updateQuantity = useCartStore(state => state.updateQuantity);
   const removeItem = useCartStore(state => state.removeItem);
+
+  // URL изображения
+  const imageUrl = product.images?.[0] || '';
 
   // Синхронизируем локальное состояние с глобальным после монтирования
   useEffect(() => {
@@ -140,7 +145,7 @@ export function ProductCard({ product }: ProductCardProps) {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images?.[0] || '/placeholder-product.jpg',
+      image: imageUrl || '/placeholder-product.jpg',
     });
     setQuantity(1);
     setInputValue('1');
@@ -252,15 +257,41 @@ export function ProductCard({ product }: ProductCardProps) {
         <Link href={`/product/${product.slug}`}>
           <div className="relative aspect-square overflow-hidden bg-gray-100">
             {product.images && product.images.length > 0 ? (
-              <Image
-                src={product.images[0]}
-                alt={product.name}
-                fill
-                className="object-cover transition-transform duration-200 group-hover:scale-105"
-                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                placeholder="blur"
-                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmM2Y0ZjYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU3ZWIiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0idXJsKCNncmFkKSIvPjwvc3ZnPg=="
-              />
+              isFirst ? (
+                // LCP изображение с максимальным приоритетом
+                <img
+                  src={imageUrl}
+                  alt={product.name}
+                  width={400}
+                  height={400}
+                  fetchPriority="high"
+                  loading="eager"
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+                />
+              ) : isAboveFold ? (
+                // Above the fold - высокий приоритет
+                <img
+                  src={imageUrl}
+                  alt={product.name}
+                  width={400}
+                  height={400}
+                  loading="eager"
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+                />
+              ) : (
+                // Below the fold - ленивая загрузка
+                <img
+                  src={imageUrl}
+                  alt={product.name}
+                  width={400}
+                  height={400}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+                />
+              )
             ) : product.video_url ? (() => {
               const videoInfo = getVideoInfo(product.video_url);
               return videoInfo.embedUrl ? (
@@ -315,7 +346,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {product.characteristics && (() => {
           const characteristics = getKeyCharacteristics(product.characteristics);
           return characteristics.length > 0 && (
-            <div className="mb-3">
+            <div className="mb-3 min-h-[5rem]">
               <div className="max-h-32 overflow-y-auto space-y-1 pr-1">
                 {characteristics.map((char, index) => (
                   <div key={index} className="flex justify-between items-center text-[11px] md:text-base">

@@ -62,6 +62,10 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <head>
+        {/* DNS prefetch и preconnect для внешних ресурсов */}
+        <link rel="dns-prefetch" href="https://gqnwyyinswqoustiqtpk.supabase.co" />
+        <link rel="preconnect" href="https://gqnwyyinswqoustiqtpk.supabase.co" crossOrigin="anonymous" />
+        
         <link rel="icon" href="/icons/favicon.ico" />
         <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon_16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon_32.png" />
@@ -77,7 +81,6 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="256x256" href="/icons/icon_256.png" />
         <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon_512.png" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="canonical" href="https://salutgrad.ru" />
         {/* Preload critical hero images */}
         <link rel="preload" as="image" href="/images/hero-bg.webp" />
         <link rel="preload" as="image" href="/images/hero-bg2.webp" />

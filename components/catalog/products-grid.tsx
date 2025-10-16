@@ -29,7 +29,6 @@ export function ProductsGrid({
                     ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4'
                     : 'grid-cols-1'
                 }`}
-            style={{ gridAutoRows: '1fr' }}
         >
             {isLoading ? (
                 Array.from({ length: 8 }).map((_, index) => (
@@ -40,8 +39,13 @@ export function ProductsGrid({
                     </div>
                 ))
             ) : (
-                products.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                products.map((product, index) => (
+                    <ProductCard 
+                        key={product.id} 
+                        product={product} 
+                        isFirst={index === 0} 
+                        isAboveFold={index < 8}
+                    />
                 ))
             )}
         </div>

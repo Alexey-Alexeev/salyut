@@ -18,6 +18,22 @@ const nextConfig = {
       include: /edge-functions/,
       use: 'ignore-loader',
     });
+    
+    // Оптимизация бандла
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
+        },
+      },
+    };
+    
     return config;
   },
   images: {
@@ -30,6 +46,11 @@ const nextConfig = {
         pathname: '/storage/v1/object/public/**',
       },
     ],
+    // Агрессивная оптимизация изображений
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 31536000, // 1 год
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   // Принудительное обновление кеша
   generateBuildId: async () => {

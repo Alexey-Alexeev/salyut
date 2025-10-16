@@ -11,6 +11,13 @@ import { CategoriesSection } from '@/components/sections/categories-section';
 import { PopularProductsSection } from '@/components/sections/popular-products-section';
 import { ProfessionalServicesSection } from '@/components/sections/professional-services-section';
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
+import dynamicImport from 'next/dynamic';
+
+// Динамические импорты для тяжелых компонентов
+const DynamicVideoReviewsSection = dynamicImport(() => import('@/components/sections/video-reviews-section').then(mod => ({ default: mod.VideoReviewsSection })), {
+  loading: () => <div className="h-32 bg-gray-100 animate-pulse rounded" />,
+  ssr: true
+});
 
 export const metadata: Metadata = {
   title: 'Фейерверки и салюты в Москве и МО | Качественная пиротехника',
@@ -84,6 +91,8 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-8">
+      {/* Preload критических изображений */}
+      
       <HeroSection />
 
       <DeliverySection />
@@ -96,7 +105,7 @@ export default async function HomePage() {
 
       <ProfessionalServicesSection />
 
-      <VideoReviewsSection videoReviews={videoReviews} />
+      <DynamicVideoReviewsSection videoReviews={videoReviews} />
 
       {/* CTA Section с диалогом */}
       <ConsultationCTA className="pb-8 md:pb-16" />
