@@ -34,7 +34,7 @@ export function HeroSection({ cityName }: HeroSectionProps) {
                         </>
                     ) : (
                         <>
-                            Сверх незабываемые <span className="text-orange-400">салюты</span> для
+                            Незабываемые <span className="text-orange-400">салюты</span> для
                             ваших праздников
                         </>
                     )}
