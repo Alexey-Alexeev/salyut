@@ -446,7 +446,7 @@ export default function ProductClient({
                   </TabsTrigger>
                   {getSafetyRules(category?.name || '') && (
                     <TabsTrigger value="safety" className="flex items-center gap-2">
-                      <Shield className="size-4 sm:size-4 size-5" />
+                      <Shield className="size-5 sm:size-4" />
                       Безопасность
                     </TabsTrigger>
                   )}
