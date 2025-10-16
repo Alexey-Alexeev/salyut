@@ -6,6 +6,14 @@ const nextConfig = {
   // Статический экспорт для хостинга
   output: 'export',
   trailingSlash: true,
+  // Исключаем папку supabase из сборки Next.js
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /supabase\/.*\.ts$/,
+      use: 'ignore-loader',
+    });
+    return config;
+  },
   images: {
     unoptimized: true,
     remotePatterns: [
