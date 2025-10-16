@@ -3,6 +3,9 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'Пользовательское соглашение',
     description: 'Пользовательское соглашение сайта СалютГрад. Условия использования сервиса, права и обязанности пользователей.',
+    alternates: {
+        canonical: 'https://salutgrad.ru/terms',
+    },
     robots: {
         index: true,
         follow: true,

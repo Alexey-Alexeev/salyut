@@ -3,6 +3,9 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'Политика конфиденциальности',
     description: 'Политика конфиденциальности сайта СалютГрад. Обработка персональных данных пользователей.',
+    alternates: {
+        canonical: 'https://salutgrad.ru/privacy',
+    },
     robots: {
         index: true,
         follow: true,
