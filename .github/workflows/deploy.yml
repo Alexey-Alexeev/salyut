@@ -27,14 +27,12 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: |
-          cd salyut
-          npm ci
+        working-directory: salyut
+        run: npm ci
 
       - name: Build project
-        run: |
-          cd salyut
-          npm run build && npm run export
+        working-directory: salyut
+        run: npm run build && npm run export
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
