@@ -306,7 +306,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <CardContent className="flex flex-1 flex-col p-4">
         <Link href={`/product/${product.slug}`}>
-          <h3 className="group-hover:text-primary mb-2 min-h-[2.5rem] line-clamp-2 text-sm md:text-xl font-medium transition-colors">
+          <h3 className="group-hover:text-primary mb-2 min-h-[2.5rem] line-clamp-2 text-sm md:text-xl font-bold transition-colors">
             {product.name}
           </h3>
         </Link>
@@ -319,8 +319,8 @@ export function ProductCard({ product }: ProductCardProps) {
               <div className="max-h-32 overflow-y-auto space-y-1 pr-1">
                 {characteristics.map((char, index) => (
                   <div key={index} className="flex justify-between items-center text-[11px] md:text-base">
-                    <span className="text-gray-600 font-medium truncate mr-2">{char.label}:</span>
-                    <span className="text-gray-900 font-semibold flex-shrink-0">{char.value}</span>
+                    <span className="text-gray-600 font-normal truncate mr-2">{char.label}:</span>
+                    <span className="text-gray-900 font-medium flex-shrink-0">{char.value}</span>
                   </div>
                 ))}
               </div>
