@@ -27,9 +27,6 @@ export const metadata: Metadata = {
     title: 'Доставка фейерверков в Москве и МО',
     description: 'Быстрая доставка фейерверков и салютов по Москве и Московской области. Самовывоз в Балашихе.',
   },
-  alternates: {
-    canonical: 'https://salutgrad.ru/delivery',
-  },
   robots: {
     index: true,
     follow: true,
