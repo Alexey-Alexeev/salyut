@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
     return {
         title,
         description,
-        keywords: `купить фейерверки в ${cityData.nameLocative}, салюты в ${cityData.nameLocative}, пиротехника в ${cityData.nameLocative}, заказать салют в ${cityData.nameLocative}, доставка фейерверков ${cityData.name}, профессиональный запуск салюта ${cityData.name}`,
+        keywords: `купить фейерверки в ${cityData.nameLocative}, салюты в ${cityData.nameLocative}, пиротехника в ${cityData.nameLocative}, заказать салют в ${cityData.nameLocative}, доставка фейерверков ${cityData.name}, безопасный запуск салюта ${cityData.name}`,
         openGraph: {
             title,
             description,
@@ -146,7 +146,7 @@ export default async function CityPage({ params }: CityPageProps) {
                         "@context": "https://schema.org",
                         "@type": ["LocalBusiness", "Store"],
                         "name": `СалютГрад - ${cityData.name}`,
-                        "description": `Лучшие фейерверки, салюты и пиротехника в ${cityData.nameLocative}. Быстрая доставка, профессиональный запуск, гарантия качества.`,
+                        "description": `Лучшие фейерверки, салюты и пиротехника в ${cityData.nameLocative}. Быстрая доставка, безопасный запуск, гарантия качества.`,
                         "url": `https://salutgrad.ru/${params.city}`,
                         "telephone": "+7 (977) 360-20-08",
                         "address": {
@@ -230,7 +230,7 @@ export default async function CityPage({ params }: CityPageProps) {
                                     "ratingValue": "5",
                                     "bestRating": "5"
                                 },
-                                "reviewBody": `Заказывали салют на свадьбу в ${cityData.nameLocative} - получилось невероятно красиво! Профессиональный запуск, все гости были в восторге.`
+                                "reviewBody": `Заказывали салют на свадьбу в ${cityData.nameLocative} - получилось невероятно красиво! Безопасный запуск, все гости были в восторге.`
                             },
                             {
                                 "@type": "Review",

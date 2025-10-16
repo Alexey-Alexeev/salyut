@@ -66,7 +66,7 @@ export function BenefitsSection() {
                                 <li className="flex items-start gap-3">
                                     <UserCheck className="mt-0.5 size-5 shrink-0 text-green-500" aria-hidden="true" />
                                     <span>
-                                        Профессиональных специалистов с опытом проведения салютов
+                                        Опытных специалистов с многолетним стажем проведения салютов
                                     </span>
                                 </li>
                                 <li className="flex items-start gap-3">

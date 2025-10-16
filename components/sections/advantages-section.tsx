@@ -28,10 +28,10 @@ export function AdvantagesSection() {
                                     className="mx-auto size-16 text-orange-500"
                                     aria-hidden="true"
                                 />
-                                <h3 className="text-xl font-semibold">Профессиональный запуск</h3>
+                                <h3 className="text-xl font-semibold">Безопасный запуск</h3>
                                 <p className="text-muted-foreground flex-grow">
-                                    Доверьте запуск профессионалам! Мы обеспечим полную безопасность,
-                                    соблюдение всех норм и незабываемое шоу. Не рискуйте — оставьте всё профессионалам!
+                                    Закажите услугу запуска! Мы обеспечим соблюдение всех норм,
+                                    качественное исполнение и незабываемое шоу. Не рискуйте — оставьте всё нам!
                                 </p>
                             </CardContent>
                         </Card>

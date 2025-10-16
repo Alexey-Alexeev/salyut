@@ -15,7 +15,7 @@ export function ServicesHeroSection({ onConsultationClick }: ServicesHeroSection
                 <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black" />
                 <Image
                     src="/images/services-bg.webp"
-                    alt="Профессиональный запуск салютов, пиротехника на празднике"
+                    alt="Безопасный запуск салютов, пиротехника на празднике"
                     fill
                     className="object-cover transition-opacity duration-500"
                     priority
@@ -28,10 +28,10 @@ export function ServicesHeroSection({ onConsultationClick }: ServicesHeroSection
 
             <div className="relative z-10 mx-auto max-w-4xl space-y-6 px-4 text-center text-white">
                 <h1 className="rounded-lg bg-black/40 p-4 text-3xl font-bold leading-tight text-white backdrop-blur-sm md:text-4xl lg:text-5xl">
-                    <span className="text-orange-400">Профессиональный</span> запуск салютов
+                    <span className="text-orange-400">Безопасный</span> запуск салютов
                 </h1>
                 <p className="mx-auto max-w-2xl rounded-lg bg-black/30 p-4 text-lg text-white md:text-xl">
-                    Безопасная пиротехника для свадеб, дней рождения, корпоративов и ваших праздников. Работаем в Москве и МО.
+                    Качественная пиротехника для свадеб, дней рождения, корпоративов и ваших праздников. Работаем в Москве и МО.
                 </p>
                 <div className="flex flex-col justify-center gap-4 sm:flex-row">
                     <Button

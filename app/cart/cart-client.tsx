@@ -695,7 +695,7 @@ export default function CartPageClient() {
                                             Дополнительные услуги
                                         </h3>
 
-                                        {/* Профессиональный запуск */}
+                                        {/* Безопасный запуск */}
                                         <div className="rounded-lg border bg-gradient-to-r from-orange-50 to-red-50 p-3 sm:p-4">
                                             <div className="flex items-start gap-2 sm:gap-3">
                                                 <Checkbox
@@ -713,7 +713,7 @@ export default function CartPageClient() {
                                                             htmlFor="professionalLaunch"
                                                             className="cursor-pointer text-xs sm:text-sm font-medium leading-tight"
                                                         >
-                                                            Профессиональный запуск салютов
+                                                            Безопасный запуск салютов
                                                         </Label>
                                                     </div>
                                                     <p className="text-muted-foreground text-[10px] sm:text-xs leading-relaxed">
@@ -879,7 +879,7 @@ export default function CartPageClient() {
                         "@context": "https://schema.org",
                         "@type": "WebPage",
                         "name": "Корзина - Фейерверки и салюты",
-                        "description": "Оформление заказа фейерверков и салютов. Быстрая доставка по Москве и МО. Профессиональный запуск салютов.",
+                        "description": "Оформление заказа фейерверков и салютов. Быстрая доставка по Москве и МО. Безопасный запуск салютов.",
                         "url": "https://salutgrad.ru/cart",
                         "breadcrumb": {
                             "@type": "BreadcrumbList",
