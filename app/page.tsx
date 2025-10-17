@@ -12,6 +12,7 @@ import { PopularProductsSection } from '@/components/sections/popular-products-s
 import { ProfessionalServicesSection } from '@/components/sections/professional-services-section';
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
 import dynamicImport from 'next/dynamic';
+import { BUSINESS_INFO, RATING_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL, getRandomReviewAuthor, getRandomReviewText } from '@/lib/schema-constants';
 
 // Динамические импорты для тяжелых компонентов
 const DynamicVideoReviewsSection = dynamicImport(() => import('@/components/sections/video-reviews-section').then(mod => ({ default: mod.VideoReviewsSection })), {
@@ -121,25 +122,25 @@ export default async function HomePage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": ["LocalBusiness", "Store"],
-            "name": "СалютГрад",
+            "name": BUSINESS_INFO.name,
             "description": "Лучшие фейерверки, салюты и пиротехника в Москве и МО. Быстрая доставка, безопасный запуск, гарантия качества.",
-            "url": "https://salutgrad.ru",
-            "telephone": "+7 (977) 360-20-08",
+            "url": BUSINESS_INFO.url,
+            "telephone": BUSINESS_INFO.telephone,
             "address": {
               "@type": "PostalAddress",
-              "streetAddress": "Рассветная улица, 14",
-              "addressLocality": "деревня Чёрное",
-              "addressRegion": "Московская область",
-              "addressCountry": "RU",
-              "postalCode": "143921"
+              "streetAddress": BUSINESS_INFO.address.streetAddress,
+              "addressLocality": BUSINESS_INFO.address.addressLocality,
+              "addressRegion": BUSINESS_INFO.address.addressRegion,
+              "addressCountry": BUSINESS_INFO.address.addressCountry,
+              "postalCode": BUSINESS_INFO.address.postalCode
             },
             "geo": {
               "@type": "GeoCoordinates",
-              "latitude": "55.740340",
-              "longitude": "38.054064"
+              "latitude": BUSINESS_INFO.geo.latitude,
+              "longitude": BUSINESS_INFO.geo.longitude
             },
-            "openingHours": "Mo-Su 09:00-21:00",
-            "priceRange": "₽₽",
+            "openingHours": BUSINESS_INFO.openingHours,
+            "priceRange": BUSINESS_INFO.priceRange,
             "servedArea": {
               "@type": "GeoCircle",
               "geoMidpoint": {
@@ -158,7 +159,46 @@ export default async function HomePage() {
                 "itemOffered": {
                   "@type": "Product",
                   "name": category.name,
-                  "description": `Фейерверки и пиротехника категории ${category.name}`
+                  "description": `Фейерверки и пиротехника категории ${category.name}`,
+                  "category": category.name,
+                  "brand": {
+                    "@type": "Brand",
+                    "name": "СалютГрад"
+                  },
+                  "offers": {
+                    "@type": "AggregateOffer",
+                    "priceCurrency": "RUB",
+                    "lowPrice": CATEGORY_PRICES.lowPrice,
+                    "highPrice": CATEGORY_PRICES.highPrice,
+                    "offerCount": CATEGORY_PRICES.offerCount,
+                    "availability": "https://schema.org/InStock",
+                    "seller": {
+                      "@type": "Organization",
+                      "name": "СалютГрад"
+                    }
+                  },
+                  "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": RATING_INFO.ratingValue,
+                    "reviewCount": RATING_INFO.reviewCount,
+                    "bestRating": RATING_INFO.bestRating,
+                    "worstRating": RATING_INFO.worstRating
+                  },
+                  "review": [
+                    {
+                      "@type": "Review",
+                      "author": {
+                        "@type": "Person",
+                        "name": getRandomReviewAuthor()
+                      },
+                      "reviewRating": {
+                        "@type": "Rating",
+                        "ratingValue": "5",
+                        "bestRating": "5"
+                      },
+                      "reviewBody": getRandomReviewText()
+                    }
+                  ]
                 },
                 "position": index + 1
               }))
@@ -172,66 +212,88 @@ export default async function HomePage() {
                 "@type": "Brand",
                 "name": "СалютГрад"
               },
-              "category": "Пиротехника",
+              "category": product.category_id ? categoriesData.find(cat => cat.id === product.category_id)?.name || "Пиротехника" : "Пиротехника",
               "offers": {
                 "@type": "Offer",
                 "price": product.price,
                 "priceCurrency": "RUB",
-                "priceValidUntil": "2026-12-31",
+                "priceValidUntil": PRICE_VALID_UNTIL,
                 "availability": product.is_active ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
                 "seller": {
                   "@type": "Organization",
                   "name": "СалютГрад"
                 },
                 "url": `https://salutgrad.ru/product/${product.slug}`
-              }
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": RATING_INFO.ratingValue,
+                "reviewCount": RATING_INFO.reviewCount,
+                "bestRating": RATING_INFO.bestRating,
+                "worstRating": RATING_INFO.worstRating
+              },
+              "review": [
+                {
+                  "@type": "Review",
+                  "author": {
+                    "@type": "Person",
+                    "name": getRandomReviewAuthor()
+                  },
+                  "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": "5",
+                    "bestRating": "5"
+                  },
+                  "reviewBody": getRandomReviewText()
+                }
+              ]
             })),
             "aggregateRating": {
               "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "reviewCount": "127",
-              "bestRating": "5",
-              "worstRating": "1"
+              "ratingValue": RATING_INFO.ratingValue,
+              "reviewCount": RATING_INFO.reviewCount,
+              "bestRating": RATING_INFO.bestRating,
+              "worstRating": RATING_INFO.worstRating
             },
             "review": [
               {
                 "@type": "Review",
                 "author": {
                   "@type": "Person",
-                  "name": "Анна Петрова"
+                  "name": getRandomReviewAuthor()
                 },
                 "reviewRating": {
                   "@type": "Rating",
                   "ratingValue": "5",
                   "bestRating": "5"
                 },
-                "reviewBody": "Заказывали салют на свадьбу - получилось невероятно красиво! Безопасный запуск, все гости были в восторге."
+                "reviewBody": getRandomReviewText()
               },
               {
                 "@type": "Review",
                 "author": {
                   "@type": "Person",
-                  "name": "Михаил Соколов"
+                  "name": getRandomReviewAuthor()
                 },
                 "reviewRating": {
                   "@type": "Rating",
                   "ratingValue": "5",
                   "bestRating": "5"
                 },
-                "reviewBody": "Отличное качество фейерверков, доставка быстрая. Сын был в восторге от салюта на день рождения!"
+                "reviewBody": getRandomReviewText()
               },
               {
                 "@type": "Review",
                 "author": {
                   "@type": "Person",
-                  "name": "Елена Козлова"
+                  "name": getRandomReviewAuthor()
                 },
                 "reviewRating": {
                   "@type": "Rating",
                   "ratingValue": "5",
                   "bestRating": "5"
                 },
-                "reviewBody": "Профессиональный подход, безопасность на высоте. Рекомендую для любых праздников!"
+                "reviewBody": getRandomReviewText()
               }
             ],
             "video": videoReviews.slice(0, 4).map(video => ({

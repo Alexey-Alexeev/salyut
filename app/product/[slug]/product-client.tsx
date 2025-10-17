@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCartStore } from '@/lib/cart-store';
 import { ProductDescription } from '@/components/product-description';
 import { toast } from 'sonner';
+import { RATING_INFO, PRICE_VALID_UNTIL, getRandomReviewAuthor, getRandomReviewText } from '@/lib/schema-constants';
 
 // Типы поддерживаемых видео платформ
 type VideoPlatform = 'rutube' | 'vk' | 'youtube' | 'unknown';
@@ -292,7 +293,7 @@ export default function ProductClient({
               "@type": "Offer",
               "price": product.price,
               "priceCurrency": "RUB",
-              "priceValidUntil": "2026-12-31",
+              "priceValidUntil": PRICE_VALID_UNTIL,
               "availability": "https://schema.org/InStock",
               "seller": {
                 "@type": "Organization",
@@ -312,50 +313,50 @@ export default function ProductClient({
             },
             "aggregateRating": {
               "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "reviewCount": "127",
-              "bestRating": "5",
-              "worstRating": "1"
+              "ratingValue": RATING_INFO.ratingValue,
+              "reviewCount": RATING_INFO.reviewCount,
+              "bestRating": RATING_INFO.bestRating,
+              "worstRating": RATING_INFO.worstRating
             },
             "review": [
               {
                 "@type": "Review",
                 "author": {
                   "@type": "Person",
-                  "name": "Анна Петрова"
+                  "name": getRandomReviewAuthor()
                 },
                 "reviewRating": {
                   "@type": "Rating",
                   "ratingValue": "5",
                   "bestRating": "5"
                 },
-                "reviewBody": "Отличное качество фейерверков! Безопасный запуск, все гости были в восторге от салюта на свадьбе."
+                "reviewBody": getRandomReviewText()
               },
               {
                 "@type": "Review",
                 "author": {
                   "@type": "Person",
-                  "name": "Михаил Соколов"
+                  "name": getRandomReviewAuthor()
                 },
                 "reviewRating": {
                   "@type": "Rating",
                   "ratingValue": "5",
                   "bestRating": "5"
                 },
-                "reviewBody": "Качественная пиротехника, доставка быстрая. Сын был в восторге от салюта на день рождения!"
+                "reviewBody": getRandomReviewText()
               },
               {
                 "@type": "Review",
                 "author": {
                   "@type": "Person",
-                  "name": "Елена Козлова"
+                  "name": getRandomReviewAuthor()
                 },
                 "reviewRating": {
                   "@type": "Rating",
                   "ratingValue": "5",
                   "bestRating": "5"
                 },
-                "reviewBody": "Профессиональный подход, безопасность на высоте. Рекомендую для любых праздников!"
+                "reviewBody": getRandomReviewText()
               }
             ],
             "additionalProperty": product.characteristics ? Object.entries(product.characteristics).map(([key, value]) => ({

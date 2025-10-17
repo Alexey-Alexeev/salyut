@@ -13,6 +13,7 @@ import { CatalogPaginationInfo } from '@/components/catalog/catalog-pagination-i
 import { ProductsGrid } from '@/components/catalog/products-grid';
 import { CatalogEmptyState } from '@/components/catalog/catalog-empty-state';
 import { fetchProducts } from '@/lib/api-client';
+import { RATING_INFO, PRICE_VALID_UNTIL, getRandomReviewAuthor, getRandomReviewText } from '@/lib/schema-constants';
 
 // Типы
 interface Category {
@@ -703,14 +704,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                                     "@type": "Brand",
                                     "name": "СалютГрад"
                                 },
-                                "category": "Пиротехника",
+                                "category": product.category_id ? categories.find(cat => cat.id === product.category_id)?.name || "Пиротехника" : "Пиротехника",
                                 "sku": product.id,
                                 "url": `https://salutgrad.ru/product/${product.slug}`,
                                 "offers": {
                                     "@type": "Offer",
                                     "price": product.price,
                                     "priceCurrency": "RUB",
-                                    "priceValidUntil": "2026-12-31",
+                                    "priceValidUntil": PRICE_VALID_UNTIL,
                                     "availability": "https://schema.org/InStock",
                                     "seller": {
                                         "@type": "Organization",
@@ -720,24 +721,24 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                                 },
                                 "aggregateRating": {
                                     "@type": "AggregateRating",
-                                    "ratingValue": "4.8",
-                                    "reviewCount": "127",
-                                    "bestRating": "5",
-                                    "worstRating": "1"
+                                    "ratingValue": RATING_INFO.ratingValue,
+                                    "reviewCount": RATING_INFO.reviewCount,
+                                    "bestRating": RATING_INFO.bestRating,
+                                    "worstRating": RATING_INFO.worstRating
                                 },
                                 "review": [
                                     {
                                         "@type": "Review",
                                         "author": {
                                             "@type": "Person",
-                                            "name": "Анна Петрова"
+                                            "name": getRandomReviewAuthor()
                                         },
                                         "reviewRating": {
                                             "@type": "Rating",
                                             "ratingValue": "5",
                                             "bestRating": "5"
                                         },
-                                        "reviewBody": "Отличное качество фейерверков! Безопасный запуск, все гости были в восторге от салюта на свадьбе."
+                                        "reviewBody": getRandomReviewText()
                                     }
                                 ]
                             }))

@@ -63,7 +63,7 @@ function checkSchemaStructure() {
           required: true
         },
         { 
-          pattern: /"priceValidUntil":\s*"2026-12-31"/, 
+          pattern: /"priceValidUntil":\s*(PRICE_VALID_UNTIL|"2026-12-31")/, 
           name: 'Price Valid Until',
           required: true
         },
@@ -81,6 +81,11 @@ function checkSchemaStructure() {
           pattern: /"reviewRating":\s*{/, 
           name: 'Review Rating',
           required: true
+        },
+        { 
+          pattern: /"AggregateOffer"/, 
+          name: 'Aggregate Offer for Categories',
+          required: filePath.includes('page.tsx') || filePath.includes('[city]')
         }
       ];
 
