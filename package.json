@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/copy-sitemap.js",
     "start": "next start",
     "lint": "next lint",
     "export": "next export",
@@ -13,7 +13,8 @@
     "db:push": "drizzle-kit push",
     "db:seed": "tsx scripts/seed.ts",
     "test:deploy": "node scripts/test-deploy.js",
-    "test:cities": "node scripts/test-cities.js"
+    "test:cities": "node scripts/test-cities.js",
+    "copy-sitemap": "node scripts/copy-sitemap.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
