@@ -70,6 +70,21 @@ const nextConfig = {
   },
   // Redirects are handled at DNS/hosting level
   // No application-level redirects needed
+  
+  // Статические файлы для PWA
+  async headers() {
+    return [
+      {
+        source: '/manifest.json',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/manifest+json',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
