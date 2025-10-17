@@ -1,39 +1,74 @@
 /**
- * Скрипт для копирования детального sitemap.xml из public в out
- * После сборки Next.js генерирует свой упрощенный sitemap.xml,
- * но нам нужен детальный с video и image разметкой
+ * Скрипт для копирования необходимых файлов из public в out после сборки
+ * 
+ * Копирует:
+ * 1. sitemap.xml - детальный sitemap с video и image разметкой
+ *    (вместо автогенерированного упрощенного от Next.js)
+ * 2. .htaccess - правила для Apache (рег.ру хостинг)
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const sourcePath = path.join(__dirname, '..', 'public', 'sitemap.xml');
-const destPath = path.join(__dirname, '..', 'out', 'sitemap.xml');
-
-try {
-  // Проверяем существование исходного файла
-  if (!fs.existsSync(sourcePath)) {
-    console.error('❌ Файл public/sitemap.xml не найден');
-    process.exit(1);
+const filesToCopy = [
+  {
+    name: 'sitemap.xml',
+    source: path.join(__dirname, '..', 'public', 'sitemap.xml'),
+    dest: path.join(__dirname, '..', 'out', 'sitemap.xml'),
+    required: true
+  },
+  {
+    name: '.htaccess',
+    source: path.join(__dirname, '..', 'public', '.htaccess'),
+    dest: path.join(__dirname, '..', 'out', '.htaccess'),
+    required: true
   }
+];
 
-  // Проверяем существование директории out
-  const outDir = path.dirname(destPath);
-  if (!fs.existsSync(outDir)) {
-    console.error('❌ Директория out/ не найдена. Убедитесь, что сборка завершена');
-    process.exit(1);
+console.log('📦 Копирование файлов после сборки...\n');
+
+let hasErrors = false;
+
+filesToCopy.forEach(file => {
+  try {
+    // Проверяем существование исходного файла
+    if (!fs.existsSync(file.source)) {
+      if (file.required) {
+        console.error(`❌ Файл ${file.name} не найден в public/`);
+        hasErrors = true;
+      } else {
+        console.log(`⚠️  Файл ${file.name} не найден (необязательный)`);
+      }
+      return;
+    }
+
+    // Проверяем существование директории out
+    const outDir = path.dirname(file.dest);
+    if (!fs.existsSync(outDir)) {
+      console.error('❌ Директория out/ не найдена. Убедитесь, что сборка завершена');
+      hasErrors = true;
+      return;
+    }
+
+    // Копируем файл
+    fs.copyFileSync(file.source, file.dest);
+    const stats = fs.statSync(file.dest);
+    const size = stats.size > 1024 
+      ? `${(stats.size / 1024).toFixed(2)} KB`
+      : `${stats.size} bytes`;
+    
+    console.log(`✅ ${file.name} → out/ (${size})`);
+    
+  } catch (error) {
+    console.error(`❌ Ошибка при копировании ${file.name}:`, error.message);
+    hasErrors = true;
   }
+});
 
-  // Копируем файл
-  fs.copyFileSync(sourcePath, destPath);
-  console.log('✅ Sitemap успешно скопирован из public/sitemap.xml в out/sitemap.xml');
-  
-  // Выводим информацию о размере файла
-  const stats = fs.statSync(destPath);
-  console.log(`   Размер файла: ${(stats.size / 1024).toFixed(2)} KB`);
-  
-} catch (error) {
-  console.error('❌ Ошибка при копировании sitemap:', error.message);
+if (hasErrors) {
+  console.log('\n❌ Копирование завершено с ошибками');
   process.exit(1);
+} else {
+  console.log('\n✅ Все файлы успешно скопированы');
 }
 
