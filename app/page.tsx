@@ -177,6 +177,7 @@ export default async function HomePage() {
                 "@type": "Offer",
                 "price": product.price,
                 "priceCurrency": "RUB",
+                "priceValidUntil": "2026-12-31",
                 "availability": product.is_active ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
                 "seller": {
                   "@type": "Organization",

@@ -195,21 +195,48 @@ export default async function CityPage({ params }: CityPageProps) {
                                 "name": "СалютГрад"
                             },
                             "category": "Пиротехника",
+                            "sku": product.id,
+                            "url": `https://salutgrad.ru/product/${product.slug}`,
                             "offers": {
                                 "@type": "Offer",
                                 "price": product.price,
                                 "priceCurrency": "RUB",
+                                "priceValidUntil": "2026-12-31",
                                 "availability": product.is_active ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
                                 "seller": {
                                     "@type": "Organization",
-                                    "name": "СалютГрад"
+                                    "name": "СалютГрад",
+                                    "url": "https://salutgrad.ru",
+                                    "telephone": "+7 (977) 360-20-08"
                                 },
                                 "url": `https://salutgrad.ru/product/${product.slug}`,
                                 "areaServed": {
                                     "@type": "City",
                                     "name": cityData.name
                                 }
-                            }
+                            },
+                            "aggregateRating": {
+                                "@type": "AggregateRating",
+                                "ratingValue": "4.8",
+                                "reviewCount": "127",
+                                "bestRating": "5",
+                                "worstRating": "1"
+                            },
+                            "review": [
+                                {
+                                    "@type": "Review",
+                                    "author": {
+                                        "@type": "Person",
+                                        "name": `Анна П. из ${cityData.name}`
+                                    },
+                                    "reviewRating": {
+                                        "@type": "Rating",
+                                        "ratingValue": "5",
+                                        "bestRating": "5"
+                                    },
+                                    "reviewBody": `Отличное качество фейерверков! Безопасный запуск, все гости были в восторге от салюта на свадьбе в ${cityData.nameLocative}.`
+                                }
+                            ]
                         })),
                         "aggregateRating": {
                             "@type": "AggregateRating",

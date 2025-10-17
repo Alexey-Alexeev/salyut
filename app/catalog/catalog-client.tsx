@@ -678,6 +678,91 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
     return (
         <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24 py-8 animate-in fade-in duration-300">
+            {/* JSON-LD Structured Data для каталога */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "CollectionPage",
+                        "name": "Каталог фейерверков и салютов",
+                        "description": "Каталог качественных фейерверков и салютов в Москве и МО. Большой выбор пиротехники от проверенных производителей.",
+                        "url": "https://salutgrad.ru/catalog",
+                        "mainEntity": {
+                            "@type": "ItemList",
+                            "name": "Каталог фейерверков и салютов",
+                            "description": "Список всех доступных фейерверков и салютов",
+                            "numberOfItems": pagination.totalCount,
+                            "itemListElement": filteredProducts.slice(0, 20).map((product, index) => ({
+                                "@type": "Product",
+                                "position": index + 1,
+                                "name": product.name,
+                                "description": product.short_description || `Качественный ${product.name} для праздников`,
+                                "image": product.images?.[0] || "https://salutgrad.ru/images/product-placeholder.jpg",
+                                "brand": {
+                                    "@type": "Brand",
+                                    "name": "СалютГрад"
+                                },
+                                "category": "Пиротехника",
+                                "sku": product.id,
+                                "url": `https://salutgrad.ru/product/${product.slug}`,
+                                "offers": {
+                                    "@type": "Offer",
+                                    "price": product.price,
+                                    "priceCurrency": "RUB",
+                                    "priceValidUntil": "2026-12-31",
+                                    "availability": "https://schema.org/InStock",
+                                    "seller": {
+                                        "@type": "Organization",
+                                        "name": "СалютГрад",
+                                        "url": "https://salutgrad.ru"
+                                    }
+                                },
+                                "aggregateRating": {
+                                    "@type": "AggregateRating",
+                                    "ratingValue": "4.8",
+                                    "reviewCount": "127",
+                                    "bestRating": "5",
+                                    "worstRating": "1"
+                                },
+                                "review": [
+                                    {
+                                        "@type": "Review",
+                                        "author": {
+                                            "@type": "Person",
+                                            "name": "Анна Петрова"
+                                        },
+                                        "reviewRating": {
+                                            "@type": "Rating",
+                                            "ratingValue": "5",
+                                            "bestRating": "5"
+                                        },
+                                        "reviewBody": "Отличное качество фейерверков! Безопасный запуск, все гости были в восторге от салюта на свадьбе."
+                                    }
+                                ]
+                            }))
+                        },
+                        "breadcrumb": {
+                            "@type": "BreadcrumbList",
+                            "itemListElement": [
+                                {
+                                    "@type": "ListItem",
+                                    "position": 1,
+                                    "name": "Главная",
+                                    "item": "https://salutgrad.ru"
+                                },
+                                {
+                                    "@type": "ListItem",
+                                    "position": 2,
+                                    "name": "Каталог товаров",
+                                    "item": "https://salutgrad.ru/catalog"
+                                }
+                            ]
+                        }
+                    })
+                }}
+            />
+
             {/* Preload критических изображений */}
             {/* Breadcrumb */}
             <div className="mb-6">

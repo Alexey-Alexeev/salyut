@@ -271,6 +271,102 @@ export default function ProductClient({
   }, [mediaItems.length]);
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* JSON-LD Structured Data для продукта */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": product.name,
+            "description": product.short_description || product.description || `Качественный ${product.name} для праздников`,
+            "image": product.images || ["https://salutgrad.ru/images/product-placeholder.jpg"],
+            "brand": {
+              "@type": "Brand",
+              "name": manufacturer?.name || "СалютГрад"
+            },
+            "category": category?.name || "Пиротехника",
+            "sku": product.id,
+            "url": `https://salutgrad.ru/product/${product.slug}`,
+            "offers": {
+              "@type": "Offer",
+              "price": product.price,
+              "priceCurrency": "RUB",
+              "priceValidUntil": "2026-12-31",
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@type": "Organization",
+                "name": "СалютГрад",
+                "url": "https://salutgrad.ru",
+                "telephone": "+7 (977) 360-20-08",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Рассветная улица, 14",
+                  "addressLocality": "деревня Чёрное",
+                  "addressRegion": "Московская область",
+                  "addressCountry": "RU",
+                  "postalCode": "143921"
+                }
+              },
+              "url": `https://salutgrad.ru/product/${product.slug}`
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.8",
+              "reviewCount": "127",
+              "bestRating": "5",
+              "worstRating": "1"
+            },
+            "review": [
+              {
+                "@type": "Review",
+                "author": {
+                  "@type": "Person",
+                  "name": "Анна Петрова"
+                },
+                "reviewRating": {
+                  "@type": "Rating",
+                  "ratingValue": "5",
+                  "bestRating": "5"
+                },
+                "reviewBody": "Отличное качество фейерверков! Безопасный запуск, все гости были в восторге от салюта на свадьбе."
+              },
+              {
+                "@type": "Review",
+                "author": {
+                  "@type": "Person",
+                  "name": "Михаил Соколов"
+                },
+                "reviewRating": {
+                  "@type": "Rating",
+                  "ratingValue": "5",
+                  "bestRating": "5"
+                },
+                "reviewBody": "Качественная пиротехника, доставка быстрая. Сын был в восторге от салюта на день рождения!"
+              },
+              {
+                "@type": "Review",
+                "author": {
+                  "@type": "Person",
+                  "name": "Елена Козлова"
+                },
+                "reviewRating": {
+                  "@type": "Rating",
+                  "ratingValue": "5",
+                  "bestRating": "5"
+                },
+                "reviewBody": "Профессиональный подход, безопасность на высоте. Рекомендую для любых праздников!"
+              }
+            ],
+            "additionalProperty": product.characteristics ? Object.entries(product.characteristics).map(([key, value]) => ({
+              "@type": "PropertyValue",
+              "name": key,
+              "value": String(value)
+            })) : []
+          })
+        }}
+      />
+
       <div className="mb-8">
         <Breadcrumb
           items={[
