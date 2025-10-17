@@ -1,0 +1,1091 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" 
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" 
+        xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Главная страница -->
+  <url>
+    <loc>https://salutgrad.ru/</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://salutgrad.ru/"/>
+  </url>
+  
+  <!-- Основные страницы -->
+  <url>
+    <loc>https://salutgrad.ru/catalog</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/about</loc>
+    <lastmod>2025-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/about"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/delivery</loc>
+    <lastmod>2025-09-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/delivery"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/privacy</loc>
+    <lastmod>2025-08-01</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/privacy"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/terms</loc>
+    <lastmod>2025-08-01</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/terms"/>
+  </url>
+
+  <!-- Категории -->
+  <url>
+    <loc>https://salutgrad.ru/catalog?category=saluty</loc>
+    <lastmod>2025-10-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog?category=saluty"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/catalog?category=petardy</loc>
+    <lastmod>2025-10-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog?category=petardy"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/catalog?category=veernye-saluty</loc>
+    <lastmod>2025-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog?category=veernye-saluty"/>
+  </url>
+
+  <!-- Городские страницы -->
+  <url>
+    <loc>https://salutgrad.ru/moskva</loc>
+    <lastmod>2025-10-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/moskva"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/balashiha</loc>
+    <lastmod>2025-10-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/balashiha"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/domodedovo</loc>
+    <lastmod>2025-10-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/domodedovo"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/elektrostal</loc>
+    <lastmod>2025-10-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/elektrostal"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/himki</loc>
+    <lastmod>2025-10-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/himki"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/kolomna</loc>
+    <lastmod>2025-10-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/kolomna"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/korolev</loc>
+    <lastmod>2025-10-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/korolev"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/krasnogorsk</loc>
+    <lastmod>2025-10-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/krasnogorsk"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/lyubertsy</loc>
+    <lastmod>2025-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/lyubertsy"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/mytishchi</loc>
+    <lastmod>2025-10-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/mytishchi"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/noginsk</loc>
+    <lastmod>2025-10-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/noginsk"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/odincovo</loc>
+    <lastmod>2025-10-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/odincovo"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/orekhovo-zuevo</loc>
+    <lastmod>2025-10-04</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/orekhovo-zuevo"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/podolsk</loc>
+    <lastmod>2025-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/podolsk"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/pushkino</loc>
+    <lastmod>2025-10-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/pushkino"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/reutov</loc>
+    <lastmod>2025-10-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/reutov"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/serpuhov</loc>
+    <lastmod>2025-09-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/serpuhov"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/shchelkovo</loc>
+    <lastmod>2025-09-29</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/shchelkovo"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/zheleznodorozhny</loc>
+    <lastmod>2025-09-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/zheleznodorozhny"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/zhukovskiy</loc>
+    <lastmod>2025-09-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/zhukovskiy"/>
+  </url>
+
+  <!-- Товары (без дубликатов, с полными данными) -->
+  <url>
+    <loc>https://salutgrad.ru/product/fireworks-25</loc>
+    <lastmod>2025-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/fireworks-25.webp</image:loc>
+      <image:title>Фейерверк-25</image:title>
+      <image:caption>Фейерверк 25 залпов — салют премиум-класса с 8 эффектами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/fireworks-25.webp</video:thumbnail_loc>
+      <video:title>Фейерверк-25 - демонстрация</video:title>
+      <video:description>25 залпов калибра 1.25" с 8 эффектами в насыщенном 40-секундном шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/ad3d4fc4d4e092ab84fcb4b8992ccf4a/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/ad3d4fc4d4e092ab84fcb4b8992ccf4a</video:player_loc>
+      <video:duration>40</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/fireworks-25"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/zolotaya-korona</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/zolotaya-korona.webp</image:loc>
+      <image:title>Золотая корона 100 залпов</image:title>
+      <image:caption>Золотая корона — 100 мощных залпов премиум-класса</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/zolotaya-korona.webp</video:thumbnail_loc>
+      <video:title>Золотая корона - демонстрация</video:title>
+      <video:description>100 мощных залпов калибра 1.25" создают 60-секундное шоу премиум-класса</video:description>
+      <video:content_loc>https://rutube.ru/video/958a0f905a0f1c3d026a87f82b5c08c1/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/958a0f905a0f1c3d026a87f82b5c08c1</video:player_loc>
+      <video:duration>60</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotaya-korona"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/derzhava</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/derzhava.webp</image:loc>
+      <image:title>Держава на 36 залпов</image:title>
+      <image:caption>Держава — 36 залпов калибра 0.8" с 5 эффектами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/derzhava.webp</video:thumbnail_loc>
+      <video:title>Держава - демонстрация</video:title>
+      <video:description>36 залпов калибра 0.8" с 5 эффектами создают насыщенное 65-секундное шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/e24d081087c5417015cc73089a3f63f7/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/e24d081087c5417015cc73089a3f63f7</video:player_loc>
+      <video:duration>65</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/derzhava"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/povelitel-molniy</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/povelitel-molniy.webp</image:loc>
+      <image:title>Повелитель молний на 322 залпов</image:title>
+      <image:caption>Повелитель молний — 322 залпа за 2 минуты с 20 уникальными эффектами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/povelitel-molniy.webp</video:thumbnail_loc>
+      <video:title>Повелитель молний - демонстрация</video:title>
+      <video:description>322 залпа за 2 минуты непрерывного могущества с 20 уникальными эффектами</video:description>
+      <video:content_loc>https://rutube.ru/video/289ca8d3e120d78492f9c569298d113a/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/289ca8d3e120d78492f9c569298d113a</video:player_loc>
+      <video:duration>120</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/povelitel-molniy"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/krestonosci</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/krestonosci.webp</image:loc>
+      <image:title>Крестоносцы</image:title>
+      <image:caption>Крестоносцы — 36 залпов калибра 1.25" с 11 благородными эффектами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/krestonosci.webp</video:thumbnail_loc>
+      <video:title>Крестоносцы - демонстрация</video:title>
+      <video:description>36 залпов калибра 1.25" с 11 благородными эффектами для 65-секундной битвы стихий</video:description>
+      <video:content_loc>https://rutube.ru/video/8315b5c7009bc8312109c86dae8d386e/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/8315b5c7009bc8312109c86dae8d386e</video:player_loc>
+      <video:duration>65</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krestonosci"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/Hollywood</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/Hollywood.webp</image:loc>
+      <image:title>Голливуд</image:title>
+      <image:caption>Голливуд — 100 мощных залпов с 11 различными визуальными эффектами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/Hollywood.webp</video:thumbnail_loc>
+      <video:title>Голливуд - демонстрация</video:title>
+      <video:description>100 мощных залпов и 11 различных визуальных эффектов для 95 секунд шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/862c1ce60998b12116b66b5d8d73be41/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/862c1ce60998b12116b66b5d8d73be41</video:player_loc>
+      <video:duration>95</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Hollywood"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/borodino</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/borodino.webp</image:loc>
+      <image:title>Бородино на 160 залпов</image:title>
+      <image:caption>Бородино — 160 разнокалиберных залпов с 11 эффектами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/borodino.webp</video:thumbnail_loc>
+      <video:title>Бородино - демонстрация</video:title>
+      <video:description>160 разнокалиберных залпов с 11 эффектами в грандиозном 160-секундном шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/c925a80877a109835d4bd61c6e37a112/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/c925a80877a109835d4bd61c6e37a112</video:player_loc>
+      <video:duration>160</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/borodino"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/krasnii-drakon</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/krasnii-drakon.webp</image:loc>
+      <image:title>Красный дракон</image:title>
+      <image:caption>Красный дракон — 100 мощных залпов с 9 эффектами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/krasnii-drakon.webp</video:thumbnail_loc>
+      <video:title>Красный дракон - демонстрация</video:title>
+      <video:description>100 мощных залпов с 9 эффектами для интенсивного 75-секундного шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/a3cecdbe0e9bfefffe556c7c2038571f/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/a3cecdbe0e9bfefffe556c7c2038571f</video:player_loc>
+      <video:duration>75</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krasnii-drakon"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/zolotoi-drakon</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/zolotoi-drakon.webp</image:loc>
+      <image:title>Золотой дракон</image:title>
+      <image:caption>Золотой дракон — 100 залпов с 6 эффектами для мерцающего шоу</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/zolotoi-drakon.webp</video:thumbnail_loc>
+      <video:title>Золотой дракон - демонстрация</video:title>
+      <video:description>100 залпов с 6 эффектами для 100-секундного шоу с мерцанием и треском</video:description>
+      <video:content_loc>https://rutube.ru/video/d42bbbf6004a7f0952986d308d638d34/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/d42bbbf6004a7f0952986d308d638d34</video:player_loc>
+      <video:duration>100</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotoi-drakon"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/feyerverk-sem-chudes-sveta</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/feyerverk-sem-chudes-sveta-.webp</image:loc>
+      <image:title>Семь чудес света на 100 залпов</image:title>
+      <image:caption>Семь чудес света — 100 мощных залпов калибра 1.25" с 10 эффектами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/feyerverk-sem-chudes-sveta-.webp</video:thumbnail_loc>
+      <video:title>Семь чудес света - демонстрация</video:title>
+      <video:description>100 мощных залпов калибра 1.25" создают 60-секундное шоу с 10 эффектами</video:description>
+      <video:content_loc>https://vkvideo.ru/video-120006148_456239229</video:content_loc>
+      <video:player_loc allow_embed="yes">https://vkvideo.ru/embed/120006148_456239229</video:player_loc>
+      <video:duration>60</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/feyerverk-sem-chudes-sveta"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/laplandiya</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/laplandiya.webp</image:loc>
+      <image:title>Лапландия на 100 залпов</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/laplandiya.webp</video:thumbnail_loc>
+      <video:title>Лапландия - демонстрация</video:title>
+      <video:description>100 залпов калибра 1" создают 90-секундную искрящуюся феерию с 9 эффектами</video:description>
+      <video:content_loc>https://rutube.ru/video/38f6ff2afe839aae229100211a371d48/</video:content_loc>
+      <video:duration>90</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/laplandiya"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/zolotoy-lev</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/zolotoy-lev.webp</image:loc>
+      <image:title>Золотой лев на 49 залпов</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/zolotoy-lev.webp</video:thumbnail_loc>
+      <video:title>Золотой лев - демонстрация</video:title>
+      <video:description>49 залпов создают 90-секундное представление с 4 эффектами</video:description>
+      <video:content_loc>https://rutube.ru/video/98315144cb397106131660baf54ec5b4/</video:content_loc>
+      <video:duration>90</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotoy-lev"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/Zvizdec</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/Zvizdec.webp</image:loc>
+      <image:title>Петарды звиздец</image:title>
+      <image:caption>Петарды звиздец — максимальная громкость уровня Корсар-10</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/Zvizdec.webp</video:thumbnail_loc>
+      <video:title>Петарды звиздец - демонстрация</video:title>
+      <video:description>10 фитильных петард уровня Корсар-10 для максимальной громкости</video:description>
+      <video:content_loc>https://rutube.ru/video/4f3aada85de10ac00b69cda2aff81eb7/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/4f3aada85de10ac00b69cda2aff81eb7</video:player_loc>
+      <video:duration>10</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Zvizdec"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/Esminec</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/esminec.webp</image:loc>
+      <image:title>Эсминец</image:title>
+      <image:caption>Эсминец — 308 разнокалиберных залпов с 13 эффектами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/esminec.webp</video:thumbnail_loc>
+      <video:title>Эсминец - демонстрация</video:title>
+      <video:description>308 разнокалиберных залпов с 13 эффектами создают грандиозное 115-секундное шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/445a494fce1e0b5c1e35c21ec6dc959d/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/445a494fce1e0b5c1e35c21ec6dc959d</video:player_loc>
+      <video:duration>115</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Esminec"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/tri-bogatyrya</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/tri-bogatyrya.webp</image:loc>
+      <image:title>Три богатыря на 200 залпов</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/tri-bogatyrya.webp</video:thumbnail_loc>
+      <video:title>Три богатыря - демонстрация</video:title>
+      <video:description>200 залпов увеличенного калибра 1.25" создают грандиозное 3-минутное шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/3e8265280b9626c4645bae700737d64e/</video:content_loc>
+      <video:duration>170</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/tri-bogatyrya"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/viking</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/viking.webp</image:loc>
+      <image:title>Викинг</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/viking.webp</video:thumbnail_loc>
+      <video:title>Викинг - демонстрация</video:title>
+      <video:description>19 ярких залпов за 15 секунд с динамичной сменой эффектов</video:description>
+      <video:content_loc>https://rutube.ru/video/1b3e7804ec078aa11dcae34000181229/</video:content_loc>
+      <video:duration>15</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/viking"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/kitayskaya-stena</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/kitayskaya-stena.webp</image:loc>
+      <image:title>Китайская стена на 200 залпов</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/kitayskaya-stena.webp</video:thumbnail_loc>
+      <video:title>Китайская стена - демонстрация</video:title>
+      <video:description>200 залпов создают 135-секундную композицию с 12 различными визуальными эффектами</video:description>
+      <video:content_loc>https://rutube.ru/video/3ce2823f6c07b9fcd32e9066a1b116ce/</video:content_loc>
+      <video:duration>135</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/kitayskaya-stena"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/new-york</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/new-york.webp</image:loc>
+      <image:title>Нью-Йорк на 49 залпов</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/new-york.webp</video:thumbnail_loc>
+      <video:title>Нью-Йорк - демонстрация</video:title>
+      <video:description>49 залпов создают 75-секундную феерию с 5 эффектами</video:description>
+      <video:content_loc>https://rutube.ru/video/d578c951ae18d7a26914af4b2e1ab1b0/</video:content_loc>
+      <video:duration>75</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/new-york"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/fireworks-100</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/fireworks-100.webp</image:loc>
+      <image:title>Фейерверк-100</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/fireworks-100.webp</video:thumbnail_loc>
+      <video:title>Фейерверк-100 - демонстрация</video:title>
+      <video:description>100 залпов с зарядом 1.2 дюйма для 110-секундного шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/f225d4d1c340a0e38d4ec14f3f2d848a/</video:content_loc>
+      <video:duration>110</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/fireworks-100"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/forsash</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/worsash.webp</image:loc>
+      <image:title>Форсаж</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/worsash.webp</video:thumbnail_loc>
+      <video:title>Форсаж - демонстрация</video:title>
+      <video:description>100 залпов создают 90-секундное шоу с 10 различными визуальными композициями</video:description>
+      <video:content_loc>https://rutube.ru/video/5d345b65304487d9a781387ca8d0d90d/</video:content_loc>
+      <video:duration>90</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/forsash"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/stolichnii</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/stolichnii.webp</image:loc>
+      <image:title>Столичный</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/stolichnii.webp</video:thumbnail_loc>
+      <video:title>Столичный - демонстрация</video:title>
+      <video:description>100 залпов, каждый из которых уникален, создают насыщенное и непредсказуемое шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/04c325be60985d8d85505eabe844c846/</video:content_loc>
+      <video:duration>75</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/stolichnii"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/ilya-murometc</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/ilya-muromet.webp</image:loc>
+      <image:title>Илья Муромец на 150 залпов</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/ilya-muromet.webp</video:thumbnail_loc>
+      <video:title>Илья Муромец - демонстрация</video:title>
+      <video:description>150 залпов увеличенного калибра 1.25" создают 2-минутное былинное шоу с 9 эффектами</video:description>
+      <video:content_loc>https://rutube.ru/video/66bc5cffd1570a1534e358ad7b4b6f48/</video:content_loc>
+      <video:duration>120</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/ilya-murometc"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/rivera</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/rivera.webp</image:loc>
+      <image:title>Ривьера на 100 залпов</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/rivera.webp</video:thumbnail_loc>
+      <video:title>Ривьера - демонстрация</video:title>
+      <video:description>100 мощных залпов увеличенного калибра 1.25" создают 95-секундную изысканную огненную симфонию</video:description>
+      <video:content_loc>https://rutube.ru/video/b22bbda4affac3cc7b76d589b5a3c4bb/</video:content_loc>
+      <video:duration>95</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/rivera"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/admiral</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/admiral.webp</image:loc>
+      <image:title>Адмирал</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/admiral.webp</video:thumbnail_loc>
+      <video:title>Адмирал - демонстрация</video:title>
+      <video:description>25 залпов калибра 0.8" с разнообразием эффектов для 35-секундного шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/83f362cc13d3c2d4329c5b90ad296078/</video:content_loc>
+      <video:duration>35</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/admiral"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/gladiatori</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/gladiatori.webp</image:loc>
+      <image:title>Гладиаторы</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/gladiatori.webp</video:thumbnail_loc>
+      <video:title>Гладиаторы - демонстрация</video:title>
+      <video:description>100 мощных залпов с восемью разными эффектами создают 90-секундное победное шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/3cbfb5b6137feecd4dca70b7bd6a0f67/</video:content_loc>
+      <video:duration>90</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/gladiatori"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/aquamarin</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/aquamarin.webp</image:loc>
+      <image:title>Аквамарин</image:title>
+      <image:caption>Аквамарин — 36 залпов с атмосферой волшебства</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/aquamarin.webp</video:thumbnail_loc>
+      <video:title>Аквамарин - демонстрация</video:title>
+      <video:description>36 залпов с двумя эффектами создают атмосферу волшебства на высоте до 30 метров</video:description>
+      <video:content_loc>https://rutube.ru/video/7b7f5282728d77d343f5ee8dc905885c/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/7b7f5282728d77d343f5ee8dc905885c</video:player_loc>
+      <video:duration>35</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/aquamarin"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/ognenniy-fenix</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/ognenniy-fenix.webp</image:loc>
+      <image:title>Огненный феникс на 200 залпов</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/ognenniy-fenix.webp</video:thumbnail_loc>
+      <video:title>Огненный феникс - демонстрация</video:title>
+      <video:description>200 залпов создают невероятно плотное 80-секундное шоу с 10 эффектами</video:description>
+      <video:content_loc>https://rutube.ru/video/0c9ada54d8aea5caea4c502144de58b6/</video:content_loc>
+      <video:duration>80</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/ognenniy-fenix"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/elegia</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/elegia.webp</image:loc>
+      <image:title>Элегия</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/elegia.webp</video:thumbnail_loc>
+      <video:title>Элегия - демонстрация</video:title>
+      <video:description>100 залпов калибра 0.8" создают 90-секундную симфонию из 9 эффектов</video:description>
+      <video:content_loc>https://rutube.ru/video/71e9e8aff0c7a93dc4b8681e7df553d1/</video:content_loc>
+      <video:duration>90</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/elegia"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/stolichnyy</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+      <image:image>
+        <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/stolichnyy.webp</image:loc>
+        <image:title>LDC303 Столичный</image:title>
+        <image:caption>LDC303 Столичный — 100 залпов с семью разнообразными эффектами</image:caption>
+      </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/stolichnyy.webp</video:thumbnail_loc>
+      <video:title>LDC303 Столичный - демонстрация</video:title>
+      <video:description>100 залпов и семь разнообразных эффектов создают 75-секундную симфонию цвета и света</video:description>
+      <video:content_loc>https://rutube.ru/video/b6cf7a8f81f55d0805fb8b92537d58fd/?ysclid=mgnh1vcdbz476513455</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/b6cf7a8f81f55d0805fb8b92537d58fd</video:player_loc>
+      <video:duration>75</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/stolichnyy"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/rubikon</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/rubikon.webp</image:loc>
+      <image:title>Рубикон на 25 залпов</image:title>
+      <image:caption>Рубикон — 25 зарядов повышенной мощности для насыщенного шоу</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/rubikon.webp</video:thumbnail_loc>
+      <video:title>Рубикон - демонстрация</video:title>
+      <video:description>25 зарядов повышенной мощности создают короткое, но невероятно насыщенное 35-секундное шоу</video:description>
+      <video:content_loc>https://rutube.ru/video/a8f00f06d68d8ef1c0336b6598387402/</video:content_loc>
+      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/a8f00f06d68d8ef1c0336b6598387402</video:player_loc>
+      <video:duration>35</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/rubikon"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/shokoladka</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/shokoladka.webp</image:loc>
+      <image:title>Шоколадка арт: A7035</image:title>
+      <image:caption>Шоколадка — 36 ярких залпов с 9 различными эффектами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/shokoladka.webp</video:thumbnail_loc>
+      <video:title>Шоколадка - демонстрация</video:title>
+      <video:description>36 ярких залпов, упакованных в 20 секунд интенсивного шоу с 9 различными эффектами</video:description>
+      <video:content_loc>https://rutube.ru/video/edb117d928319498ba01e33dae8ea649/</video:content_loc>
+      <video:duration>25</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/shokoladka"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/alligator</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/alligator.webp</image:loc>
+      <image:title>Аллигатор на 36 залпов</image:title>
+      <image:caption>Аллигатор — 36 залпов калибра 1.25" с 4 эффектами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/alligator.webp</video:thumbnail_loc>
+      <video:title>Аллигатор - демонстрация</video:title>
+      <video:description>36 мощных залпов калибра 1 дюйм создают 65-секундное шоу с 4 эффектами</video:description>
+      <video:content_loc>https://vkvideo.ru/video-133318175_456239794</video:content_loc>
+      <video:duration>65</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/alligator"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/zvezdochet</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/zvezdochet.webp</image:loc>
+      <image:title>Звездочет на 49 залпов</image:title>
+      <image:caption>Звездочет — 49 залпов с атмосферой волшебства</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/zvezdochet.webp</video:thumbnail_loc>
+      <video:title>Звездочет - демонстрация</video:title>
+      <video:description>49 залпов создают 75-секундную астрономическую феерию с 9 эффектами</video:description>
+      <video:content_loc>https://rutube.ru/video/4c0bb027578e6853c764aab6a40f1e84/</video:content_loc>
+      <video:duration>75</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zvezdochet"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/krasnai-ploshad</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/krasnai-ploshad.webp</image:loc>
+      <image:title>Красная площадь</image:title>
+      <image:caption>Красная площадь — 36 уникальных залпов без повторений</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/krasnai-ploshad.webp</video:thumbnail_loc>
+      <video:title>Красная площадь - демонстрация</video:title>
+      <video:description>36 уникальных залпов, каждый из которых — отдельный шедевр без повторений</video:description>
+      <video:content_loc>https://rutube.ru/video/5995c8d6fba7fd0c0c811a8e62b82c40/</video:content_loc>
+      <video:duration>62</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krasnai-ploshad"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/super-terminator</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/syper-terminator.webp</image:loc>
+      <image:title>Супер терминатор</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/syper-terminator.webp</video:thumbnail_loc>
+      <video:title>Супер терминатор - демонстрация</video:title>
+      <video:description>49 залпов калибра 1 дюйм с 5 различными визуальными эффектами</video:description>
+      <video:content_loc>https://rutube.ru/video/fa7a81a95c903ba41293be861e7824d2/</video:content_loc>
+      <video:duration>60</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/super-terminator"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/vlast-ognya</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/vlast-ognya.webp</image:loc>
+      <image:title>Власть огня на 25 залпов</image:title>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/vlast-ognya.webp</video:thumbnail_loc>
+      <video:title>Власть огня - демонстрация</video:title>
+      <video:description>25 залпов с 8 эффектами создают 35-секундную огненную феерию</video:description>
+      <video:content_loc>https://rutube.ru/video/c3fbfe1d388a0f5798dd6f63aa64b8e8/</video:content_loc>
+      <video:duration>35</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/vlast-ognya"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/snegyrochka</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/snegyrochka.webp</image:loc>
+      <image:title>Снегурочка</image:title>
+      <image:caption>Снегурочка — 36 залпов с атмосферой волшебства</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/snegyrochka.webp</video:thumbnail_loc>
+      <video:title>Снегурочка - демонстрация</video:title>
+      <video:description>118 залпов с калибрами 1.2" и 1.5" создают 110-секундную зимнюю феерию</video:description>
+      <video:content_loc>https://rutube.ru/video/64556c1f48e3f395b891ef55509a78e6/</video:content_loc>
+      <video:duration>110</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/snegyrochka"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/v-yablochko</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/vyablochko.webp</image:loc>
+      <image:title>В Яблочко</image:title>
+      <image:caption>В Яблочко — 308 залпов с разнокалиберными зарядами</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/vyablochko.webp</video:thumbnail_loc>
+      <video:title>В Яблочко - демонстрация</video:title>
+      <video:description>308 залпов создают непрерывное 100-секундное шоу с 12 уникальными эффектами</video:description>
+      <video:content_loc>https://rutube.ru/video/6ec6f3c2f016c9b868effbde13e8b771/</video:content_loc>
+      <video:duration>100</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/v-yablochko"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/product/iskushenie</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/iskushenie.webp</image:loc>
+      <image:title>Искушение на 100 залпов</image:title>
+      <image:caption>Искушение — 100 залпов с атмосферой волшебства</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/iskushenie.webp</video:thumbnail_loc>
+      <video:title>Искушение - демонстрация</video:title>
+      <video:description>100 залпов калибра 1.2" создают 95-секундную феерию из 11 эффектов</video:description>
+      <video:content_loc>https://rutube.ru/video/c7a516ef359c776efe5031d4252bce32/</video:content_loc>
+      <video:duration>95</video:duration>
+    </video:video>
+    <mobile:mobile/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/iskushenie"/>
+  </url>
+
+</urlset>
