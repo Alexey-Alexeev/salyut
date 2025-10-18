@@ -177,58 +177,11 @@ export default async function CityPage({ params }: CityPageProps) {
                             "@type": "OfferCatalog",
                             "name": `Каталог фейерверков и салютов в ${cityData.nameLocative}`,
                             "itemListElement": categoriesData.map((category, index) => ({
-                                "@type": "Offer",
-                                "itemOffered": {
-                                    "@type": "Product",
-                                    "name": category.name,
-                                    "description": `Фейерверки и пиротехника категории ${category.name} в ${cityData.nameLocative}`,
-                                    "category": category.name,
-                                    "brand": {
-                                        "@type": "Brand",
-                                        "name": "СалютГрад"
-                                    },
-                                    "offers": {
-                                        "@type": "AggregateOffer",
-                                        "priceCurrency": "RUB",
-                                        "lowPrice": CATEGORY_PRICES.lowPrice,
-                                        "highPrice": CATEGORY_PRICES.highPrice,
-                                        "offerCount": CATEGORY_PRICES.offerCount,
-                                        "availability": "https://schema.org/InStock",
-                                        "seller": {
-                                            "@type": "Organization",
-                                            "name": "СалютГрад"
-                                        },
-                                        "areaServed": {
-                                            "@type": "City",
-                                            "name": cityData.name
-                                        }
-                                    },
-                                    "aggregateRating": {
-                                        "@type": "AggregateRating",
-                                        "ratingValue": RATING_INFO.ratingValue,
-                                        "reviewCount": RATING_INFO.reviewCount,
-                                        "bestRating": RATING_INFO.bestRating,
-                                        "worstRating": RATING_INFO.worstRating
-                                    },
-                                    "review": [
-                                        (() => {
-                                            const review = getLocalizedReview(cityData.name, cityData.nameLocative);
-                                            return {
-                                                "@type": "Review",
-                                                "author": {
-                                                    "@type": "Person",
-                                                    "name": review.author
-                                                },
-                                                "reviewRating": {
-                                                    "@type": "Rating",
-                                                    "ratingValue": "5",
-                                                    "bestRating": "5"
-                                                },
-                                                "reviewBody": review.text
-                                            };
-                                        })()
-                                    ]
-                                },
+                                "@type": "Category",
+                                "name": category.name,
+                                "description": `Категория фейерверков и пиротехники: ${category.name} в ${cityData.nameLocative}`,
+                                "url": `https://salutgrad.ru/catalog?category=${category.slug}`,
+                                "image": category.image,
                                 "position": index + 1
                             }))
                         },

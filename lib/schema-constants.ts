@@ -121,3 +121,25 @@ export function getCategoryPriceRange(products: any[]): {
     offerCount: `${products.length}+`
   };
 }
+
+/**
+ * Получить цены для всех категорий на основе товаров в базе данных
+ */
+export async function getCategoryPrices(categories: any[], products: any[]): Promise<Record<string, {
+  lowPrice: string;
+  highPrice: string;
+  offerCount: string;
+}>> {
+  const categoryPrices: Record<string, {
+    lowPrice: string;
+    highPrice: string;
+    offerCount: string;
+  }> = {};
+
+  for (const category of categories) {
+    const categoryProducts = products.filter(p => p.category_id === category.id);
+    categoryPrices[category.id] = getCategoryPriceRange(categoryProducts);
+  }
+
+  return categoryPrices;
+}

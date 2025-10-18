@@ -155,51 +155,11 @@ export default async function HomePage() {
               "@type": "OfferCatalog",
               "name": "Каталог фейерверков и салютов",
               "itemListElement": categoriesData.map((category, index) => ({
-                "@type": "Offer",
-                "itemOffered": {
-                  "@type": "Product",
-                  "name": category.name,
-                  "description": `Фейерверки и пиротехника категории ${category.name}`,
-                  "category": category.name,
-                  "brand": {
-                    "@type": "Brand",
-                    "name": "СалютГрад"
-                  },
-                  "offers": {
-                    "@type": "AggregateOffer",
-                    "priceCurrency": "RUB",
-                    "lowPrice": CATEGORY_PRICES.lowPrice,
-                    "highPrice": CATEGORY_PRICES.highPrice,
-                    "offerCount": CATEGORY_PRICES.offerCount,
-                    "availability": "https://schema.org/InStock",
-                    "seller": {
-                      "@type": "Organization",
-                      "name": "СалютГрад"
-                    }
-                  },
-                  "aggregateRating": {
-                    "@type": "AggregateRating",
-                    "ratingValue": RATING_INFO.ratingValue,
-                    "reviewCount": RATING_INFO.reviewCount,
-                    "bestRating": RATING_INFO.bestRating,
-                    "worstRating": RATING_INFO.worstRating
-                  },
-                  "review": [
-                    {
-                      "@type": "Review",
-                      "author": {
-                        "@type": "Person",
-                        "name": getRandomReviewAuthor()
-                      },
-                      "reviewRating": {
-                        "@type": "Rating",
-                        "ratingValue": "5",
-                        "bestRating": "5"
-                      },
-                      "reviewBody": getRandomReviewText()
-                    }
-                  ]
-                },
+                "@type": "Category",
+                "name": category.name,
+                "description": `Категория фейерверков и пиротехники: ${category.name}`,
+                "url": `https://salutgrad.ru/catalog?category=${category.slug}`,
+                "image": category.image,
                 "position": index + 1
               }))
             },
