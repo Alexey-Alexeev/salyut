@@ -59,36 +59,14 @@ export default async function AboutPage() {
             telephone: '+7 (977) 360-20-08',
             foundingDate: '2020',
             areaServed: 'RU',
-            hasOfferCatalog: {
-              '@type': 'OfferCatalog',
-              name: 'Пиротехника и фейерверки',
-              itemListElement: [
-                {
-                  '@type': 'Offer',
-                  itemOffered: {
-                    '@type': 'Product',
-                    name: 'Фейерверки и салюты',
-                    category: 'Пиротехника',
-                    'offers': {
-                      '@type': 'Offer',
-                      'price': '1200',
-                      'priceCurrency': 'RUB',
-                      'availability': 'https://schema.org/InStock',
-                      'seller': {
-                        '@type': 'Organization',
-                        'name': 'СалютГрад'
-                      }
-                    },
-                    'aggregateRating': {
-                      '@type': 'AggregateRating',
-                      'ratingValue': '4.8',
-                      'reviewCount': '127',
-                      'bestRating': '5',
-                      'worstRating': '1'
-                    }
-                  },
-                },
-              ],
+            serviceArea: {
+              '@type': 'GeoCircle',
+              geoMidpoint: {
+                '@type': 'GeoCoordinates',
+                latitude: '55.740340',
+                longitude: '38.054064'
+              },
+              geoRadius: '50000'
             },
           }),
         }}
