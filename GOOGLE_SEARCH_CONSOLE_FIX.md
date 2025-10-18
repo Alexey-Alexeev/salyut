@@ -47,7 +47,34 @@ Google Search Console выдавал предупреждения о ценах 
   "offers": {
     "@type": "Offer",
     "price": 1500,
-    "priceCurrency": "RUB"
+    "priceCurrency": "RUB",
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "500",
+        "currency": "RUB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "businessDays": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        },
+        "cutoffTime": "14:00"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "RU"
+      }
+    },
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+      "merchantReturnDays": 7,
+      "returnMethod": "https://schema.org/ReturnByMail",
+      "returnFees": "https://schema.org/ReturnFeesCustomerResponsibility"
+    }
   }
 }
 ```
@@ -56,6 +83,7 @@ Google Search Console выдавал предупреждения о ценах 
 - Google Search Console больше не будет видеть категории как товары с ценами
 - Каталог работает с фильтрами по категориям через URL параметры
 - Используются реальные изображения категорий из Supabase Storage
+- Добавлены поля `shippingDetails` и `hasMerchantReturnPolicy` для всех товаров
 - Структурированные данные соответствуют стандартам Schema.org
 
 ## Проверка

@@ -213,6 +213,60 @@ export default async function CityPage({ params }: CityPageProps) {
                                 "areaServed": {
                                     "@type": "City",
                                     "name": cityData.name
+                                },
+                                "shippingDetails": {
+                                    "@type": "OfferShippingDetails",
+                                    "shippingRate": {
+                                        "@type": "MonetaryAmount",
+                                        "value": "500",
+                                        "currency": "RUB"
+                                    },
+                                    "deliveryTime": {
+                                        "@type": "ShippingDeliveryTime",
+                                        "businessDays": {
+                                            "@type": "OpeningHoursSpecification",
+                                            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+                                        },
+                                        "cutoffTime": "23:59"
+                                    },
+                                    "shippingDestination": {
+                                        "@type": "DefinedRegion",
+                                        "addressCountry": "RU",
+                                        "addressRegion": "Московская область",
+                                        "addressLocality": "Москва"
+                                    }
+                                },
+                                "pickupDetails": {
+                                    "@type": "OfferShippingDetails",
+                                    "shippingRate": {
+                                        "@type": "MonetaryAmount",
+                                        "value": "0",
+                                        "currency": "RUB"
+                                    },
+                                    "deliveryTime": {
+                                        "@type": "ShippingDeliveryTime",
+                                        "businessDays": {
+                                            "@type": "OpeningHoursSpecification",
+                                            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                                            "opens": "09:00",
+                                            "closes": "21:00"
+                                        }
+                                    },
+                                    "shippingDestination": {
+                                        "@type": "DefinedRegion",
+                                        "addressCountry": "RU",
+                                        "addressRegion": "Московская область",
+                                        "addressLocality": "Балашиха",
+                                        "streetAddress": "Рассветная улица, 14",
+                                        "postalCode": "143921"
+                                    }
+                                },
+                                "hasMerchantReturnPolicy": {
+                                    "@type": "MerchantReturnPolicy",
+                                    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                                    "merchantReturnDays": 7,
+                                    "returnMethod": "https://schema.org/ReturnByMail",
+                                    "returnFees": "https://schema.org/ReturnFeesCustomerResponsibility"
                                 }
                             },
                             "aggregateRating": {
