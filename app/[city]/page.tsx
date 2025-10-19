@@ -223,6 +223,18 @@ export default async function CityPage({ params }: CityPageProps) {
                                     },
                                     "deliveryTime": {
                                         "@type": "ShippingDeliveryTime",
+                                        "handlingTime": {
+                                            "@type": "QuantitativeValue",
+                                            "minValue": 0,
+                                            "maxValue": 1,
+                                            "unitCode": "DAY"
+                                        },
+                                        "transitTime": {
+                                            "@type": "QuantitativeValue",
+                                            "minValue": 1,
+                                            "maxValue": 3,
+                                            "unitCode": "DAY"
+                                        },
                                         "businessDays": {
                                             "@type": "OpeningHoursSpecification",
                                             "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
@@ -245,6 +257,18 @@ export default async function CityPage({ params }: CityPageProps) {
                                     },
                                     "deliveryTime": {
                                         "@type": "ShippingDeliveryTime",
+                                        "handlingTime": {
+                                            "@type": "QuantitativeValue",
+                                            "minValue": 0,
+                                            "maxValue": 1,
+                                            "unitCode": "DAY"
+                                        },
+                                        "transitTime": {
+                                            "@type": "QuantitativeValue",
+                                            "minValue": 0,
+                                            "maxValue": 0,
+                                            "unitCode": "DAY"
+                                        },
                                         "businessDays": {
                                             "@type": "OpeningHoursSpecification",
                                             "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
@@ -263,6 +287,7 @@ export default async function CityPage({ params }: CityPageProps) {
                                 },
                                 "hasMerchantReturnPolicy": {
                                     "@type": "MerchantReturnPolicy",
+                                    "applicableCountry": "RU",
                                     "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
                                     "merchantReturnDays": 7,
                                     "returnMethod": "https://schema.org/ReturnByMail",

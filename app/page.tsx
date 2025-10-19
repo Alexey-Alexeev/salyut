@@ -215,6 +215,18 @@ export default async function HomePage() {
                   },
                   "deliveryTime": {
                     "@type": "ShippingDeliveryTime",
+                    "handlingTime": {
+                      "@type": "QuantitativeValue",
+                      "minValue": 0,
+                      "maxValue": 1,
+                      "unitCode": "DAY"
+                    },
+                    "transitTime": {
+                      "@type": "QuantitativeValue",
+                      "minValue": 0,
+                      "maxValue": 0,
+                      "unitCode": "DAY"
+                    },
                     "businessDays": {
                       "@type": "OpeningHoursSpecification",
                       "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
@@ -233,6 +245,7 @@ export default async function HomePage() {
                 },
                 "hasMerchantReturnPolicy": {
                   "@type": "MerchantReturnPolicy",
+                  "applicableCountry": "RU",
                   "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
                   "merchantReturnDays": 7,
                   "returnMethod": "https://schema.org/ReturnByMail",
