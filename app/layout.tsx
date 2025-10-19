@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { FloatingConsultation } from '@/components/floating-consultation';
 import { Toaster } from '@/components/ui/sonner';
+import YandexMetrika from '@/components/yandex-metrika';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -103,6 +104,7 @@ export default function RootLayout({
         </div>
         <FloatingConsultation />
         <Toaster />
+        <YandexMetrika />
       </body>
     </html>
   );
