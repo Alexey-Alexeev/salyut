@@ -62,8 +62,19 @@ Header always set X-Content-Type-Options "nosniff"
 # Защита от XSS
 Header always set X-XSS-Protection "1; mode=block"
 
-# Запрет на встраивание в iframe
-Header always set X-Frame-Options "SAMEORIGIN"
+# ===============================
+# 🎯 Яндекс.Метрика iframe настройки
+# ===============================
+<IfModule mod_headers.c>
+    # Разрешаем iframe для Яндекс.Метрики
+    SetEnvIf Referer "^https?://([^/]+\.)?(metrika\.yandex\.(ru|by)|metrica\.yandex\.(com|com\.tr)|webvisor\.com)/" allow_yandex
+    
+    # Устанавливаем X-Frame-Options только если НЕ Яндекс.Метрика
+    Header set X-Frame-Options "SAMEORIGIN" env=!allow_yandex
+    
+    # Content-Security-Policy для iframe
+    Header set Content-Security-Policy "frame-ancestors 'self' https://metrika.yandex.ru https://metrika.yandex.by https://metrica.yandex.com https://metrica.yandex.com.tr https://webvisor.com https://*.webvisor.com"
+</IfModule>
 
 # Безопасная политика Referer
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
