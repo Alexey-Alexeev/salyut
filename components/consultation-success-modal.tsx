@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, ShoppingBag, Clock, MessageCircle, Home, Phone, Send } from 'lucide-react';
+import { trackConsultationSuccess } from '@/lib/metrika';
 
 interface ConsultationSuccessModalProps {
     isOpen: boolean;
@@ -23,6 +24,11 @@ export function ConsultationSuccessModal({
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
+            
+            // Отправляем событие в Яндекс.Метрику о успешной консультации
+            trackConsultationSuccess({
+                customerName: customerName
+            });
         } else {
             document.body.style.overflow = 'unset';
         }
@@ -30,7 +36,7 @@ export function ConsultationSuccessModal({
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, [isOpen]);
+    }, [isOpen, customerName]);
 
     const handleContinueShopping = () => {
         onClose();

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, ShoppingBag, Clock, MessageCircle, Home, Phone, Send } from 'lucide-react';
+import { trackOrderSuccess } from '@/lib/metrika';
 
 interface OrderSuccessModalProps {
     isOpen: boolean;
@@ -27,6 +28,13 @@ export function OrderSuccessModal({
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
+            
+            // Отправляем событие в Яндекс.Метрику о успешном заказе
+            trackOrderSuccess({
+                orderValue: totalAmount,
+                deliveryMethod: deliveryMethod,
+                customerName: customerName
+            });
         } else {
             document.body.style.overflow = 'unset';
         }
@@ -34,7 +42,7 @@ export function OrderSuccessModal({
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, [isOpen]);
+    }, [isOpen, totalAmount, deliveryMethod, customerName]);
 
     const handleContinueShopping = () => {
         onClose();
