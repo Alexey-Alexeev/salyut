@@ -2,7 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" 
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" 
-        xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <!-- Главная страница -->
   <url>
@@ -10,7 +9,6 @@
     <lastmod>2025-10-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://salutgrad.ru/"/>
   </url>
@@ -21,7 +19,6 @@
     <lastmod>2025-10-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog"/>
   </url>
   
@@ -30,7 +27,6 @@
     <lastmod>2025-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/about"/>
   </url>
   
@@ -39,7 +35,6 @@
     <lastmod>2025-09-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/delivery"/>
   </url>
   
@@ -48,7 +43,6 @@
     <lastmod>2025-08-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/privacy"/>
   </url>
   
@@ -57,7 +51,6 @@
     <lastmod>2025-08-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/terms"/>
   </url>
 
@@ -67,7 +60,6 @@
     <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog?category=saluty"/>
   </url>
   
@@ -76,7 +68,6 @@
     <lastmod>2025-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog?category=petardy"/>
   </url>
   
@@ -85,7 +76,6 @@
     <lastmod>2025-10-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog?category=veernye-saluty"/>
   </url>
 
@@ -95,7 +85,6 @@
     <lastmod>2025-10-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/moskva"/>
   </url>
   
@@ -104,7 +93,6 @@
     <lastmod>2025-10-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/balashiha"/>
   </url>
   
@@ -113,7 +101,6 @@
     <lastmod>2025-10-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/domodedovo"/>
   </url>
   
@@ -122,7 +109,6 @@
     <lastmod>2025-10-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/elektrostal"/>
   </url>
   
@@ -131,7 +117,6 @@
     <lastmod>2025-10-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/himki"/>
   </url>
   
@@ -140,7 +125,6 @@
     <lastmod>2025-10-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/kolomna"/>
   </url>
   
@@ -149,7 +133,6 @@
     <lastmod>2025-10-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/korolev"/>
   </url>
   
@@ -158,7 +141,6 @@
     <lastmod>2025-10-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/krasnogorsk"/>
   </url>
   
@@ -167,7 +149,6 @@
     <lastmod>2025-10-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/lyubertsy"/>
   </url>
   
@@ -176,7 +157,6 @@
     <lastmod>2025-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/mytishchi"/>
   </url>
   
@@ -185,7 +165,6 @@
     <lastmod>2025-10-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/noginsk"/>
   </url>
   
@@ -194,7 +173,6 @@
     <lastmod>2025-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/odincovo"/>
   </url>
   
@@ -203,7 +181,6 @@
     <lastmod>2025-10-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/orekhovo-zuevo"/>
   </url>
   
@@ -212,7 +189,6 @@
     <lastmod>2025-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/podolsk"/>
   </url>
   
@@ -221,7 +197,6 @@
     <lastmod>2025-10-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/pushkino"/>
   </url>
   
@@ -230,7 +205,6 @@
     <lastmod>2025-10-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/reutov"/>
   </url>
   
@@ -239,7 +213,6 @@
     <lastmod>2025-09-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/serpuhov"/>
   </url>
   
@@ -248,7 +221,6 @@
     <lastmod>2025-09-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/shchelkovo"/>
   </url>
   
@@ -257,7 +229,6 @@
     <lastmod>2025-09-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/zheleznodorozhny"/>
   </url>
   
@@ -266,7 +237,6 @@
     <lastmod>2025-09-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/zhukovskiy"/>
   </url>
 
@@ -289,7 +259,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/ad3d4fc4d4e092ab84fcb4b8992ccf4a</video:player_loc>
       <video:duration>40</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/fireworks-25"/>
   </url>
   
@@ -311,7 +280,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/958a0f905a0f1c3d026a87f82b5c08c1</video:player_loc>
       <video:duration>60</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotaya-korona"/>
   </url>
   
@@ -333,7 +301,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/e24d081087c5417015cc73089a3f63f7</video:player_loc>
       <video:duration>65</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/derzhava"/>
   </url>
   
@@ -355,7 +322,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/289ca8d3e120d78492f9c569298d113a</video:player_loc>
       <video:duration>120</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/povelitel-molniy"/>
   </url>
   
@@ -377,7 +343,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/8315b5c7009bc8312109c86dae8d386e</video:player_loc>
       <video:duration>65</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krestonosci"/>
   </url>
   
@@ -399,7 +364,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/862c1ce60998b12116b66b5d8d73be41</video:player_loc>
       <video:duration>95</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Hollywood"/>
   </url>
   
@@ -421,7 +385,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/c925a80877a109835d4bd61c6e37a112</video:player_loc>
       <video:duration>160</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/borodino"/>
   </url>
   
@@ -443,7 +406,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/a3cecdbe0e9bfefffe556c7c2038571f</video:player_loc>
       <video:duration>75</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krasnii-drakon"/>
   </url>
   
@@ -465,7 +427,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/d42bbbf6004a7f0952986d308d638d34</video:player_loc>
       <video:duration>100</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotoi-drakon"/>
   </url>
   
@@ -487,7 +448,6 @@
       <video:player_loc allow_embed="yes">https://vkvideo.ru/embed/120006148_456239229</video:player_loc>
       <video:duration>60</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/feyerverk-sem-chudes-sveta"/>
   </url>
   
@@ -507,7 +467,6 @@
       <video:content_loc>https://rutube.ru/video/38f6ff2afe839aae229100211a371d48/</video:content_loc>
       <video:duration>90</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/laplandiya"/>
   </url>
   
@@ -527,7 +486,6 @@
       <video:content_loc>https://rutube.ru/video/98315144cb397106131660baf54ec5b4/</video:content_loc>
       <video:duration>90</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotoy-lev"/>
   </url>
   
@@ -549,7 +507,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/4f3aada85de10ac00b69cda2aff81eb7</video:player_loc>
       <video:duration>10</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Zvizdec"/>
   </url>
   
@@ -571,7 +528,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/445a494fce1e0b5c1e35c21ec6dc959d</video:player_loc>
       <video:duration>115</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Esminec"/>
   </url>
   
@@ -591,7 +547,6 @@
       <video:content_loc>https://rutube.ru/video/3e8265280b9626c4645bae700737d64e/</video:content_loc>
       <video:duration>170</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/tri-bogatyrya"/>
   </url>
   
@@ -611,7 +566,6 @@
       <video:content_loc>https://rutube.ru/video/1b3e7804ec078aa11dcae34000181229/</video:content_loc>
       <video:duration>15</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/viking"/>
   </url>
   
@@ -631,7 +585,6 @@
       <video:content_loc>https://rutube.ru/video/3ce2823f6c07b9fcd32e9066a1b116ce/</video:content_loc>
       <video:duration>135</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/kitayskaya-stena"/>
   </url>
   
@@ -651,7 +604,6 @@
       <video:content_loc>https://rutube.ru/video/d578c951ae18d7a26914af4b2e1ab1b0/</video:content_loc>
       <video:duration>75</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/new-york"/>
   </url>
   
@@ -671,7 +623,6 @@
       <video:content_loc>https://rutube.ru/video/f225d4d1c340a0e38d4ec14f3f2d848a/</video:content_loc>
       <video:duration>110</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/fireworks-100"/>
   </url>
   
@@ -691,7 +642,6 @@
       <video:content_loc>https://rutube.ru/video/5d345b65304487d9a781387ca8d0d90d/</video:content_loc>
       <video:duration>90</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/forsash"/>
   </url>
   
@@ -711,7 +661,6 @@
       <video:content_loc>https://rutube.ru/video/04c325be60985d8d85505eabe844c846/</video:content_loc>
       <video:duration>75</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/stolichnii"/>
   </url>
   
@@ -731,7 +680,6 @@
       <video:content_loc>https://rutube.ru/video/66bc5cffd1570a1534e358ad7b4b6f48/</video:content_loc>
       <video:duration>120</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/ilya-murometc"/>
   </url>
   
@@ -751,7 +699,6 @@
       <video:content_loc>https://rutube.ru/video/b22bbda4affac3cc7b76d589b5a3c4bb/</video:content_loc>
       <video:duration>95</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/rivera"/>
   </url>
   
@@ -771,7 +718,6 @@
       <video:content_loc>https://rutube.ru/video/83f362cc13d3c2d4329c5b90ad296078/</video:content_loc>
       <video:duration>35</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/admiral"/>
   </url>
   
@@ -791,7 +737,6 @@
       <video:content_loc>https://rutube.ru/video/3cbfb5b6137feecd4dca70b7bd6a0f67/</video:content_loc>
       <video:duration>90</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/gladiatori"/>
   </url>
   
@@ -813,7 +758,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/7b7f5282728d77d343f5ee8dc905885c</video:player_loc>
       <video:duration>35</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/aquamarin"/>
   </url>
   
@@ -833,7 +777,6 @@
       <video:content_loc>https://rutube.ru/video/0c9ada54d8aea5caea4c502144de58b6/</video:content_loc>
       <video:duration>80</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/ognenniy-fenix"/>
   </url>
   
@@ -853,7 +796,6 @@
       <video:content_loc>https://rutube.ru/video/71e9e8aff0c7a93dc4b8681e7df553d1/</video:content_loc>
       <video:duration>90</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/elegia"/>
   </url>
   
@@ -875,7 +817,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/b6cf7a8f81f55d0805fb8b92537d58fd</video:player_loc>
       <video:duration>75</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/stolichnyy"/>
   </url>
   
@@ -897,7 +838,6 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/a8f00f06d68d8ef1c0336b6598387402</video:player_loc>
       <video:duration>35</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/rubikon"/>
   </url>
   
@@ -918,7 +858,6 @@
       <video:content_loc>https://rutube.ru/video/edb117d928319498ba01e33dae8ea649/</video:content_loc>
       <video:duration>25</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/shokoladka"/>
   </url>
   
@@ -939,7 +878,6 @@
       <video:content_loc>https://vkvideo.ru/video-133318175_456239794</video:content_loc>
       <video:duration>65</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/alligator"/>
   </url>
   
@@ -960,7 +898,6 @@
       <video:content_loc>https://rutube.ru/video/4c0bb027578e6853c764aab6a40f1e84/</video:content_loc>
       <video:duration>75</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zvezdochet"/>
   </url>
   
@@ -981,7 +918,6 @@
       <video:content_loc>https://rutube.ru/video/5995c8d6fba7fd0c0c811a8e62b82c40/</video:content_loc>
       <video:duration>62</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krasnai-ploshad"/>
   </url>
   
@@ -1001,7 +937,6 @@
       <video:content_loc>https://rutube.ru/video/fa7a81a95c903ba41293be861e7824d2/</video:content_loc>
       <video:duration>60</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/super-terminator"/>
   </url>
   
@@ -1021,7 +956,6 @@
       <video:content_loc>https://rutube.ru/video/c3fbfe1d388a0f5798dd6f63aa64b8e8/</video:content_loc>
       <video:duration>35</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/vlast-ognya"/>
   </url>
   
@@ -1042,7 +976,6 @@
       <video:content_loc>https://rutube.ru/video/64556c1f48e3f395b891ef55509a78e6/</video:content_loc>
       <video:duration>110</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/snegyrochka"/>
   </url>
   
@@ -1063,7 +996,6 @@
       <video:content_loc>https://rutube.ru/video/6ec6f3c2f016c9b868effbde13e8b771/</video:content_loc>
       <video:duration>100</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/v-yablochko"/>
   </url>
   
@@ -1084,7 +1016,6 @@
       <video:content_loc>https://rutube.ru/video/c7a516ef359c776efe5031d4252bce32/</video:content_loc>
       <video:duration>95</video:duration>
     </video:video>
-    <mobile:mobile/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/iskushenie"/>
   </url>
 
