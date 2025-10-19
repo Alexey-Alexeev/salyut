@@ -13,7 +13,7 @@ import { CatalogPaginationInfo } from '@/components/catalog/catalog-pagination-i
 import { ProductsGrid } from '@/components/catalog/products-grid';
 import { CatalogEmptyState } from '@/components/catalog/catalog-empty-state';
 import { fetchProducts } from '@/lib/api-client';
-import { RATING_INFO, PRICE_VALID_UNTIL, getRandomReviewAuthor, getRandomReviewText } from '@/lib/schema-constants';
+import { PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 
 // Типы
 interface Category {
@@ -773,28 +773,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                                         "returnFees": "https://schema.org/ReturnFeesCustomerResponsibility"
                                     }
                                 },
-                                "aggregateRating": {
-                                    "@type": "AggregateRating",
-                                    "ratingValue": RATING_INFO.ratingValue,
-                                    "reviewCount": RATING_INFO.reviewCount,
-                                    "bestRating": RATING_INFO.bestRating,
-                                    "worstRating": RATING_INFO.worstRating
-                                },
-                                "review": [
-                                    {
-                                        "@type": "Review",
-                                        "author": {
-                                            "@type": "Person",
-                                            "name": getRandomReviewAuthor()
-                                        },
-                                        "reviewRating": {
-                                            "@type": "Rating",
-                                            "ratingValue": "5",
-                                            "bestRating": "5"
-                                        },
-                                        "reviewBody": getRandomReviewText()
-                                    }
-                                ]
                             }))
                         },
                         "breadcrumb": {

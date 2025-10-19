@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCartStore } from '@/lib/cart-store';
 import { ProductDescription } from '@/components/product-description';
 import { toast } from 'sonner';
-import { RATING_INFO, PRICE_VALID_UNTIL, getRandomReviewAuthor, getRandomReviewText } from '@/lib/schema-constants';
+import { PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 
 // Типы поддерживаемых видео платформ
 type VideoPlatform = 'rutube' | 'vk' | 'youtube' | 'unknown';
@@ -365,54 +365,6 @@ export default function ProductClient({
                 "returnFees": "https://schema.org/ReturnFeesCustomerResponsibility"
               }
             },
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": RATING_INFO.ratingValue,
-              "reviewCount": RATING_INFO.reviewCount,
-              "bestRating": RATING_INFO.bestRating,
-              "worstRating": RATING_INFO.worstRating
-            },
-            "review": [
-              {
-                "@type": "Review",
-                "author": {
-                  "@type": "Person",
-                  "name": getRandomReviewAuthor()
-                },
-                "reviewRating": {
-                  "@type": "Rating",
-                  "ratingValue": "5",
-                  "bestRating": "5"
-                },
-                "reviewBody": getRandomReviewText()
-              },
-              {
-                "@type": "Review",
-                "author": {
-                  "@type": "Person",
-                  "name": getRandomReviewAuthor()
-                },
-                "reviewRating": {
-                  "@type": "Rating",
-                  "ratingValue": "5",
-                  "bestRating": "5"
-                },
-                "reviewBody": getRandomReviewText()
-              },
-              {
-                "@type": "Review",
-                "author": {
-                  "@type": "Person",
-                  "name": getRandomReviewAuthor()
-                },
-                "reviewRating": {
-                  "@type": "Rating",
-                  "ratingValue": "5",
-                  "bestRating": "5"
-                },
-                "reviewBody": getRandomReviewText()
-              }
-            ],
             "additionalProperty": product.characteristics ? Object.entries(product.characteristics).map(([key, value]) => ({
               "@type": "PropertyValue",
               "name": key,

@@ -89,41 +89,6 @@ export default function LaunchingServicePage({ videoReviews }: LaunchingServiceP
                 }
               ]
             },
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.9",
-              "reviewCount": "89",
-              "bestRating": "5",
-              "worstRating": "1"
-            },
-            "review": [
-              {
-                "@type": "Review",
-                "author": {
-                  "@type": "Person",
-                  "name": "Анна Петрова"
-                },
-                "reviewRating": {
-                  "@type": "Rating",
-                  "ratingValue": "5",
-                  "bestRating": "5"
-                },
-                "reviewBody": "Качественный подход, безопасность на высоте. Рекомендую для любых праздников!"
-              },
-              {
-                "@type": "Review",
-                "author": {
-                  "@type": "Person",
-                  "name": "Михаил Козлов"
-                },
-                "reviewRating": {
-                  "@type": "Rating",
-                  "ratingValue": "5",
-                  "bestRating": "5"
-                },
-                "reviewBody": "Отличная организация, все прошло безопасно и эффектно. Спасибо за незабываемый праздник!"
-              }
-            ]
           })
         }}
       />

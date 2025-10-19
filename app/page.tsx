@@ -12,7 +12,7 @@ import { PopularProductsSection } from '@/components/sections/popular-products-s
 import { ProfessionalServicesSection } from '@/components/sections/professional-services-section';
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
 import dynamicImport from 'next/dynamic';
-import { BUSINESS_INFO, RATING_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL, getRandomReviewAuthor, getRandomReviewText } from '@/lib/schema-constants';
+import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 
 // Динамические импорты для тяжелых компонентов
 const DynamicVideoReviewsSection = dynamicImport(() => import('@/components/sections/video-reviews-section').then(mod => ({ default: mod.VideoReviewsSection })), {
@@ -239,77 +239,7 @@ export default async function HomePage() {
                   "returnFees": "https://schema.org/ReturnFeesCustomerResponsibility"
                 }
               },
-              "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": RATING_INFO.ratingValue,
-                "reviewCount": RATING_INFO.reviewCount,
-                "bestRating": RATING_INFO.bestRating,
-                "worstRating": RATING_INFO.worstRating
-              },
-              "review": [
-                {
-                  "@type": "Review",
-                  "author": {
-                    "@type": "Person",
-                    "name": getRandomReviewAuthor()
-                  },
-                  "reviewRating": {
-                    "@type": "Rating",
-                    "ratingValue": "5",
-                    "bestRating": "5"
-                  },
-                  "reviewBody": getRandomReviewText()
-                }
-              ]
             })),
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": RATING_INFO.ratingValue,
-              "reviewCount": RATING_INFO.reviewCount,
-              "bestRating": RATING_INFO.bestRating,
-              "worstRating": RATING_INFO.worstRating
-            },
-            "review": [
-              {
-                "@type": "Review",
-                "author": {
-                  "@type": "Person",
-                  "name": getRandomReviewAuthor()
-                },
-                "reviewRating": {
-                  "@type": "Rating",
-                  "ratingValue": "5",
-                  "bestRating": "5"
-                },
-                "reviewBody": getRandomReviewText()
-              },
-              {
-                "@type": "Review",
-                "author": {
-                  "@type": "Person",
-                  "name": getRandomReviewAuthor()
-                },
-                "reviewRating": {
-                  "@type": "Rating",
-                  "ratingValue": "5",
-                  "bestRating": "5"
-                },
-                "reviewBody": getRandomReviewText()
-              },
-              {
-                "@type": "Review",
-                "author": {
-                  "@type": "Person",
-                  "name": getRandomReviewAuthor()
-                },
-                "reviewRating": {
-                  "@type": "Rating",
-                  "ratingValue": "5",
-                  "bestRating": "5"
-                },
-                "reviewBody": getRandomReviewText()
-              }
-            ],
             "video": videoReviews.slice(0, 4).map(video => ({
               "@type": "VideoObject",
               "name": video.title || "Видеоотзыв о фейерверках",

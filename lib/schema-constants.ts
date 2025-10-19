@@ -22,13 +22,13 @@ export const BUSINESS_INFO = {
   priceRange: "₽₽"
 };
 
-// Рейтинги и отзывы
-export const RATING_INFO = {
-  ratingValue: "4.8",
-  reviewCount: "127",
-  bestRating: "5",
-  worstRating: "1"
-};
+// Рейтинги и отзывы - убраны для избежания рисков с SEO
+// export const RATING_INFO = {
+//   ratingValue: "4.8",
+//   reviewCount: "127",
+//   bestRating: "5",
+//   worstRating: "1"
+// };
 
 // Цены для категорий
 export const CATEGORY_PRICES = {
@@ -40,56 +40,56 @@ export const CATEGORY_PRICES = {
 // Валидность цен
 export const PRICE_VALID_UNTIL = "2026-12-31";
 
-// Авторы отзывов
-export const REVIEW_AUTHORS = [
-  "Анна Петрова",
-  "Михаил Соколов", 
-  "Елена Козлова",
-  "Дмитрий Волков",
-  "Ольга Морозова"
-];
+// Авторы отзывов - убраны для избежания рисков с SEO
+// export const REVIEW_AUTHORS = [
+//   "Анна Петрова",
+//   "Михаил Соколов", 
+//   "Елена Козлова",
+//   "Дмитрий Волков",
+//   "Ольга Морозова"
+// ];
 
-// Тексты отзывов
-export const REVIEW_TEXTS = [
-  "Отличное качество фейерверков! Безопасный запуск, все гости были в восторге от салюта на свадьбе.",
-  "Качественная пиротехника, доставка быстрая. Сын был в восторге от салюта на день рождения!",
-  "Профессиональный подход, безопасность на высоте. Рекомендую для любых праздников!",
-  "Заказывали салют на корпоратив - получилось невероятно красиво! Все коллеги были в восторге.",
-  "Безопасный запуск, качественные фейерверки. Рекомендую для любых торжеств!"
-];
-
-/**
- * Получить случайного автора отзыва
- */
-export function getRandomReviewAuthor(): string {
-  return REVIEW_AUTHORS[Math.floor(Math.random() * REVIEW_AUTHORS.length)];
-}
+// Тексты отзывов - убраны для избежания рисков с SEO
+// export const REVIEW_TEXTS = [
+//   "Отличное качество фейерверков! Безопасный запуск, все гости были в восторге от салюта на свадьбе.",
+//   "Качественная пиротехника, доставка быстрая. Сын был в восторге от салюта на день рождения!",
+//   "Профессиональный подход, безопасность на высоте. Рекомендую для любых праздников!",
+//   "Заказывали салют на корпоратив - получилось невероятно красиво! Все коллеги были в восторге.",
+//   "Безопасный запуск, качественные фейерверки. Рекомендую для любых торжеств!"
+// ];
 
 /**
- * Получить случайный текст отзыва
+ * Получить случайного автора отзыва - функция убрана для избежания рисков с SEO
  */
-export function getRandomReviewText(): string {
-  return REVIEW_TEXTS[Math.floor(Math.random() * REVIEW_TEXTS.length)];
-}
+// export function getRandomReviewAuthor(): string {
+//   return REVIEW_AUTHORS[Math.floor(Math.random() * REVIEW_AUTHORS.length)];
+// }
 
 /**
- * Получить отзыв с локализацией для города
+ * Получить случайный текст отзыва - функция убрана для избежания рисков с SEO
  */
-export function getLocalizedReview(cityName: string, cityNameLocative: string): {
-  author: string;
-  text: string;
-} {
-  const author = getRandomReviewAuthor();
-  const baseText = getRandomReviewText();
-  
-  // Локализуем текст для города
-  const localizedText = baseText.replace(/на свадьбе|на день рождения|на корпоратив/, `в ${cityNameLocative}`);
-  
-  return {
-    author: `${author.split(' ')[0]} ${author.split(' ')[1][0]}. из ${cityName}`,
-    text: localizedText
-  };
-}
+// export function getRandomReviewText(): string {
+//   return REVIEW_TEXTS[Math.floor(Math.random() * REVIEW_TEXTS.length)];
+// }
+
+/**
+ * Получить отзыв с локализацией для города - функция убрана для избежания рисков с SEO
+ */
+// export function getLocalizedReview(cityName: string, cityNameLocative: string): {
+//   author: string;
+//   text: string;
+// } {
+//   const author = getRandomReviewAuthor();
+//   const baseText = getRandomReviewText();
+//   
+//   // Локализуем текст для города
+//   const localizedText = baseText.replace(/на свадьбе|на день рождения|на корпоратив/, `в ${cityNameLocative}`);
+//   
+//   return {
+//     author: `${author.split(' ')[0]} ${author.split(' ')[1][0]}. из ${cityName}`,
+//     text: localizedText
+//   };
+// }
 
 /**
  * Получить диапазон цен для категории на основе реальных данных

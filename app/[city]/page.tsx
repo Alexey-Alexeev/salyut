@@ -12,7 +12,7 @@ import { ProfessionalServicesSection } from '@/components/sections/professional-
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
 import { getCityBySlug, getAllCitySlugs } from '@/lib/cities';
 import { notFound } from 'next/navigation';
-import { BUSINESS_INFO, RATING_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL, getLocalizedReview } from '@/lib/schema-constants';
+import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 
 interface CityPageProps {
     params: {
@@ -269,73 +269,7 @@ export default async function CityPage({ params }: CityPageProps) {
                                     "returnFees": "https://schema.org/ReturnFeesCustomerResponsibility"
                                 }
                             },
-                            "aggregateRating": {
-                                "@type": "AggregateRating",
-                                "ratingValue": RATING_INFO.ratingValue,
-                                "reviewCount": RATING_INFO.reviewCount,
-                                "bestRating": RATING_INFO.bestRating,
-                                "worstRating": RATING_INFO.worstRating
-                            },
-                            "review": [
-                                (() => {
-                                    const review = getLocalizedReview(cityData.name, cityData.nameLocative);
-                                    return {
-                                        "@type": "Review",
-                                        "author": {
-                                            "@type": "Person",
-                                            "name": review.author
-                                        },
-                                        "reviewRating": {
-                                            "@type": "Rating",
-                                            "ratingValue": "5",
-                                            "bestRating": "5"
-                                        },
-                                        "reviewBody": review.text
-                                    };
-                                })()
-                            ]
                         })),
-                        "aggregateRating": {
-                            "@type": "AggregateRating",
-                            "ratingValue": RATING_INFO.ratingValue,
-                            "reviewCount": RATING_INFO.reviewCount,
-                            "bestRating": RATING_INFO.bestRating,
-                            "worstRating": RATING_INFO.worstRating
-                        },
-                        "review": [
-                            (() => {
-                                const review = getLocalizedReview(cityData.name, cityData.nameLocative);
-                                return {
-                                    "@type": "Review",
-                                    "author": {
-                                        "@type": "Person",
-                                        "name": review.author
-                                    },
-                                    "reviewRating": {
-                                        "@type": "Rating",
-                                        "ratingValue": "5",
-                                        "bestRating": "5"
-                                    },
-                                    "reviewBody": review.text
-                                };
-                            })(),
-                            (() => {
-                                const review = getLocalizedReview(cityData.name, cityData.nameLocative);
-                                return {
-                                    "@type": "Review",
-                                    "author": {
-                                        "@type": "Person",
-                                        "name": review.author
-                                    },
-                                    "reviewRating": {
-                                        "@type": "Rating",
-                                        "ratingValue": "5",
-                                        "bestRating": "5"
-                                    },
-                                    "reviewBody": review.text
-                                };
-                            })()
-                        ],
                         "video": videoReviews.slice(0, 4).map(video => ({
                             "@type": "VideoObject",
                             "name": video.title || `Видеоотзыв о фейерверках в ${cityData.nameLocative}`,
