@@ -107,15 +107,6 @@ export function ConsultationDialog({
     }
   };
 
-  const handleDirectContact = (type: 'telegram' | 'whatsapp' | 'phone') => {
-    if (type === 'telegram') {
-      window.open('https://t.me/+79773602008', '_blank');
-    } else if (type === 'whatsapp') {
-      window.open('https://wa.me/79773602008', '_blank');
-    } else if (type === 'phone') {
-      window.open('tel:+79773602008', '_blank');
-    }
-  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -260,40 +251,38 @@ export function ConsultationDialog({
           </p>
           <div className="flex justify-center gap-2 sm:gap-3">
             {/* Телефон */}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="flex flex-1 items-center gap-1 sm:gap-2 h-8 sm:h-9"
-              onClick={() => handleDirectContact('phone')}
+            <a
+              href="tel:+79773602008"
+              className="flex flex-1 items-center justify-center gap-1 sm:gap-2 h-8 sm:h-9 px-3 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md text-xs sm:text-sm transition-colors"
+              aria-label="Позвонить по телефону"
             >
               <Phone className="size-3 sm:size-4" />
-              <span className="text-xs sm:text-sm">Телефон</span>
-            </Button>
+              <span>Телефон</span>
+            </a>
 
             {/* WhatsApp */}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="flex flex-1 items-center gap-1 sm:gap-2 h-8 sm:h-9"
-              onClick={() => handleDirectContact('whatsapp')}
+            <a
+              href="https://wa.me/79773602008"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-1 items-center justify-center gap-1 sm:gap-2 h-8 sm:h-9 px-3 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md text-xs sm:text-sm transition-colors"
+              aria-label="Написать в WhatsApp"
             >
               <MessageCircle className="size-3 sm:size-4" />
-              <span className="text-xs sm:text-sm">WhatsApp</span>
-            </Button>
+              <span>WhatsApp</span>
+            </a>
 
             {/* Telegram */}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="flex flex-1 items-center gap-1 sm:gap-2 h-8 sm:h-9"
-              onClick={() => handleDirectContact('telegram')}
+            <a
+              href="https://t.me/+79773602008"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-1 items-center justify-center gap-1 sm:gap-2 h-8 sm:h-9 px-3 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md text-xs sm:text-sm transition-colors"
+              aria-label="Написать в Telegram"
             >
               <Send className="size-3 sm:size-4" />
-              <span className="text-xs sm:text-sm">Telegram</span>
-            </Button>
+              <span>Telegram</span>
+            </a>
           </div>
         </div>
       </DialogContent>
