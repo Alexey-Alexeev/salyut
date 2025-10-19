@@ -97,6 +97,7 @@ export default function RootLayout({
         
         {/* Yandex.Metrika counter */}
         <script
+          type="text/javascript"
           dangerouslySetInnerHTML={{
             __html: `
               (function(m,e,t,r,i,k,a){
