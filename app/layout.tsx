@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { FloatingConsultation } from '@/components/floating-consultation';
 import { Toaster } from '@/components/ui/sonner';
+import { ConditionalCanonical, ConditionalNoIndex } from '@/components/conditional-head';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,17 +18,7 @@ export const metadata: Metadata = {
     'Лучшие фейерверки, салюты и пиротехника в Москве. Быстрая доставка по Москве и МО, безопасный запуск салютов. Качественная пиротехника для незабываемых праздников!',
   keywords:
     'фейерверки москва, салюты купить, пиротехника, петарды, ракеты, фонтаны, новый год, день рождения, свадьба, безопасный запуск салютов, доставка москва',
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
+  // robots настройки будут управляться условными компонентами
   viewport: 'width=device-width, initial-scale=1',
   verification: {
     google: 'your-google-verification-code', // Замените на реальный код
@@ -95,26 +86,29 @@ export default function RootLayout({
         <meta name="geo.position" content="55.7558;37.6176" />
         <meta name="ICBM" content="55.7558, 37.6176" />
         
-        {/* Yandex.Metrika counter */}
+        {/* Yandex.Metrika counter - только для production домена */}
         <script
           type="text/javascript"
           dangerouslySetInnerHTML={{
             __html: `
-              (function(m,e,t,r,i,k,a){
-                  m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-                  m[i].l=1*new Date();
-                  for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-                  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-              })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=104700931', 'ym');
+              // Проверяем домен на сервере
+              if (typeof window !== 'undefined' && window.location.hostname === 'salutgrad.ru') {
+                (function(m,e,t,r,i,k,a){
+                    m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                    m[i].l=1*new Date();
+                    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+                })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=104700931', 'ym');
 
-              ym(104700931, 'init', {
-                ssr:true, 
-                webvisor:true, 
-                clickmap:true, 
-                ecommerce:"dataLayer", 
-                accurateTrackBounce:true, 
-                trackLinks:true
-              });
+                ym(104700931, 'init', {
+                  ssr:true, 
+                  webvisor:true, 
+                  clickmap:true, 
+                  ecommerce:"dataLayer", 
+                  accurateTrackBounce:true, 
+                  trackLinks:true
+                });
+              }
             `,
           }}
         />
@@ -127,7 +121,12 @@ export default function RootLayout({
             />
           </div>
         </noscript>
-        {/* /Yandex.Metrika counter */}
+        
+        {/* Conditional canonical URL - только для production */}
+        <ConditionalCanonical href="https://salutgrad.ru/" />
+        
+        {/* Conditional noindex meta tags - только для Vercel */}
+        <ConditionalNoIndex />
       </head>
       <body className={inter.className}>
         <div className="flex min-h-screen flex-col">

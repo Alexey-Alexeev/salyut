@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Основной домен: salutgrad.ru
+# Development домен: salyut.vercel.app
+# Оба домена индексируются, но основной имеет приоритет
+Sitemap: https://salutgrad.ru/sitemap.xml
