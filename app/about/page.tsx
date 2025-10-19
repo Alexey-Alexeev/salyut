@@ -68,6 +68,19 @@ export default async function AboutPage() {
               },
               geoRadius: '50000'
             },
+            address: {
+              '@type': 'PostalAddress',
+              addressCountry: 'RU',
+              addressRegion: 'Московская область',
+              addressLocality: 'Балашиха',
+              streetAddress: 'Рассветная улица, 14',
+              postalCode: '143921'
+            },
+            sameAs: [
+              'https://salutgrad.ru',
+              'https://salutgrad.ru/catalog',
+              'https://salutgrad.ru/delivery'
+            ]
           }),
         }}
       />
