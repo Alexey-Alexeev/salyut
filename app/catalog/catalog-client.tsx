@@ -207,6 +207,13 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         const maxPriceParam = searchParams.maxPrice as string;
         const sortByParam = searchParams.sortBy as string;
 
+        // Отладочная информация
+        console.log('🔍 CatalogClient Debug Info:');
+        console.log('📍 URL:', typeof window !== 'undefined' ? window.location.href : 'SSR');
+        console.log('📋 searchParams:', searchParams);
+        console.log('📂 categories from initialData:', initialData.categories);
+        console.log('🏷️ categoryParam:', categoryParam);
+
 
         // Парсим категории (может быть массив)
         const categories = Array.isArray(categoryParam) ? categoryParam : (categoryParam ? [categoryParam] : []);
@@ -321,6 +328,13 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     .filter(cat => filters.categories.includes(cat.slug))
                     .map(cat => cat.id);
 
+                // Отладочная информация для фильтрации
+                console.log('🔍 Filter Debug Info:');
+                console.log('📂 Available categories:', categories.map(cat => ({ id: cat.id, name: cat.name, slug: cat.slug })));
+                console.log('🏷️ Selected category slugs:', filters.categories);
+                console.log('🆔 Category IDs for API:', categoryIds);
+                console.log('🔍 Filter state:', filters);
+
                 const data = await fetchProducts({
                     search: filters.search.trim() || undefined,
                     categoryId: categoryIds.length > 0 ? categoryIds : undefined,
@@ -330,6 +344,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     page: 1,
                     limit: 20,
                 });
+
+                console.log('📦 API Response:', data);
 
                 setFilteredProducts(data.products || []);
                 setPagination(data.pagination || pagination);

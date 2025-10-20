@@ -29,6 +29,12 @@ export async function fetchProducts(filters: ProductFilters = {}) {
             limit = 20,
         } = filters;
 
+        // Отладочная информация для API
+        console.log('🔍 fetchProducts Debug Info:');
+        console.log('📋 Filters received:', filters);
+        console.log('🏷️ Category IDs:', categoryId);
+        console.log('🔍 Search term:', search);
+
         // Начинаем с базового запроса
         let query = supabase
             .from('products')
@@ -79,10 +85,19 @@ export async function fetchProducts(filters: ProductFilters = {}) {
 
         const { data: products, error, count } = await query;
 
-        if (error) throw error;
+        if (error) {
+            console.error('❌ Supabase query error:', error);
+            throw error;
+        }
 
         const totalCount = count || 0;
         const totalPages = Math.ceil(totalCount / limit);
+
+        // Отладочная информация результата
+        console.log('📦 Supabase Query Result:');
+        console.log('📊 Total count:', totalCount);
+        console.log('📦 Products found:', products?.length || 0);
+        console.log('🏷️ Products:', products?.map(p => ({ id: p.id, name: p.name, category_id: p.category_id })));
 
         return {
             products: products || [],

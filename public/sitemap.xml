@@ -56,27 +56,59 @@
 
   <!-- Категории -->
   <url>
-    <loc>https://salutgrad.ru/catalog?category=saluty</loc>
+    <loc>https://salutgrad.ru/catalog/?category=Fireworks</loc>
     <lastmod>2025-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog?category=saluty"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog/?category=Fireworks"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/catalog?category=petardy</loc>
+    <loc>https://salutgrad.ru/catalog/?category=Petards</loc>
     <lastmod>2025-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog?category=petardy"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog/?category=Petards"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/catalog?category=veernye-saluty</loc>
+    <loc>https://salutgrad.ru/catalog/?category=Fan-salutes</loc>
     <lastmod>2025-10-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog?category=veernye-saluty"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog/?category=Fan-salutes"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/catalog/?category=Fountains</loc>
+    <lastmod>2025-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog/?category=Fountains"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/catalog/?category=Roman-candles</loc>
+    <lastmod>2025-10-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog/?category=Roman-candles"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/catalog/?category=Rockets</loc>
+    <lastmod>2025-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog/?category=Rockets"/>
+  </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/catalog/?category=Bengal-lights</loc>
+    <lastmod>2025-10-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog/?category=Bengal-lights"/>
   </url>
 
   <!-- Городские страницы -->
