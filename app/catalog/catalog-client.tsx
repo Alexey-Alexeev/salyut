@@ -155,7 +155,9 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
     // Функция для обновления URL с фильтрами
     const updateURL = useCallback((newFilters: Partial<FilterState>, newSortBy?: string, newPage?: number) => {
-        const params = new URLSearchParams(urlSearchParams.toString());
+        // Используем текущий URL для получения параметров
+        const currentUrl = typeof window !== 'undefined' ? window.location.search : '';
+        const params = new URLSearchParams(currentUrl);
 
         // Очищаем существующие параметры фильтров
         params.delete('search');
@@ -195,17 +197,34 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Обновляем URL без перезагрузки страницы
         const newURL = params.toString() ? `?${params.toString()}` : '';
         router.replace(`/catalog${newURL}`, { scroll: false });
-    }, [router, urlSearchParams]);
+    }, [router]);
 
     // Инициализация фильтров из URL (только один раз)
     useEffect(() => {
         if (hasInitializedRef.current) return;
 
-        const categoryParam = searchParams.category as string | string[];
-        const searchParam = searchParams.search as string;
-        const minPriceParam = searchParams.minPrice as string;
-        const maxPriceParam = searchParams.maxPrice as string;
-        const sortByParam = searchParams.sortBy as string;
+        // Парсим URL параметры вручную для статического экспорта
+        let categoryParam: string | string[] | undefined;
+        let searchParam: string | undefined;
+        let minPriceParam: string | undefined;
+        let maxPriceParam: string | undefined;
+        let sortByParam: string | undefined;
+
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            categoryParam = urlParams.getAll('category');
+            searchParam = urlParams.get('search') || undefined;
+            minPriceParam = urlParams.get('minPrice') || undefined;
+            maxPriceParam = urlParams.get('maxPrice') || undefined;
+            sortByParam = urlParams.get('sortBy') || undefined;
+        } else {
+            // Fallback для SSR
+            categoryParam = searchParams.category as string | string[];
+            searchParam = searchParams.search as string;
+            minPriceParam = searchParams.minPrice as string;
+            maxPriceParam = searchParams.maxPrice as string;
+            sortByParam = searchParams.sortBy as string;
+        }
 
         // Отладочная информация
         console.log('🔍 CatalogClient Debug Info:');
@@ -213,13 +232,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         console.log('📋 searchParams:', searchParams);
         console.log('📂 categories from initialData:', initialData.categories);
         console.log('🏷️ categoryParam:', categoryParam);
+        console.log('🔍 URL Search Params:', typeof window !== 'undefined' ? new URLSearchParams(window.location.search).toString() : 'SSR');
 
 
         // Парсим категории (может быть массив)
         const categories = Array.isArray(categoryParam) ? categoryParam : (categoryParam ? [categoryParam] : []);
 
         // Проверяем, есть ли параметры в URL
-        const hasUrlParams = categoryParam || searchParam || minPriceParam || maxPriceParam || sortByParam;
+        const hasUrlParams = (categoryParam && categoryParam.length > 0) || searchParam || minPriceParam || maxPriceParam || sortByParam;
 
         if (hasUrlParams) {
 
