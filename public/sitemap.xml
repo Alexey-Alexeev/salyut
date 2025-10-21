@@ -15,43 +15,43 @@
   
   <!-- Основные страницы -->
   <url>
-    <loc>https://salutgrad.ru/catalog</loc>
+    <loc>https://salutgrad.ru/catalog/</loc>
     <lastmod>2025-10-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/catalog/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/about</loc>
+    <loc>https://salutgrad.ru/about/</loc>
     <lastmod>2025-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/about"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/about/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/delivery</loc>
+    <loc>https://salutgrad.ru/delivery/</loc>
     <lastmod>2025-09-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/delivery"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/delivery/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/privacy</loc>
+    <loc>https://salutgrad.ru/privacy/</loc>
     <lastmod>2025-08-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/privacy"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/privacy/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/terms</loc>
+    <loc>https://salutgrad.ru/terms/</loc>
     <lastmod>2025-08-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/terms"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/terms/"/>
   </url>
 
   <!-- Категории -->
@@ -113,168 +113,168 @@
 
   <!-- Городские страницы -->
   <url>
-    <loc>https://salutgrad.ru/moskva</loc>
+    <loc>https://salutgrad.ru/moskva/</loc>
     <lastmod>2025-10-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/moskva"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/moskva/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/balashiha</loc>
+    <loc>https://salutgrad.ru/balashiha/</loc>
     <lastmod>2025-10-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/balashiha"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/balashiha/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/domodedovo</loc>
+    <loc>https://salutgrad.ru/domodedovo/</loc>
     <lastmod>2025-10-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/domodedovo"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/domodedovo/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/elektrostal</loc>
+    <loc>https://salutgrad.ru/elektrostal/</loc>
     <lastmod>2025-10-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/elektrostal"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/elektrostal/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/himki</loc>
+    <loc>https://salutgrad.ru/himki/</loc>
     <lastmod>2025-10-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/himki"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/himki/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/kolomna</loc>
+    <loc>https://salutgrad.ru/kolomna/</loc>
     <lastmod>2025-10-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/kolomna"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/kolomna/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/korolev</loc>
+    <loc>https://salutgrad.ru/korolev/</loc>
     <lastmod>2025-10-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/korolev"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/korolev/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/krasnogorsk</loc>
+    <loc>https://salutgrad.ru/krasnogorsk/</loc>
     <lastmod>2025-10-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/krasnogorsk"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/krasnogorsk/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/lyubertsy</loc>
+    <loc>https://salutgrad.ru/lyubertsy/</loc>
     <lastmod>2025-10-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/lyubertsy"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/lyubertsy/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/mytishchi</loc>
+    <loc>https://salutgrad.ru/mytishchi/</loc>
     <lastmod>2025-10-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/mytishchi"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/mytishchi/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/noginsk</loc>
+    <loc>https://salutgrad.ru/noginsk/</loc>
     <lastmod>2025-10-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/noginsk"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/noginsk/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/odincovo</loc>
+    <loc>https://salutgrad.ru/odincovo/</loc>
     <lastmod>2025-10-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/odincovo"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/odincovo/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/orekhovo-zuevo</loc>
+    <loc>https://salutgrad.ru/orekhovo-zuevo/</loc>
     <lastmod>2025-10-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/orekhovo-zuevo"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/orekhovo-zuevo/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/podolsk</loc>
+    <loc>https://salutgrad.ru/podolsk/</loc>
     <lastmod>2025-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/podolsk"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/podolsk/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/pushkino</loc>
+    <loc>https://salutgrad.ru/pushkino/</loc>
     <lastmod>2025-10-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/pushkino"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/pushkino/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/reutov</loc>
+    <loc>https://salutgrad.ru/reutov/</loc>
     <lastmod>2025-10-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/reutov"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/reutov/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/serpuhov</loc>
+    <loc>https://salutgrad.ru/serpuhov/</loc>
     <lastmod>2025-09-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/serpuhov"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/serpuhov/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/shchelkovo</loc>
+    <loc>https://salutgrad.ru/shchelkovo/</loc>
     <lastmod>2025-09-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/shchelkovo"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/shchelkovo/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/zheleznodorozhny</loc>
+    <loc>https://salutgrad.ru/zheleznodorozhny/</loc>
     <lastmod>2025-09-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/zheleznodorozhny"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/zheleznodorozhny/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/zhukovskiy</loc>
+    <loc>https://salutgrad.ru/zhukovskiy/</loc>
     <lastmod>2025-09-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/zhukovskiy"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/zhukovskiy/"/>
   </url>
 
   <!-- Товары (без дубликатов, с полными данными) -->
   <url>
-    <loc>https://salutgrad.ru/product/fireworks-25</loc>
+    <loc>https://salutgrad.ru/product/fireworks-25/</loc>
     <lastmod>2025-10-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -291,11 +291,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/ad3d4fc4d4e092ab84fcb4b8992ccf4a</video:player_loc>
       <video:duration>40</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/fireworks-25"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/fireworks-25/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/zolotaya-korona</loc>
+    <loc>https://salutgrad.ru/product/zolotaya-korona/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -312,11 +312,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/958a0f905a0f1c3d026a87f82b5c08c1</video:player_loc>
       <video:duration>60</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotaya-korona"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotaya-korona/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/derzhava</loc>
+    <loc>https://salutgrad.ru/product/derzhava/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -333,11 +333,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/e24d081087c5417015cc73089a3f63f7</video:player_loc>
       <video:duration>65</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/derzhava"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/derzhava/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/povelitel-molniy</loc>
+    <loc>https://salutgrad.ru/product/povelitel-molniy/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -354,11 +354,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/289ca8d3e120d78492f9c569298d113a</video:player_loc>
       <video:duration>120</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/povelitel-molniy"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/povelitel-molniy/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/krestonosci</loc>
+    <loc>https://salutgrad.ru/product/krestonosci/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -375,11 +375,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/8315b5c7009bc8312109c86dae8d386e</video:player_loc>
       <video:duration>65</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krestonosci"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krestonosci/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/Hollywood</loc>
+    <loc>https://salutgrad.ru/product/Hollywood/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -396,11 +396,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/862c1ce60998b12116b66b5d8d73be41</video:player_loc>
       <video:duration>95</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Hollywood"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Hollywood/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/borodino</loc>
+    <loc>https://salutgrad.ru/product/borodino/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -417,11 +417,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/c925a80877a109835d4bd61c6e37a112</video:player_loc>
       <video:duration>160</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/borodino"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/borodino/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/krasnii-drakon</loc>
+    <loc>https://salutgrad.ru/product/krasnii-drakon/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -438,11 +438,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/a3cecdbe0e9bfefffe556c7c2038571f</video:player_loc>
       <video:duration>75</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krasnii-drakon"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krasnii-drakon/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/zolotoi-drakon</loc>
+    <loc>https://salutgrad.ru/product/zolotoi-drakon/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -459,11 +459,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/d42bbbf6004a7f0952986d308d638d34</video:player_loc>
       <video:duration>100</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotoi-drakon"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotoi-drakon/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/feyerverk-sem-chudes-sveta</loc>
+    <loc>https://salutgrad.ru/product/feyerverk-sem-chudes-sveta/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -480,11 +480,11 @@
       <video:player_loc allow_embed="yes">https://vkvideo.ru/embed/120006148_456239229</video:player_loc>
       <video:duration>60</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/feyerverk-sem-chudes-sveta"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/feyerverk-sem-chudes-sveta/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/laplandiya</loc>
+    <loc>https://salutgrad.ru/product/laplandiya/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -499,11 +499,11 @@
       <video:content_loc>https://rutube.ru/video/38f6ff2afe839aae229100211a371d48/</video:content_loc>
       <video:duration>90</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/laplandiya"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/laplandiya/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/zolotoy-lev</loc>
+    <loc>https://salutgrad.ru/product/zolotoy-lev/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -518,11 +518,11 @@
       <video:content_loc>https://rutube.ru/video/98315144cb397106131660baf54ec5b4/</video:content_loc>
       <video:duration>90</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotoy-lev"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotoy-lev/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/Zvizdec</loc>
+    <loc>https://salutgrad.ru/product/Zvizdec/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -539,11 +539,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/4f3aada85de10ac00b69cda2aff81eb7</video:player_loc>
       <video:duration>10</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Zvizdec"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Zvizdec/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/Esminec</loc>
+    <loc>https://salutgrad.ru/product/Esminec/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -560,11 +560,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/445a494fce1e0b5c1e35c21ec6dc959d</video:player_loc>
       <video:duration>115</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Esminec"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Esminec/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/tri-bogatyrya</loc>
+    <loc>https://salutgrad.ru/product/tri-bogatyrya/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -579,11 +579,11 @@
       <video:content_loc>https://rutube.ru/video/3e8265280b9626c4645bae700737d64e/</video:content_loc>
       <video:duration>170</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/tri-bogatyrya"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/tri-bogatyrya/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/viking</loc>
+    <loc>https://salutgrad.ru/product/viking/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -598,11 +598,11 @@
       <video:content_loc>https://rutube.ru/video/1b3e7804ec078aa11dcae34000181229/</video:content_loc>
       <video:duration>15</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/viking"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/viking/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/kitayskaya-stena</loc>
+    <loc>https://salutgrad.ru/product/kitayskaya-stena/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -617,11 +617,11 @@
       <video:content_loc>https://rutube.ru/video/3ce2823f6c07b9fcd32e9066a1b116ce/</video:content_loc>
       <video:duration>135</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/kitayskaya-stena"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/kitayskaya-stena/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/new-york</loc>
+    <loc>https://salutgrad.ru/product/new-york/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -636,11 +636,11 @@
       <video:content_loc>https://rutube.ru/video/d578c951ae18d7a26914af4b2e1ab1b0/</video:content_loc>
       <video:duration>75</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/new-york"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/new-york/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/fireworks-100</loc>
+    <loc>https://salutgrad.ru/product/fireworks-100/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -655,11 +655,11 @@
       <video:content_loc>https://rutube.ru/video/f225d4d1c340a0e38d4ec14f3f2d848a/</video:content_loc>
       <video:duration>110</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/fireworks-100"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/fireworks-100/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/forsash</loc>
+    <loc>https://salutgrad.ru/product/forsash/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -674,11 +674,11 @@
       <video:content_loc>https://rutube.ru/video/5d345b65304487d9a781387ca8d0d90d/</video:content_loc>
       <video:duration>90</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/forsash"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/forsash/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/stolichnii</loc>
+    <loc>https://salutgrad.ru/product/stolichnii/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -693,11 +693,11 @@
       <video:content_loc>https://rutube.ru/video/04c325be60985d8d85505eabe844c846/</video:content_loc>
       <video:duration>75</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/stolichnii"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/stolichnii/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/ilya-murometc</loc>
+    <loc>https://salutgrad.ru/product/ilya-murometc/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -712,11 +712,11 @@
       <video:content_loc>https://rutube.ru/video/66bc5cffd1570a1534e358ad7b4b6f48/</video:content_loc>
       <video:duration>120</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/ilya-murometc"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/ilya-murometc/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/rivera</loc>
+    <loc>https://salutgrad.ru/product/rivera/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -731,11 +731,11 @@
       <video:content_loc>https://rutube.ru/video/b22bbda4affac3cc7b76d589b5a3c4bb/</video:content_loc>
       <video:duration>95</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/rivera"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/rivera/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/admiral</loc>
+    <loc>https://salutgrad.ru/product/admiral/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -750,11 +750,11 @@
       <video:content_loc>https://rutube.ru/video/83f362cc13d3c2d4329c5b90ad296078/</video:content_loc>
       <video:duration>35</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/admiral"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/admiral/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/gladiatori</loc>
+    <loc>https://salutgrad.ru/product/gladiatori/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -769,11 +769,11 @@
       <video:content_loc>https://rutube.ru/video/3cbfb5b6137feecd4dca70b7bd6a0f67/</video:content_loc>
       <video:duration>90</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/gladiatori"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/gladiatori/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/aquamarin</loc>
+    <loc>https://salutgrad.ru/product/aquamarin/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -790,11 +790,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/7b7f5282728d77d343f5ee8dc905885c</video:player_loc>
       <video:duration>35</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/aquamarin"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/aquamarin/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/ognenniy-fenix</loc>
+    <loc>https://salutgrad.ru/product/ognenniy-fenix/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -809,11 +809,11 @@
       <video:content_loc>https://rutube.ru/video/0c9ada54d8aea5caea4c502144de58b6/</video:content_loc>
       <video:duration>80</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/ognenniy-fenix"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/ognenniy-fenix/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/elegia</loc>
+    <loc>https://salutgrad.ru/product/elegia/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -828,11 +828,11 @@
       <video:content_loc>https://rutube.ru/video/71e9e8aff0c7a93dc4b8681e7df553d1/</video:content_loc>
       <video:duration>90</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/elegia"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/elegia/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/stolichnyy</loc>
+    <loc>https://salutgrad.ru/product/stolichnyy/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -849,11 +849,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/b6cf7a8f81f55d0805fb8b92537d58fd</video:player_loc>
       <video:duration>75</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/stolichnyy"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/stolichnyy/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/rubikon</loc>
+    <loc>https://salutgrad.ru/product/rubikon/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -870,11 +870,11 @@
       <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/a8f00f06d68d8ef1c0336b6598387402</video:player_loc>
       <video:duration>35</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/rubikon"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/rubikon/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/shokoladka</loc>
+    <loc>https://salutgrad.ru/product/shokoladka/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -890,11 +890,11 @@
       <video:content_loc>https://rutube.ru/video/edb117d928319498ba01e33dae8ea649/</video:content_loc>
       <video:duration>25</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/shokoladka"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/shokoladka/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/alligator</loc>
+    <loc>https://salutgrad.ru/product/alligator/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -910,11 +910,11 @@
       <video:content_loc>https://vkvideo.ru/video-133318175_456239794</video:content_loc>
       <video:duration>65</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/alligator"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/alligator/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/zvezdochet</loc>
+    <loc>https://salutgrad.ru/product/zvezdochet/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -930,11 +930,11 @@
       <video:content_loc>https://rutube.ru/video/4c0bb027578e6853c764aab6a40f1e84/</video:content_loc>
       <video:duration>75</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zvezdochet"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zvezdochet/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/krasnai-ploshad</loc>
+    <loc>https://salutgrad.ru/product/krasnai-ploshad/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -950,11 +950,11 @@
       <video:content_loc>https://rutube.ru/video/5995c8d6fba7fd0c0c811a8e62b82c40/</video:content_loc>
       <video:duration>62</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krasnai-ploshad"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krasnai-ploshad/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/super-terminator</loc>
+    <loc>https://salutgrad.ru/product/super-terminator/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -969,11 +969,11 @@
       <video:content_loc>https://rutube.ru/video/fa7a81a95c903ba41293be861e7824d2/</video:content_loc>
       <video:duration>60</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/super-terminator"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/super-terminator/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/vlast-ognya</loc>
+    <loc>https://salutgrad.ru/product/vlast-ognya/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -988,11 +988,11 @@
       <video:content_loc>https://rutube.ru/video/c3fbfe1d388a0f5798dd6f63aa64b8e8/</video:content_loc>
       <video:duration>35</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/vlast-ognya"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/vlast-ognya/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/snegyrochka</loc>
+    <loc>https://salutgrad.ru/product/snegyrochka/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -1008,11 +1008,11 @@
       <video:content_loc>https://rutube.ru/video/64556c1f48e3f395b891ef55509a78e6/</video:content_loc>
       <video:duration>110</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/snegyrochka"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/snegyrochka/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/v-yablochko</loc>
+    <loc>https://salutgrad.ru/product/v-yablochko/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -1028,11 +1028,11 @@
       <video:content_loc>https://rutube.ru/video/6ec6f3c2f016c9b868effbde13e8b771/</video:content_loc>
       <video:duration>100</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/v-yablochko"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/v-yablochko/"/>
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/iskushenie</loc>
+    <loc>https://salutgrad.ru/product/iskushenie/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -1048,7 +1048,7 @@
       <video:content_loc>https://rutube.ru/video/c7a516ef359c776efe5031d4252bce32/</video:content_loc>
       <video:duration>95</video:duration>
     </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/iskushenie"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/iskushenie/"/>
   </url>
 
 </urlset>
