@@ -22,6 +22,12 @@ const filesToCopy = [
     source: path.join(__dirname, '..', 'public', '.htaccess'),
     dest: path.join(__dirname, '..', 'out', '.htaccess'),
     required: true
+  },
+  {
+    name: 'yandex_085493d34d34fe0b.html',
+    source: path.join(__dirname, '..', 'public', 'yandex_085493d34d34fe0b.html'),
+    dest: path.join(__dirname, '..', 'out', 'yandex_085493d34d34fe0b.html'),
+    required: true
   }
 ];
 
