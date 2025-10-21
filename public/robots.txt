@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /cart/
 
 # Основной домен: salutgrad.ru
 # Development домен: salyut.vercel.app
