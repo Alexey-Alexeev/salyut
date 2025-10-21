@@ -19,6 +19,10 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
 # ===============================
 # 🔄 SPA fallback (Next.js static export)
 # ===============================
+
+# Редирект для favicon - стандартизация для поисковых систем
+RewriteRule ^icons/favicon\.ico$ /favicon.ico [L,R=301]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [L]

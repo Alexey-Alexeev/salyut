@@ -57,7 +57,11 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://gqnwyyinswqoustiqtpk.supabase.co" />
         <link rel="preconnect" href="https://gqnwyyinswqoustiqtpk.supabase.co" crossOrigin="anonymous" />
         
-        <link rel="icon" href="/favicon.ico" />
+        {/* Основной favicon для всех браузеров и поисковых систем */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        
+        {/* PNG иконки для современных браузеров */}
         <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon_16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon_32.png" />
         <link rel="icon" type="image/png" sizes="48x48" href="/icons/icon_48.png" />
