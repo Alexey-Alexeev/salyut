@@ -14,6 +14,7 @@ import { ProductsGrid } from '@/components/catalog/products-grid';
 import { CatalogEmptyState } from '@/components/catalog/catalog-empty-state';
 import { fetchProducts } from '@/lib/api-client';
 import { PRICE_VALID_UNTIL } from '@/lib/schema-constants';
+import { CatalogCanonical } from '@/components/catalog/catalog-canonical';
 
 // Типы
 interface Category {
@@ -697,6 +698,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
     return (
         <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24 py-8 animate-in fade-in duration-300">
+            <CatalogCanonical />
             {/* JSON-LD Structured Data для каталога */}
             <script
                 type="application/ld+json"

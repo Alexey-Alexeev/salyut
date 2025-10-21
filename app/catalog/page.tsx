@@ -23,12 +23,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Каталог фейерверков и салютов',
     description: 'Каталог качественных фейерверков и салютов в Москве и МО. Большой выбор пиротехники от проверенных производителей.',
-    url: 'https://salutgrad.ru/catalog',
+    url: 'https://salutgrad.ru/catalog/',
     type: 'website',
     locale: 'ru_RU',
   },
   alternates: {
-    canonical: 'https://salutgrad.ru/catalog',
+    canonical: 'https://salutgrad.ru/catalog/',
   },
 };
 
