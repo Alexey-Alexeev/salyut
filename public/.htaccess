@@ -18,7 +18,13 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
 # ===============================
 # 🌍 Канонический домен
 # ===============================
-RewriteCond %{HTTP_HOST} !^salutgrad\.ru$ [NC]
+# Редирект с www на основной домен
+RewriteCond %{HTTP_HOST} ^www\.salutgrad\.ru$ [NC]
+RewriteRule ^(.*)$ https://salutgrad.ru/$1 [L,R=301]
+
+# Редирект с кириллического домена
+RewriteCond %{HTTP_HOST} ^салютград\.рф$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^www\.салютград\.рф$ [NC]
 RewriteRule ^(.*)$ https://salutgrad.ru/$1 [L,R=301]
 
 # ===============================
