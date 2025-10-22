@@ -23,6 +23,10 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
 # Редирект для favicon - стандартизация для поисковых систем
 RewriteRule ^icons/favicon\.ico$ /favicon.ico [L,R=301]
 
+# Альтернативный редирект для favicon (если первый не сработал)
+RewriteCond %{REQUEST_URI} ^/icons/favicon\.ico$
+RewriteRule ^(.*)$ /favicon.ico [L,R=301]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [L]

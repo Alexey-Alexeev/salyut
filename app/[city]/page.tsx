@@ -299,11 +299,10 @@ export default async function CityPage({ params }: CityPageProps) {
                             "@type": "VideoObject",
                             "name": video.title || `Видеоотзыв о фейерверках в ${cityData.nameLocative}`,
                             "description": `Реальные отзывы клиентов о наших фейерверках в ${cityData.nameLocative}`,
-                            "thumbnailUrl": video.thumbnail_url || "https://salutgrad.ru/images/video-thumb.jpg",
+                            "thumbnailUrl": video.thumbnail_url,
                             "duration": "PT30S",
                             "uploadDate": video.created_at || new Date().toISOString(),
-                            "contentUrl": video.video_url || "https://salutgrad.ru/videos/review.mp4",
-                            "embedUrl": video.embed_url || `https://salutgrad.ru/embed/${video.id}`
+                            "contentUrl": video.video_url
                         }))
                     })
                 }}
