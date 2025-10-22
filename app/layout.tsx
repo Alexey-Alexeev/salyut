@@ -60,6 +60,8 @@ export default function RootLayout({
         {/* Основной favicon для всех браузеров и поисковых систем */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <meta name="msapplication-TileImage" content="/favicon.ico" />
         
         {/* PNG иконки для современных браузеров */}
         <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon_16.png" />

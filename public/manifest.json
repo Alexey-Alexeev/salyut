@@ -11,6 +11,12 @@
     "lang": "ru",
     "icons": [
         {
+            "src": "/favicon.ico",
+            "sizes": "48x48",
+            "type": "image/x-icon",
+            "purpose": "any"
+        },
+        {
             "src": "/icons/icon_16.png",
             "sizes": "16x16",
             "type": "image/png"
