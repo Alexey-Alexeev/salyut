@@ -76,6 +76,11 @@ export default function DeliveryPage() {
               "streetAddress": "Рассветная улица, 14",
               "postalCode": "143921"
             },
+            "additionalProperty": {
+              "@type": "PropertyValue",
+              "name": "Заезд",
+              "value": "Со стороны ул. Лесные пруды"
+            },
             "geo": {
               "@type": "GeoCoordinates",
               "latitude": "55.740340",

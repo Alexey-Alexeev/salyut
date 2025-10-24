@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin } from 'lucide-react';
-import YandexMapWithFallback from '@/components/yandex-map';
+import YandexMapEmbedWithFallback from '@/components/yandex-map-embed';
 
 export function MapSection() {
     return (
@@ -15,12 +15,10 @@ export function MapSection() {
             </CardHeader>
             <CardContent>
                 <div className="space-y-4">
-                    {/* Yandex Map */}
-                    <YandexMapWithFallback
-                        height="384px"
+                    {/* Yandex Map Embed */}
+                    <YandexMapEmbedWithFallback
+                        height="400px"
                         className="w-full"
-                        showControls={true}
-                        zoom={15}
                     />
                 </div>
             </CardContent>
