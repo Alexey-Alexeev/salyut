@@ -11,7 +11,7 @@ const CatalogClient = dynamicImport(() => import('./catalog-client').then(mod =>
 });
 
 // Кэшируем данные на уровне Next.js
-export const revalidate = 300; // 5 минут
+export const revalidate = 300; // 5 минут (соответствует серверному кэшу)
 
 // Статическая генерация для улучшения производительности
 export const dynamic = 'force-static';

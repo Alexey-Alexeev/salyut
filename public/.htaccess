@@ -31,13 +31,27 @@ RewriteRule ^ index.html [L]
 # ===============================
 <IfModule mod_expires.c>
     ExpiresActive On
-    ExpiresDefault "access plus 1 month"
-
+    
+    # HTML страницы - короткое кэширование для актуальности данных
+    <FilesMatch "\.html$">
+        ExpiresDefault "access plus 20 minutes"
+        Header set Cache-Control "public, max-age=1200, must-revalidate"
+    </FilesMatch>
+    
+    # API ответы - очень короткое кэширование
+    <FilesMatch "api/">
+        ExpiresDefault "access plus 5 minutes"
+        Header set Cache-Control "public, max-age=300, must-revalidate"
+    </FilesMatch>
+    
     # Долгое кэширование для неизменяемых файлов
     <FilesMatch "\.(js|css|jpg|jpeg|png|gif|svg|ico|webp|woff|woff2|ttf|eot)$">
         ExpiresDefault "access plus 1 year"
         Header set Cache-Control "public, immutable"
     </FilesMatch>
+    
+    # По умолчанию для остальных файлов
+    ExpiresDefault "access plus 1 hour"
 </IfModule>
 
 # ===============================
