@@ -247,7 +247,7 @@
   <meta property="og:image" content="https://salutgrad.ru/images/hero-bg.webp">
   
   <!-- Canonical URL -->
-  <link rel="canonical" href="https://salutgrad.ru/balashiha">
+  <link rel="canonical" href="https://salutgrad.ru/balashiha/">
 </head>
 <body>
   <main>

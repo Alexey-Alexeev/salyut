@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     images: ['https://salutgrad.ru/images/hero-bg.webp'],
   },
   alternates: {
-    canonical: 'https://salutgrad.ru',
+    canonical: 'https://salutgrad.ru/',
   },
   other: {
     'contact:email': 'info@salutgrad.ru',

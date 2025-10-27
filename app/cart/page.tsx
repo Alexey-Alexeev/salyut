@@ -23,7 +23,7 @@ export const metadata: Metadata = {
       'Оформление заказа фейерверков и салютов. Быстрая доставка по Москве и МО.',
   },
   alternates: {
-    canonical: 'https://salutgrad.ru/cart',
+    canonical: 'https://salutgrad.ru/cart/',
   },
 };
 

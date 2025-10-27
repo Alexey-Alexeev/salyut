@@ -57,7 +57,7 @@ export async function generateMetadata({
           ? [{ url: productData.images[0] as string }]
           : undefined,
       },
-      alternates: { canonical: `https://salutgrad.ru/product/${productData.slug}` },
+      alternates: { canonical: `https://salutgrad.ru/product/${productData.slug}/` },
     };
   } catch (error) {
     console.error('Error generating metadata:', error);

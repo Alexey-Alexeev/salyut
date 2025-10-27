@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
             images: ['https://salutgrad.ru/images/hero-bg.webp'],
         },
         alternates: {
-            canonical: `https://salutgrad.ru/${params.city}`,
+            canonical: `https://salutgrad.ru/${params.city}/`,
         },
         robots: {
             index: true,

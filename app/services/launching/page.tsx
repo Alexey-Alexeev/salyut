@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     images: ['https://salutgrad.ru/images/services-bg.webp', 'https://salutgrad.ru/images/services-bg.jpg'],
   },
   alternates: {
-    canonical: 'https://salutgrad.ru/services/launching',
+    canonical: 'https://salutgrad.ru/services/launching/',
   },
   robots: {
     index: true,

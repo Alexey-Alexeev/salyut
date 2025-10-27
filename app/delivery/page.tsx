@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   keywords:
     'доставка фейерверков москва, купить салют с доставкой, самовывоз фейерверков балашиха, доставка пиротехники московская область',
   alternates: {
-    canonical: 'https://salutgrad.ru/delivery',
+    canonical: 'https://salutgrad.ru/delivery/',
   },
   openGraph: {
     title: 'Доставка фейерверков в Москве и МО',
