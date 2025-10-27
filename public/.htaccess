@@ -21,7 +21,6 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
 # ===============================
 
 # Favicon теперь находится только в корне /favicon.ico
-
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [L]
@@ -32,28 +31,21 @@ RewriteRule ^ index.html [L]
 <IfModule mod_expires.c>
     ExpiresActive On
 
-    # HTML — короткое кэширование
+    # HTML — короткое кэширование для актуальности данных
     <FilesMatch "\.html?$">
         ExpiresDefault "access plus 20 minutes"
         Header set Cache-Control "public, max-age=1200, must-revalidate"
     </FilesMatch>
 
-    # API — только по пути /api/, а не по имени файла
-    <LocationMatch "^/api/">
-        ExpiresDefault "access plus 5 minutes"
-        Header set Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate"
-    </LocationMatch>
-
-    # Изображения, шрифты, стили, JS — долгое кэширование
+    # Изображения, шрифты, стили и скрипты — длительное кэширование
     <FilesMatch "\.(js|css|jpg|jpeg|png|gif|svg|ico|webp|woff|woff2|ttf|eot)$">
         ExpiresDefault "access plus 1 year"
         Header set Cache-Control "public, immutable"
     </FilesMatch>
 
-    # Остальное — на 1 час
+    # По умолчанию — 1 час
     ExpiresDefault "access plus 1 hour"
 </IfModule>
-
 
 # ===============================
 # 💨 Gzip / Brotli сжатие
@@ -73,45 +65,35 @@ RewriteRule ^ index.html [L]
 # ===============================
 # 🛡️ Безопасность и SEO
 # ===============================
-
-# Защита от MIME sniffing
-Header always set X-Content-Type-Options "nosniff"
-
-# Защита от XSS
-Header always set X-XSS-Protection "1; mode=block"
-
-# ===============================
-# 🎯 Яндекс.Метрика iframe настройки
-# ===============================
 <IfModule mod_headers.c>
-    # Разрешаем iframe для Яндекс.Метрики
+    # Защита от MIME sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Защита от XSS
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Безопасная политика Referer
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # HSTS — заставляем браузеры использовать HTTPS
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # 🎯 Яндекс.Метрика — разрешаем iframe
     SetEnvIf Referer "^https?://([^/]+\.)?(metrika\.yandex\.(ru|by)|metrica\.yandex\.(com|com\.tr)|webvisor\.com)/" allow_yandex
-    
-    # Устанавливаем X-Frame-Options только если НЕ Яндекс.Метрика
     Header set X-Frame-Options "SAMEORIGIN" env=!allow_yandex
-    
-    # Content-Security-Policy для iframe
     Header set Content-Security-Policy "frame-ancestors 'self' https://metrika.yandex.ru https://metrika.yandex.by https://metrica.yandex.com https://metrica.yandex.com.tr https://webvisor.com https://*.webvisor.com"
 </IfModule>
 
-# Безопасная политика Referer
-Header always set Referrer-Policy "strict-origin-when-cross-origin"
+# ===============================
+# 🔒 Доступ к файлам
+# ===============================
 
-# Canonical-домен убран - Next.js сам управляет canonical URL
-
-# Разрешаем доступ к важным SEO-файлам
+# Разрешаем доступ к SEO-файлам
 <FilesMatch "^(sitemap\.xml|robots\.txt)$">
     Require all granted
 </FilesMatch>
 
-# Запрещаем доступ к системным файлам (НЕ включая sitemap.xml)
+# Запрещаем доступ к системным и конфигурационным файлам
 <FilesMatch "(\.(env|git|htaccess|json|lock|config|log|sh|sql))$">
     Require all denied
 </FilesMatch>
-
-# ===============================
-# 🔐 HSTS (повторно направляет на HTTPS)
-# ===============================
-<IfModule mod_headers.c>
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-</IfModule>
