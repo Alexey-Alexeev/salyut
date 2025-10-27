@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/footer';
 import { FloatingConsultation } from '@/components/floating-consultation';
 import { Toaster } from '@/components/ui/sonner';
 import { ConditionalCanonical, ConditionalNoIndex } from '@/components/conditional-head';
+import { OrganizationJsonLd } from '@/components/organization-jsonld';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -133,6 +134,9 @@ export default function RootLayout({
         
         {/* Conditional noindex meta tags - только для Vercel */}
         <ConditionalNoIndex />
+        
+        {/* Глобальная JSON-LD разметка организации для всех страниц */}
+        <OrganizationJsonLd />
       </head>
       <body className={inter.className}>
         <div className="flex min-h-screen flex-col">

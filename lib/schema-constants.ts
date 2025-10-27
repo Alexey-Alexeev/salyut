@@ -22,6 +22,22 @@ export const BUSINESS_INFO = {
   priceRange: "₽₽"
 };
 
+// Ссылки на официальные страницы организации
+export const ORGANIZATION_LINKS = {
+  website: "https://salutgrad.ru",
+  catalog: "https://salutgrad.ru/catalog",
+  delivery: "https://salutgrad.ru/delivery",
+  yandexProfile: "https://yandex.ru/profile/94416577675?lang=ru"
+};
+
+// Массив ссылок для поля sameAs в JSON-LD
+export const SAME_AS_LINKS = [
+  ORGANIZATION_LINKS.website,
+  ORGANIZATION_LINKS.catalog,
+  ORGANIZATION_LINKS.delivery,
+  ORGANIZATION_LINKS.yandexProfile
+];
+
 // Рейтинги и отзывы - убраны для избежания рисков с SEO
 // export const RATING_INFO = {
 //   ratingValue: "4.8",
