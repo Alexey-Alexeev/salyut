@@ -1,120 +1,138 @@
+#!/usr/bin/env node
+
 /**
- * Скрипт для тестирования IndexNow API
- * Запуск: node scripts/test-indexnow.js
+ * Тестовый скрипт для проверки IndexNow API с одним URL
  */
 
-const INDEXNOW_KEY = '5KTGsAzSgRxtoPKGw5EPQ5R9nlLWPrLk';
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://salutgrad.ru';
+const https = require('https');
 
-async function testIndexNow() {
-  console.log('🔍 Тестирование IndexNow API...\n');
+const SITE_URL = 'https://salutgrad.ru';
+const KEY = '5KTGsAzSgRxtoPKGw5EPQ5R9nlLWPrLk';
+const TEST_URL = 'https://salutgrad.ru/';
 
-  // Тест 1: Проверка файла с ключом
-  console.log('1️⃣ Проверка файла с ключом:');
-  try {
-    const keyFileUrl = `${BASE_URL}/${INDEXNOW_KEY}.txt`;
-    const response = await fetch(keyFileUrl);
-    
-    if (response.ok) {
-      const keyContent = await response.text();
-      if (keyContent.trim() === INDEXNOW_KEY) {
-        console.log('✅ Файл с ключом найден и корректен');
-        console.log(`   URL: ${keyFileUrl}`);
-        console.log(`   Ключ: ${keyContent.trim()}`);
-      } else {
-        console.log('❌ Содержимое файла не соответствует ключу');
-      }
-    } else {
-      console.log(`❌ Файл с ключом не найден (${response.status})`);
-    }
-  } catch (error) {
-    console.log(`❌ Ошибка при проверке файла: ${error.message}`);
-  }
+console.log('🧪 Тестируем IndexNow API с одним URL...\n');
 
-  console.log('\n2️⃣ Тестирование отправки URL:');
+// Тест 1: GET запрос с одним URL
+function testSingleUrl() {
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: 'yandex.com',
+      port: 443,
+      path: `/indexnow?key=${KEY}&host=${SITE_URL}&url=${encodeURIComponent(TEST_URL)}`,
+      method: 'GET'
+    };
 
-  // Тест 2: Отправка одного URL
-  try {
-    const testUrl = `${BASE_URL}/`;
-    const params = new URLSearchParams({
-      url: testUrl,
-      key: INDEXNOW_KEY,
-      host: new URL(BASE_URL).host
+    console.log('📤 Отправляем GET запрос:');
+    console.log(`URL: https://yandex.com${options.path}`);
+
+    const req = https.request(options, (res) => {
+      console.log(`\n📥 Ответ:`);
+      console.log(`Status: ${res.statusCode}`);
+      
+      let responseData = '';
+      res.on('data', (chunk) => {
+        responseData += chunk;
+      });
+      
+      res.on('end', () => {
+        console.log(`Response: ${responseData || '(пустой ответ)'}`);
+        resolve({ status: res.statusCode, data: responseData });
+      });
     });
 
-    const response = await fetch(`https://yandex.com/indexnow?${params}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    req.on('error', (error) => {
+      console.error('❌ Ошибка:', error);
+      reject(error);
     });
 
-    console.log(`📤 Отправка URL: ${testUrl}`);
-    console.log(`📊 Статус ответа: ${response.status}`);
+    req.end();
+  });
+}
+
+// Тест 3: POST запрос с одним URL (как в основном скрипте)
+function testPostSingleUrlLikeMain() {
+  return new Promise((resolve, reject) => {
+    const requestBody = {
+      key: KEY,
+      host: SITE_URL,
+      urlList: [TEST_URL]
+    };
+    const data = JSON.stringify(requestBody);
     
-    if (response.status === 202) {
-      console.log('✅ URL успешно отправлен в Яндекс');
-    } else {
-      console.log(`❌ Ошибка отправки: ${response.status} ${response.statusText}`);
-    }
-  } catch (error) {
-    console.log(`❌ Ошибка при отправке: ${error.message}`);
-  }
-
-  // Тест 3: Отправка нескольких URL
-  try {
-    const testUrls = [
-      `${BASE_URL}/`,
-      `${BASE_URL}/catalog`,
-      `${BASE_URL}/about`
-    ];
-
-    const response = await fetch('https://yandex.com/indexnow', {
+    const options = {
+      hostname: 'yandex.com',
+      port: 443,
+      path: '/indexnow',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        host: new URL(BASE_URL).host,
-        key: INDEXNOW_KEY,
-        urlList: testUrls
-      }),
+        'Content-Length': data.length
+      }
+    };
+
+    console.log('\n📤 Отправляем POST запрос (как в основном скрипте):');
+    console.log(`URL: https://yandex.com${options.path}`);
+    console.log(`Body: ${data}`);
+
+    const req = https.request(options, (res) => {
+      console.log(`\n📥 Ответ:`);
+      console.log(`Status: ${res.statusCode}`);
+      
+      let responseData = '';
+      res.on('data', (chunk) => {
+        responseData += chunk;
+      });
+      
+      res.on('end', () => {
+        console.log(`Response: ${responseData || '(пустой ответ)'}`);
+        resolve({ status: res.statusCode, data: responseData });
+      });
     });
 
-    console.log(`\n📤 Отправка ${testUrls.length} URL:`);
-    testUrls.forEach(url => console.log(`   - ${url}`));
-    console.log(`📊 Статус ответа: ${response.status}`);
-    
-    if (response.status === 202) {
-      console.log('✅ URL успешно отправлены в Яндекс');
-    } else {
-      console.log(`❌ Ошибка отправки: ${response.status} ${response.statusText}`);
-    }
-  } catch (error) {
-    console.log(`❌ Ошибка при отправке: ${error.message}`);
-  }
+    req.on('error', (error) => {
+      console.error('❌ Ошибка:', error);
+      reject(error);
+    });
 
-  console.log('\n3️⃣ Тестирование через API endpoint:');
-
-  // Тест 4: Через наш API endpoint
-  try {
-    const apiUrl = `${BASE_URL}/api/indexnow?url=${encodeURIComponent(BASE_URL)}`;
-    const response = await fetch(apiUrl);
-    const result = await response.json();
-
-    console.log(`📤 API запрос: ${apiUrl}`);
-    console.log(`📊 Результат:`, result);
-  } catch (error) {
-    console.log(`❌ Ошибка API: ${error.message}`);
-  }
-
-  console.log('\n🎯 Рекомендации:');
-  console.log('1. Убедитесь, что файл с ключом доступен по URL');
-  console.log('2. Проверьте, что ваш сайт доступен из интернета');
-  console.log('3. Статус 202 означает успешную отправку');
-  console.log('4. Яндекс может занять время для обработки запросов');
+    req.write(data);
+    req.end();
+  });
 }
 
-// Запуск теста
-testIndexNow().catch(console.error);
+// Запуск тестов
+async function runTests() {
+  try {
+    console.log('🔑 Ключ:', KEY);
+    console.log('🌐 Сайт:', SITE_URL);
+    console.log('📄 Тестовый URL:', TEST_URL);
+    
+    console.log('\n' + '='.repeat(50));
+    console.log('ТЕСТ 1: GET запрос с одним URL');
+    console.log('='.repeat(50));
+    
+    const result1 = await testSingleUrl();
+    
+    console.log('\n' + '='.repeat(50));
+    console.log('ТЕСТ 2: POST запрос с одним URL (как в основном скрипте)');
+    console.log('='.repeat(50));
+    
+    const result2 = await testPostSingleUrlLikeMain();
+    
+    console.log('\n' + '='.repeat(50));
+    console.log('РЕЗУЛЬТАТЫ:');
+    console.log('='.repeat(50));
+    console.log(`GET запрос: ${result1.status === 202 ? '✅ Успех' : '❌ Ошибка'} (${result1.status})`);
+    console.log(`POST запрос: ${result2.status === 202 ? '✅ Успех' : '❌ Ошибка'} (${result2.status})`);
+    
+    if (result1.status === 202 || result2.status === 202) {
+      console.log('\n🎉 Ключ работает! Проблема в основном скрипте.');
+    } else {
+      console.log('\n⚠️  Ключ не работает. Нужно зарегистрировать в Яндекс.Вебмастере.');
+    }
+    
+  } catch (error) {
+    console.error('❌ Ошибка тестирования:', error.message);
+  }
+}
 
+runTests();

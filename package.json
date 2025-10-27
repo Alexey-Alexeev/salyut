@@ -14,7 +14,11 @@
     "db:seed": "tsx scripts/seed.ts",
     "test:deploy": "node scripts/test-deploy.js",
     "test:cities": "node scripts/test-cities.js",
-    "copy-sitemap": "node scripts/copy-sitemap.js"
+    "copy-sitemap": "node scripts/copy-sitemap.js",
+    "submit-yandex": "node scripts/submit-to-yandex.js",
+    "generate-key": "node scripts/generate-indexnow-key.js",
+    "test-indexnow": "node scripts/test-indexnow.js",
+    "submit-single": "node scripts/submit-single-urls.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
