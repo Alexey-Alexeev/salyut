@@ -288,7 +288,6 @@
       <video:title>Фейерверк-25 - демонстрация</video:title>
       <video:description>25 залпов калибра 1.25" с 8 эффектами в насыщенном 40-секундном шоу</video:description>
       <video:content_loc>https://rutube.ru/video/ad3d4fc4d4e092ab84fcb4b8992ccf4a/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/ad3d4fc4d4e092ab84fcb4b8992ccf4a</video:player_loc>
       <video:duration>40</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/fireworks-25/"/>
@@ -309,7 +308,6 @@
       <video:title>Золотая корона - демонстрация</video:title>
       <video:description>100 мощных залпов калибра 1.25" создают 60-секундное шоу премиум-класса</video:description>
       <video:content_loc>https://rutube.ru/video/958a0f905a0f1c3d026a87f82b5c08c1/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/958a0f905a0f1c3d026a87f82b5c08c1</video:player_loc>
       <video:duration>60</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotaya-korona/"/>
@@ -330,7 +328,6 @@
       <video:title>Держава - демонстрация</video:title>
       <video:description>36 залпов калибра 0.8" с 5 эффектами создают насыщенное 65-секундное шоу</video:description>
       <video:content_loc>https://rutube.ru/video/e24d081087c5417015cc73089a3f63f7/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/e24d081087c5417015cc73089a3f63f7</video:player_loc>
       <video:duration>65</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/derzhava/"/>
@@ -351,7 +348,6 @@
       <video:title>Повелитель молний - демонстрация</video:title>
       <video:description>322 залпа за 2 минуты непрерывного могущества с 20 уникальными эффектами</video:description>
       <video:content_loc>https://rutube.ru/video/289ca8d3e120d78492f9c569298d113a/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/289ca8d3e120d78492f9c569298d113a</video:player_loc>
       <video:duration>120</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/povelitel-molniy/"/>
@@ -372,7 +368,6 @@
       <video:title>Крестоносцы - демонстрация</video:title>
       <video:description>36 залпов калибра 1.25" с 11 благородными эффектами для 65-секундной битвы стихий</video:description>
       <video:content_loc>https://rutube.ru/video/8315b5c7009bc8312109c86dae8d386e/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/8315b5c7009bc8312109c86dae8d386e</video:player_loc>
       <video:duration>65</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krestonosci/"/>
@@ -393,7 +388,6 @@
       <video:title>Голливуд - демонстрация</video:title>
       <video:description>100 мощных залпов и 11 различных визуальных эффектов для 95 секунд шоу</video:description>
       <video:content_loc>https://rutube.ru/video/862c1ce60998b12116b66b5d8d73be41/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/862c1ce60998b12116b66b5d8d73be41</video:player_loc>
       <video:duration>95</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Hollywood/"/>
@@ -414,7 +408,6 @@
       <video:title>Бородино - демонстрация</video:title>
       <video:description>160 разнокалиберных залпов с 11 эффектами в грандиозном 160-секундном шоу</video:description>
       <video:content_loc>https://rutube.ru/video/c925a80877a109835d4bd61c6e37a112/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/c925a80877a109835d4bd61c6e37a112</video:player_loc>
       <video:duration>160</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/borodino/"/>
@@ -435,7 +428,6 @@
       <video:title>Красный дракон - демонстрация</video:title>
       <video:description>100 мощных залпов с 9 эффектами для интенсивного 75-секундного шоу</video:description>
       <video:content_loc>https://rutube.ru/video/a3cecdbe0e9bfefffe556c7c2038571f/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/a3cecdbe0e9bfefffe556c7c2038571f</video:player_loc>
       <video:duration>75</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/krasnii-drakon/"/>
@@ -456,7 +448,6 @@
       <video:title>Золотой дракон - демонстрация</video:title>
       <video:description>100 залпов с 6 эффектами для 100-секундного шоу с мерцанием и треском</video:description>
       <video:content_loc>https://rutube.ru/video/d42bbbf6004a7f0952986d308d638d34/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/d42bbbf6004a7f0952986d308d638d34</video:player_loc>
       <video:duration>100</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/zolotoi-drakon/"/>
@@ -477,7 +468,6 @@
       <video:title>Семь чудес света - демонстрация</video:title>
       <video:description>100 мощных залпов калибра 1.25" создают 60-секундное шоу с 10 эффектами</video:description>
       <video:content_loc>https://vkvideo.ru/video-120006148_456239229</video:content_loc>
-      <video:player_loc allow_embed="yes">https://vkvideo.ru/embed/120006148_456239229</video:player_loc>
       <video:duration>60</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/feyerverk-sem-chudes-sveta/"/>
@@ -536,7 +526,6 @@
       <video:title>Петарды звиздец - демонстрация</video:title>
       <video:description>10 фитильных петард уровня Корсар-10 для максимальной громкости</video:description>
       <video:content_loc>https://rutube.ru/video/4f3aada85de10ac00b69cda2aff81eb7/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/4f3aada85de10ac00b69cda2aff81eb7</video:player_loc>
       <video:duration>10</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Zvizdec/"/>
@@ -557,7 +546,6 @@
       <video:title>Эсминец - демонстрация</video:title>
       <video:description>308 разнокалиберных залпов с 13 эффектами создают грандиозное 115-секундное шоу</video:description>
       <video:content_loc>https://rutube.ru/video/445a494fce1e0b5c1e35c21ec6dc959d/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/445a494fce1e0b5c1e35c21ec6dc959d</video:player_loc>
       <video:duration>115</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/Esminec/"/>
@@ -787,7 +775,6 @@
       <video:title>Аквамарин - демонстрация</video:title>
       <video:description>36 залпов с двумя эффектами создают атмосферу волшебства на высоте до 30 метров</video:description>
       <video:content_loc>https://rutube.ru/video/7b7f5282728d77d343f5ee8dc905885c/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/7b7f5282728d77d343f5ee8dc905885c</video:player_loc>
       <video:duration>35</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/aquamarin/"/>
@@ -846,7 +833,6 @@
       <video:title>LDC303 Столичный - демонстрация</video:title>
       <video:description>100 залпов и семь разнообразных эффектов создают 75-секундную симфонию цвета и света</video:description>
       <video:content_loc>https://rutube.ru/video/b6cf7a8f81f55d0805fb8b92537d58fd/?ysclid=mgnh1vcdbz476513455</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/b6cf7a8f81f55d0805fb8b92537d58fd</video:player_loc>
       <video:duration>75</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/stolichnyy/"/>
@@ -867,7 +853,6 @@
       <video:title>Рубикон - демонстрация</video:title>
       <video:description>25 зарядов повышенной мощности создают короткое, но невероятно насыщенное 35-секундное шоу</video:description>
       <video:content_loc>https://rutube.ru/video/a8f00f06d68d8ef1c0336b6598387402/</video:content_loc>
-      <video:player_loc allow_embed="yes">https://rutube.ru/play/embed/a8f00f06d68d8ef1c0336b6598387402</video:player_loc>
       <video:duration>35</video:duration>
     </video:video>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/rubikon/"/>

@@ -394,7 +394,19 @@ export default function ProductClient({
               "@type": "PropertyValue",
               "name": key,
               "value": String(value)
-            })) : []
+            })) : [],
+            ...(product.video_url ? {
+              "video": {
+                "@type": "VideoObject",
+                "name": `Демонстрация ${product.name}`,
+                "description": `Видео демонстрация фейерверка ${product.name}`,
+                "contentUrl": product.video_url,
+                "embedUrl": getVideoInfo(product.video_url).embedUrl,
+                "thumbnailUrl": product.images?.[0],
+                "uploadDate": new Date().toISOString(),
+                "duration": "PT60S"
+              }
+            } : {})
           })
         }}
       />
