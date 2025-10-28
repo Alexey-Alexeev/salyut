@@ -14,9 +14,11 @@ export function CatalogCanonical() {
       searchParams.get('maxPrice') ||
       searchParams.get('sortBy');
 
-    // Удаляем старый canonical-тег, если есть
+    // Безопасно удаляем старый canonical-тег, если есть
     const existingCanonical = document.querySelector('link[rel="canonical"]');
-    if (existingCanonical) existingCanonical.remove();
+    if (existingCanonical && existingCanonical.parentNode) {
+      existingCanonical.parentNode.removeChild(existingCanonical);
+    }
 
     // Определяем canonical в зависимости от состояния фильтров
     const canonicalUrl = hasFilters
@@ -28,7 +30,10 @@ export function CatalogCanonical() {
     canonicalLink.rel = 'canonical';
     canonicalLink.href = canonicalUrl;
 
-    document.head.appendChild(canonicalLink);
+    // Безопасно добавляем в head
+    if (document.head) {
+      document.head.appendChild(canonicalLink);
+    }
   }, [searchParams]);
 
   return null;
