@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   // robots настройки будут управляться условными компонентами
   viewport: 'width=device-width, initial-scale=1',
   verification: {
-    google: 'your-google-verification-code', // Замените на реальный код
+    google: 'google-site-verification=UjQUv2ZFXE-S-XJK7fTzHRH9SF3sewBPrJMwc8w-4X4', // Замените на реальный код
   },
   icons: {
     icon: [
