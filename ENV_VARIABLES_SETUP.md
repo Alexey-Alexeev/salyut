@@ -33,10 +33,13 @@ NEXT_PUBLIC_YANDEX_API_KEY=your-maps-api-key
 NEXT_PUBLIC_GA_ID=your-ga-id
 ```
 
-### 🔍 **Google Search Console (опционально):**
+### 🔄 **Кэширование (автоматически):**
 ```
-GOOGLE_SITE_VERIFICATION=your-verification-code
+SITE_VERSION=123-abc123def456  # Автоматически в GitHub Actions
+BUILD_ID=build-123-abc123def456  # Автоматически в GitHub Actions
 ```
+
+**Примечание:** Эти переменные используются для генерации файла `version.json`, который помогает сбрасывать кэш браузера при обновлении сайта.
 
 ## 🛠️ Настройка в GitHub Secrets
 
@@ -62,6 +65,8 @@ GOOGLE_SITE_VERIFICATION=your-verification-code
 ✅ FTP_USERNAME
 ✅ FTP_PASSWORD
 ✅ FTP_SERVER_DIR
+🔄 SITE_VERSION (автоматически)
+🔄 BUILD_ID (автоматически)
 ```
 
 ## 🔧 Локальная разработка
@@ -82,6 +87,10 @@ DATABASE_URL=your-database-url
 TELEGRAM_BOT_TOKEN=your-bot-token
 TELEGRAM_CHAT_ID=your-chat-id
 NEXT_PUBLIC_YANDEX_API_KEY=your-maps-key
+
+# Для локальной разработки (опционально)
+SITE_VERSION=local-dev-$(date +%s)
+BUILD_ID=local-build-$(date +%s)
 ```
 
 ### 3. **Перезапустите сервер разработки:**

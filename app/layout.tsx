@@ -7,6 +7,7 @@ import { FloatingConsultation } from '@/components/floating-consultation';
 import { Toaster } from '@/components/ui/sonner';
 import { ConditionalNoIndex } from '@/components/conditional-head';
 import { OrganizationJsonLd } from '@/components/organization-jsonld';
+import { CacheBuster } from '@/components/cache-buster';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -139,6 +140,25 @@ export default function RootLayout({
         {/* Conditional noindex meta tags - только для Vercel */}
         <ConditionalNoIndex />
         
+        {/* Service Worker для управления кэшем */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                      console.log('SW зарегистрирован:', registration);
+                    })
+                    .catch((error) => {
+                      console.log('Ошибка регистрации SW:', error);
+                    });
+                });
+              }
+            `,
+          }}
+        />
+        
         {/* Глобальная JSON-LD разметка организации для всех страниц */}
         <OrganizationJsonLd />
       </head>
@@ -150,6 +170,7 @@ export default function RootLayout({
         </div>
         <FloatingConsultation />
         <Toaster />
+        <CacheBuster />
       </body>
     </html>
   );

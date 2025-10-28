@@ -6,6 +6,10 @@ const nextConfig = {
   // Статический экспорт для хостинга
   output: 'export',
   trailingSlash: true,
+  // Управление кэшем
+  generateBuildId: async () => {
+    return `build-${Date.now()}`;
+  },
   // Оптимизации для Lighthouse
   compress: true,
   poweredByHeader: false,
