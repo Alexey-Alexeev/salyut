@@ -20,9 +20,9 @@ export function ConditionalCanonical({ href }: { href: string }) {
     return null;
   }
 
-  // Для Vercel домена - указываем canonical на основной домен
+  // Для Vercel домена - указываем canonical на основной домен с правильным путем
   // Для production домена - указываем на себя
-  const canonicalUrl = isProduction ? href : 'https://salutgrad.ru/';
+  const canonicalUrl = isProduction ? href : `https://salutgrad.ru${window.location.pathname}`;
   
   return <link rel="canonical" href={canonicalUrl} />;
 }
