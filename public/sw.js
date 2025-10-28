@@ -19,42 +19,34 @@ const STATIC_URLS = [
 
 // Ресурсы, которые не должны кэшироваться
 const NO_CACHE_URLS = [
-  '/api/version',
+  '/version.json',
 ];
 
 self.addEventListener('install', (event) => {
-  console.log('Service Worker: Установка');
-  
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then((cache) => {
-        console.log('Service Worker: Кэширование статических ресурсов');
         return cache.addAll(STATIC_URLS);
       })
       .then(() => {
-        console.log('Service Worker: Установка завершена');
         return self.skipWaiting();
       })
   );
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Активация');
-  
   event.waitUntil(
     caches.keys()
       .then((cacheNames) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
             if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-              console.log('Service Worker: Удаление старого кэша:', cacheName);
               return caches.delete(cacheName);
             }
           })
         );
       })
       .then(() => {
-        console.log('Service Worker: Активация завершена');
         return self.clients.claim();
       })
   );
@@ -79,7 +71,6 @@ self.addEventListener('fetch', (event) => {
       .then((cachedResponse) => {
         if (FORCE_UPDATE_MODE) {
           // АГРЕССИВНЫЙ РЕЖИМ: всегда загружаем свежую версию
-          console.log('Service Worker: Принудительное обновление - загружаем свежую версию:', request.url);
           return fetch(request)
             .then((response) => {
               // Обновляем кэш свежей версией
@@ -98,7 +89,6 @@ self.addEventListener('fetch', (event) => {
         } else {
           // ОБЫЧНЫЙ РЕЖИМ: используем кэш
           if (cachedResponse) {
-            console.log('Service Worker: Возвращаем из кэша:', request.url);
             return cachedResponse;
           }
           
@@ -112,7 +102,6 @@ self.addEventListener('fetch', (event) => {
             if (response.status === 200) {
               caches.open(DYNAMIC_CACHE)
                 .then((cache) => {
-                  console.log('Service Worker: Кэшируем новый ресурс:', request.url);
                   cache.put(request, responseClone);
                 });
             }
@@ -131,12 +120,10 @@ self.addEventListener('fetch', (event) => {
 // Обработка сообщений от основного потока
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
-    console.log('Service Worker: Принудительное обновление');
     self.skipWaiting();
   }
   
   if (event.data && event.data.type === 'CLEAR_CACHE') {
-    console.log('Service Worker: Очистка кэша');
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => caches.delete(cacheName))
@@ -162,7 +149,6 @@ setInterval(() => {
               
               // Удаляем кэш старше 24 часов
               if (ageInHours > 24) {
-                console.log('Service Worker: Удаляем старый кэш:', request.url);
                 cache.delete(request);
               }
             }

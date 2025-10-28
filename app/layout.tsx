@@ -148,10 +148,8 @@ export default function RootLayout({
                 window.addEventListener('load', () => {
                   navigator.serviceWorker.register('/sw.js')
                     .then((registration) => {
-                      console.log('SW зарегистрирован:', registration);
                     })
                     .catch((error) => {
-                      console.log('Ошибка регистрации SW:', error);
                     });
                 });
               }

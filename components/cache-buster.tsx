@@ -36,7 +36,6 @@ export function CacheBuster() {
         
         // Если версия изменилась
         if (currentVersion && currentVersion !== versionInfo.version) {
-          console.log('Обнаружена новая версия сайта:', versionInfo.version);
           
           // В локальной разработке не показываем уведомления об обновлениях
           const isLocalDev = versionInfo.version === 'local-dev' || window.location.hostname === 'localhost';
@@ -48,7 +47,6 @@ export function CacheBuster() {
               await Promise.all(
                 cacheNames.map(cacheName => caches.delete(cacheName))
               );
-              console.log('Кэши очищены');
             }
             
             // Очищаем localStorage
@@ -68,7 +66,6 @@ export function CacheBuster() {
             }
           } else {
             // В локальной разработке просто обновляем версию без уведомлений
-            console.log('Локальная разработка - обновляем версию без уведомлений');
           }
         }
         
