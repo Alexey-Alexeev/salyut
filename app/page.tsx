@@ -11,11 +11,11 @@ import { CategoriesSection } from '@/components/sections/categories-section';
 import { PopularProductsSection } from '@/components/sections/popular-products-section';
 import { ProfessionalServicesSection } from '@/components/sections/professional-services-section';
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
-import dynamicImport from 'next/dynamic';
+import dynamic from 'next/dynamic';
 import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 
 // Динамические импорты для тяжелых компонентов
-const DynamicVideoReviewsSection = dynamicImport(() => import('@/components/sections/video-reviews-section').then(mod => ({ default: mod.VideoReviewsSection })), {
+const DynamicVideoReviewsSection = dynamic(() => import('@/components/sections/video-reviews-section').then(mod => ({ default: mod.VideoReviewsSection })), {
   loading: () => <div className="h-32 bg-gray-100 animate-pulse rounded" />,
   ssr: true
 });

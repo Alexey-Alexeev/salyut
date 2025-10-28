@@ -14,27 +14,37 @@ export function CatalogCanonical() {
       searchParams.get('maxPrice') ||
       searchParams.get('sortBy');
 
-    // Безопасно удаляем старый canonical-тег, если есть
-    const existingCanonical = document.querySelector('link[rel="canonical"]');
-    if (existingCanonical && existingCanonical.parentNode) {
-      existingCanonical.parentNode.removeChild(existingCanonical);
-    }
-
     // Определяем canonical в зависимости от состояния фильтров
     const canonicalUrl = hasFilters
       ? 'https://salutgrad.ru/catalog/' // при фильтрах — указываем на общий каталог
       : window.location.origin + window.location.pathname; // без фильтров — текущий URL
 
-    // Создаём новый тег
-    const canonicalLink = document.createElement('link');
-    canonicalLink.rel = 'canonical';
-    canonicalLink.href = canonicalUrl;
-
-    // Безопасно добавляем в head
-    if (document.head) {
+    // Просто обновляем href существующего canonical тега или создаем новый
+    let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
+    
+    if (canonicalLink) {
+      // Обновляем существующий
+      canonicalLink.href = canonicalUrl;
+    } else {
+      // Создаем новый
+      canonicalLink = document.createElement('link');
+      canonicalLink.rel = 'canonical';
+      canonicalLink.href = canonicalUrl;
       document.head.appendChild(canonicalLink);
     }
+
+    // Cleanup функция - только если мы создали новый тег
+    return () => {
+      if (canonicalLink && canonicalLink.parentNode && !document.querySelector('link[rel="canonical"]')) {
+        try {
+          canonicalLink.parentNode.removeChild(canonicalLink);
+        } catch (error) {
+          // Игнорируем ошибки удаления
+        }
+      }
+    };
   }, [searchParams]);
 
   return null;
 }
+

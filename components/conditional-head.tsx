@@ -41,14 +41,38 @@ export function ConditionalNoIndex() {
     setIsLoaded(true);
   }, []);
 
-  if (!isLoaded || isProduction) {
-    return null; // НЕ рендерим noindex для production домена
-  }
+  useEffect(() => {
+    if (!isLoaded || isProduction) {
+      return;
+    }
 
-  return (
-    <>
-      <meta name="robots" content="noindex, nofollow" />
-      <meta name="googlebot" content="noindex, nofollow" />
-    </>
-  );
+    // Создаем мета-теги программно
+    const robotsMeta = document.createElement('meta');
+    robotsMeta.name = 'robots';
+    robotsMeta.content = 'noindex, nofollow';
+
+    const googlebotMeta = document.createElement('meta');
+    googlebotMeta.name = 'googlebot';
+    googlebotMeta.content = 'noindex, nofollow';
+
+    // Добавляем в head
+    document.head.appendChild(robotsMeta);
+    document.head.appendChild(googlebotMeta);
+
+    // Cleanup функция
+    return () => {
+      try {
+        if (robotsMeta.parentNode) {
+          robotsMeta.parentNode.removeChild(robotsMeta);
+        }
+        if (googlebotMeta.parentNode) {
+          googlebotMeta.parentNode.removeChild(googlebotMeta);
+        }
+      } catch (error) {
+        // Игнорируем ошибки удаления
+      }
+    };
+  }, [isLoaded, isProduction]);
+
+  return null; // Не рендерим ничего в JSX
 }
