@@ -275,7 +275,7 @@ export function DeliverySelection({
                     <p>
                       • За МКАД —{' '}
                       <strong>
-                        500 ₽ базовая + 100 ₽/км
+                        500 ₽ базовая + 75 ₽/км
                       </strong>
                     </p>
                     <p>

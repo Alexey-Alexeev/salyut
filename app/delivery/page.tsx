@@ -125,13 +125,13 @@ export default function DeliveryPage() {
                     "name": "Доставка фейерверков по МО",
                     "description": "Доставка фейерверков по Московской области с расчетом по километражу"
                   },
-                  "price": "100",
+                  "price": "75",
                   "priceCurrency": "RUB",
                   "priceValidUntil": "2025-12-31",
                   "eligibleRegion": "RU-MOS",
                   "priceSpecification": {
                     "@type": "UnitPriceSpecification",
-                    "price": "100",
+                    "price": "75",
                     "priceCurrency": "RUB",
                     "unitText": "за километр от МКАД"
                   },

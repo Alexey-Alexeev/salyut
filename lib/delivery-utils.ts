@@ -6,7 +6,7 @@ export const DELIVERY_CONSTANTS = {
   MOSCOW_DELIVERY_COST: 500,
 
   // Стоимость за каждый км от МКАД для других городов области
-  COST_PER_KM: 100,
+  COST_PER_KM: 75,
 
   // Минимальная стоимость доставки для всех случаев
   MIN_DELIVERY_COST: 500,
@@ -151,7 +151,7 @@ export function calculateDeliveryCost(
       // Внутри МКАД - фиксированная стоимость
       return DELIVERY_CONSTANTS.MOSCOW_DELIVERY_COST;
     } else {
-      // За МКАД: 500₽ базовая стоимость + 100₽ за каждый км
+      // За МКАД: 500₽ базовая стоимость + 75₽ за каждый км
       return (
         DELIVERY_CONSTANTS.MIN_DELIVERY_COST +
         DELIVERY_CONSTANTS.COST_PER_KM * distanceFromMKAD
@@ -190,7 +190,7 @@ export function calculateDelivery(
     if (data.distanceFromMKAD <= 0) {
       description = `Доставка: ${cost} ₽`;
     } else {
-      description = `Доставка (${data.distanceFromMKAD} км от МКАД): 500₽ + ${data.distanceFromMKAD}км × 100₽ = ${cost} ₽`;
+      description = `Доставка (${data.distanceFromMKAD} км от МКАД): 500₽ + ${data.distanceFromMKAD}км × 75₽ = ${cost} ₽`;
     }
   } else {
     description = `Доставка: ${cost} ₽`;
