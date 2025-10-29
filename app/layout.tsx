@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { FloatingConsultation } from '@/components/floating-consultation';
+import { ExitIntentConsultation } from '@/components/exit-intent-consultation';
 import { Toaster } from '@/components/ui/sonner';
 import { ConditionalNoIndex } from '@/components/conditional-head';
 import { OrganizationJsonLd } from '@/components/organization-jsonld';
@@ -167,6 +168,7 @@ export default function RootLayout({
           <Footer />
         </div>
         <FloatingConsultation />
+        <ExitIntentConsultation />
         <Toaster />
         <CacheBuster />
       </body>

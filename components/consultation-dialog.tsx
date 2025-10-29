@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -27,11 +28,27 @@ import { createConsultation } from '@/lib/api-client';
 interface ConsultationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /**
+   * Необязательный вводный блок, который отображается под заголовком.
+   * Используется, например, для exit-intent сообщений.
+   */
+  introContent?: ReactNode;
+  /**
+   * Необязательный заголовок. По умолчанию — "Получить бесплатную консультацию".
+   */
+  title?: string;
+  /**
+   * Центрировать ли заголовок модалки
+   */
+  centerTitle?: boolean;
 }
 
 export function ConsultationDialog({
   open,
   onOpenChange,
+  introContent,
+  title,
+  centerTitle,
 }: ConsultationDialogProps) {
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -112,10 +129,15 @@ export function ConsultationDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md w-full mx-0 sm:mx-0 max-h-[95vh] overflow-y-auto focus:outline-none">
         <DialogHeader>
-          <DialogTitle className="text-lg sm:text-xl font-bold">
-            Получить бесплатную консультацию
+          <DialogTitle className={`text-lg sm:text-xl font-bold ${centerTitle ? 'text-center' : ''}`}>
+            {title || 'Получить бесплатную консультацию'}
           </DialogTitle>
         </DialogHeader>
+        {introContent && (
+          <div className="mb-3 rounded-md border border-orange-200 bg-orange-50 p-3 text-sm text-orange-900">
+            {introContent}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -240,14 +262,22 @@ export function ConsultationDialog({
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Отправка...' : 'Отправить заявку'}
+            {loading ? 'Отправка...' : 'Получить бесплатную консультацию'}
           </Button>
+
+          {/* Микро-доверие под кнопкой */}
+          <div className="text-xs text-muted-foreground flex items-start gap-2 leading-snug">
+            <span aria-hidden>🔒</span>
+            <span>
+              Мы не рассылаем спам, общаемся по делу и не передаём данные третьим лицам
+            </span>
+          </div>
         </form>
 
         {/* Секция прямых контактов */}
         <div className="mt-4 border-t pt-4">
           <p className="text-muted-foreground mb-3 text-center text-sm">
-            Или можете связаться с нами напрямую
+            Или свяжитесь напрямую 👇
           </p>
           <div className="flex justify-center gap-2 sm:gap-3">
             {/* Телефон */}
