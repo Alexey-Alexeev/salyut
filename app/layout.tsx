@@ -9,6 +9,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { ConditionalNoIndex } from '@/components/conditional-head';
 import { OrganizationJsonLd } from '@/components/organization-jsonld';
 import { CacheBuster } from '@/components/cache-buster';
+import MobileExitBottomSheet from '@/components/mobile-exit-bottom-sheet';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -169,6 +170,9 @@ export default function RootLayout({
         </div>
         <FloatingConsultation />
         <ExitIntentConsultation />
+        {/** Mobile bottom sheet exit-intent */}
+        {/** Rendered globally; component self-guards to mobile and eligible pages */}
+        <MobileExitBottomSheet />
         <Toaster />
         <CacheBuster />
       </body>
