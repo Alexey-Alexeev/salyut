@@ -54,7 +54,7 @@ export function ExitIntentConsultation() {
     <ConsultationDialog
       open={open}
       onOpenChange={setOpen}
-      title="Подберём идеальный салют под ваш праздник — бесплатно"
+      title="Подберем товар для Вас - консультация бесплатна"
       centerTitle
       introContent={
         <div className="space-y-2 text-center">
