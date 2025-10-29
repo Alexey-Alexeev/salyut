@@ -13,6 +13,14 @@ import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
  */
 export default function MobileExitBottomSheet() {
   const [open, setOpen] = useState(false);
+  const [hasShown, setHasShown] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return sessionStorage.getItem('mobileExitSheetShown') === '1';
+    } catch {
+      return false;
+    }
+  });
   const pathname = usePathname();
 
   // Актуальная проверка условий показа (пересчитывается при смене пути)
@@ -28,15 +36,17 @@ export default function MobileExitBottomSheet() {
     const isCoarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
     if (!isCoarse) return false;
 
-    const shown = sessionStorage.getItem('mobileExitSheetShown') === '1';
-    if (shown) return false;
+    if (hasShown) return false;
 
     return true;
-  }, [pathname]);
+  }, [pathname, hasShown]);
 
   const triggerOnce = useCallback(() => {
     if (!isEligible || open) return;
-    sessionStorage.setItem('mobileExitSheetShown', '1');
+    try {
+      sessionStorage.setItem('mobileExitSheetShown', '1');
+    } catch {}
+    setHasShown(true);
     setOpen(true);
   }, [isEligible, open]);
 
