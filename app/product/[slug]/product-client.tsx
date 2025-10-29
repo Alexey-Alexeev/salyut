@@ -610,7 +610,21 @@ export default function ProductClient({
                       <div>
                         <span className="text-muted-foreground">Категория:</span>
                         <br />
-                        <span className="font-medium">{category.name}</span>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Link 
+                            href={`/catalog?category=${category.slug}`}
+                            className="font-medium text-primary underline hover:opacity-80 transition-opacity"
+                          >
+                            {category.name}
+                          </Link>
+                          <span className="text-muted-foreground">•</span>
+                          <Link 
+                            href="/catalog"
+                            className="font-medium text-primary underline hover:opacity-80 transition-opacity"
+                          >
+                            В каталог
+                          </Link>
+                        </div>
                       </div>
                     )}
                   </div>
