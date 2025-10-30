@@ -142,6 +142,14 @@ export function DeliverySelection({
       return;
     }
 
+    // Если не удалось распознать город из адреса — не пытаемся геокодировать,
+    // чтобы не получить случайные координаты в другой стране/регионе
+    const detectedCity = extractCityFromAddress(addressText);
+    if (!detectedCity) {
+      setDistanceFromMKAD(undefined);
+      return;
+    }
+
     const apiKey = process.env.NEXT_PUBLIC_YANDEX_API_KEY;
     if (!apiKey) {
       setDistanceFromMKAD(undefined);
@@ -195,9 +203,12 @@ export function DeliverySelection({
       // const coefficient = getDistanceCoefficient(deliveryLat, deliveryLng)
       const estimatedRoadDistance = minStraightDistanceKm * 1.35;
       const finalDistance = Math.ceil(estimatedRoadDistance);
-
-
-      setDistanceFromMKAD(finalDistance);
+      // Защита от неверных результатов геокодирования
+      if (!isFinite(finalDistance) || finalDistance < 0 || finalDistance > 200) {
+        setDistanceFromMKAD(undefined);
+      } else {
+        setDistanceFromMKAD(finalDistance);
+      }
     } catch (error) {
       setDistanceFromMKAD(undefined);
     } finally {
