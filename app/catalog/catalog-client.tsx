@@ -114,7 +114,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     // Стабилизируем список товаров для предотвращения лишних рендеров
     const stableProducts = useMemo(() => {
         return filteredProducts;
-    }, [filteredProducts.length, filteredProducts.map(p => p.id).join(',')]);
+    }, [filteredProducts]);
 
     // Мемоизируем построение URL параметров
     const buildApiParams = useCallback((page: number = 1) => {
@@ -228,7 +228,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         }
 
         // Парсим категории (может быть массив)
-        const categories = Array.isArray(categoryParam) ? categoryParam : (categoryParam ? [categoryParam] : []);
+        const categoriesFromUrl = Array.isArray(categoryParam) ? categoryParam : (categoryParam ? [categoryParam] : []);
 
         // Проверяем, есть ли параметры в URL
         const hasUrlParams = (categoryParam && categoryParam.length > 0) || searchParam || minPriceParam || maxPriceParam || sortByParam;
@@ -251,7 +251,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             resetPage();
             setFilters(prev => ({
                 ...prev,
-                categories,
+                categories: categoriesFromUrl,
                 search: searchParam || '',
                 priceFrom: minPriceParam || '',
                 priceTo: maxPriceParam || '',
@@ -612,8 +612,17 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         }));
         
         // Показываем loader в мобильной версии вместо скролла
-        if (window.innerWidth < 768) {
+        if (typeof window !== 'undefined' && window.innerWidth < 768) {
             setIsPaginationLoading(true);
+        }
+
+         // Плавный скролл наверх при смене страницы
+         if (typeof window !== 'undefined') {
+            try {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch {
+                window.scrollTo(0, 0);
+            }
         }
     }, []);
 
