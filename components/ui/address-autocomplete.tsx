@@ -54,7 +54,7 @@ export function AddressAutocomplete({
     // Yandex Geocoder API for suggestions
   }, []);
 
-  // Функция получения подсказок через Yandex Geocoder API
+  // Функция получения подсказок (приоритет: DaData → Yandex → fallback)
   const getSuggestions = useCallback(async (query: string) => {
     if (!query.trim() || query.length < 3) {
       setSuggestions([]);
@@ -65,43 +65,88 @@ export function AddressAutocomplete({
     setIsLoading(true);
 
     try {
-      const apiKey = process.env.NEXT_PUBLIC_YANDEX_API_KEY;
+      // Отменяем предыдущий незавершённый запрос (debounce/гонки)
+      const prev = (getSuggestions as any)._ctrl as AbortController | undefined;
+      if (prev) prev.abort();
+      const ctrl = new AbortController();
+      (getSuggestions as any)._ctrl = ctrl;
 
+      const dadataToken = process.env.NEXT_PUBLIC_DADATA_TOKEN;
+      if (dadataToken) {
+        // DaData Suggest API (приоритетный провайдер)
+        const dadataResp = await fetch(
+          'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+              Authorization: `Token ${dadataToken}`,
+            },
+            body: JSON.stringify({
+              query,
+              count: 7,
+              // ограничиваемся Москвой и МО для релевантности
+              locations: [
+                { region: 'Москва' },
+                { region: 'Московская' },
+              ],
+            }),
+            signal: ctrl.signal,
+          }
+        );
+
+        if (dadataResp.ok) {
+          const dadata = await dadataResp.json();
+          const list: YandexSuggestion[] = (dadata.suggestions || []).map(
+            (s: any) => ({
+              displayName: s.unrestricted_value || s.value,
+              value: s.unrestricted_value || s.value,
+            })
+          );
+
+          if (list.length > 0) {
+            setSuggestions(list);
+            setIsOpen(true);
+            setSelectedIndex(-1);
+            return;
+          }
+          // DaData вернула 0 результатов — НЕ обращаемся к Яндексу, показываем fallback
+          showFallbackSuggestions(query);
+          return;
+        } else {
+          console.warn('DaData error:', dadataResp.status, dadataResp.statusText);
+        }
+      }
+
+      // Yandex Geocoder как резерв ТОЛЬКО при ошибке DaData или отсутствии токена
+      const apiKey = process.env.NEXT_PUBLIC_YANDEX_API_KEY;
       if (apiKey) {
-        // Используем Yandex Geocoder API для поиска адресов
         const response = await fetch(
-          `https://geocode-maps.yandex.ru/v1/?apikey=${apiKey}&format=json&geocode=${encodeURIComponent(query)}&results=7&bbox=35.0,54.5~40.5,57.0&rspn=1`
+          `https://geocode-maps.yandex.ru/v1/?apikey=${apiKey}&format=json&geocode=${encodeURIComponent(
+            query
+          )}&results=7&bbox=35.0,54.5~40.5,57.0&rspn=1`,
+          { signal: ctrl.signal }
         );
 
         if (response.ok) {
           const data = await response.json();
-          const results =
-            data.response?.GeoObjectCollection?.featureMember || [];
+          const results = data.response?.GeoObjectCollection?.featureMember || [];
 
-          const suggestions: YandexSuggestion[] = results.map((item: any) => {
+          const mapped: YandexSuggestion[] = results.map((item: any) => {
             const geoObject = item.GeoObject;
             const address = geoObject.metaDataProperty.GeocoderMetaData.text;
-            return {
-              displayName: address,
-              value: address,
-            };
+            return { displayName: address, value: address };
           });
 
-          setSuggestions(suggestions);
-          setIsOpen(suggestions.length > 0);
+          setSuggestions(mapped);
+          setIsOpen(mapped.length > 0);
           setSelectedIndex(-1);
         } else {
-          console.error(
-            'Yandex Geocoder API error:',
-            response.status,
-            response.statusText
-          );
+          console.error('Yandex Geocoder API error:', response.status, response.statusText);
           showFallbackSuggestions(query);
         }
       } else {
-        console.warn(
-          'No Yandex API key provided (NEXT_PUBLIC_YANDEX_API_KEY), using fallback suggestions'
-        );
         showFallbackSuggestions(query);
       }
     } catch (error) {
@@ -116,6 +161,14 @@ export function AddressAutocomplete({
   const showFallbackSuggestions = (query: string) => {
     const lowerQuery = query.toLowerCase();
     const fallbackSuggestions: YandexSuggestion[] = [];
+
+    // Всегда предлагаем использовать введённый адрес как есть
+    if (query.trim()) {
+      fallbackSuggestions.push({
+        displayName: `Использовать введённый адрес: "${query}"`,
+        value: query,
+      });
+    }
 
     // Основные города Московской области
     const cities = [
@@ -140,8 +193,8 @@ export function AddressAutocomplete({
       }
     });
 
-    // Если ничего не нашли, показываем подсказку о формате
-    if (fallbackSuggestions.length === 0 && query.length >= 3) {
+    // Если ничего больше не нашли, добавляем подсказку о формате
+    if (fallbackSuggestions.length === 1 && query.length >= 3) {
       fallbackSuggestions.push({
         displayName: `Пример: Московская область, г. ${query}, ул. Ленина, д. 1, кв. 1`,
         value: `Московская область, г. ${query}, ул. Ленина, д. 1, кв. 1`,
