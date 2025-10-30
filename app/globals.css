@@ -86,3 +86,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Анимация для плавающей кнопки консультации */
+@keyframes attention-pulse {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+  }
+  25% {
+    transform: scale(1.15) translateY(-10px);
+  }
+  50% {
+    transform: scale(1.08) translateY(-5px);
+  }
+  75% {
+    transform: scale(1.12) translateY(-8px);
+  }
+}
