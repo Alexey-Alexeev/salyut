@@ -304,24 +304,21 @@ export function DeliverySelection({
                   <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-2 sm:p-3">
                     <p className="text-xs sm:text-sm text-yellow-800">
                       {isCalculatingDistance ? (
-                        <span className="text-blue-600">
-                          🔄 Рассчитываем...
+                        <span className="text-blue-600">🔄 Рассчитываем...</span>
+                      ) : address && distanceFromMKAD === undefined ? (
+                        <span className="text-gray-700">
+                          ⚠️ Не удалось автоматически определить расстояние от МКАД. Ничего страшного — менеджер уточнит расстояние и стоимость при подтверждении заказа.
                         </span>
                       ) : distanceFromMKAD !== undefined && address ? (
                         distanceFromMKAD === 0 ? (
-                          <span className="text-green-600">
-                            ✅ В пределах МКАД
-                          </span>
+                          <span className="text-green-600">✅ В пределах МКАД</span>
                         ) : (
                           <span className="text-green-600">
-                            ✅ Примерно: <strong>{distanceFromMKAD} км</strong>{' '}
-                            от МКАД (если расстояние неверно — сообщите в комментарии)
+                            ✅ Примерно: <strong>{distanceFromMKAD} км</strong> от МКАД (если расстояние неверно — сообщите в комментарии)
                           </span>
                         )
                       ) : (
-                        <span className="text-gray-600">
-                          📍 Будет рассчитано автоматически
-                        </span>
+                        <span className="text-gray-600">📍 Будет рассчитано автоматически</span>
                       )}
                     </p>
                   </div>
