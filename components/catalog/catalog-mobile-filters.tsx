@@ -45,12 +45,20 @@ export function CatalogMobileFilters({
     onPriceFromChange,
     onPriceToChange,
 }: CatalogMobileFiltersProps) {
+    // Суммарное количество выбранных фильтров: все категории + 1 если цена
+    const filtersCount = selectedCategories.length + ((priceFrom || priceTo) ? 1 : 0);
+
     return (
         <Sheet open={isOpen} onOpenChange={onOpenChange}>
             <SheetTrigger asChild>
-                <Button variant="outline" size="sm">
-                    <Filter className="mr-2 size-4" />
-                    Фильтры
+                <Button variant="outline" size="sm" className="relative font-medium">
+                    <span className="flex items-center gap-1">
+                        <Filter className="mr-1 size-4" />
+                        Показать фильтры
+                        {filtersCount > 0 && (
+                            <span className="ml-2 inline-flex items-center justify-center bg-orange-500 text-white rounded-full w-5 h-5 text-xs font-bold">{filtersCount}</span>
+                        )}
+                    </span>
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-80">
@@ -64,7 +72,6 @@ export function CatalogMobileFilters({
                             selectedCategories={selectedCategories}
                             onCategoryChange={onCategoryChange}
                         />
-
                         <PriceRangeFilter
                             priceFrom={priceFrom}
                             priceTo={priceTo}
@@ -81,4 +88,3 @@ export function CatalogMobileFilters({
         </Sheet>
     );
 }
-

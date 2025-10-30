@@ -17,7 +17,7 @@ export function CatalogEmptyState({ onClearFilters }: CatalogEmptyStateProps) {
                     По выбранным параметрам ничего не найдено.
                 </p>
                 <p className="text-gray-700">
-                    На сайте представлены не все товары. Можете связаться с нами — вероятно, мы сможем вам помочь и подобрать нужный вариант.
+                    На сайте представлены не все товары. Можете связаться с нами — мы сможем Вам помочь и подобрать нужный вариант.
                 </p>
             </div>
             <div className="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
