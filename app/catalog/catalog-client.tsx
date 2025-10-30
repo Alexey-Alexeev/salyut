@@ -615,6 +615,15 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         if (window.innerWidth < 768) {
             setIsPaginationLoading(true);
         }
+
+        // Плавный скролл наверх при смене страницы
+        if (typeof window !== 'undefined') {
+            try {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch {
+                window.scrollTo(0, 0);
+            }
+        }
     }, []);
 
     // Сброс страницы при изменении сортировки
