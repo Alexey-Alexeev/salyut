@@ -37,6 +37,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXT_PUBLIC_YANDEX_API_KEY: ${{ secrets.NEXT_PUBLIC_YANDEX_API_KEY }}
+          NEXT_PUBLIC_DADATA_TOKEN: ${{ secrets.NEXT_PUBLIC_DADATA_TOKEN }}
           SITE_VERSION: ${{ github.run_number }}-${{ github.sha }}
           BUILD_ID: build-${{ github.run_number }}-${{ github.sha }}
           
