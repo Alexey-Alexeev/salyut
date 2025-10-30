@@ -37,7 +37,31 @@ export async function fetchProducts(filters: ProductFilters = {}) {
 
         // Применяем фильтры
         if (search && search.trim()) {
-            query = query.ilike('name', `%${search.trim()}%`);
+            const term = search.trim();
+
+            // Если пользователь ввел поисковый запрос, дополнительно попробуем найти совпадение по названию категории
+            // и включим такие товары, как будто пользователь выбрал найденные категории
+            try {
+                const { data: matchedCategories } = await supabase
+                    .from('categories')
+                    .select('id, name')
+                    .ilike('name', `%${term}%`);
+
+                const matchedCategoryIds = (matchedCategories || []).map(c => c.id);
+
+                // Если пользователь НЕ выбрал категории вручную, расширяем поиск: (name ILIKE term) OR (category_id IN matchedCategoryIds)
+                if ((!categoryId || categoryId.length === 0) && matchedCategoryIds.length > 0) {
+                    const idsList = matchedCategoryIds.join(',');
+                    // Используем OR в Supabase: name.ilike.%term% OR category_id.in.(ids)
+                    query = query.or(`name.ilike.%${term}%,category_id.in.(${idsList})`);
+                } else {
+                    // Обычный поиск по названию
+                    query = query.ilike('name', `%${term}%`);
+                }
+            } catch {
+                // fallback к обычному поиску
+                query = query.ilike('name', `%${term}%`);
+            }
         }
 
         if (categoryId && categoryId.length > 0) {
@@ -275,4 +299,3 @@ async function sendConsultationTelegramNotification(consultation: any) {
         console.error('Error sending Telegram notification:', error);
     }
 }
-
