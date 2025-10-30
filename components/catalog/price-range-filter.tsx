@@ -79,6 +79,7 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
     const handleFromChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value.replace(/[^0-9]/g, '');
+        console.log('[Webvisor] Фильтр цены (От):', value);
         setFromValue(value);
         setValidationError('');
 
@@ -93,6 +94,7 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
     const handleToChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value.replace(/[^0-9]/g, '');
+        console.log('[Webvisor] Фильтр цены (До):', value);
         setToValue(value);
         setValidationError('');
 
@@ -133,7 +135,7 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
               value={fromValue}
               onChange={handleFromChange}
               onKeyPress={handleKeyPress}
-              className="h-9 text-sm"
+              className="h-9 text-sm ym-record-keys"
             />
           </div>
           <div className="flex-1">
@@ -148,7 +150,7 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
               value={toValue}
               onChange={handleToChange}
               onKeyPress={handleKeyPress}
-              className="h-9 text-sm"
+              className="h-9 text-sm ym-record-keys"
             />
           </div>
         </div>

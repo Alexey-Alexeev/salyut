@@ -317,10 +317,14 @@ export function AddressAutocomplete({
           ref={inputRef}
           id={id}
           value={value}
-          onChange={e => handleInputChange(e.target.value)}
+          onChange={e => {
+            const newValue = e.target.value;
+            console.log('[Webvisor] Адрес доставки:', newValue);
+            handleInputChange(newValue);
+          }}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={cn('min-h-[80px] pr-8', className)}
+          className={cn('min-h-[80px] pr-8 ym-record-keys', className)}
         />
         {value && (
           <Button

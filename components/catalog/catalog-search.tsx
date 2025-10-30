@@ -29,8 +29,12 @@ export function CatalogSearch({
                     type="text"
                     placeholder="Поиск по названию товара..."
                     value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                    className="pl-10 pr-10"
+                    onChange={(e) => {
+                        const searchValue = e.target.value;
+                        console.log('[Webvisor] Поиск товара:', searchValue);
+                        onChange(searchValue);
+                    }}
+                    className="pl-10 pr-10 ym-record-keys"
                 />
                 {hasActiveSearch && !isSearching && (
                     <Button

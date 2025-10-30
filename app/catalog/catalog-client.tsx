@@ -387,6 +387,9 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 ? [...filters.categories, categorySlug]
                 : filters.categories.filter(slug => slug !== categorySlug);
 
+            // Логирование выбранных категорий
+            console.log(`[Webvisor] Категории выбраны:`, newCategories);
+
             const newFilters = {
                 ...filters,
                 categories: newCategories,
@@ -403,6 +406,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
     const handlePriceChange = useCallback((from: string, to: string) => {
         resetPage();
+        // Логирование диапазона цены
+        console.log(`[Webvisor] Диапазон цены: от ${from || 'не указано'} до ${to || 'не указано'}`);
         const newFilters = {
             ...filters,
             priceFrom: from,

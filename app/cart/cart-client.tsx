@@ -581,8 +581,12 @@ export default function CartPageClient() {
                                             <Input
                                                 id="name"
                                                 {...register('name')}
-                                                className={`w-full ${(errors.name || (!watch('name') && hasValidationAttempted)) ? 'border-red-500 bg-red-50' : ''}`}
+                                                className={`w-full ym-record-keys ${(errors.name || (!watch('name') && hasValidationAttempted)) ? 'border-red-500 bg-red-50' : ''}`}
                                                 placeholder="Введите ваше имя"
+                                                onInput={(e) => {
+                                                    const value = (e.target as HTMLInputElement).value;
+                                                    console.log('[Webvisor] Имя:', value);
+                                                }}
                                             />
                                             {errors.name && (
                                                 <p className="mt-1 text-sm text-red-500">
@@ -635,7 +639,7 @@ export default function CartPageClient() {
                                                                 ? '+7 (999) 123-45-67'
                                                                 : '+7 (999) 123-45-67'
                                                     }
-                                                    className={errors.contact ? 'border-red-500 bg-red-50' : ''}
+                                                    className={`ym-record-keys ${errors.contact ? 'border-red-500 bg-red-50' : ''}`}
                                                     onKeyDown={(e) => {
                                                         // Разрешаем только цифры, +, -, (, ), пробел для телефона и WhatsApp
                                                         if (watch('contactMethod') === 'phone' || watch('contactMethod') === 'whatsapp') {
@@ -652,10 +656,14 @@ export default function CartPageClient() {
                                                         }
                                                     }}
                                                     onInput={(e) => {
+                                                        const target = e.target as HTMLInputElement;
+                                                        const value = target.value;
+                                                        
+                                                        // Логирование для вебвизора
+                                                        console.log(`[Webvisor] Контакт (${watch('contactMethod')}):`, value);
+                                                        
                                                         // Дополнительная проверка для очистки недопустимых символов
                                                         if (watch('contactMethod') === 'phone' || watch('contactMethod') === 'whatsapp') {
-                                                            const target = e.target as HTMLInputElement;
-                                                            const value = target.value;
                                                             const cleanedValue = value.replace(/[^0-9+\-() ]/g, '');
                                                             if (value !== cleanedValue) {
                                                                 target.value = cleanedValue;
@@ -740,6 +748,11 @@ export default function CartPageClient() {
                                             {...register('comment')}
                                             placeholder="Дополнительные пожелания..."
                                             rows={3}
+                                            className="ym-record-keys"
+                                            onInput={(e) => {
+                                                const value = (e.target as HTMLTextAreaElement).value;
+                                                console.log('[Webvisor] Комментарий:', value);
+                                            }}
                                         />
                                     </div>
 
