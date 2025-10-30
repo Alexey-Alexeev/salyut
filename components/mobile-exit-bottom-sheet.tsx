@@ -13,19 +13,25 @@ import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
  */
 export default function MobileExitBottomSheet() {
   const [open, setOpen] = useState(false);
-  const [hasShown, setHasShown] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    try {
-      return sessionStorage.getItem('mobileExitSheetShown') === '1';
-    } catch {
-      return false;
-    }
-  });
   const pathname = usePathname();
+  const hasTriggeredRef = useRef(false);
 
-  // Актуальная проверка условий показа (пересчитывается при смене пути)
-  const isEligible = useMemo(() => {
+  // Проверка, показывали ли уже в этой сессии
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const shown = sessionStorage.getItem('mobileExitSheetShown') === '1';
+        if (shown) {
+          hasTriggeredRef.current = true;
+        }
+      } catch {}
+    }
+  }, []);
+
+  // Проверка условий для активации триггеров
+  const canTrigger = useMemo(() => {
     if (typeof window === 'undefined') return false;
+    if (hasTriggeredRef.current) return false;
 
     const path = pathname || window.location.pathname;
     if (path.startsWith('/admin')) return false;
@@ -33,37 +39,36 @@ export default function MobileExitBottomSheet() {
     if (path.includes('checkout')) return false;
     if (path.includes('thank') || path.includes('success')) return false;
 
+    // Проверка на мобильное устройство
     const isCoarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-    if (!isCoarse) return false;
+    return isCoarse;
+  }, [pathname]);
 
-    if (hasShown) return false;
-
-    return true;
-  }, [pathname, hasShown]);
-
-  const triggerOnce = useCallback(() => {
-    if (!isEligible || open) return;
+  const triggerSheet = useCallback(() => {
+    if (hasTriggeredRef.current || open) return;
+    
+    hasTriggeredRef.current = true;
     try {
       sessionStorage.setItem('mobileExitSheetShown', '1');
     } catch {}
-    setHasShown(true);
     setOpen(true);
-  }, [isEligible, open]);
+  }, [open]);
 
   // Триггер: время на сайте > 40с
   useEffect(() => {
-    if (!isEligible || open) return;
-    const timer = window.setTimeout(() => triggerOnce(), 40_000);
+    if (!canTrigger) return;
+    const timer = window.setTimeout(() => triggerSheet(), 40_000);
     return () => window.clearTimeout(timer);
-  }, [isEligible, triggerOnce, open]);
+  }, [canTrigger, triggerSheet]);
 
   // Триггер: бездействие > 25с
   useEffect(() => {
-    if (!isEligible || open) return;
+    if (!canTrigger) return;
     let inactivityTimer: number | undefined;
+    
     const restart = () => {
       if (inactivityTimer) window.clearTimeout(inactivityTimer);
-      inactivityTimer = window.setTimeout(() => triggerOnce(), 25_000);
+      inactivityTimer = window.setTimeout(() => triggerSheet(), 25_000);
     };
 
     const resetters = ['scroll', 'touchstart', 'touchmove', 'click', 'keydown', 'mousemove'] as const;
@@ -74,34 +79,37 @@ export default function MobileExitBottomSheet() {
       if (inactivityTimer) window.clearTimeout(inactivityTimer);
       resetters.forEach((evt) => document.removeEventListener(evt, restart as EventListener));
     };
-  }, [isEligible, triggerOnce, open]);
+  }, [canTrigger, triggerSheet]);
 
   // Триггер: прокрутил вниз >400px, затем резкий скролл вверх >100px
   const lastYRef = useRef<number>(0);
   const maxScrolledRef = useRef<number>(0);
-  const recentlyScrolledDownRef = useRef<boolean>(false);
 
   useEffect(() => {
-    if (!isEligible || open) return;
+    if (!canTrigger) return;
+    
     const onScroll = () => {
       const y = window.scrollY;
-      if (y > maxScrolledRef.current) maxScrolledRef.current = y;
-
-      // Отметили, что пользователь был ниже порога
-      if (maxScrolledRef.current > 400) recentlyScrolledDownRef.current = true;
+      if (y > maxScrolledRef.current) {
+        maxScrolledRef.current = y;
+      }
 
       const delta = lastYRef.current - y; // положительное — скролл вверх
-      if (recentlyScrolledDownRef.current && delta > 100) {
-        triggerOnce();
-        window.removeEventListener('scroll', onScroll);
+      
+      // Если проскроллили вниз больше 400px и резко вверх больше 100px
+      if (maxScrolledRef.current > 400 && delta > 100) {
+        triggerSheet();
       }
+      
       lastYRef.current = y;
     };
+    
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [isEligible, triggerOnce, open]);
+  }, [canTrigger, triggerSheet]);
 
-  if (!isEligible) return null;
+  // Рендерим Sheet независимо от canTrigger, чтобы он мог показаться после срабатывания триггера
+  if (typeof window === 'undefined') return null;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
