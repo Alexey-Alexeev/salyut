@@ -147,11 +147,7 @@ export function ConsultationDialog({
             <Input
               id="name"
               value={formData.name}
-              onChange={e => {
-                const value = e.target.value;
-                console.log('[Webvisor] Имя (консультация):', value);
-                setFormData({ ...formData, name: value });
-              }}
+              onChange={e => setFormData({ ...formData, name: e.target.value })}
               placeholder="Ваше имя"
               autoFocus={false}
               className="focus:ring-0 focus:outline-none ym-record-keys"
@@ -202,11 +198,7 @@ export function ConsultationDialog({
               <Input
                 id="contactInfo"
                 value={formData.contactInfo}
-                onChange={e => {
-                  const value = e.target.value;
-                  console.log(`[Webvisor] Контакт (консультация, ${formData.contactMethod}):`, value);
-                  setFormData({ ...formData, contactInfo: value });
-                }}
+                onChange={e => setFormData({ ...formData, contactInfo: e.target.value })}
                 placeholder={
                   formData.contactMethod === 'phone'
                     ? '+7 (999) 123-45-67'
@@ -257,11 +249,7 @@ export function ConsultationDialog({
             <Textarea
               id="message"
               value={formData.message}
-              onChange={e => {
-                const value = e.target.value;
-                console.log('[Webvisor] Комментарий (консультация):', value);
-                setFormData({ ...formData, message: value });
-              }}
+              onChange={e => setFormData({ ...formData, message: e.target.value })}
               className="focus:ring-0 focus:outline-none ym-record-keys"
               placeholder="Опишите, какой вопрос вас интересует..."
               rows={3}

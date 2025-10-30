@@ -26,11 +26,9 @@ export const CategoryFilter = React.memo<CategoryFilterProps>(
               <Checkbox
                 id={`category-${category.slug}`}
                 checked={selectedCategories.includes(category.slug)}
-                onCheckedChange={checked => {
-                  const isChecked = checked as boolean;
-                  console.log(`[Webvisor] Фильтр категорий: ${category.name} (${category.slug}) - ${isChecked ? 'включено' : 'выключено'}`);
-                  onCategoryChange(category.slug, isChecked);
-                }}
+                onCheckedChange={checked =>
+                  onCategoryChange(category.slug, checked as boolean)
+                }
                 className="ym-record-keys"
               />
               <label

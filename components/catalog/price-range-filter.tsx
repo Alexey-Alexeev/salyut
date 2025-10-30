@@ -79,7 +79,6 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
     const handleFromChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value.replace(/[^0-9]/g, '');
-        console.log('[Webvisor] Фильтр цены (От):', value);
         setFromValue(value);
         setValidationError('');
 
@@ -94,7 +93,6 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
     const handleToChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value.replace(/[^0-9]/g, '');
-        console.log('[Webvisor] Фильтр цены (До):', value);
         setToValue(value);
         setValidationError('');
 
