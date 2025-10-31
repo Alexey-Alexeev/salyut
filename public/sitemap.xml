@@ -153,11 +153,11 @@
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/kolomna/</loc>
-    <lastmod>2025-10-11</lastmod>
+    <loc>https://salutgrad.ru/dolgoprudny/</loc>
+    <lastmod>2025-10-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/kolomna/"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/dolgoprudny/"/>
   </url>
   
   <url>
@@ -238,14 +238,6 @@
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/reutov/"/>
-  </url>
-  
-  <url>
-    <loc>https://salutgrad.ru/serpuhov/</loc>
-    <lastmod>2025-10-17</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/serpuhov/"/>
   </url>
   
   <url>
