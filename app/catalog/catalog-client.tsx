@@ -279,6 +279,59 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         hasInitializedRef.current = true;
     }, [searchParams, resetPage]);
 
+    // Отслеживание изменений URL после инициализации для сброса фильтров
+    useEffect(() => {
+        // Пропускаем во время первичной инициализации
+        if (!hasInitializedRef.current) return;
+
+        // Парсим текущие URL параметры
+        const categoryParam = urlSearchParams.getAll('category');
+        const searchParam = urlSearchParams.get('search');
+        const minPriceParam = urlSearchParams.get('minPrice');
+        const maxPriceParam = urlSearchParams.get('maxPrice');
+        const sortByParam = urlSearchParams.get('sortBy');
+
+        // Проверяем, есть ли параметры фильтров в URL (sortBy не считается фильтром)
+        const hasUrlParams = (categoryParam && categoryParam.length > 0) || 
+                            searchParam || 
+                            minPriceParam || 
+                            maxPriceParam;
+
+        // Если URL параметров фильтров нет, сбрасываем фильтры
+        if (!hasUrlParams) {
+            setFilters(prev => {
+                // Проверяем, нужно ли сбрасывать (чтобы избежать ненужных обновлений)
+                if (prev.categories.length === 0 && 
+                    !prev.search.trim() && 
+                    !prev.priceFrom && 
+                    !prev.priceTo) {
+                    return prev; // Фильтры уже сброшены
+                }
+                return {
+                    ...prev,
+                    categories: [],
+                    search: '',
+                    priceFrom: '',
+                    priceTo: '',
+                };
+            });
+            setSearchValue('');
+            setPriceFromValue('');
+            setPriceToValue('');
+            
+            // Сбрасываем сортировку, если её нет в URL (используем функциональное обновление для актуального значения)
+            setSortBy(prevSortBy => {
+                // Если в URL нет sortBy параметра, сбрасываем на значение по умолчанию
+                if (!sortByParam && prevSortBy !== 'name') {
+                    return 'name';
+                }
+                return prevSortBy;
+            });
+            
+            resetPage();
+        }
+    }, [urlSearchParams.toString(), resetPage]); // Отслеживаем только изменения URL (sortBy обновляется через updateURL)
+
     // Синхронизация значений полей цены с фильтрами
     useEffect(() => {
         // Не синхронизируем во время инициализации из URL

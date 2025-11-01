@@ -3,6 +3,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Menu, Phone, Shield, ShoppingCart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -15,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export function Header() {
+  const router = useRouter();
   const totalItems = useCartStore(state => state.getTotalItems());
   const isInitialized = useCartStore(state => state.isInitialized);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -34,6 +36,12 @@ export function Header() {
     { href: '/delivery', label: 'Доставка / Самовывоз' },
     { href: '/about', label: 'О нас' },
   ];
+
+  // Обработчик клика на "Каталог" - сбрасывает фильтры
+  const handleCatalogClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    router.push('/catalog');
+  };
 
   return (
     <>
@@ -63,14 +71,25 @@ export function Header() {
             {/* Навигация по центру */}
             <nav className="hidden items-center space-x-6 md:flex">
               {navItems.map(item => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="hover:text-primary text-sm font-medium transition-colors"
-                  prefetch={item.href === '/catalog' ? true : undefined}
-                >
-                  {item.label}
-                </Link>
+                item.href === '/catalog' ? (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={handleCatalogClick}
+                    className="hover:text-primary text-sm font-medium transition-colors"
+                    prefetch={true}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="hover:text-primary text-sm font-medium transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                )
               ))}
               {role === 'admin' && (
                 <Link
@@ -131,14 +150,28 @@ export function Header() {
                 <SheetContent side="right" className="w-80">
                   <nav className="mt-8 flex flex-col space-y-4">
                     {navItems.map(item => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="hover:text-primary text-sm font-medium transition-colors"
-                        onClick={() => setIsSheetOpen(false)}
-                      >
-                        {item.label}
-                      </Link>
+                      item.href === '/catalog' ? (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="hover:text-primary text-sm font-medium transition-colors"
+                          onClick={(e) => {
+                            setIsSheetOpen(false);
+                            handleCatalogClick(e);
+                          }}
+                        >
+                          {item.label}
+                        </Link>
+                      ) : (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="hover:text-primary text-sm font-medium transition-colors"
+                          onClick={() => setIsSheetOpen(false)}
+                        >
+                          {item.label}
+                        </Link>
+                      )
                     ))}
                     {role === 'admin' && (
                       <Link
