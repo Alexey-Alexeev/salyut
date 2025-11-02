@@ -53,7 +53,7 @@ export function CatalogEmptyState({ onClearFilters, similarProducts = [], search
             {/* Блок "Возможно вы имели в виду" - всегда показываем, меньше по размеру */}
             <div className="mt-8">
                 <h3 className="mb-4 text-center text-lg font-semibold">
-                    Возможно вы имели в виду
+                    Возможно Вы имели в виду
                 </h3>
                 {similarProducts.length > 0 ? (
                     <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
