@@ -319,7 +319,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             setPriceFromValue('');
             setPriceToValue('');
             
-            // Сбрасываем сортировку, если её нет в URL (используем функциональное обновление для актуального значения)
+            // Сбрасываем сортировку, если её нет в URL (используем функиональное обновление для актуального значения)
             setSortBy(prevSortBy => {
                 // Если в URL нет sortBy параметра, сбрасываем на значение по умолчанию
                 if (!sortByParam && prevSortBy !== 'name') {

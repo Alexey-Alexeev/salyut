@@ -38,6 +38,7 @@ node scripts/test-cities.js
 | 18 | Электросталь | `/elektrostal` |
 | 19 | Жуковский | `/zhukovskiy` |
 | 20 | Ногинск | `/noginsk` |
+| 21 | Видное | `/vidnoe` |
 
 ## ➕ Добавить новый город
 

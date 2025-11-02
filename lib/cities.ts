@@ -185,6 +185,15 @@ export const cities: City[] = [
         metaDescription: 'Купить фейерверки и салюты в Ногинске с доставкой. Качественная пиротехника!',
         population: 100000,
     },
+    {
+        slug: 'vidnoe',
+        name: 'Видное',
+        nameLocative: 'Видном',
+        nameAccusative: 'Видное',
+        region: 'Московская область',
+        metaDescription: 'Купить фейерверки и салюты в Видном с доставкой. Безопасный запуск пиротехники!',
+        population: 70000,
+    },
 ];
 
 /**
