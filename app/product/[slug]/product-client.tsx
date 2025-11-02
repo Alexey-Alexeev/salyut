@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Minus, Plus, Star, ChevronLeft, ChevronRight, FileText, Shield, AlertTriangle, ExternalLink, Sparkles } from 'lucide-react';
+import { ShoppingCart, Minus, Plus, Star, ChevronLeft, ChevronRight, FileText, Shield, AlertTriangle, ExternalLink, Sparkles, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -579,7 +579,29 @@ export default function ProductClient({
           <Card>
             <CardContent className="pt-6">
               <Tabs defaultValue="description" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className={`grid w-full ${hasVideo && getSafetyRules(category?.name || '') ? 'grid-cols-3' : hasVideo || getSafetyRules(category?.name || '') ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                  {hasVideo && (
+                    <TabsTrigger 
+                      value="video" 
+                      className="flex items-center gap-2 relative group/video data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-md lg:data-[state=active]:border-primary/50 lg:border-2 lg:border-transparent lg:data-[state=active]:border-primary transition-all hover:bg-primary/5"
+                    >
+                      <div className="relative flex items-center justify-center">
+                        <Play className="size-4 lg:size-6 text-primary lg:drop-shadow-sm fill-primary/20 lg:fill-primary/30" />
+                        {/* Пульсирующий эффект для десктопа при hover */}
+                        <span className="absolute inset-0 rounded-full bg-primary/30 animate-ping opacity-0 lg:group-hover/video:opacity-100 hidden lg:block"></span>
+                      </div>
+                      <span className="font-semibold lg:font-bold lg:text-base relative">
+                        Видео
+                        {/* Маленький индикатор для десктопа */}
+                        <span className="absolute -top-1 -right-2 hidden lg:block">
+                          <span className="relative flex size-2">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
+                            <span className="relative inline-flex size-2 rounded-full bg-primary"></span>
+                          </span>
+                        </span>
+                      </span>
+                    </TabsTrigger>
+                  )}
                   <TabsTrigger value="description" className="flex items-center gap-2">
                     <FileText className="size-4" />
                     Описание
@@ -591,6 +613,42 @@ export default function ProductClient({
                     </TabsTrigger>
                   )}
                 </TabsList>
+
+                {hasVideo && (
+                  <TabsContent value="video" className="mt-6">
+                    <div className="space-y-4">
+                      <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-gray-100">
+                        {(() => {
+                          const videoInfo = getVideoInfo(product.video_url || '');
+                          return videoInfo.embedUrl ? (
+                            <iframe
+                              src={videoInfo.embedUrl}
+                              title={`Видео: ${product.name}`}
+                              className="h-full w-full"
+                              allow="clipboard-write; autoplay; encrypted-media; picture-in-picture"
+                              allowFullScreen
+                              frameBorder="0"
+                              style={{ border: 'none' }}
+                            />
+                          ) : (
+                            <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-8 text-center">
+                              <div className="mb-4 text-6xl opacity-50">🎬</div>
+                              <div className="text-lg font-medium text-gray-600 line-clamp-3">
+                                {product.name}
+                              </div>
+                              <div className="mt-2 text-sm text-gray-500">
+                                Видео недоступно
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                      <p className="text-sm text-muted-foreground text-center lg:text-left">
+                        Видео демонстрация товара <strong>{product.name}</strong>
+                      </p>
+                    </div>
+                  </TabsContent>
+                )}
 
                 <TabsContent value="description" className="mt-6">
                   <ProductDescription
