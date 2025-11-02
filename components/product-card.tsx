@@ -378,7 +378,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full text-primary border-primary hover:bg-primary hover:text-primary-foreground"
+                className="w-full text-primary border-primary hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-600 hover:text-white hover:border-transparent transition-all duration-200 ease-out hover:shadow-md"
               >
                 <Play className="mr-2 size-4" />
                 См. видео

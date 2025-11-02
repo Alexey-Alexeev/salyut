@@ -247,10 +247,13 @@ export default function ProductClient({
     const tabParam = searchParams.get('tab');
     if (tabParam === 'video' && hasVideo) {
       setActiveTab('video');
-      // Плавная прокрутка к блоку вкладок через небольшую задержку
-      setTimeout(() => {
-        tabsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+      // Плавная прокрутка к блоку вкладок только на мобильных устройствах
+      const isMobile = window.innerWidth < 1024; // lg breakpoint
+      if (isMobile) {
+        setTimeout(() => {
+          tabsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
     } else {
       setActiveTab('description');
     }
@@ -602,31 +605,31 @@ export default function ProductClient({
                   {hasVideo && (
                     <TabsTrigger 
                       value="video" 
-                      className="flex items-center gap-1 sm:gap-1.5 relative group/video data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-md lg:data-[state=active]:border-primary/50 lg:border-2 lg:border-transparent lg:data-[state=active]:border-primary transition-all hover:bg-primary/5 text-[11px] sm:text-sm px-1 sm:px-3 py-1 sm:py-1.5 overflow-hidden min-w-0"
+                      className="flex items-center gap-1 sm:gap-1.5 relative group/video data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:shadow-md lg:data-[state=active]:border-blue-500/50 lg:border-2 lg:border-transparent lg:data-[state=active]:border-blue-500 transition-all hover:bg-blue-50/50 text-[11px] sm:text-sm px-1 sm:px-3 py-1 sm:py-1.5 overflow-hidden min-w-0"
                     >
                       <div className="relative flex items-center justify-center flex-shrink-0">
-                        <Play className="size-3.5 sm:size-4 lg:size-6 text-primary lg:drop-shadow-sm fill-primary/20 lg:fill-primary/30" />
+                        <Play className="size-3.5 sm:size-4 lg:size-6 text-blue-600 data-[state=active]:text-blue-700 lg:drop-shadow-sm fill-blue-100 lg:fill-blue-200" />
                         {/* Пульсирующий эффект для десктопа при hover */}
-                        <span className="absolute inset-0 rounded-full bg-primary/30 animate-ping opacity-0 lg:group-hover/video:opacity-100 hidden lg:block"></span>
+                        <span className="absolute inset-0 rounded-full bg-blue-400/30 animate-ping opacity-0 lg:group-hover/video:opacity-100 hidden lg:block"></span>
                       </div>
                       <span className="font-semibold sm:font-semibold lg:font-bold lg:text-base relative">
                         Видео
                         {/* Маленький индикатор для десктопа */}
                         <span className="absolute -top-1 -right-2 hidden lg:block">
                           <span className="relative flex size-2">
-                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
-                            <span className="relative inline-flex size-2 rounded-full bg-primary"></span>
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-500 opacity-75"></span>
+                            <span className="relative inline-flex size-2 rounded-full bg-blue-500"></span>
                           </span>
                         </span>
                       </span>
                     </TabsTrigger>
                   )}
-                  <TabsTrigger value="description" className="flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-sm px-1 sm:px-3 py-1 sm:py-1.5 overflow-hidden">
+                  <TabsTrigger value="description" className="flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-sm px-1 sm:px-3 py-1 sm:py-1.5 overflow-hidden data-[state=active]:bg-purple-50 data-[state=active]:text-purple-700 data-[state=active]:shadow-md lg:data-[state=active]:border-purple-500/50 lg:border-2 lg:border-transparent lg:data-[state=active]:border-purple-500 transition-all hover:bg-purple-50/50">
                     <FileText className="size-3.5 sm:size-4 flex-shrink-0" />
                     <span>Описание</span>
                   </TabsTrigger>
                   {getSafetyRules(category?.name || '') && (
-                    <TabsTrigger value="safety" className="flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-sm px-1 sm:px-3 py-1 sm:py-1.5 overflow-hidden min-w-0">
+                    <TabsTrigger value="safety" className="flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-sm px-1 sm:px-3 py-1 sm:py-1.5 overflow-hidden min-w-0 data-[state=active]:bg-orange-50 data-[state=active]:text-orange-700 data-[state=active]:shadow-md lg:data-[state=active]:border-orange-500/50 lg:border-2 lg:border-transparent lg:data-[state=active]:border-orange-500 transition-all hover:bg-orange-50/50">
                       <Shield className="size-3.5 sm:size-4 lg:size-5 flex-shrink-0" />
                       <span className="whitespace-nowrap">Безопасность</span>
                     </TabsTrigger>

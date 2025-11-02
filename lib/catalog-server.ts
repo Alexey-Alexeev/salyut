@@ -88,6 +88,7 @@ export async function getProductsData(page: number = 1, limit: number = 20, sort
                 price: products.price,
                 category_id: products.category_id,
                 images: products.images,
+                video_url: products.video_url,
                 is_popular: products.is_popular,
                 short_description: products.short_description,
                 characteristics: products.characteristics,
