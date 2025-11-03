@@ -29,9 +29,34 @@ export function CatalogEmptyState({ onClearFilters, similarProducts = [], search
     const hasSimilarProducts = similarProducts.length > 0;
 
     return (
-        <div className="py-12">
-            {/* Блок "По выбранным параметрам ничего не найдено" - всегда показываем */}
-            <div className="text-center mb-8">
+        <div className="pt-[14px] md:pt-[22px] pb-12">
+            {/* Блок "Возможно вы имели в виду" - показываем первым, компактный на десктопе */}
+            <div className="mb-8 rounded-lg border-2 border-orange-200 bg-orange-50/30 p-4 md:p-3 md:max-w-2xl md:mx-auto shadow-sm">
+                <h3 className="mb-3 md:mb-2 text-center text-lg md:text-base font-semibold text-orange-900">
+                    Возможно Вы имели в виду
+                </h3>
+                {similarProducts.length > 0 ? (
+                    <div className="grid grid-cols-2 gap-2 md:gap-3">
+                        {similarProducts.map((product, index) => (
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                                isFirst={index === 0}
+                                isAboveFold={index < 2}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-4">
+                        <p className="text-sm text-muted-foreground">
+                            Загрузка товаров...
+                        </p>
+                    </div>
+                )}
+            </div>
+
+            {/* Блок "По выбранным параметрам ничего не найдено" - показываем вторым */}
+            <div className="text-center">
                 <div className="mx-auto max-w-2xl space-y-3">
                     <p className="text-muted-foreground">
                         По выбранным параметрам ничего не найдено.
@@ -48,31 +73,6 @@ export function CatalogEmptyState({ onClearFilters, similarProducts = [], search
                         Сбросить фильтры
                     </Button>
                 </div>
-            </div>
-
-            {/* Блок "Возможно вы имели в виду" - всегда показываем, меньше по размеру */}
-            <div className="mt-8">
-                <h3 className="mb-4 text-center text-lg font-semibold">
-                    Возможно Вы имели в виду
-                </h3>
-                {similarProducts.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-                        {similarProducts.map((product, index) => (
-                            <ProductCard
-                                key={product.id}
-                                product={product}
-                                isFirst={index === 0}
-                                isAboveFold={index < 3}
-                            />
-                        ))}
-                    </div>
-                ) : (
-                    <div className="text-center py-4">
-                        <p className="text-sm text-muted-foreground">
-                            Загрузка товаров...
-                        </p>
-                    </div>
-                )}
             </div>
             
             <ConsultationDialog open={isConsultOpen} onOpenChange={setIsConsultOpen} centerTitle />

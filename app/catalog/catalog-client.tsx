@@ -97,7 +97,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     });
 
     // Состояние интерфейса
-    const [sortBy, setSortBy] = useState('name');
+    const [sortBy, setSortBy] = useState('popular');
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
     const [isFiltering, setIsFiltering] = useState(false);
@@ -191,7 +191,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             params.set('maxPrice', newFilters.priceTo.trim());
         }
 
-        if (newSortBy && newSortBy !== 'name') {
+        if (newSortBy && newSortBy !== 'popular') {
             params.set('sortBy', newSortBy);
         }
 
@@ -326,8 +326,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             // Сбрасываем сортировку, если её нет в URL (используем функиональное обновление для актуального значения)
             setSortBy(prevSortBy => {
                 // Если в URL нет sortBy параметра, сбрасываем на значение по умолчанию
-                if (!sortByParam && prevSortBy !== 'name') {
-                    return 'name';
+                if (!sortByParam && prevSortBy !== 'popular') {
+                    return 'popular';
                 }
                 return prevSortBy;
             });
@@ -362,7 +362,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 filters.priceFrom ||
                 filters.priceTo;
 
-            if (!hasActiveFilters && sortBy === 'name') {
+            if (!hasActiveFilters && sortBy === 'popular') {
                 // Возвращаемся к исходным данным с сервера
                 setFilteredProducts(initialProducts.current);
                 setPagination({
@@ -637,7 +637,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         setPriceToValue('');
         setIsSearching(false);
         resetPage();
-        setSortBy('name'); // Сбрасываем сортировку к умолчанию
+        setSortBy('popular'); // Сбрасываем сортировку к умолчанию
         const newFilters = {
             categories: [],
             priceFrom: '',
@@ -648,7 +648,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             ...prev,
             ...newFilters,
         }));
-        updateURL(newFilters, 'name');
+        updateURL(newFilters, 'popular');
 
         // Очищаем таймауты
         if (searchTimeoutRef.current) {
@@ -1049,7 +1049,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         {/* Управление для десктопа */}
                         <div className="hidden items-center justify-between lg:flex">
                             <span className="text-muted-foreground text-sm">
-                                Найдено: {filteredProducts.length}{' '}
+                                На этой странице: {filteredProducts.length}{' '}
                                 {filteredProducts.length === 1 ? 'товар' : 'товаров'}
                             </span>
 
@@ -1066,7 +1066,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         {/* Счетчик и сортировка для мобильных */}
                         <div className="flex items-center justify-between lg:hidden">
                             <span className="text-muted-foreground text-sm">
-                                Найдено: {filteredProducts.length}
+                                На этой странице: {filteredProducts.length}
                             </span>
 
                             <CatalogSort value={sortBy} onChange={handleSortChange} isMobile />
@@ -1129,17 +1129,17 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         // Ищем похожие товары только если есть поисковый запрос
                         const searchQuery = filters.search?.trim();
                         const similarProducts = searchQuery && allProducts.length > 0
-                            ? findSimilarProducts(searchQuery, allProducts, 3)
+                            ? findSimilarProducts(searchQuery, allProducts, 2)
                             : [];
                         
-                        // Если похожих товаров меньше 3, дополняем популярными
+                        // Если похожих товаров меньше 2, дополняем популярными
                         const productsToShow = [...similarProducts];
                         
-                        // Если не хватает до 3, добавляем популярные товары
-                        if (productsToShow.length < 3 && popularProducts.length > 0) {
+                        // Если не хватает до 2, добавляем популярные товары
+                        if (productsToShow.length < 2 && popularProducts.length > 0) {
                             const remaining = popularProducts
                                 .filter(p => !productsToShow.some(sp => sp.id === p.id))
-                                .slice(0, 3 - productsToShow.length);
+                                .slice(0, 2 - productsToShow.length);
                             productsToShow.push(...remaining);
                         }
                         
@@ -1151,7 +1151,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         return (
                             <CatalogEmptyState 
                                 onClearFilters={handleClearAllFilters}
-                                similarProducts={productsToShow.slice(0, 3)}
+                                similarProducts={productsToShow.slice(0, 2)}
                                 searchQuery={searchQuery || undefined}
                             />
                         );

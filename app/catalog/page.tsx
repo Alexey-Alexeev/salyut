@@ -41,7 +41,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
   // Загружаем данные параллельно с приоритетом для критических данных
   const [categories, productsResponse, stats] = await Promise.all([
     getCategoriesData(),
-    getProductsData(1, 20, 'name'),
+    getProductsData(1, 20, 'popular'),
     getProductsStatsData(),
   ]);
 
