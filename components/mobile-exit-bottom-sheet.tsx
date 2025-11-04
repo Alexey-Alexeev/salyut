@@ -55,40 +55,108 @@ export default function MobileExitBottomSheet() {
   }, [open]);
 
   // Триггер: время на сайте > 40с
+  // Используем глобальный таймер, который не сбрасывается при смене страницы
+  const globalTimeRef = useRef<number | null>(null);
+  
   useEffect(() => {
-    if (!canTrigger) return;
-    const timer = window.setTimeout(() => triggerSheet(), 40_000);
-    return () => window.clearTimeout(timer);
+    if (!canTrigger) {
+      // Очищаем таймер, если триггер стал недоступен
+      if (globalTimeRef.current) {
+        window.clearTimeout(globalTimeRef.current);
+        globalTimeRef.current = null;
+      }
+      return;
+    }
+    
+    // Если таймер уже запущен, не создаем новый
+    if (globalTimeRef.current) return;
+    
+    globalTimeRef.current = window.setTimeout(() => {
+      triggerSheet();
+      globalTimeRef.current = null;
+    }, 40_000);
+    
+    return () => {
+      if (globalTimeRef.current) {
+        window.clearTimeout(globalTimeRef.current);
+        globalTimeRef.current = null;
+      }
+    };
   }, [canTrigger, triggerSheet]);
 
   // Триггер: бездействие > 25с
+  // Используем глобальный таймер бездействия, который не сбрасывается при смене страницы
+  const inactivityTimerRef = useRef<number | undefined>();
+  const pageLoadTimeForInactivityRef = useRef<number>(Date.now());
+  
   useEffect(() => {
-    if (!canTrigger) return;
-    let inactivityTimer: number | undefined;
+    // Обновляем время загрузки страницы при смене pathname
+    pageLoadTimeForInactivityRef.current = Date.now();
+  }, [pathname]);
+  
+  useEffect(() => {
+    if (!canTrigger) {
+      // Очищаем таймер, если триггер стал недоступен
+      if (inactivityTimerRef.current) {
+        window.clearTimeout(inactivityTimerRef.current);
+        inactivityTimerRef.current = undefined;
+      }
+      return;
+    }
     
     const restart = () => {
-      if (inactivityTimer) window.clearTimeout(inactivityTimer);
-      inactivityTimer = window.setTimeout(() => triggerSheet(), 25_000);
+      // Не учитываем события в первые 2 секунды после загрузки страницы
+      const timeSinceLoad = Date.now() - pageLoadTimeForInactivityRef.current;
+      if (timeSinceLoad < 2000) return;
+      
+      if (inactivityTimerRef.current) window.clearTimeout(inactivityTimerRef.current);
+      inactivityTimerRef.current = window.setTimeout(() => triggerSheet(), 25_000);
     };
 
     const resetters = ['scroll', 'touchstart', 'touchmove', 'click', 'keydown', 'mousemove'] as const;
     resetters.forEach((evt) => document.addEventListener(evt, restart, { passive: true }));
-    restart();
+    
+    // Запускаем таймер только после задержки в 2 секунды
+    const initialDelay = window.setTimeout(() => {
+      restart();
+    }, 2000);
 
     return () => {
-      if (inactivityTimer) window.clearTimeout(inactivityTimer);
+      if (inactivityTimerRef.current) window.clearTimeout(inactivityTimerRef.current);
+      window.clearTimeout(initialDelay);
       resetters.forEach((evt) => document.removeEventListener(evt, restart as EventListener));
     };
-  }, [canTrigger, triggerSheet]);
+  }, [canTrigger, triggerSheet, pathname]);
 
   // Триггер: прокрутил вниз >400px, затем резкий скролл вверх >100px
   const lastYRef = useRef<number>(0);
   const maxScrolledRef = useRef<number>(0);
+  const pageLoadTimeRef = useRef<number>(Date.now());
+
+  // Сброс состояния скролла при смене страницы
+  useEffect(() => {
+    // Сбрасываем состояние скролла при переходе на новую страницу
+    lastYRef.current = window.scrollY || 0;
+    maxScrolledRef.current = window.scrollY || 0;
+    pageLoadTimeRef.current = Date.now();
+  }, [pathname]);
 
   useEffect(() => {
     if (!canTrigger) return;
     
+    // Не активируем триггер скролла в первые 2 секунды после загрузки страницы
+    // чтобы избежать ложных срабатываний от автоматического скролла при навигации
+    const minTimeOnPage = 2000;
+    
     const onScroll = () => {
+      // Проверяем, что прошло достаточно времени с момента загрузки страницы
+      const timeSinceLoad = Date.now() - pageLoadTimeRef.current;
+      if (timeSinceLoad < minTimeOnPage) {
+        lastYRef.current = window.scrollY;
+        maxScrolledRef.current = window.scrollY;
+        return;
+      }
+
       const y = window.scrollY;
       if (y > maxScrolledRef.current) {
         maxScrolledRef.current = y;
@@ -106,7 +174,7 @@ export default function MobileExitBottomSheet() {
     
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [canTrigger, triggerSheet]);
+  }, [canTrigger, triggerSheet, pathname]);
 
   // Рендерим Sheet независимо от canTrigger, чтобы он мог показаться после срабатывания триггера
   if (typeof window === 'undefined') return null;
