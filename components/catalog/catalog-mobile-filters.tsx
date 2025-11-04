@@ -9,6 +9,7 @@ import {
 import { Filter } from 'lucide-react';
 import { CategoryFilter } from './category-filter';
 import { PriceRangeFilter } from './price-range-filter';
+import { ShotsRangeFilter } from './shots-range-filter';
 
 interface Category {
     id: string;
@@ -25,10 +26,17 @@ interface CatalogMobileFiltersProps {
     priceTo: string;
     minPrice: number;
     maxPrice: number;
+    shotsFrom: string;
+    shotsTo: string;
+    minShots: number;
+    maxShots: number;
     onCategoryChange: (categorySlug: string, checked: boolean) => void;
     onPriceChange: (from: string, to: string) => void;
     onPriceFromChange?: (value: string) => void;
     onPriceToChange?: (value: string) => void;
+    onShotsChange: (from: string, to: string) => void;
+    onShotsFromChange?: (value: string) => void;
+    onShotsToChange?: (value: string) => void;
 }
 
 export function CatalogMobileFilters({
@@ -40,13 +48,20 @@ export function CatalogMobileFilters({
     priceTo,
     minPrice,
     maxPrice,
+    shotsFrom,
+    shotsTo,
+    minShots,
+    maxShots,
     onCategoryChange,
     onPriceChange,
     onPriceFromChange,
     onPriceToChange,
+    onShotsChange,
+    onShotsFromChange,
+    onShotsToChange,
 }: CatalogMobileFiltersProps) {
-    // Суммарное количество выбранных фильтров: все категории + 1 если цена
-    const filtersCount = selectedCategories.length + ((priceFrom || priceTo) ? 1 : 0);
+    // Суммарное количество выбранных фильтров: все категории + 1 если цена + 1 если залпы
+    const filtersCount = selectedCategories.length + ((priceFrom || priceTo) ? 1 : 0) + ((shotsFrom || shotsTo) ? 1 : 0);
 
     return (
         <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -72,6 +87,16 @@ export function CatalogMobileFilters({
                             selectedCategories={selectedCategories}
                             onCategoryChange={onCategoryChange}
                         />
+                        <ShotsRangeFilter
+                            shotsFrom={shotsFrom}
+                            shotsTo={shotsTo}
+                            minShots={minShots}
+                            maxShots={maxShots}
+                            onShotsChange={onShotsChange}
+                            onShotsFromChange={onShotsFromChange}
+                            onShotsToChange={onShotsToChange}
+                            onMobileFilterClose={() => onOpenChange(false)}
+                        />
                         <PriceRangeFilter
                             priceFrom={priceFrom}
                             priceTo={priceTo}
@@ -83,6 +108,19 @@ export function CatalogMobileFilters({
                             onMobileFilterClose={() => onOpenChange(false)}
                         />
                     </div>
+                    <Button
+                        onClick={() => {
+                            // Применяем все фильтры - они уже применяются автоматически через debouncing,
+                            // но кнопка явно применяет и закрывает мобильное меню
+                            onPriceChange(priceFrom, priceTo);
+                            onShotsChange(shotsFrom, shotsTo);
+                            onOpenChange(false);
+                        }}
+                        className="mt-6 h-10 w-full text-sm"
+                        size="sm"
+                    >
+                        Применить фильтр
+                    </Button>
                 </div>
             </SheetContent>
         </Sheet>

@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Filter } from 'lucide-react';
 import { CategoryFilter } from './category-filter';
 import { PriceRangeFilter } from './price-range-filter';
+import { ShotsRangeFilter } from './shots-range-filter';
 
 interface Category {
     id: string;
@@ -16,10 +18,17 @@ interface CatalogDesktopFiltersProps {
     priceTo: string;
     minPrice: number;
     maxPrice: number;
+    shotsFrom: string;
+    shotsTo: string;
+    minShots: number;
+    maxShots: number;
     onCategoryChange: (categorySlug: string, checked: boolean) => void;
     onPriceChange: (from: string, to: string) => void;
     onPriceFromChange?: (value: string) => void;
     onPriceToChange?: (value: string) => void;
+    onShotsChange: (from: string, to: string) => void;
+    onShotsFromChange?: (value: string) => void;
+    onShotsToChange?: (value: string) => void;
 }
 
 export function CatalogDesktopFilters({
@@ -29,10 +38,17 @@ export function CatalogDesktopFilters({
     priceTo,
     minPrice,
     maxPrice,
+    shotsFrom,
+    shotsTo,
+    minShots,
+    maxShots,
     onCategoryChange,
     onPriceChange,
     onPriceFromChange,
     onPriceToChange,
+    onShotsChange,
+    onShotsFromChange,
+    onShotsToChange,
 }: CatalogDesktopFiltersProps) {
     return (
         <div className="hidden w-64 shrink-0 lg:block">
@@ -51,6 +67,16 @@ export function CatalogDesktopFilters({
                             onCategoryChange={onCategoryChange}
                         />
 
+                        <ShotsRangeFilter
+                            shotsFrom={shotsFrom}
+                            shotsTo={shotsTo}
+                            minShots={minShots}
+                            maxShots={maxShots}
+                            onShotsChange={onShotsChange}
+                            onShotsFromChange={onShotsFromChange}
+                            onShotsToChange={onShotsToChange}
+                        />
+
                         <PriceRangeFilter
                             priceFrom={priceFrom}
                             priceTo={priceTo}
@@ -61,6 +87,18 @@ export function CatalogDesktopFilters({
                             onPriceToChange={onPriceToChange}
                         />
                     </div>
+                    <Button
+                        onClick={() => {
+                            // Применяем все фильтры - они уже применяются автоматически через debouncing,
+                            // но кнопка может быть полезна для явного применения
+                            onPriceChange(priceFrom, priceTo);
+                            onShotsChange(shotsFrom, shotsTo);
+                        }}
+                        className="mt-4 h-9 w-full text-sm"
+                        size="sm"
+                    >
+                        Применить фильтр
+                    </Button>
                 </CardContent>
             </Card>
         </div>

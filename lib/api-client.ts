@@ -12,6 +12,8 @@ export interface ProductFilters {
     categoryId?: string[];
     minPrice?: number;
     maxPrice?: number;
+    minShots?: number;
+    maxShots?: number;
     sortBy?: string;
     page?: number;
     limit?: number;
@@ -24,6 +26,8 @@ export async function fetchProducts(filters: ProductFilters = {}) {
             categoryId,
             minPrice,
             maxPrice,
+            minShots,
+            maxShots,
             sortBy = 'name',
             page = 1,
             limit = 20,
@@ -76,6 +80,11 @@ export async function fetchProducts(filters: ProductFilters = {}) {
             query = query.lte('price', maxPrice);
         }
 
+        // Фильтрация по количеству залпов (из JSONB поля characteristics)
+        // В Supabase JS SDK фильтрация по JSONB требует специального подхода
+        // Используем фильтрацию на клиенте после получения данных
+        // (альтернатива - создать RPC функцию в Supabase)
+
         // Сортировка
         switch (sortBy) {
             case 'price-asc':
@@ -96,12 +105,63 @@ export async function fetchProducts(filters: ProductFilters = {}) {
                 break;
         }
 
-        // Пагинация
-        const from = (page - 1) * limit;
-        const to = from + limit - 1;
-        query = query.range(from, to);
+        // Если есть фильтр по залпам, получаем все данные для фильтрации на клиенте
+        // (так как Supabase JS SDK не поддерживает напрямую фильтрацию по JSONB с преобразованием типов)
+        const needsClientSideFiltering = minShots !== undefined || maxShots !== undefined;
+        
+        let data: any[] = [];
+        let error: any = null;
+        let count: number | null = null;
 
-        const { data: products, error, count } = await query;
+        if (needsClientSideFiltering) {
+            // Получаем все данные без пагинации для фильтрации
+            const { data: allProducts, error: allError, count: allCount } = await query;
+            data = allProducts || [];
+            error = allError;
+            
+            // Фильтруем по количеству залпов на клиенте
+            data = data.filter((product: any) => {
+                const characteristics = product.characteristics || {};
+                const shotsStr = characteristics['Кол-во залпов'];
+                
+                if (!shotsStr) {
+                    // Если нет значения "Кол-во залпов", пропускаем товар
+                    return false;
+                }
+                
+                const shots = parseInt(shotsStr, 10);
+                if (isNaN(shots)) {
+                    return false;
+                }
+                
+                if (minShots !== undefined && shots < minShots) {
+                    return false;
+                }
+                
+                if (maxShots !== undefined && shots > maxShots) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            count = data.length;
+            
+            // Применяем пагинацию после фильтрации
+            const from = (page - 1) * limit;
+            const to = from + limit;
+            data = data.slice(from, to);
+        } else {
+            // Обычная пагинация на сервере
+            const from = (page - 1) * limit;
+            const to = from + limit - 1;
+            query = query.range(from, to);
+            
+            const result = await query;
+            data = result.data || [];
+            error = result.error;
+            count = result.count;
+        }
 
         if (error) {
             console.error('Supabase query error:', error);
@@ -112,7 +172,7 @@ export async function fetchProducts(filters: ProductFilters = {}) {
         const totalPages = Math.ceil(totalCount / limit);
 
         return {
-            products: products || [],
+            products: data,
             pagination: {
                 page,
                 limit,

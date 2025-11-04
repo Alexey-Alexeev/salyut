@@ -43,6 +43,10 @@ interface FilterState {
     priceTo: string;
     priceMin: number;
     priceMax: number;
+    shotsFrom: string;
+    shotsTo: string;
+    shotsMin: number;
+    shotsMax: number;
     search: string;
 }
 
@@ -86,6 +90,43 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const initialPagination = useRef(initialData.pagination);
     const initialProducts = useRef(initialData.products);
 
+    // Вычисляем min/max значения залпов из всех товаров
+    const calculateShotsStats = useCallback((productsList: Product[]) => {
+        const shotsValues: number[] = [];
+        productsList.forEach(product => {
+            const characteristics = product.characteristics || {};
+            const shotsStr = characteristics['Кол-во залпов'];
+            if (shotsStr) {
+                const shots = parseInt(shotsStr, 10);
+                if (!isNaN(shots) && shots > 0) {
+                    shotsValues.push(shots);
+                }
+            }
+        });
+        
+        if (shotsValues.length > 0) {
+            return {
+                min: Math.min(...shotsValues),
+                max: Math.max(...shotsValues),
+            };
+        }
+        return { min: 0, max: 100 };
+    }, []);
+
+    const initialShotsStats = calculateShotsStats(initialData.products);
+    const [shotsStats, setShotsStats] = useState(initialShotsStats);
+    
+    useEffect(() => {
+        const stats = calculateShotsStats(allProducts);
+        setShotsStats(stats);
+        // Обновляем min/max в фильтрах
+        setFilters(prev => ({
+            ...prev,
+            shotsMin: stats.min,
+            shotsMax: stats.max,
+        }));
+    }, [allProducts, calculateShotsStats]);
+
     // Состояние фильтров
     const [filters, setFilters] = useState<FilterState>({
         categories: [],
@@ -93,6 +134,10 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         priceTo: '',
         priceMin: initialData.stats.minPrice,
         priceMax: initialData.stats.maxPrice,
+        shotsFrom: '',
+        shotsTo: '',
+        shotsMin: initialShotsStats.min,
+        shotsMax: initialShotsStats.max,
         search: '',
     });
 
@@ -106,8 +151,11 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const [searchValue, setSearchValue] = useState('');
     const [priceFromValue, setPriceFromValue] = useState('');
     const [priceToValue, setPriceToValue] = useState('');
+    const [shotsFromValue, setShotsFromValue] = useState('');
+    const [shotsToValue, setShotsToValue] = useState('');
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const priceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const shotsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const lastPageRef = useRef(1);
     const hasInitializedRef = useRef(false);
     const isInitializingFromUrlRef = useRef(false);
@@ -150,6 +198,13 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             params.set('maxPrice', filters.priceTo);
         }
 
+        if (filters.shotsFrom) {
+            params.set('minShots', filters.shotsFrom);
+        }
+        if (filters.shotsTo) {
+            params.set('maxShots', filters.shotsTo);
+        }
+
         return params.toString();
     }, [sortBy, filters, categories]); // Убрали pagination.page из зависимостей
 
@@ -169,6 +224,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         params.delete('category');
         params.delete('minPrice');
         params.delete('maxPrice');
+        params.delete('minShots');
+        params.delete('maxShots');
         params.delete('sortBy');
         params.delete('page');
 
@@ -189,6 +246,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
         if (newFilters.priceTo?.trim()) {
             params.set('maxPrice', newFilters.priceTo.trim());
+        }
+
+        if (newFilters.shotsFrom?.trim()) {
+            params.set('minShots', newFilters.shotsFrom.trim());
+        }
+
+        if (newFilters.shotsTo?.trim()) {
+            params.set('maxShots', newFilters.shotsTo.trim());
         }
 
         if (newSortBy && newSortBy !== 'popular') {
@@ -213,6 +278,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         let searchParam: string | undefined;
         let minPriceParam: string | undefined;
         let maxPriceParam: string | undefined;
+        let minShotsParam: string | undefined;
+        let maxShotsParam: string | undefined;
         let sortByParam: string | undefined;
 
         if (typeof window !== 'undefined') {
@@ -221,6 +288,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             searchParam = urlParams.get('search') || undefined;
             minPriceParam = urlParams.get('minPrice') || undefined;
             maxPriceParam = urlParams.get('maxPrice') || undefined;
+            minShotsParam = urlParams.get('minShots') || undefined;
+            maxShotsParam = urlParams.get('maxShots') || undefined;
             sortByParam = urlParams.get('sortBy') || undefined;
         } else {
             // Fallback для SSR
@@ -228,6 +297,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             searchParam = searchParams.search as string;
             minPriceParam = searchParams.minPrice as string;
             maxPriceParam = searchParams.maxPrice as string;
+            minShotsParam = searchParams.minShots as string;
+            maxShotsParam = searchParams.maxShots as string;
             sortByParam = searchParams.sortBy as string;
         }
 
@@ -235,7 +306,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         const categoriesFromUrl = Array.isArray(categoryParam) ? categoryParam : (categoryParam ? [categoryParam] : []);
 
         // Проверяем, есть ли параметры в URL
-        const hasUrlParams = (categoryParam && categoryParam.length > 0) || searchParam || minPriceParam || maxPriceParam || sortByParam;
+        const hasUrlParams = (categoryParam && categoryParam.length > 0) || searchParam || minPriceParam || maxPriceParam || minShotsParam || maxShotsParam || sortByParam;
 
         if (hasUrlParams) {
 
@@ -259,6 +330,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 search: searchParam || '',
                 priceFrom: minPriceParam || '',
                 priceTo: maxPriceParam || '',
+                shotsFrom: minShotsParam || '',
+                shotsTo: maxShotsParam || '',
             }));
 
             if (sortByParam) {
@@ -274,6 +347,12 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             }
             if (maxPriceParam) {
                 setPriceToValue(maxPriceParam);
+            }
+            if (minShotsParam) {
+                setShotsFromValue(minShotsParam);
+            }
+            if (maxShotsParam) {
+                setShotsToValue(maxShotsParam);
             }
         } else {
             // Если нет параметров URL, сразу завершаем инициализацию
@@ -293,22 +372,28 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         const searchParam = urlSearchParams.get('search');
         const minPriceParam = urlSearchParams.get('minPrice');
         const maxPriceParam = urlSearchParams.get('maxPrice');
+        const minShotsParam = urlSearchParams.get('minShots');
+        const maxShotsParam = urlSearchParams.get('maxShots');
         const sortByParam = urlSearchParams.get('sortBy');
 
         // Проверяем, есть ли параметры фильтров в URL (sortBy не считается фильтром)
         const hasUrlParams = (categoryParam && categoryParam.length > 0) || 
                             searchParam || 
                             minPriceParam || 
-                            maxPriceParam;
+                            maxPriceParam ||
+                            minShotsParam ||
+                            maxShotsParam;
 
-        // Если URL параметров фильтров нет, сбрасываем фильтры
+            // Если URL параметров фильтров нет, сбрасываем фильтры
         if (!hasUrlParams) {
             setFilters(prev => {
                 // Проверяем, нужно ли сбрасывать (чтобы избежать ненужных обновлений)
                 if (prev.categories.length === 0 && 
                     !prev.search.trim() && 
                     !prev.priceFrom && 
-                    !prev.priceTo) {
+                    !prev.priceTo &&
+                    !prev.shotsFrom &&
+                    !prev.shotsTo) {
                     return prev; // Фильтры уже сброшены
                 }
                 return {
@@ -317,11 +402,15 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     search: '',
                     priceFrom: '',
                     priceTo: '',
+                    shotsFrom: '',
+                    shotsTo: '',
                 };
             });
             setSearchValue('');
             setPriceFromValue('');
             setPriceToValue('');
+            setShotsFromValue('');
+            setShotsToValue('');
             
             // Сбрасываем сортировку, если её нет в URL (используем функиональное обновление для актуального значения)
             setSortBy(prevSortBy => {
@@ -346,6 +435,16 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         setPriceToValue(filters.priceTo);
     }, [filters.priceFrom, filters.priceTo]);
 
+    // Синхронизация значений полей залпов с фильтрами
+    useEffect(() => {
+        // Не синхронизируем во время инициализации из URL
+        if (isInitializingFromUrlRef.current) {
+            return;
+        }
+        setShotsFromValue(filters.shotsFrom);
+        setShotsToValue(filters.shotsTo);
+    }, [filters.shotsFrom, filters.shotsTo]);
+
     // Применение всех фильтров через серверные запросы
     useEffect(() => {
 
@@ -360,7 +459,9 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             const hasActiveFilters = filters.search.trim() ||
                 filters.categories.length > 0 ||
                 filters.priceFrom ||
-                filters.priceTo;
+                filters.priceTo ||
+                filters.shotsFrom ||
+                filters.shotsTo;
 
             if (!hasActiveFilters && sortBy === 'popular') {
                 // Возвращаемся к исходным данным с сервера
@@ -402,6 +503,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     categoryId: categoryIds.length > 0 ? categoryIds : undefined,
                     minPrice: filters.priceFrom ? Number(filters.priceFrom) : undefined,
                     maxPrice: filters.priceTo ? Number(filters.priceTo) : undefined,
+                    minShots: filters.shotsFrom ? Number(filters.shotsFrom) : undefined,
+                    maxShots: filters.shotsTo ? Number(filters.shotsTo) : undefined,
                     sortBy: sortBy,
                     page: 1,
                     limit: 20,
@@ -505,6 +608,109 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             priceTo: '',
         }));
         updateURL(newFilters, sortBy);
+    }, [resetPage, filters, sortBy, updateURL]);
+
+    const handleShotsChange = useCallback((from: string, to: string) => {
+        resetPage();
+        const newFilters = {
+            ...filters,
+            shotsFrom: from,
+            shotsTo: to,
+        };
+        setFilters(prev => ({
+            ...prev,
+            shotsFrom: from,
+            shotsTo: to,
+        }));
+        updateURL(newFilters, sortBy);
+    }, [resetPage, filters, sortBy, updateURL]);
+
+    const handleShotsFromChange = useCallback((value: string) => {
+        setShotsFromValue(value);
+
+        // Очищаем предыдущий таймаут
+        if (shotsTimeoutRef.current) {
+            clearTimeout(shotsTimeoutRef.current);
+        }
+
+        // Если поле пустое, сразу очищаем фильтр
+        if (value.trim() === '') {
+            resetPage();
+            setFilters(prev => ({
+                ...prev,
+                shotsFrom: '',
+            }));
+            return;
+        }
+
+        // Устанавливаем новый таймаут для debouncing
+        shotsTimeoutRef.current = setTimeout(() => {
+            resetPage();
+            const newFilters = {
+                ...filters,
+                shotsFrom: value,
+            };
+            setFilters(prev => ({
+                ...prev,
+                shotsFrom: value,
+            }));
+            updateURL(newFilters, sortBy);
+        }, 500);
+    }, [resetPage]);
+
+    const handleShotsToChange = useCallback((value: string) => {
+        setShotsToValue(value);
+
+        // Очищаем предыдущий таймаут
+        if (shotsTimeoutRef.current) {
+            clearTimeout(shotsTimeoutRef.current);
+        }
+
+        // Если поле пустое, сразу очищаем фильтр
+        if (value.trim() === '') {
+            resetPage();
+            setFilters(prev => ({
+                ...prev,
+                shotsTo: '',
+            }));
+            return;
+        }
+
+        // Устанавливаем новый таймаут для debouncing
+        shotsTimeoutRef.current = setTimeout(() => {
+            resetPage();
+            const newFilters = {
+                ...filters,
+                shotsTo: value,
+            };
+            setFilters(prev => ({
+                ...prev,
+                shotsTo: value,
+            }));
+            updateURL(newFilters, sortBy);
+        }, 500);
+    }, [resetPage]);
+
+    const handleClearShots = useCallback(() => {
+        setShotsFromValue('');
+        setShotsToValue('');
+        resetPage();
+        const newFilters = {
+            ...filters,
+            shotsFrom: '',
+            shotsTo: '',
+        };
+        setFilters(prev => ({
+            ...prev,
+            shotsFrom: '',
+            shotsTo: '',
+        }));
+        updateURL(newFilters, sortBy);
+
+        // Очищаем таймаут
+        if (shotsTimeoutRef.current) {
+            clearTimeout(shotsTimeoutRef.current);
+        }
     }, [resetPage, filters, sortBy, updateURL]);
 
     const handleSearchChange = useCallback((value: string) => {
@@ -635,6 +841,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         setSearchValue('');
         setPriceFromValue('');
         setPriceToValue('');
+        setShotsFromValue('');
+        setShotsToValue('');
         setIsSearching(false);
         resetPage();
         setSortBy('popular'); // Сбрасываем сортировку к умолчанию
@@ -642,6 +850,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             categories: [],
             priceFrom: '',
             priceTo: '',
+            shotsFrom: '',
+            shotsTo: '',
             search: '',
         };
         setFilters(prev => ({
@@ -656,6 +866,9 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         }
         if (priceTimeoutRef.current) {
             clearTimeout(priceTimeoutRef.current);
+        }
+        if (shotsTimeoutRef.current) {
+            clearTimeout(shotsTimeoutRef.current);
         }
         // Сбрасываем флаг запроса
         isRequestInProgressRef.current = false;
@@ -707,6 +920,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         categoryId: categoryIds.length > 0 ? categoryIds : undefined,
                         minPrice: filters.priceFrom ? Number(filters.priceFrom) : undefined,
                         maxPrice: filters.priceTo ? Number(filters.priceTo) : undefined,
+                        minShots: filters.shotsFrom ? Number(filters.shotsFrom) : undefined,
+                        maxShots: filters.shotsTo ? Number(filters.shotsTo) : undefined,
                         sortBy: sortBy,
                         page: pagination.page,
                         limit: 20,
@@ -814,6 +1029,9 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             }
             if (priceTimeoutRef.current) {
                 clearTimeout(priceTimeoutRef.current);
+            }
+            if (shotsTimeoutRef.current) {
+                clearTimeout(shotsTimeoutRef.current);
             }
             if (initializationTimeoutRef.current) {
                 clearTimeout(initializationTimeoutRef.current);
@@ -1010,10 +1228,17 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     priceTo={filters.priceTo}
                     minPrice={filters.priceMin}
                     maxPrice={filters.priceMax}
+                    shotsFrom={filters.shotsFrom}
+                    shotsTo={filters.shotsTo}
+                    minShots={filters.shotsMin}
+                    maxShots={filters.shotsMax}
                     onCategoryChange={handleCategoryChange}
                     onPriceChange={handlePriceChange}
                     onPriceFromChange={handlePriceFromChange}
                     onPriceToChange={handlePriceToChange}
+                    onShotsChange={handleShotsChange}
+                    onShotsFromChange={handleShotsFromChange}
+                    onShotsToChange={handleShotsToChange}
                 />
 
                 {/* Основной контент */}
@@ -1031,10 +1256,17 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                                 priceTo={filters.priceTo}
                                 minPrice={filters.priceMin}
                                 maxPrice={filters.priceMax}
+                                shotsFrom={filters.shotsFrom}
+                                shotsTo={filters.shotsTo}
+                                minShots={filters.shotsMin}
+                                maxShots={filters.shotsMax}
                                 onCategoryChange={handleCategoryChange}
                                 onPriceChange={handlePriceChange}
                                 onPriceFromChange={handlePriceFromChange}
                                 onPriceToChange={handlePriceToChange}
+                                onShotsChange={handleShotsChange}
+                                onShotsFromChange={handleShotsFromChange}
+                                onShotsToChange={handleShotsToChange}
                             />
 
                             <ViewModeControls
@@ -1076,9 +1308,12 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         selectedCategories={filters.categories}
                         priceFrom={filters.priceFrom}
                         priceTo={filters.priceTo}
+                        shotsFrom={filters.shotsFrom}
+                        shotsTo={filters.shotsTo}
                         search={filters.search}
                         onRemoveCategory={handleRemoveCategory}
                         onClearPrice={handleClearPrice}
+                        onClearShots={handleClearShots}
                         onClearSearch={handleClearSearch}
                         onClearAll={handleClearAllFilters}
                     />

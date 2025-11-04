@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -13,7 +12,6 @@ interface PriceRangeFilterProps {
   onPriceChange: (from: string, to: string) => void;
   onPriceFromChange?: (value: string) => void;
   onPriceToChange?: (value: string) => void;
-  onApplyFilter?: () => void;
   onMobileFilterClose?: () => void;
 }
 
@@ -26,7 +24,6 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
     onPriceChange,
     onPriceFromChange,
     onPriceToChange,
-    onApplyFilter,
     onMobileFilterClose,
   }) => {
     const [fromValue, setFromValue] = useState(priceFrom);
@@ -59,9 +56,6 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
 
       setValidationError('');
       onPriceChange(fromValue, toValue);
-      if (onApplyFilter) {
-        onApplyFilter();
-      }
       // Закрываем мобильный фильтр при применении
       if (onMobileFilterClose) {
         onMobileFilterClose();
@@ -71,7 +65,6 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
       toValue,
       maxPrice,
       onPriceChange,
-      onApplyFilter,
       onMobileFilterClose,
     ]);
 
@@ -174,14 +167,6 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
             {validationError}
           </div>
         )}
-
-        <Button
-          onClick={applyCurrentFilter}
-          className="h-8 w-full text-xs"
-          size="sm"
-        >
-          Применить фильтр
-        </Button>
       </div>
     );
   }
