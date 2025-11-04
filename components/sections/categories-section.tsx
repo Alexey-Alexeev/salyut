@@ -20,9 +20,12 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
                 </p>
             </div>
 
-            <div className={`grid gap-4 md:gap-6 ${categories.length === 7
-                ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 xl:justify-center'
-                : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
+            <div className={`grid gap-4 md:gap-6 ${
+                categories.length === 7
+                    ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 xl:justify-center'
+                    : categories.length === 4
+                    ? 'grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 xl:justify-center'
+                    : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
                 }`}>
                 {categories.map(category => (
                     <CategoryCard key={category.id} category={category} />

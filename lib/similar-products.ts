@@ -168,12 +168,6 @@ export function findSimilarProducts(
         .slice(0, limit)
         .map(({ product }) => product);
 
-    // Отладочная информация (можно убрать после проверки)
-    if (similarProducts.length > 0) {
-        console.log('Найдены похожие товары для запроса "' + query + '":', 
-            similarProducts.map(p => p.name));
-    }
-
     return similarProducts;
 }
 

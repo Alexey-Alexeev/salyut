@@ -12,7 +12,7 @@ import { PopularProductsSection } from '@/components/sections/popular-products-s
 import { ProfessionalServicesSection } from '@/components/sections/professional-services-section';
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
 import dynamic from 'next/dynamic';
-import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL } from '@/lib/schema-constants';
+import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL, filterVisibleCategories } from '@/lib/schema-constants';
 
 // Динамические импорты для тяжелых компонентов
 const DynamicVideoReviewsSection = dynamic(() => import('@/components/sections/video-reviews-section').then(mod => ({ default: mod.VideoReviewsSection })), {
@@ -80,6 +80,8 @@ export default async function HomePage() {
         .where(and(eq(products.is_popular, true), eq(products.is_active, true)))
         .limit(4),
     ]);
+    // Фильтруем скрытые категории
+    categoriesData = filterVisibleCategories(categoriesData);
   } catch (error) {
     console.error('Error loading categories or products:', error);
   }

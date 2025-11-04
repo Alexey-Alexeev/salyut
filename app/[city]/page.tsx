@@ -12,7 +12,7 @@ import { ProfessionalServicesSection } from '@/components/sections/professional-
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
 import { getCityBySlug, getAllCitySlugs } from '@/lib/cities';
 import { notFound } from 'next/navigation';
-import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL } from '@/lib/schema-constants';
+import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL, filterVisibleCategories } from '@/lib/schema-constants';
 
 interface CityPageProps {
     params: {
@@ -105,6 +105,8 @@ export default async function CityPage({ params }: CityPageProps) {
                 .where(and(eq(products.is_popular, true), eq(products.is_active, true)))
                 .limit(4),
         ]);
+        // Фильтруем скрытые категории
+        categoriesData = filterVisibleCategories(categoriesData);
     } catch (error) {
         console.error('Error loading categories or products:', error);
     }

@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
 import { products, categories } from '@/db/schema';
 import { eq, sql, desc, asc } from 'drizzle-orm';
+import { filterVisibleCategories } from '@/lib/schema-constants';
 
 // Кэш для server-side функций
 const serverCache = new Map<string, { data: any; timestamp: number }>();
@@ -23,7 +24,8 @@ export async function getCategoriesData() {
     const cacheKey = 'categories';
     const cached = getCachedServerData(cacheKey);
     if (cached) {
-        return cached;
+        // Фильтруем скрытые категории даже из кэша
+        return filterVisibleCategories(cached);
     }
 
     try {
@@ -36,12 +38,20 @@ export async function getCategoriesData() {
             .from(categories)
             .orderBy(asc(categories.name));
 
-        setCachedServerData(cacheKey, result);
-        return result;
+        // Фильтруем скрытые категории
+        const filteredResult = filterVisibleCategories(result);
+
+        setCachedServerData(cacheKey, filteredResult);
+        return filteredResult;
     } catch (error) {
         console.error('Error fetching categories:', error);
         return [];
     }
+}
+
+// Функция для очистки кэша категорий (полезно при изменении списка скрытых категорий)
+export function clearCategoriesCache() {
+    serverCache.delete('categories');
 }
 
 export async function getProductsData(page: number = 1, limit: number = 20, sortBy: string = 'name') {

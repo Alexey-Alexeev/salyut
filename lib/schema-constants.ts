@@ -56,6 +56,44 @@ export const CATEGORY_PRICES = {
 // Валидность цен
 export const PRICE_VALID_UNTIL = "2026-12-31";
 
+// Список slug'ов категорий, которые нужно скрыть (категории без товаров в БД)
+// Используем lowercase для сравнения, поэтому регистр не важен
+export const HIDDEN_CATEGORY_SLUGS = [
+  'rockets',       // Ракеты
+  'fountains',     // Фонтаны
+  'sparklers',     // Бенгальские огни (старый slug)
+  'bengal-lights', // Бенгальские огни (новый slug - будет работать с Bengal-lights, bengal-lights, etc)
+].map(slug => slug.toLowerCase());
+
+/**
+ * Фильтровать категории, исключая скрытые
+ * Нормализует slug (убирает пробелы, приводит к lowercase) для надежного сравнения
+ */
+export function filterVisibleCategories<T extends { slug: string }>(categories: T[]): T[] {
+  if (!categories || categories.length === 0) {
+    return [];
+  }
+  
+  const filtered = categories.filter(category => {
+    if (!category || !category.slug) {
+      return true; // Сохраняем категории без slug (на всякий случай)
+    }
+    // Нормализуем slug: убираем пробелы, приводим к lowercase, заменяем множественные дефисы
+    const categorySlug = category.slug
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-') // Заменяем пробелы на дефисы
+      .replace(/-+/g, '-')  // Заменяем множественные дефисы на один
+      .replace(/^-|-$/g, ''); // Убираем дефисы в начале и конце
+    
+    const isHidden = HIDDEN_CATEGORY_SLUGS.includes(categorySlug);
+    
+    return !isHidden;
+  });
+  
+  return filtered;
+}
+
 // Авторы отзывов - убраны для избежания рисков с SEO
 // export const REVIEW_AUTHORS = [
 //   "Анна Петрова",

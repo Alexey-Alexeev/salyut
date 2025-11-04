@@ -741,7 +741,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 
                 if (isMounted && data.products && data.products.length > 0) {
                     setAllProducts(data.products);
-                    console.log('Загружено товаров для поиска похожих:', data.products.length);
                     
                     // Получаем популярные товары
                     const popular = data.products
@@ -759,11 +758,9 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     }
                     
                     setPopularProducts(popular.slice(0, 3));
-                    console.log('Загружено популярных товаров:', popular.length);
                 } else if (isMounted) {
                     // Если не загрузилось, используем начальные товары
                     setAllProducts(initialProducts.current);
-                    console.log('Используем начальные товары для поиска похожих:', initialProducts.current.length);
                     
                     // Берем популярные из начальных
                     const popular = initialProducts.current
@@ -1141,11 +1138,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                                 .filter(p => !productsToShow.some(sp => sp.id === p.id))
                                 .slice(0, 2 - productsToShow.length);
                             productsToShow.push(...remaining);
-                        }
-                        
-                        // Отладочная информация
-                        if (searchQuery) {
-                            console.log('[Поиск похожих] Запрос:', searchQuery, 'Товаров в базе:', allProducts.length, 'Найдено похожих:', similarProducts.length, 'Показано товаров:', productsToShow.length);
                         }
                         
                         return (

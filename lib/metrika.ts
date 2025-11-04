@@ -36,7 +36,6 @@ export function sendMetrikaGoal(goalName: string, params?: Record<string, any>) 
 
   try {
     ym(METRIKA_ID, 'reachGoal', goalName, params);
-    console.log(`Metrika goal sent: ${goalName}`, params);
   } catch (error) {
     console.error('Error sending Metrika goal:', error);
   }
