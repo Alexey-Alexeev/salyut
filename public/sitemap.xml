@@ -217,6 +217,14 @@
   </url>
   
   <url>
+    <loc>https://salutgrad.ru/pavlovsky-posad/</loc>
+    <lastmod>2025-01-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/pavlovsky-posad/"/>
+  </url>
+  
+  <url>
     <loc>https://salutgrad.ru/podolsk/</loc>
     <lastmod>2025-10-03</lastmod>
     <changefreq>daily</changefreq>
