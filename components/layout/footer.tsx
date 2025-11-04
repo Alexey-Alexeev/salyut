@@ -180,7 +180,7 @@ export async function Footer() {
                   href="/services/launching"
                   className="text-gray-700 hover:text-orange-600"
                 >
-                  Услуги
+                  Безопасный запуск салютов
                 </Link>
               </li>
               <li>
