@@ -35,6 +35,8 @@ export const FIXED_DELIVERY_CITIES = [
   'balashikha',
   'люберцы',
   'lyubertsy',
+  'реутов',
+  'reutov',
 ] as const;
 
 // Полный список городов Московской области для распознавания
@@ -139,7 +141,7 @@ export function calculateDeliveryCost(
   city: string,
   distanceFromMKAD?: number
 ): number {
-  // Если это город с фиксированной стоимостью (Москва, Балашиха, Люберцы)
+  // Если это город с фиксированной стоимостью (Москва, Балашиха, Люберцы, Реутов)
   // ВАЖНО: Проверяем это ПЕРВЫМ, независимо от расстояния от МКАД
   if (city && isFixedDeliveryCity(city)) {
     return DELIVERY_CONSTANTS.MOSCOW_DELIVERY_COST;
@@ -330,6 +332,8 @@ export function formatCityName(city: string): string {
     balashikha: 'Балашиху',
     люберцы: 'Люберцы',
     lyubertsy: 'Люберцы',
+    реутов: 'Реутов',
+    reutov: 'Реутов',
     мытищи: 'Мытищи',
     королёв: 'Королёв',
     королев: 'Королёв',

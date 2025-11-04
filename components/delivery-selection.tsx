@@ -281,7 +281,7 @@ export function DeliverySelection({
                   </h4>
                   <div className="space-y-1 text-xs sm:text-sm text-blue-700">
                     <p>
-                      • Москва, Балашиха, Люберцы — <strong>500 ₽</strong>
+                      • Москва, Балашиха, Люберцы, Реутов — <strong>500 ₽</strong>
                     </p>
                     <p>
                       • За МКАД —{' '}

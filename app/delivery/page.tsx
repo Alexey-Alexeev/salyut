@@ -110,7 +110,7 @@ export default function DeliveryPage() {
                   "itemOffered": {
                     "@type": "Service",
                     "name": "Доставка фейерверков по Москве",
-                    "description": "Фиксированная стоимость доставки фейерверков по Москве, Балашихе, Люберцам"
+                    "description": "Фиксированная стоимость доставки фейерверков по Москве, Балашихе, Люберцам, Реутову"
                   },
                   "price": "500",
                   "priceCurrency": "RUB",
