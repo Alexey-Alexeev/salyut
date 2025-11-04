@@ -15,6 +15,7 @@ import { CatalogEmptyState } from '@/components/catalog/catalog-empty-state';
 import { fetchProducts } from '@/lib/api-client';
 import { PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 import { CatalogCanonical } from '@/components/catalog/catalog-canonical';
+import { findSimilarProducts } from '@/lib/similar-products';
 
 // Типы
 interface Category {
@@ -30,6 +31,7 @@ interface Product {
     price: number;
     category_id: string | null;
     images: string[] | null;
+    video_url?: string | null;
     is_popular: boolean | null;
     characteristics?: Record<string, any> | null;
     short_description?: string | null;
@@ -70,10 +72,32 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const router = useRouter();
     const urlSearchParams = useSearchParams();
 
+    // Клиентский редирект для старой рекламной ссылки (работает до регистрации SW)
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const categories = urlParams.getAll('category');
+        const sortBy = urlParams.get('sortBy');
+        
+        // Проверяем, является ли это старой рекламной ссылкой
+        const isOldAdUrl = 
+            categories.includes('Fireworks') &&
+            categories.includes('Fan-salutes') &&
+            sortBy === 'price-asc';
+        
+        if (isOldAdUrl) {
+            // Выполняем редирект на оптимизированную промо страницу
+            router.replace('/catalog/promo/fireworks/', { scroll: false });
+        }
+    }, [router]);
+
     // Основное состояние - инициализируем из server data
     const [categories] = useState<Category[]>(initialData.categories);
     const [products, setProducts] = useState<Product[]>(initialData.products);
     const [filteredProducts, setFilteredProducts] = useState<Product[]>(initialData.products);
+    const [allProducts, setAllProducts] = useState<Product[]>(initialData.products); // Все товары для поиска похожих
+    const [popularProducts, setPopularProducts] = useState<Product[]>([]); // Популярные товары для блока "Возможно вы имели в виду"
     const [loading, setLoading] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
     const [pagination, setPagination] = useState(initialData.pagination);
@@ -93,7 +117,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     });
 
     // Состояние интерфейса
-    const [sortBy, setSortBy] = useState('name');
+    const [sortBy, setSortBy] = useState('popular');
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
     const [isFiltering, setIsFiltering] = useState(false);
@@ -114,7 +138,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     // Стабилизируем список товаров для предотвращения лишних рендеров
     const stableProducts = useMemo(() => {
         return filteredProducts;
-    }, [filteredProducts.length, filteredProducts.map(p => p.id).join(',')]);
+    }, [filteredProducts]);
 
     // Мемоизируем построение URL параметров
     const buildApiParams = useCallback((page: number = 1) => {
@@ -187,7 +211,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             params.set('maxPrice', newFilters.priceTo.trim());
         }
 
-        if (newSortBy && newSortBy !== 'name') {
+        if (newSortBy && newSortBy !== 'popular') {
             params.set('sortBy', newSortBy);
         }
 
@@ -228,7 +252,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         }
 
         // Парсим категории (может быть массив)
-        const categories = Array.isArray(categoryParam) ? categoryParam : (categoryParam ? [categoryParam] : []);
+        const categoriesFromUrl = Array.isArray(categoryParam) ? categoryParam : (categoryParam ? [categoryParam] : []);
 
         // Проверяем, есть ли параметры в URL
         const hasUrlParams = (categoryParam && categoryParam.length > 0) || searchParam || minPriceParam || maxPriceParam || sortByParam;
@@ -251,7 +275,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             resetPage();
             setFilters(prev => ({
                 ...prev,
-                categories,
+                categories: categoriesFromUrl,
                 search: searchParam || '',
                 priceFrom: minPriceParam || '',
                 priceTo: maxPriceParam || '',
@@ -279,6 +303,59 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         hasInitializedRef.current = true;
     }, [searchParams, resetPage]);
 
+    // Отслеживание изменений URL после инициализации для сброса фильтров
+    useEffect(() => {
+        // Пропускаем во время первичной инициализации
+        if (!hasInitializedRef.current) return;
+
+        // Парсим текущие URL параметры
+        const categoryParam = urlSearchParams.getAll('category');
+        const searchParam = urlSearchParams.get('search');
+        const minPriceParam = urlSearchParams.get('minPrice');
+        const maxPriceParam = urlSearchParams.get('maxPrice');
+        const sortByParam = urlSearchParams.get('sortBy');
+
+        // Проверяем, есть ли параметры фильтров в URL (sortBy не считается фильтром)
+        const hasUrlParams = (categoryParam && categoryParam.length > 0) || 
+                            searchParam || 
+                            minPriceParam || 
+                            maxPriceParam;
+
+        // Если URL параметров фильтров нет, сбрасываем фильтры
+        if (!hasUrlParams) {
+            setFilters(prev => {
+                // Проверяем, нужно ли сбрасывать (чтобы избежать ненужных обновлений)
+                if (prev.categories.length === 0 && 
+                    !prev.search.trim() && 
+                    !prev.priceFrom && 
+                    !prev.priceTo) {
+                    return prev; // Фильтры уже сброшены
+                }
+                return {
+                    ...prev,
+                    categories: [],
+                    search: '',
+                    priceFrom: '',
+                    priceTo: '',
+                };
+            });
+            setSearchValue('');
+            setPriceFromValue('');
+            setPriceToValue('');
+            
+            // Сбрасываем сортировку, если её нет в URL (используем функиональное обновление для актуального значения)
+            setSortBy(prevSortBy => {
+                // Если в URL нет sortBy параметра, сбрасываем на значение по умолчанию
+                if (!sortByParam && prevSortBy !== 'popular') {
+                    return 'popular';
+                }
+                return prevSortBy;
+            });
+            
+            resetPage();
+        }
+    }, [urlSearchParams.toString(), resetPage]); // Отслеживаем только изменения URL (sortBy обновляется через updateURL)
+
     // Синхронизация значений полей цены с фильтрами
     useEffect(() => {
         // Не синхронизируем во время инициализации из URL
@@ -305,7 +382,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 filters.priceFrom ||
                 filters.priceTo;
 
-            if (!hasActiveFilters && sortBy === 'name') {
+            if (!hasActiveFilters && sortBy === 'popular') {
                 // Возвращаемся к исходным данным с сервера
                 setFilteredProducts(initialProducts.current);
                 setPagination({
@@ -580,7 +657,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         setPriceToValue('');
         setIsSearching(false);
         resetPage();
-        setSortBy('name'); // Сбрасываем сортировку к умолчанию
+        setSortBy('popular'); // Сбрасываем сортировку к умолчанию
         const newFilters = {
             categories: [],
             priceFrom: '',
@@ -591,7 +668,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             ...prev,
             ...newFilters,
         }));
-        updateURL(newFilters, 'name');
+        updateURL(newFilters, 'popular');
 
         // Очищаем таймауты
         if (searchTimeoutRef.current) {
@@ -612,7 +689,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         }));
         
         // Показываем loader в мобильной версии вместо скролла
-        if (window.innerWidth < 768) {
+        if (typeof window !== 'undefined' && window.innerWidth < 768) {
             setIsPaginationLoading(true);
         }
 
@@ -669,6 +746,88 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             lastPageRef.current = pagination.page;
         }
     }, [pagination.page, categories, filters, sortBy]);
+
+    // Загрузка всех товаров для поиска похожих и популярных товаров (один раз при монтировании)
+    useEffect(() => {
+        let isMounted = true;
+        
+        const loadAllProducts = async () => {
+            try {
+                // Загружаем все товары без фильтров и пагинации
+                const data = await fetchProducts({
+                    limit: 1000, // Большой лимит для получения всех товаров
+                    sortBy: 'name',
+                });
+                
+                if (isMounted && data.products && data.products.length > 0) {
+                    setAllProducts(data.products);
+                    console.log('Загружено товаров для поиска похожих:', data.products.length);
+                    
+                    // Получаем популярные товары
+                    const popular = data.products
+                        .filter(p => p.is_popular === true)
+                        .sort(() => Math.random() - 0.5) // Перемешиваем случайно
+                        .slice(0, 3);
+                    
+                    if (popular.length < 3) {
+                        // Если популярных меньше 3, добавляем случайные товары
+                        const remaining = data.products
+                            .filter(p => !popular.some(pp => pp.id === p.id))
+                            .sort(() => Math.random() - 0.5)
+                            .slice(0, 3 - popular.length);
+                        popular.push(...remaining);
+                    }
+                    
+                    setPopularProducts(popular.slice(0, 3));
+                    console.log('Загружено популярных товаров:', popular.length);
+                } else if (isMounted) {
+                    // Если не загрузилось, используем начальные товары
+                    setAllProducts(initialProducts.current);
+                    console.log('Используем начальные товары для поиска похожих:', initialProducts.current.length);
+                    
+                    // Берем популярные из начальных
+                    const popular = initialProducts.current
+                        .filter(p => p.is_popular === true)
+                        .slice(0, 3);
+                    
+                    if (popular.length < 3) {
+                        const remaining = initialProducts.current
+                            .filter(p => !popular.some(pp => pp.id === p.id))
+                            .slice(0, 3 - popular.length);
+                        popular.push(...remaining);
+                    }
+                    
+                    setPopularProducts(popular.slice(0, 3));
+                }
+            } catch (error) {
+                console.error('Error loading all products for similar search:', error);
+                // В случае ошибки используем начальные товары из initialData
+                if (isMounted) {
+                    setAllProducts(initialProducts.current);
+                    
+                    const popular = initialProducts.current
+                        .filter(p => p.is_popular === true)
+                        .slice(0, 3);
+                    
+                    if (popular.length < 3) {
+                        const remaining = initialProducts.current
+                            .filter(p => !popular.some(pp => pp.id === p.id))
+                            .slice(0, 3 - popular.length);
+                        popular.push(...remaining);
+                    }
+                    
+                    setPopularProducts(popular.slice(0, 3));
+                }
+            }
+        };
+
+        // Всегда загружаем все товары для лучшего поиска похожих
+        loadAllProducts();
+        
+        return () => {
+            isMounted = false;
+        };
+    }, []); // Только при монтировании
 
     // Очистка таймаутов при размонтировании
     useEffect(() => {
@@ -910,7 +1069,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         {/* Управление для десктопа */}
                         <div className="hidden items-center justify-between lg:flex">
                             <span className="text-muted-foreground text-sm">
-                                Найдено: {filteredProducts.length}{' '}
+                                На этой странице: {filteredProducts.length}{' '}
                                 {filteredProducts.length === 1 ? 'товар' : 'товаров'}
                             </span>
 
@@ -927,7 +1086,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         {/* Счетчик и сортировка для мобильных */}
                         <div className="flex items-center justify-between lg:hidden">
                             <span className="text-muted-foreground text-sm">
-                                Найдено: {filteredProducts.length}
+                                На этой странице: {filteredProducts.length}
                             </span>
 
                             <CatalogSort value={sortBy} onChange={handleSortChange} isMobile />
@@ -986,9 +1145,37 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     )}
 
                     {/* Сообщение о пустых результатах */}
-                    {filteredProducts.length === 0 && (
-                        <CatalogEmptyState onClearFilters={handleClearAllFilters} />
-                    )}
+                    {filteredProducts.length === 0 && (() => {
+                        // Ищем похожие товары только если есть поисковый запрос
+                        const searchQuery = filters.search?.trim();
+                        const similarProducts = searchQuery && allProducts.length > 0
+                            ? findSimilarProducts(searchQuery, allProducts, 2)
+                            : [];
+                        
+                        // Если похожих товаров меньше 2, дополняем популярными
+                        const productsToShow = [...similarProducts];
+                        
+                        // Если не хватает до 2, добавляем популярные товары
+                        if (productsToShow.length < 2 && popularProducts.length > 0) {
+                            const remaining = popularProducts
+                                .filter(p => !productsToShow.some(sp => sp.id === p.id))
+                                .slice(0, 2 - productsToShow.length);
+                            productsToShow.push(...remaining);
+                        }
+                        
+                        // Отладочная информация
+                        if (searchQuery) {
+                            console.log('[Поиск похожих] Запрос:', searchQuery, 'Товаров в базе:', allProducts.length, 'Найдено похожих:', similarProducts.length, 'Показано товаров:', productsToShow.length);
+                        }
+                        
+                        return (
+                            <CatalogEmptyState 
+                                onClearFilters={handleClearAllFilters}
+                                similarProducts={productsToShow.slice(0, 2)}
+                                searchQuery={searchQuery || undefined}
+                            />
+                        );
+                    })()}
                 </div>
             </div>
         </div>

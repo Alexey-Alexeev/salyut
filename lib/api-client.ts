@@ -299,4 +299,3 @@ async function sendConsultationTelegramNotification(consultation: any) {
         console.error('Error sending Telegram notification:', error);
     }
 }
-

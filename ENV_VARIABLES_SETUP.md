@@ -28,6 +28,11 @@ TELEGRAM_CHAT_ID=your-chat-id
 NEXT_PUBLIC_YANDEX_API_KEY=your-maps-api-key
 ```
 
+### 📍 **DaData (автодополнение адресов, опционально):**
+```
+NEXT_PUBLIC_DADATA_TOKEN=your-dadata-token
+```
+
 ### 📊 **Google Analytics (опционально):**
 ```
 NEXT_PUBLIC_GA_ID=your-ga-id
@@ -61,6 +66,7 @@ BUILD_ID=build-123-abc123def456  # Автоматически в GitHub Actions
 ✅ TELEGRAM_BOT_TOKEN
 ✅ TELEGRAM_CHAT_ID
 ✅ NEXT_PUBLIC_YANDEX_API_KEY
+✅ NEXT_PUBLIC_DADATA_TOKEN (опционально)
 ✅ FTP_SERVER
 ✅ FTP_USERNAME
 ✅ FTP_PASSWORD
@@ -87,6 +93,7 @@ DATABASE_URL=your-database-url
 TELEGRAM_BOT_TOKEN=your-bot-token
 TELEGRAM_CHAT_ID=your-chat-id
 NEXT_PUBLIC_YANDEX_API_KEY=your-maps-key
+NEXT_PUBLIC_DADATA_TOKEN=your-dadata-token
 
 # Для локальной разработки (опционально)
 SITE_VERSION=local-dev-$(date +%s)
@@ -143,6 +150,13 @@ echo $NEXT_PUBLIC_SUPABASE_URL
 1. Перейдите в Yandex Cloud
 2. Создайте API ключ
 3. Скопируйте ключ
+
+### **DaData:**
+1. Перейдите на [dadata.ru](https://dadata.ru/)
+2. Зарегистрируйтесь или войдите
+3. Перейдите в личный кабинет → API
+4. Скопируйте токен для API "Подсказки адресов"
+5. Добавьте токен в GitHub Secrets как `NEXT_PUBLIC_DADATA_TOKEN`
 
 ---
 **Важно:** Все переменные должны быть настроены до первого деплоя!

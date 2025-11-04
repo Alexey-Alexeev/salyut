@@ -29,6 +29,7 @@ export const CategoryFilter = React.memo<CategoryFilterProps>(
                 onCheckedChange={checked =>
                   onCategoryChange(category.slug, checked as boolean)
                 }
+                className="ym-record-keys"
               />
               <label
                 htmlFor={`category-${category.slug}`}

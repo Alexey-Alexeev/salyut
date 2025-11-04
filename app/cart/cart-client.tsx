@@ -581,7 +581,7 @@ export default function CartPageClient() {
                                             <Input
                                                 id="name"
                                                 {...register('name')}
-                                                className={`w-full ${(errors.name || (!watch('name') && hasValidationAttempted)) ? 'border-red-500 bg-red-50' : ''}`}
+                                                className={`w-full ym-record-keys ${(errors.name || (!watch('name') && hasValidationAttempted)) ? 'border-red-500 bg-red-50' : ''}`}
                                                 placeholder="Введите ваше имя"
                                             />
                                             {errors.name && (
@@ -635,7 +635,7 @@ export default function CartPageClient() {
                                                                 ? '+7 (999) 123-45-67'
                                                                 : '+7 (999) 123-45-67'
                                                     }
-                                                    className={errors.contact ? 'border-red-500 bg-red-50' : ''}
+                                                    className={`ym-record-keys ${errors.contact ? 'border-red-500 bg-red-50' : ''}`}
                                                     onKeyDown={(e) => {
                                                         // Разрешаем только цифры, +, -, (, ), пробел для телефона и WhatsApp
                                                         if (watch('contactMethod') === 'phone' || watch('contactMethod') === 'whatsapp') {
@@ -740,6 +740,7 @@ export default function CartPageClient() {
                                             {...register('comment')}
                                             placeholder="Дополнительные пожелания..."
                                             rows={3}
+                                            className="ym-record-keys"
                                         />
                                     </div>
 

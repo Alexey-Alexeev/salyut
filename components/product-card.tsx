@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
+import { ShoppingCart, Plus, Minus, Trash2, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -370,6 +370,22 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
             {product.price.toLocaleString('ru-RU')} ₽
           </p>
         </div>
+
+        {/* Кнопка "См. видео" если есть видео */}
+        {product.video_url && (
+          <div className="mt-3">
+            <Link href={`/product/${product.slug}?tab=video`}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full text-primary border-primary hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-600 hover:text-white hover:border-transparent transition-all duration-200 ease-out hover:shadow-md"
+              >
+                <Play className="mr-2 size-4" />
+                См. видео
+              </Button>
+            </Link>
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="p-4 pt-0">

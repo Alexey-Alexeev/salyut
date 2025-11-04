@@ -133,7 +133,7 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
               value={fromValue}
               onChange={handleFromChange}
               onKeyPress={handleKeyPress}
-              className="h-9 text-sm"
+              className="h-9 text-sm ym-record-keys"
             />
           </div>
           <div className="flex-1">
@@ -148,7 +148,7 @@ export const PriceRangeFilter = React.memo<PriceRangeFilterProps>(
               value={toValue}
               onChange={handleToChange}
               onKeyPress={handleKeyPress}
-              className="h-9 text-sm"
+              className="h-9 text-sm ym-record-keys"
             />
           </div>
         </div>

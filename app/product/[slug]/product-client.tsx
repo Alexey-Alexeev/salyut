@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Minus, Plus, Star, ChevronLeft, ChevronRight, FileText, Shield, AlertTriangle, ExternalLink, Sparkles } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { ShoppingCart, Minus, Plus, Star, ChevronLeft, ChevronRight, FileText, Shield, AlertTriangle, ExternalLink, Sparkles, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -220,6 +221,9 @@ export default function ProductClient({
 }: ProductClientProps) {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [activeTab, setActiveTab] = useState<string>('description');
+  const searchParams = useSearchParams();
+  const tabsRef = useRef<HTMLDivElement>(null);
   const addItem = useCartStore(state => state.addItem);
 
   const handleAddToCart = () => {
@@ -237,6 +241,23 @@ export default function ProductClient({
 
   const images = product.images || [];
   const hasVideo = !!product.video_url;
+
+  // Определяем, какую вкладку открыть по умолчанию
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'video' && hasVideo) {
+      setActiveTab('video');
+      // Плавная прокрутка к блоку вкладок только на мобильных устройствах
+      const isMobile = window.innerWidth < 1024; // lg breakpoint
+      if (isMobile) {
+        setTimeout(() => {
+          tabsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    } else {
+      setActiveTab('description');
+    }
+  }, [searchParams, hasVideo]);
 
   // Создаем массив медиа-контента: сначала изображения, потом видео
   const mediaItems = [
@@ -576,21 +597,80 @@ export default function ProductClient({
           </div>
 
           {/* Блок с вкладками */}
-          <Card>
-            <CardContent className="pt-6">
-              <Tabs defaultValue="description" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="description" className="flex items-center gap-2">
-                    <FileText className="size-4" />
-                    Описание
+          <div ref={tabsRef}>
+            <Card>
+              <CardContent className="pt-6">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className={`grid w-full h-9 sm:h-10 p-0.5 sm:p-1 ${hasVideo && getSafetyRules(category?.name || '') ? 'grid-cols-3' : hasVideo || getSafetyRules(category?.name || '') ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                  {hasVideo && (
+                    <TabsTrigger 
+                      value="video" 
+                      className="flex items-center gap-1 sm:gap-1.5 relative group/video data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:shadow-md lg:data-[state=active]:border-blue-500/50 lg:border-2 lg:border-transparent lg:data-[state=active]:border-blue-500 transition-all hover:bg-blue-50/50 text-[11px] sm:text-sm px-1 sm:px-3 py-1 sm:py-1.5 overflow-hidden min-w-0"
+                    >
+                      <div className="relative flex items-center justify-center flex-shrink-0">
+                        <Play className="size-3.5 sm:size-4 lg:size-6 text-blue-600 data-[state=active]:text-blue-700 lg:drop-shadow-sm fill-blue-100 lg:fill-blue-200" />
+                        {/* Пульсирующий эффект для десктопа при hover */}
+                        <span className="absolute inset-0 rounded-full bg-blue-400/30 animate-ping opacity-0 lg:group-hover/video:opacity-100 hidden lg:block"></span>
+                      </div>
+                      <span className="font-semibold sm:font-semibold lg:font-bold lg:text-base relative">
+                        Видео
+                        {/* Маленький индикатор для десктопа */}
+                        <span className="absolute -top-1 -right-2 hidden lg:block">
+                          <span className="relative flex size-2">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-500 opacity-75"></span>
+                            <span className="relative inline-flex size-2 rounded-full bg-blue-500"></span>
+                          </span>
+                        </span>
+                      </span>
+                    </TabsTrigger>
+                  )}
+                  <TabsTrigger value="description" className="flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-sm px-1 sm:px-3 py-1 sm:py-1.5 overflow-hidden data-[state=active]:bg-purple-50 data-[state=active]:text-purple-700 data-[state=active]:shadow-md lg:data-[state=active]:border-purple-500/50 lg:border-2 lg:border-transparent lg:data-[state=active]:border-purple-500 transition-all hover:bg-purple-50/50">
+                    <FileText className="size-3.5 sm:size-4 flex-shrink-0" />
+                    <span>Описание</span>
                   </TabsTrigger>
                   {getSafetyRules(category?.name || '') && (
-                    <TabsTrigger value="safety" className="flex items-center gap-2">
-                      <Shield className="size-5 sm:size-4" />
-                      Безопасность
+                    <TabsTrigger value="safety" className="flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-sm px-1 sm:px-3 py-1 sm:py-1.5 overflow-hidden min-w-0 data-[state=active]:bg-orange-50 data-[state=active]:text-orange-700 data-[state=active]:shadow-md lg:data-[state=active]:border-orange-500/50 lg:border-2 lg:border-transparent lg:data-[state=active]:border-orange-500 transition-all hover:bg-orange-50/50">
+                      <Shield className="size-3.5 sm:size-4 lg:size-5 flex-shrink-0" />
+                      <span className="whitespace-nowrap">Безопасность</span>
                     </TabsTrigger>
                   )}
                 </TabsList>
+
+                {hasVideo && (
+                  <TabsContent value="video" className="mt-6">
+                    <div className="space-y-4">
+                      <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-gray-100">
+                        {(() => {
+                          const videoInfo = getVideoInfo(product.video_url || '');
+                          return videoInfo.embedUrl ? (
+                            <iframe
+                              src={videoInfo.embedUrl}
+                              title={`Видео: ${product.name}`}
+                              className="h-full w-full"
+                              allow="clipboard-write; autoplay; encrypted-media; picture-in-picture"
+                              allowFullScreen
+                              frameBorder="0"
+                              style={{ border: 'none' }}
+                            />
+                          ) : (
+                            <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 p-8 text-center">
+                              <div className="mb-4 text-6xl opacity-50">🎬</div>
+                              <div className="text-lg font-medium text-gray-600 line-clamp-3">
+                                {product.name}
+                              </div>
+                              <div className="mt-2 text-sm text-gray-500">
+                                Видео недоступно
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                      <p className="text-sm text-muted-foreground text-center lg:text-left">
+                        Видео демонстрация товара <strong>{product.name}</strong>
+                      </p>
+                    </div>
+                  </TabsContent>
+                )}
 
                 <TabsContent value="description" className="mt-6">
                   <ProductDescription
@@ -686,6 +766,7 @@ export default function ProductClient({
               </Tabs>
             </CardContent>
           </Card>
+          </div>
 
           {/* Блок характеристик */}
           {product.characteristics && Object.keys(product.characteristics).length > 0 && (

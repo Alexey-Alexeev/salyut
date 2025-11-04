@@ -347,6 +347,7 @@ export function formatCityName(city: string): string {
     раменское: 'Раменское',
     'сергиев посад': 'Сергиев Посад',
     щёлково: 'Щёлково',
+    видное: 'Видное',
   };
 
   const lowerCity = city.toLowerCase();

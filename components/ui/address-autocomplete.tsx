@@ -182,6 +182,7 @@ export function AddressAutocomplete({
       'Московская область, г. Одинцово',
       'Московская область, г. Клин',
       'Московская область, г. Жуковский',
+      'Московская область, г. Видное',
     ];
 
     cities.forEach(city => {
@@ -320,7 +321,7 @@ export function AddressAutocomplete({
           onChange={e => handleInputChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={cn('min-h-[80px] pr-8', className)}
+          className={cn('min-h-[80px] pr-8 ym-record-keys', className)}
         />
         {value && (
           <Button
