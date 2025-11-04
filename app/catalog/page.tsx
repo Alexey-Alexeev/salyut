@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { CatalogLoading } from '@/components/catalog/catalog-loading';
-import { getCategoriesData, getProductsData, getProductsStatsData } from '@/lib/catalog-server';
+import { getCategoriesData, getProductsData, getProductsStatsData, getProductsDataWithCategories } from '@/lib/catalog-server';
 import { Metadata } from 'next';
 import dynamicImport from 'next/dynamic';
 
@@ -9,12 +9,6 @@ const CatalogClient = dynamicImport(() => import('./catalog-client').then(mod =>
   loading: () => <CatalogLoading />,
   ssr: true
 });
-
-// Кэшируем данные на уровне Next.js
-export const revalidate = 300; // 5 минут (соответствует серверному кэшу)
-
-// Статическая генерация для улучшения производительности
-export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: 'Каталог фейерверков и салютов',
@@ -38,7 +32,7 @@ interface CatalogPageProps {
 }
 
 export default async function CatalogPage({ searchParams }: CatalogPageProps) {
-  // Загружаем данные параллельно с приоритетом для критических данных
+  // Загружаем данные параллельно
   const [categories, productsResponse, stats] = await Promise.all([
     getCategoriesData(),
     getProductsData(1, 20, 'popular'),

@@ -72,6 +72,26 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const router = useRouter();
     const urlSearchParams = useSearchParams();
 
+    // Клиентский редирект для старой рекламной ссылки (работает до регистрации SW)
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const categories = urlParams.getAll('category');
+        const sortBy = urlParams.get('sortBy');
+        
+        // Проверяем, является ли это старой рекламной ссылкой
+        const isOldAdUrl = 
+            categories.includes('Fireworks') &&
+            categories.includes('Fan-salutes') &&
+            sortBy === 'price-asc';
+        
+        if (isOldAdUrl) {
+            // Выполняем редирект на оптимизированную промо страницу
+            router.replace('/catalog/promo/fireworks/', { scroll: false });
+        }
+    }, [router]);
+
     // Основное состояние - инициализируем из server data
     const [categories] = useState<Category[]>(initialData.categories);
     const [products, setProducts] = useState<Product[]>(initialData.products);
