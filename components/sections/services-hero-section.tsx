@@ -28,10 +28,10 @@ export function ServicesHeroSection({ onConsultationClick }: ServicesHeroSection
 
             <div className="relative z-10 mx-auto max-w-4xl space-y-6 px-4 text-center text-white">
                 <h1 className="rounded-lg bg-black/40 p-4 text-3xl font-bold leading-tight text-white backdrop-blur-sm md:text-4xl lg:text-5xl">
-                    <span className="text-orange-400">Безопасный</span> запуск салютов
+                    Услуга <span className="text-orange-400">безопасного</span> запуска салютов
                 </h1>
                 <p className="mx-auto max-w-2xl rounded-lg bg-black/30 p-4 text-lg text-white md:text-xl">
-                    Качественная пиротехника для свадеб, дней рождения, корпоративов и ваших праздников. Работаем в Москве и МО.
+                    Доверьтесь опытным специалистам на вашем празднике. Безопасный запуск салютов для свадеб, Дней рождения, корпоративов и других торжеств. Работаем в Москве и МО.
                 </p>
                 <div className="flex flex-col justify-center gap-4 sm:flex-row">
                     <Button
