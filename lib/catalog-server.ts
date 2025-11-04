@@ -19,13 +19,20 @@ function setCachedServerData(key: string, data: any) {
     serverCache.set(key, { data, timestamp: Date.now() });
 }
 
+// Тип для категории
+export interface CategoryData {
+    id: string;
+    name: string;
+    slug: string;
+}
+
 // Прямые функции для получения данных на сервере
-export async function getCategoriesData() {
+export async function getCategoriesData(): Promise<CategoryData[]> {
     const cacheKey = 'categories';
     const cached = getCachedServerData(cacheKey);
     if (cached) {
         // Фильтруем скрытые категории даже из кэша
-        return filterVisibleCategories(cached);
+        return filterVisibleCategories(cached as CategoryData[]);
     }
 
     try {
