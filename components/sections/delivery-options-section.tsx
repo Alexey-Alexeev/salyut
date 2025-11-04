@@ -36,7 +36,7 @@ export function DeliveryOptionsSection() {
                             <CheckCircle className="size-5 shrink-0 text-green-600" aria-hidden="true" />
                             <div>
                                 <p className="font-medium text-green-900">
-                                    Москва, Балашиха, Люберцы, Реутов
+                                    Москва, Балашиха, Люберцы, Реутов, Орехово-Зуево, Павловский Посад
                                 </p>
                                 <p className="text-sm text-green-700">
                                     Фиксированная стоимость:{' '}

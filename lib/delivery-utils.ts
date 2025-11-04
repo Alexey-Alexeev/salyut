@@ -37,6 +37,10 @@ export const FIXED_DELIVERY_CITIES = [
   'lyubertsy',
   'реутов',
   'reutov',
+  'орехово-зуево',
+  'orekhovo-zuevo',
+  'павловский посад',
+  'pavlovsky-posad',
 ] as const;
 
 // Полный список городов Московской области для распознавания
@@ -141,7 +145,7 @@ export function calculateDeliveryCost(
   city: string,
   distanceFromMKAD?: number
 ): number {
-  // Если это город с фиксированной стоимостью (Москва, Балашиха, Люберцы, Реутов)
+  // Если это город с фиксированной стоимостью (Москва, Балашиха, Люберцы, Реутов, Орехово-Зуево, Павловский Посад)
   // ВАЖНО: Проверяем это ПЕРВЫМ, независимо от расстояния от МКАД
   if (city && isFixedDeliveryCity(city)) {
     return DELIVERY_CONSTANTS.MOSCOW_DELIVERY_COST;
@@ -334,6 +338,10 @@ export function formatCityName(city: string): string {
     lyubertsy: 'Люберцы',
     реутов: 'Реутов',
     reutov: 'Реутов',
+    'орехово-зуево': 'Орехово-Зуево',
+    'orekhovo-zuevo': 'Орехово-Зуево',
+    'павловский посад': 'Павловский Посад',
+    'pavlovsky-posad': 'Павловский Посад',
     мытищи: 'Мытищи',
     королёв: 'Королёв',
     королев: 'Королёв',
