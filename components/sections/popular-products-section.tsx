@@ -10,6 +10,8 @@ interface Product {
     images: string[];
     short_description?: string;
     is_popular?: boolean;
+    category_name?: string | null;
+    category_slug?: string | null;
 }
 
 interface PopularProductsSectionProps {

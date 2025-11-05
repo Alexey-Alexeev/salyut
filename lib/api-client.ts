@@ -33,10 +33,12 @@ export async function fetchProducts(filters: ProductFilters = {}) {
             limit = 20,
         } = filters;
 
-        // Начинаем с базового запроса
+        // Начинаем с базового запроса с информацией о категориях
+        // В Supabase для foreign key relationships используется синтаксис: table_name(columns)
+        // Если связь настроена автоматически, можно использовать просто: categories(name, slug)
         let query = supabase
             .from('products')
-            .select('*', { count: 'exact' })
+            .select('*, categories(name, slug)', { count: 'exact' })
             .eq('is_active', true);
 
         // Применяем фильтры
@@ -168,11 +170,22 @@ export async function fetchProducts(filters: ProductFilters = {}) {
             throw error;
         }
 
+        // Преобразуем данные: извлекаем информацию о категориях из объекта categories
+        const transformedData = (data || []).map((product: any) => {
+            const category = product.categories;
+            return {
+                ...product,
+                category_name: category?.name || null,
+                category_slug: category?.slug || null,
+                categories: undefined, // Удаляем исходный объект categories
+            };
+        });
+
         const totalCount = count || 0;
         const totalPages = Math.ceil(totalCount / limit);
 
         return {
-            products: data,
+            products: transformedData,
             pagination: {
                 page,
                 limit,

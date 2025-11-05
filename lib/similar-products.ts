@@ -12,6 +12,8 @@ interface Product {
     is_popular?: boolean | null;
     characteristics?: Record<string, any> | null;
     short_description?: string | null;
+    category_name?: string | null;
+    category_slug?: string | null;
 }
 
 /**

@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { ShoppingCart, Plus, Minus, Trash2, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -109,6 +108,8 @@ interface Product {
   is_popular?: boolean | null;
   characteristics?: Record<string, any> | null;
   short_description?: string | null;
+  category_name?: string | null;
+  category_slug?: string | null;
 }
 
 interface ProductCardProps {
@@ -331,6 +332,11 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
         {product.is_popular && (
           <Badge className="absolute left-2 top-2 rounded bg-orange-700 px-2 py-1 font-semibold text-white shadow-md">
             Популярный
+          </Badge>
+        )}
+        {product.category_name && (
+          <Badge className="absolute bottom-2 right-2 rounded bg-gray-700 px-2 py-1 font-semibold text-white shadow-md">
+            {product.category_name}
           </Badge>
         )}
       </div>

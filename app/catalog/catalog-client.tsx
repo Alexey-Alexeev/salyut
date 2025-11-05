@@ -30,6 +30,8 @@ interface Product {
     slug: string;
     price: number;
     category_id: string | null;
+    category_name?: string | null;
+    category_slug?: string | null;
     images: string[] | null;
     video_url?: string | null;
     is_popular: boolean | null;

@@ -75,8 +75,23 @@ export default async function HomePage() {
     [categoriesData, popularProducts] = await Promise.all([
       db.select().from(categories),
       db
-        .select()
+        .select({
+          id: products.id,
+          name: products.name,
+          slug: products.slug,
+          price: products.price,
+          category_id: products.category_id,
+          category_name: categories.name,
+          category_slug: categories.slug,
+          images: products.images,
+          video_url: products.video_url,
+          is_popular: products.is_popular,
+          short_description: products.short_description,
+          characteristics: products.characteristics,
+          created_at: products.created_at,
+        })
         .from(products)
+        .leftJoin(categories, eq(products.category_id, categories.id))
         .where(and(eq(products.is_popular, true), eq(products.is_active, true)))
         .limit(4),
     ]);

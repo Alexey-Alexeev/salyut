@@ -96,7 +96,7 @@ export async function getProductsData(page: number = 1, limit: number = 20, sort
             .from(products)
             .where(eq(products.is_active, true));
 
-        // Получаем товары с пагинацией
+        // Получаем товары с пагинацией и информацией о категориях
         const productsData = await db
             .select({
                 id: products.id,
@@ -104,6 +104,8 @@ export async function getProductsData(page: number = 1, limit: number = 20, sort
                 slug: products.slug,
                 price: products.price,
                 category_id: products.category_id,
+                category_name: categories.name,
+                category_slug: categories.slug,
                 images: products.images,
                 video_url: products.video_url,
                 is_popular: products.is_popular,
@@ -112,6 +114,7 @@ export async function getProductsData(page: number = 1, limit: number = 20, sort
                 created_at: products.created_at,
             })
             .from(products)
+            .leftJoin(categories, eq(products.category_id, categories.id))
             .where(eq(products.is_active, true))
             .orderBy(...orderBy)
             .limit(limit)
