@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 
 /**
  * MobileExitBottomSheet
- * Мягкий bottom-sheet для мобильных с триггерами: время на сайте, бездействие, жест возврата вверх.
+ * Мягкий bottom-sheet для мобильных с триггером бездействия (40 секунд).
  * Показывается не чаще 1 раза за сессию. Исключает админ, корзину/оформление и потенциальную страницу «спасибо».
  */
 export default function MobileExitBottomSheet() {
@@ -54,38 +54,7 @@ export default function MobileExitBottomSheet() {
     setOpen(true);
   }, [open]);
 
-  // Триггер: время на сайте > 40с
-  // Используем глобальный таймер, который не сбрасывается при смене страницы
-  const globalTimeRef = useRef<number | null>(null);
-  
-  useEffect(() => {
-    if (!canTrigger) {
-      // Очищаем таймер, если триггер стал недоступен
-      if (globalTimeRef.current) {
-        window.clearTimeout(globalTimeRef.current);
-        globalTimeRef.current = null;
-      }
-      return;
-    }
-    
-    // Если таймер уже запущен, не создаем новый
-    if (globalTimeRef.current) return;
-    
-    globalTimeRef.current = window.setTimeout(() => {
-      triggerSheet();
-      globalTimeRef.current = null;
-    }, 40_000);
-    
-    return () => {
-      if (globalTimeRef.current) {
-        window.clearTimeout(globalTimeRef.current);
-        globalTimeRef.current = null;
-      }
-    };
-  }, [canTrigger, triggerSheet]);
-
-  // Триггер: бездействие > 25с
-  // Используем глобальный таймер бездействия, который не сбрасывается при смене страницы
+  // Триггер: бездействие > 40с
   const inactivityTimerRef = useRef<number | undefined>();
   const pageLoadTimeForInactivityRef = useRef<number>(Date.now());
   
@@ -110,7 +79,7 @@ export default function MobileExitBottomSheet() {
       if (timeSinceLoad < 2000) return;
       
       if (inactivityTimerRef.current) window.clearTimeout(inactivityTimerRef.current);
-      inactivityTimerRef.current = window.setTimeout(() => triggerSheet(), 25_000);
+      inactivityTimerRef.current = window.setTimeout(() => triggerSheet(), 40_000);
     };
 
     const resetters = ['scroll', 'touchstart', 'touchmove', 'click', 'keydown', 'mousemove'] as const;
@@ -126,54 +95,6 @@ export default function MobileExitBottomSheet() {
       window.clearTimeout(initialDelay);
       resetters.forEach((evt) => document.removeEventListener(evt, restart as EventListener));
     };
-  }, [canTrigger, triggerSheet, pathname]);
-
-  // Триггер: прокрутил вниз >400px, затем резкий скролл вверх >100px
-  const lastYRef = useRef<number>(0);
-  const maxScrolledRef = useRef<number>(0);
-  const pageLoadTimeRef = useRef<number>(Date.now());
-
-  // Сброс состояния скролла при смене страницы
-  useEffect(() => {
-    // Сбрасываем состояние скролла при переходе на новую страницу
-    lastYRef.current = window.scrollY || 0;
-    maxScrolledRef.current = window.scrollY || 0;
-    pageLoadTimeRef.current = Date.now();
-  }, [pathname]);
-
-  useEffect(() => {
-    if (!canTrigger) return;
-    
-    // Не активируем триггер скролла в первые 2 секунды после загрузки страницы
-    // чтобы избежать ложных срабатываний от автоматического скролла при навигации
-    const minTimeOnPage = 2000;
-    
-    const onScroll = () => {
-      // Проверяем, что прошло достаточно времени с момента загрузки страницы
-      const timeSinceLoad = Date.now() - pageLoadTimeRef.current;
-      if (timeSinceLoad < minTimeOnPage) {
-        lastYRef.current = window.scrollY;
-        maxScrolledRef.current = window.scrollY;
-        return;
-      }
-
-      const y = window.scrollY;
-      if (y > maxScrolledRef.current) {
-        maxScrolledRef.current = y;
-      }
-
-      const delta = lastYRef.current - y; // положительное — скролл вверх
-      
-      // Если проскроллили вниз больше 400px и резко вверх больше 100px
-      if (maxScrolledRef.current > 400 && delta > 100) {
-        triggerSheet();
-      }
-      
-      lastYRef.current = y;
-    };
-    
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
   }, [canTrigger, triggerSheet, pathname]);
 
   // Рендерим Sheet независимо от canTrigger, чтобы он мог показаться после срабатывания триггера
