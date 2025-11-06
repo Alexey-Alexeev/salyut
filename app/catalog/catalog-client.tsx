@@ -12,6 +12,7 @@ import { CatalogSort } from '@/components/catalog/catalog-sort';
 import { CatalogPaginationInfo } from '@/components/catalog/catalog-pagination-info';
 import { ProductsGrid } from '@/components/catalog/products-grid';
 import { CatalogEmptyState } from '@/components/catalog/catalog-empty-state';
+import { SinglePetardProductLayout } from '@/components/catalog/single-petard-product-layout';
 import { fetchProducts } from '@/lib/api-client';
 import { PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 import { CatalogCanonical } from '@/components/catalog/catalog-canonical';
@@ -72,6 +73,11 @@ interface InitialData {
 interface CatalogClientProps {
     initialData: InitialData;
     searchParams: { [key: string]: string | string[] | undefined };
+}
+
+// Вспомогательная функция для проверки, является ли товар петардой
+function isPetard(product: Product): boolean {
+    return product.category_slug === 'firecrackers' || product.category_name === 'Петарды';
 }
 
 export function CatalogClient({ initialData, searchParams }: CatalogClientProps) {
@@ -1342,12 +1348,16 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         </div>
                     )}
 
-                    {/* Сетка товаров */}
-                    <ProductsGrid
-                        products={stableProducts}
-                        viewMode={viewMode}
-                        isLoading={loading || isFiltering}
-                    />
+                    {/* Сетка товаров с мотивационным блоком для одного товара-петарды */}
+                    {!loading && !isFiltering && filteredProducts.length === 1 && isPetard(filteredProducts[0]) ? (
+                        <SinglePetardProductLayout products={stableProducts} />
+                    ) : (
+                        <ProductsGrid
+                            products={stableProducts}
+                            viewMode={viewMode}
+                            isLoading={loading || isFiltering}
+                        />
+                    )}
 
                     {/* Пагинация снизу */}
                     {filteredProducts.length > 0 && (
