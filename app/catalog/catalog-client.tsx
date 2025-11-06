@@ -283,6 +283,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         let minShotsParam: string | undefined;
         let maxShotsParam: string | undefined;
         let sortByParam: string | undefined;
+        let pageParam: number | undefined;
 
         if (typeof window !== 'undefined') {
             const urlParams = new URLSearchParams(window.location.search);
@@ -293,6 +294,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             minShotsParam = urlParams.get('minShots') || undefined;
             maxShotsParam = urlParams.get('maxShots') || undefined;
             sortByParam = urlParams.get('sortBy') || undefined;
+            const pageStr = urlParams.get('page');
+            pageParam = pageStr ? parseInt(pageStr, 10) : undefined;
         } else {
             // Fallback для SSR
             categoryParam = searchParams.category as string | string[];
@@ -302,6 +305,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             minShotsParam = searchParams.minShots as string;
             maxShotsParam = searchParams.maxShots as string;
             sortByParam = searchParams.sortBy as string;
+            const pageStr = searchParams.page as string;
+            pageParam = pageStr ? parseInt(pageStr, 10) : undefined;
         }
 
         // Парсим категории (может быть массив)
@@ -325,7 +330,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 setIsInitializing(true);
             }, 100);
 
-            resetPage();
             setFilters(prev => ({
                 ...prev,
                 categories: categoriesFromUrl,
@@ -338,6 +342,10 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
             if (sortByParam) {
                 setSortBy(sortByParam);
+            }
+
+            if (pageParam && !isNaN(pageParam) && pageParam > 1) {
+                setPagination(p => ({...p, page: pageParam}));
             }
 
             // Синхронизируем значения полей
@@ -362,7 +370,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         }
 
         hasInitializedRef.current = true;
-    }, [searchParams, resetPage]);
+    }, [searchParams]);
 
     // Отслеживание изменений URL после инициализации для сброса фильтров
     useEffect(() => {
@@ -377,6 +385,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         const minShotsParam = urlSearchParams.get('minShots');
         const maxShotsParam = urlSearchParams.get('maxShots');
         const sortByParam = urlSearchParams.get('sortBy');
+        const pageParam = urlSearchParams.get('page');
 
         // Проверяем, есть ли параметры фильтров в URL (sortBy не считается фильтром)
         const hasUrlParams = (categoryParam && categoryParam.length > 0) || 
@@ -579,8 +588,10 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     }, [resetPage, filters, sortBy, updateURL]);
 
     const handleSortChange = useCallback((newSortBy: string) => {
+        // всегда сбрасываем страницу при смене сортировки (но сброс ТОЛЬКО по намерению)
         setSortBy(newSortBy);
-        updateURL(filters, newSortBy);
+        setPagination(prev => ({ ...prev, page: 1 }));
+        updateURL(filters, newSortBy, 1);
     }, [filters, updateURL]);
 
     const handleRemoveCategory = useCallback((categorySlug: string) => {
@@ -899,11 +910,11 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     }, []);
 
     // Сброс страницы при изменении сортировки
-    useEffect(() => {
-        if (pagination.page > 1) {
-            resetPage();
-        }
-    }, [sortBy, resetPage]);
+    // useEffect(() => {
+    //     if (pagination.page > 1) {
+    //         resetPage();
+    //     }
+    // }, [sortBy, resetPage]);
 
     // Отдельный useEffect для смены страницы
     useEffect(() => {

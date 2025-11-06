@@ -377,7 +377,7 @@ export default function CartPageClient() {
                                     >
                                         {/* Информация о товаре */}
                                         <div className="flex items-start gap-2 flex-1 min-w-0 sm:gap-4 sm:items-center">
-                                            <div className="relative h-16 w-16 shrink-0 sm:h-20 sm:w-20">
+                                            <Link href={`/product/${item.slug}`} className="relative h-16 w-16 shrink-0 sm:h-20 sm:w-20 block">
                                                 <Image
                                                     src={item.image || '/images/placeholder.jpg'}
                                                     alt={item.name}
@@ -385,10 +385,14 @@ export default function CartPageClient() {
                                                     className="rounded-lg object-cover"
                                                     sizes="(max-width: 640px) 64px, 80px"
                                                 />
-                                            </div>
+                                            </Link>
 
                                             <div className="flex-1 min-w-0 pr-8 sm:pr-0">
-                                                <h3 className="font-semibold text-sm leading-tight mb-1 sm:text-base sm:mb-0">{item.name}</h3>
+                                                <Link href={`/product/${item.slug}`}>
+                                                    <h3 className="font-semibold text-sm leading-tight mb-1 sm:text-base sm:mb-0 hover:text-primary transition-colors underline">
+                                                        {item.name}
+                                                    </h3>
+                                                </Link>
                                                 <p className="text-xs sm:text-sm text-gray-600">
                                                     {item.price.toLocaleString('ru-RU')} ₽ за шт.
                                                 </p>

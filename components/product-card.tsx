@@ -147,6 +147,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
       name: product.name,
       price: product.price,
       image: imageUrl || '/placeholder-product.jpg',
+      slug: product.slug,
     });
     setQuantity(1);
     setInputValue('1');
@@ -206,6 +207,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
           name: product.name,
           price: product.price,
           image: product.images?.[0] || '/placeholder-product.jpg',
+          slug: product.slug,
           // quantity не нужен, т.к. addItem по умолчанию добавляет 1 штуку
         });
         // Но нам нужно установить нужное количество

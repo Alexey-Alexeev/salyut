@@ -233,6 +233,7 @@ export default function ProductClient({
         name: product.name,
         price: product.price,
         image: product.images?.[0] || '',
+        slug: product.slug,
       });
     }
     toast.success(`${quantity} товар(ов) добавлено в корзину`);
