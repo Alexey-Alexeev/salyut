@@ -344,8 +344,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 setSortBy(sortByParam);
             }
 
-            if (pageParam && !isNaN(pageParam) && pageParam > 1) {
-                setPagination(p => ({...p, page: pageParam}));
+            if (typeof pageParam === 'number' && !isNaN(pageParam) && pageParam > 1) {
+                setPagination(p => ({ ...p, page: pageParam }));
             }
 
             // Синхронизируем значения полей
