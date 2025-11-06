@@ -170,6 +170,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const initializationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const isRequestInProgressRef = useRef(false);
     const lastRequestIdRef = useRef<string | null>(null);
+    const isUpdatingURLRef = useRef(false);
 
     // Стабилизируем список товаров для предотвращения лишних рендеров
     const stableProducts = useMemo(() => {
@@ -274,7 +275,12 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
         // Обновляем URL без перезагрузки страницы
         const newURL = params.toString() ? `?${params.toString()}` : '';
+        isUpdatingURLRef.current = true;
         router.replace(`/catalog${newURL}`, { scroll: false });
+        // Сбрасываем флаг после небольшой задержки, чтобы useEffect мог его увидеть
+        setTimeout(() => {
+            isUpdatingURLRef.current = false;
+        }, 100);
     }, [router]);
 
     // Инициализация фильтров из URL (только один раз)
@@ -378,10 +384,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         hasInitializedRef.current = true;
     }, [searchParams]);
 
-    // Отслеживание изменений URL после инициализации для сброса фильтров
+    // Отслеживание изменений URL после инициализации для синхронизации фильтров
     useEffect(() => {
         // Пропускаем во время первичной инициализации
         if (!hasInitializedRef.current) return;
+        // Пропускаем во время инициализации из URL
+        if (isInitializingFromUrlRef.current) return;
+        // Пропускаем, если URL был обновлен программно (через updateURL)
+        if (isUpdatingURLRef.current) return;
 
         // Парсим текущие URL параметры
         const categoryParam = urlSearchParams.getAll('category');
@@ -393,18 +403,31 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         const sortByParam = urlSearchParams.get('sortBy');
         const pageParam = urlSearchParams.get('page');
 
+        // Парсим категории (может быть массив)
+        const categoriesFromUrl = Array.isArray(categoryParam) 
+            ? categoryParam 
+            : (categoryParam ? [categoryParam] : []);
+
         // Проверяем, есть ли параметры фильтров в URL (sortBy не считается фильтром)
-        const hasUrlParams = (categoryParam && categoryParam.length > 0) || 
+        const hasUrlParams = (categoriesFromUrl.length > 0) || 
                             searchParam || 
                             minPriceParam || 
                             maxPriceParam ||
                             minShotsParam ||
                             maxShotsParam;
 
-            // Если URL параметров фильтров нет, сбрасываем фильтры
-        if (!hasUrlParams) {
-            setFilters(prev => {
-                // Проверяем, нужно ли сбрасывать (чтобы избежать ненужных обновлений)
+        // Синхронизируем фильтры с URL
+        setFilters(prev => {
+            // Проверяем, нужно ли обновлять фильтры
+            const categoriesChanged = JSON.stringify(prev.categories.sort()) !== JSON.stringify(categoriesFromUrl.sort());
+            const searchChanged = (prev.search || '') !== (searchParam || '');
+            const priceFromChanged = (prev.priceFrom || '') !== (minPriceParam || '');
+            const priceToChanged = (prev.priceTo || '') !== (maxPriceParam || '');
+            const shotsFromChanged = (prev.shotsFrom || '') !== (minShotsParam || '');
+            const shotsToChanged = (prev.shotsTo || '') !== (maxShotsParam || '');
+
+            if (!hasUrlParams) {
+                // Если URL параметров фильтров нет, сбрасываем фильтры
                 if (prev.categories.length === 0 && 
                     !prev.search.trim() && 
                     !prev.priceFrom && 
@@ -422,22 +445,59 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     shotsFrom: '',
                     shotsTo: '',
                 };
-            });
+            }
+
+            // Если есть параметры в URL, но фильтры не изменились, не обновляем
+            if (!categoriesChanged && !searchChanged && !priceFromChanged && !priceToChanged && !shotsFromChanged && !shotsToChanged) {
+                return prev;
+            }
+
+            // Восстанавливаем фильтры из URL
+            return {
+                ...prev,
+                categories: categoriesFromUrl,
+                search: searchParam || '',
+                priceFrom: minPriceParam || '',
+                priceTo: maxPriceParam || '',
+                shotsFrom: minShotsParam || '',
+                shotsTo: maxShotsParam || '',
+            };
+        });
+
+        // Синхронизируем значения полей с URL параметрами
+        if (hasUrlParams) {
+            setSearchValue(searchParam || '');
+            setPriceFromValue(minPriceParam || '');
+            setPriceToValue(maxPriceParam || '');
+            setShotsFromValue(minShotsParam || '');
+            setShotsToValue(maxShotsParam || '');
+        } else {
             setSearchValue('');
             setPriceFromValue('');
             setPriceToValue('');
             setShotsFromValue('');
             setShotsToValue('');
-            
-            // Сбрасываем сортировку, если её нет в URL (используем функиональное обновление для актуального значения)
+        }
+        
+        // Синхронизируем сортировку
+        if (sortByParam) {
+            setSortBy(sortByParam);
+        } else {
             setSortBy(prevSortBy => {
-                // Если в URL нет sortBy параметра, сбрасываем на значение по умолчанию
-                if (!sortByParam && prevSortBy !== 'popular') {
+                if (prevSortBy !== 'popular') {
                     return 'popular';
                 }
                 return prevSortBy;
             });
-            
+        }
+
+        // Синхронизируем страницу
+        if (pageParam) {
+            const page = parseInt(pageParam, 10);
+            if (!isNaN(page) && page > 0) {
+                setPagination(prev => ({ ...prev, page }));
+            }
+        } else {
             resetPage();
         }
     }, [urlSearchParams.toString(), resetPage]); // Отслеживаем только изменения URL (sortBy обновляется через updateURL)
@@ -665,17 +725,16 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Устанавливаем новый таймаут для debouncing
         shotsTimeoutRef.current = setTimeout(() => {
             resetPage();
-            const newFilters = {
-                ...filters,
-                shotsFrom: value,
-            };
-            setFilters(prev => ({
-                ...prev,
-                shotsFrom: value,
-            }));
-            updateURL(newFilters, sortBy);
+            setFilters(prev => {
+                const newFilters = {
+                    ...prev,
+                    shotsFrom: value,
+                };
+                updateURL(newFilters, sortBy);
+                return newFilters;
+            });
         }, 500);
-    }, [resetPage]);
+    }, [resetPage, sortBy, updateURL]);
 
     const handleShotsToChange = useCallback((value: string) => {
         setShotsToValue(value);
@@ -698,17 +757,16 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Устанавливаем новый таймаут для debouncing
         shotsTimeoutRef.current = setTimeout(() => {
             resetPage();
-            const newFilters = {
-                ...filters,
-                shotsTo: value,
-            };
-            setFilters(prev => ({
-                ...prev,
-                shotsTo: value,
-            }));
-            updateURL(newFilters, sortBy);
+            setFilters(prev => {
+                const newFilters = {
+                    ...prev,
+                    shotsTo: value,
+                };
+                updateURL(newFilters, sortBy);
+                return newFilters;
+            });
         }, 500);
-    }, [resetPage]);
+    }, [resetPage, sortBy, updateURL]);
 
     const handleClearShots = useCallback(() => {
         setShotsFromValue('');
@@ -757,18 +815,17 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Устанавливаем новый таймаут для debouncing (уменьшили до 300ms)
         searchTimeoutRef.current = setTimeout(() => {
             resetPage();
-            const newFilters = {
-                ...filters,
-                search: value,
-            };
-            setFilters(prev => ({
-                ...prev,
-                search: value,
-            }));
-            updateURL(newFilters, sortBy);
+            setFilters(prev => {
+                const newFilters = {
+                    ...prev,
+                    search: value,
+                };
+                updateURL(newFilters, sortBy);
+                return newFilters;
+            });
             setIsSearching(false);
         }, 300); // 300ms задержка для более быстрого отклика
-    }, [resetPage]);
+    }, [resetPage, sortBy, updateURL]);
 
     const handlePriceFromChange = useCallback((value: string) => {
         setPriceFromValue(value);
@@ -791,17 +848,16 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Устанавливаем новый таймаут для debouncing
         priceTimeoutRef.current = setTimeout(() => {
             resetPage();
-            const newFilters = {
-                ...filters,
-                priceFrom: value,
-            };
-            setFilters(prev => ({
-                ...prev,
-                priceFrom: value,
-            }));
-            updateURL(newFilters, sortBy);
+            setFilters(prev => {
+                const newFilters = {
+                    ...prev,
+                    priceFrom: value,
+                };
+                updateURL(newFilters, sortBy);
+                return newFilters;
+            });
         }, 500); // 500ms задержка для цены (чуть больше, чем для поиска)
-    }, [resetPage]);
+    }, [resetPage, sortBy, updateURL]);
 
     const handlePriceToChange = useCallback((value: string) => {
         setPriceToValue(value);
@@ -824,17 +880,16 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Устанавливаем новый таймаут для debouncing
         priceTimeoutRef.current = setTimeout(() => {
             resetPage();
-            const newFilters = {
-                ...filters,
-                priceTo: value,
-            };
-            setFilters(prev => ({
-                ...prev,
-                priceTo: value,
-            }));
-            updateURL(newFilters, sortBy);
+            setFilters(prev => {
+                const newFilters = {
+                    ...prev,
+                    priceTo: value,
+                };
+                updateURL(newFilters, sortBy);
+                return newFilters;
+            });
         }, 500); // 500ms задержка для цены (чуть больше, чем для поиска)
-    }, [resetPage]);
+    }, [resetPage, sortBy, updateURL]);
 
     const handleClearSearch = useCallback(() => {
         setSearchValue('');
