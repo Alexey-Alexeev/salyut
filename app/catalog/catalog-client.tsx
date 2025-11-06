@@ -283,7 +283,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         let minShotsParam: string | undefined;
         let maxShotsParam: string | undefined;
         let sortByParam: string | undefined;
-        let pageParam: number | undefined;
+        let pageParam: number = 1;
 
         if (typeof window !== 'undefined') {
             const urlParams = new URLSearchParams(window.location.search);
@@ -295,7 +295,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             maxShotsParam = urlParams.get('maxShots') || undefined;
             sortByParam = urlParams.get('sortBy') || undefined;
             const pageStr = urlParams.get('page');
-            pageParam = pageStr ? parseInt(pageStr, 10) : undefined;
+            pageParam = pageStr ? parseInt(pageStr, 10) : 1;
         } else {
             // Fallback для SSR
             categoryParam = searchParams.category as string | string[];
@@ -306,7 +306,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             maxShotsParam = searchParams.maxShots as string;
             sortByParam = searchParams.sortBy as string;
             const pageStr = searchParams.page as string;
-            pageParam = pageStr ? parseInt(pageStr, 10) : undefined;
+            pageParam = pageStr ? parseInt(pageStr, 10) : 1;
         }
 
         // Парсим категории (может быть массив)
@@ -344,7 +344,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 setSortBy(sortByParam);
             }
 
-            if (typeof pageParam === 'number' && !isNaN(pageParam) && pageParam > 1) {
+            if (!isNaN(pageParam) && pageParam > 1) {
                 setPagination(p => ({ ...p, page: pageParam }));
             }
 
