@@ -141,6 +141,14 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
     }
   }, [isMounted, pathname, searchParams.toString()]);
 
+  // Сохраняем позицию прокрутки перед переходом в карточку товара
+  const handleProductClick = () => {
+    if (typeof window !== 'undefined' && pathname === '/catalog') {
+      const scrollY = window.scrollY;
+      sessionStorage.setItem('catalogScrollPosition', scrollY.toString());
+    }
+  };
+
   // URL изображения
   const imageUrl = product.images?.[0] || '';
 
@@ -269,7 +277,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
   return (
     <Card className="group flex h-full flex-col overflow-hidden transition-all duration-200 hover:shadow-lg">
       <div className="relative">
-        <Link href={`/product/${product.slug}`}>
+        <Link href={`/product/${product.slug}`} onClick={handleProductClick}>
           <div className="relative aspect-square overflow-hidden bg-gray-100">
             {product.images && product.images.length > 0 ? (
               isFirst ? (
@@ -356,7 +364,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
       </div>
 
       <CardContent className="flex flex-1 flex-col p-4">
-        <Link href={`/product/${product.slug}`}>
+        <Link href={`/product/${product.slug}`} onClick={handleProductClick}>
           <h3 className="group-hover:text-primary mb-2 min-h-[2.5rem] line-clamp-2 text-sm md:text-xl font-bold transition-colors">
             {product.name}
           </h3>
