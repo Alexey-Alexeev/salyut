@@ -84,6 +84,19 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const router = useRouter();
     const urlSearchParams = useSearchParams();
 
+    // Отслеживаем нажатия кнопки "Назад" браузера
+    useEffect(() => {
+        const handlePopState = () => {
+            // Сбрасываем флаг обновления URL, чтобы синхронизация сработала
+            isUpdatingURLRef.current = false;
+        };
+
+        window.addEventListener('popstate', handlePopState);
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, []);
+
     // Основное состояние - инициализируем из server data
     const [categories] = useState<Category[]>(initialData.categories);
     const [products, setProducts] = useState<Product[]>(initialData.products);
@@ -252,7 +265,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     }, []);
 
     // Функция для обновления URL с фильтрами
-    const updateURL = useCallback((newFilters: Partial<FilterState>, newSortBy?: string, newPage?: number) => {
+    const updateURL = useCallback((newFilters: Partial<FilterState>, newSortBy?: string, newPage?: number, addToHistory: boolean = false) => {
         // Используем текущий URL для получения параметров
         const currentUrl = typeof window !== 'undefined' ? window.location.search : '';
         const params = new URLSearchParams(currentUrl);
@@ -304,8 +317,17 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
         // Обновляем URL без перезагрузки страницы
         const newURL = params.toString() ? `?${params.toString()}` : '';
+        const fullURL = `/catalog${newURL}`;
+        
         isUpdatingURLRef.current = true;
-        router.replace(`/catalog${newURL}`, { scroll: false });
+        
+        // Используем push для создания записи в истории при смене страницы, replace для фильтров
+        if (addToHistory) {
+            router.push(fullURL, { scroll: false });
+        } else {
+            router.replace(fullURL, { scroll: false });
+        }
+        
         // Сбрасываем флаг после небольшой задержки, чтобы useEffect мог его увидеть
         setTimeout(() => {
             isUpdatingURLRef.current = false;
@@ -428,7 +450,9 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Пропускаем во время инициализации из URL
         if (isInitializingFromUrlRef.current) return;
         // Пропускаем, если URL был обновлен программно (через updateURL)
-        if (isUpdatingURLRef.current) return;
+        if (isUpdatingURLRef.current) {
+            return;
+        }
 
         // Парсим текущие URL параметры
         const categoryParam = urlSearchParams.getAll('category');
@@ -535,18 +559,21 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 setPagination(prev => {
                     // Обновляем только если страница действительно изменилась
                     if (prev.page !== page) {
-                        lastPageRef.current = page;
+                        // НЕ обновляем lastPageRef здесь, чтобы useEffect для загрузки данных сработал
                         return { ...prev, page };
                     }
                     return prev;
                 });
             }
         } else {
-            // Не сбрасываем страницу автоматически, если она уже установлена
-            // Сброс страницы должен происходить только при явных действиях пользователя
-            // (например, при изменении фильтров)
+            // Если в URL нет параметра page, но мы на странице > 1, сбрасываем на 1
+            if (pagination.page > 1) {
+                // НЕ обновляем lastPageRef здесь, чтобы useEffect для загрузки данных сработал
+                setPagination(prev => ({ ...prev, page: 1 }));
+            }
+            // Не обновляем lastPageRef здесь - это сделает useEffect для загрузки данных
         }
-    }, [urlSearchParams.toString()]); // Убрали resetPage из зависимостей
+    }, [urlSearchParams.toString(), pagination.page]); // Добавили pagination.page для отслеживания изменений
 
     // Синхронизация значений полей цены с фильтрами
     useEffect(() => {
@@ -1051,8 +1078,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             page,
         }));
         
-        // Обновляем URL с параметром page
-        updateURL(filters, sortBy, page);
+        // Обновляем URL с параметром page и создаем запись в истории браузера
+        updateURL(filters, sortBy, page, true);
         
         // Показываем loader в мобильной версии вместо скролла
         if (typeof window !== 'undefined' && window.innerWidth < 768) {
@@ -1069,15 +1096,13 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         }
     }, [filters, sortBy, updateURL]);
 
-    // Сброс страницы при изменении сортировки
-    // useEffect(() => {
-    //     if (pagination.page > 1) {
-    //         resetPage();
-    //     }
-    // }, [sortBy, resetPage]);
-
     // Отдельный useEffect для смены страницы
     useEffect(() => {
+        // Пропускаем во время инициализации из URL
+        if (isInitializingFromUrlRef.current) {
+            return;
+        }
+        
         if (pagination.page !== lastPageRef.current) {
             const fetchPage = async () => {
                 setIsFiltering(true);
@@ -1102,6 +1127,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
                     setFilteredProducts(data.products || []);
                     setPagination(data.pagination || pagination);
+                    lastPageRef.current = pagination.page;
                 } catch (error) {
                     console.error('Error fetching page:', error);
                 } finally {
@@ -1111,7 +1137,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             };
 
             fetchPage();
-            lastPageRef.current = pagination.page;
         }
     }, [pagination.page, categories, filters, sortBy]);
 
