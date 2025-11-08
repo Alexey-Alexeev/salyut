@@ -132,20 +132,28 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
   const updateQuantity = useCartStore(state => state.updateQuantity);
   const removeItem = useCartStore(state => state.removeItem);
 
-  // Сохраняем текущий URL каталога при монтировании, если мы на странице каталога
+  // Сохраняем текущий URL при монтировании, если мы на странице каталога или главной
   useEffect(() => {
     // Выполняем только после монтирования, чтобы избежать hydration mismatch
-    if (isMounted && pathname === '/catalog' && typeof window !== 'undefined') {
-      const currentUrl = `/catalog${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
-      sessionStorage.setItem('catalogReturnUrl', currentUrl);
+    if (isMounted && typeof window !== 'undefined') {
+      if (pathname === '/catalog') {
+        const currentUrl = `/catalog${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+        sessionStorage.setItem('catalogReturnUrl', currentUrl);
+      } else if (pathname === '/') {
+        sessionStorage.setItem('homeReturnUrl', '/');
+      }
     }
   }, [isMounted, pathname, searchParams.toString()]);
 
   // Сохраняем позицию прокрутки перед переходом в карточку товара
   const handleProductClick = () => {
-    if (typeof window !== 'undefined' && pathname === '/catalog') {
+    if (typeof window !== 'undefined') {
       const scrollY = window.scrollY;
-      sessionStorage.setItem('catalogScrollPosition', scrollY.toString());
+      if (pathname === '/catalog') {
+        sessionStorage.setItem('catalogScrollPosition', scrollY.toString());
+      } else if (pathname === '/') {
+        sessionStorage.setItem('homeScrollPosition', scrollY.toString());
+      }
     }
   };
 

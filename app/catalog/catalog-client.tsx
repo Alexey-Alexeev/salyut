@@ -347,28 +347,24 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 // Скрываем лоадер, если условия не выполнены
                 setIsRestoringScroll(false);
                 
+                // Получаем текущую страницу из URL (один раз)
+                const currentPageParam = urlSearchParams.get('page');
+                const currentPage = currentPageParam ? parseInt(currentPageParam, 10) : 1;
+                
                 // Если нет сохраненной позиции, но мы на странице каталога,
                 // и это возврат назад между страницами, прокручиваем наверх
                 if (!savedScrollPosition && isCatalogPage) {
-                    const currentPageParam = urlSearchParams.get('page');
-                    const currentPage = currentPageParam ? parseInt(currentPageParam, 10) : 1;
-                    
                     // Если вернулись на предыдущую страницу (меньшую), прокручиваем наверх
                     if (currentPage < previousPageRef.current) {
                         setTimeout(() => {
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }, 100);
                     }
-                    
-                    // Обновляем предыдущую страницу
-                    previousPageRef.current = currentPage;
                 }
                 
                 // Проверяем, вернулись ли мы на предыдущую страницу каталога (не из карточки товара)
                 // Если да, очищаем сохраненную позицию прокрутки из карточки товара и прокручиваем наверх
                 if (savedScrollPosition && returnUrl && isCatalogPage) {
-                    const currentPageParam = urlSearchParams.get('page');
-                    const currentPage = currentPageParam ? parseInt(currentPageParam, 10) : 1;
                     const returnPageParam = returnUrl ? new URLSearchParams(returnUrl.split('?')[1] || '').get('page') : null;
                     const returnPage = returnPageParam ? parseInt(returnPageParam, 10) : 1;
                     
@@ -380,9 +376,12 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         setTimeout(() => {
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }, 100);
-                        // Обновляем предыдущую страницу
-                        previousPageRef.current = currentPage;
                     }
+                }
+                
+                // Обновляем предыдущую страницу
+                if (isCatalogPage) {
+                    previousPageRef.current = currentPage;
                 }
             }
         } else {

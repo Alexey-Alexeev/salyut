@@ -11,6 +11,7 @@ import { CategoriesSection } from '@/components/sections/categories-section';
 import { PopularProductsSection } from '@/components/sections/popular-products-section';
 import { ProfessionalServicesSection } from '@/components/sections/professional-services-section';
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
+import { HomeScrollRestore } from '@/components/home-scroll-restore';
 import dynamic from 'next/dynamic';
 import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL, filterVisibleCategories } from '@/lib/schema-constants';
 
@@ -113,6 +114,7 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-8">
+      <HomeScrollRestore />
       {/* Preload критических изображений */}
       
       <HeroSection />

@@ -235,12 +235,16 @@ export default function ProductClient({
     setIsMounted(true);
   }, []);
 
-  // Восстанавливаем сохраненный URL каталога после монтирования
+  // Восстанавливаем сохраненный URL каталога или главной страницы после монтирования
   useEffect(() => {
     if (isMounted && typeof window !== 'undefined') {
-      const savedUrl = sessionStorage.getItem('catalogReturnUrl');
-      if (savedUrl) {
-        setCatalogReturnUrl(savedUrl);
+      const savedCatalogUrl = sessionStorage.getItem('catalogReturnUrl');
+      const savedHomeUrl = sessionStorage.getItem('homeReturnUrl');
+      
+      if (savedCatalogUrl) {
+        setCatalogReturnUrl(savedCatalogUrl);
+      } else if (savedHomeUrl) {
+        setCatalogReturnUrl(savedHomeUrl);
       }
     }
   }, [isMounted]);
