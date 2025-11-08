@@ -94,6 +94,35 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const [isSearching, setIsSearching] = useState(false);
     const [pagination, setPagination] = useState(initialData.pagination);
 
+    // Сохраняем текущий URL каталога в sessionStorage при каждом изменении
+    // Используем ref для предотвращения бесконечных циклов
+    const lastSavedUrlRef = useRef<string>('');
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            // Используем небольшую задержку, чтобы дать время router.replace обновить URL
+            const timeoutId = setTimeout(() => {
+                // Используем window.location.search для получения всех параметров
+                const searchParams = new URLSearchParams(window.location.search);
+                
+                // Если в URL нет параметра page, но pagination.page > 1, добавляем его
+                if (!searchParams.has('page') && pagination.page > 1) {
+                    searchParams.set('page', pagination.page.toString());
+                }
+                
+                const queryString = searchParams.toString();
+                const currentUrl = `/catalog${queryString ? `?${queryString}` : ''}`;
+                
+                // Сохраняем только если URL изменился
+                if (currentUrl !== lastSavedUrlRef.current) {
+                    sessionStorage.setItem('catalogReturnUrl', currentUrl);
+                    lastSavedUrlRef.current = currentUrl;
+                }
+            }, 100);
+            
+            return () => clearTimeout(timeoutId);
+        }
+    }, [urlSearchParams.toString(), pagination.page]);
+
     // Сохраняем исходные данные для возврата при очистке фильтров
     const initialPagination = useRef(initialData.pagination);
     const initialProducts = useRef(initialData.products);
@@ -324,8 +353,20 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Парсим категории (может быть массив)
         const categoriesFromUrl = Array.isArray(categoryParam) ? categoryParam : (categoryParam ? [categoryParam] : []);
 
-        // Проверяем, есть ли параметры в URL
-        const hasUrlParams = (categoryParam && categoryParam.length > 0) || searchParam || minPriceParam || maxPriceParam || minShotsParam || maxShotsParam || sortByParam;
+        // Проверяем, есть ли параметры в URL (включая page)
+        const hasUrlParams = (categoryParam && categoryParam.length > 0) || searchParam || minPriceParam || maxPriceParam || minShotsParam || maxShotsParam || sortByParam || (pageParam > 1);
+
+        // Устанавливаем страницу независимо от других параметров
+        if (!isNaN(pageParam) && pageParam > 0) {
+            setPagination(p => {
+                // Обновляем только если страница действительно изменилась
+                if (p.page !== pageParam) {
+                    lastPageRef.current = pageParam; // Обновляем ref ДО обновления состояния
+                    return { ...p, page: pageParam };
+                }
+                return p;
+            });
+        }
 
         if (hasUrlParams) {
 
@@ -354,10 +395,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
             if (sortByParam) {
                 setSortBy(sortByParam);
-            }
-
-            if (!isNaN(pageParam) && pageParam > 1) {
-                setPagination(p => ({ ...p, page: pageParam }));
             }
 
             // Синхронизируем значения полей
@@ -495,12 +532,21 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         if (pageParam) {
             const page = parseInt(pageParam, 10);
             if (!isNaN(page) && page > 0) {
-                setPagination(prev => ({ ...prev, page }));
+                setPagination(prev => {
+                    // Обновляем только если страница действительно изменилась
+                    if (prev.page !== page) {
+                        lastPageRef.current = page;
+                        return { ...prev, page };
+                    }
+                    return prev;
+                });
             }
         } else {
-            resetPage();
+            // Не сбрасываем страницу автоматически, если она уже установлена
+            // Сброс страницы должен происходить только при явных действиях пользователя
+            // (например, при изменении фильтров)
         }
-    }, [urlSearchParams.toString(), resetPage]); // Отслеживаем только изменения URL (sortBy обновляется через updateURL)
+    }, [urlSearchParams.toString()]); // Убрали resetPage из зависимостей
 
     // Синхронизация значений полей цены с фильтрами
     useEffect(() => {
@@ -528,7 +574,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         const applyAllFilters = async () => {
 
             // Не применяем фильтры при смене страницы (это делает отдельный useEffect)
-            if (pagination.page !== lastPageRef.current) {
+            // Но пропускаем только если страница действительно изменилась и мы еще не загрузили данные
+            if (pagination.page !== lastPageRef.current && lastPageRef.current !== 0) {
                 return;
             }
 
@@ -541,12 +588,53 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 filters.shotsTo;
 
             if (!hasActiveFilters && sortBy === 'popular') {
-                // Возвращаемся к исходным данным с сервера
-                setFilteredProducts(initialProducts.current);
-                setPagination({
-                    ...initialPagination.current,
-                    page: 1, // Сбрасываем на первую страницу
-                });
+                // Проверяем текущую страницу из состояния и из URL
+                const currentPage = pagination.page;
+                const urlPageParam = typeof window !== 'undefined' 
+                    ? new URLSearchParams(window.location.search).get('page')
+                    : null;
+                const urlPage = urlPageParam ? parseInt(urlPageParam, 10) : null;
+                
+                // Используем страницу из URL, если она есть, иначе из состояния
+                const targetPage = (urlPage && !isNaN(urlPage) && urlPage > 0) ? urlPage : currentPage;
+                
+                // Если целевая страница > 1, загружаем данные для этой страницы
+                if (targetPage > 1) {
+                    // Загружаем данные для нужной страницы
+                    setIsFiltering(true);
+                    fetchProducts({
+                        sortBy: 'popular',
+                        page: targetPage,
+                        limit: 20,
+                    })
+                        .then(data => {
+                            setFilteredProducts(data.products || []);
+                            setPagination(data.pagination || { ...initialPagination.current, page: targetPage });
+                            lastPageRef.current = targetPage;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching page:', error);
+                        })
+                        .finally(() => {
+                            setIsFiltering(false);
+                            if (isInitializing) {
+                                setIsInitializing(false);
+                                isInitializingFromUrlRef.current = false;
+                            }
+                        });
+                    return;
+                }
+                
+                // Если страница 1, возвращаемся к исходным данным с сервера
+                // Но только если мы не инициализируемся из URL с другой страницей
+                if (!isInitializingFromUrlRef.current || targetPage === 1) {
+                    setFilteredProducts(initialProducts.current);
+                    setPagination({
+                        ...initialPagination.current,
+                        page: 1,
+                    });
+                    lastPageRef.current = 1;
+                }
                 // Завершаем инициализацию, если она была активна
                 if (isInitializing) {
                     setIsInitializing(false);
@@ -575,6 +663,13 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     .filter(cat => filters.categories.includes(cat.slug))
                     .map(cat => cat.id);
 
+                // Проверяем, есть ли параметр page в URL, если нет - используем текущую страницу из состояния
+                const urlPageParam = typeof window !== 'undefined' 
+                    ? new URLSearchParams(window.location.search).get('page')
+                    : null;
+                const urlPage = urlPageParam ? parseInt(urlPageParam, 10) : null;
+                const targetPage = (urlPage && !isNaN(urlPage) && urlPage > 0) ? urlPage : pagination.page;
+
                 const data = await fetchProducts({
                     search: filters.search.trim() || undefined,
                     categoryId: categoryIds.length > 0 ? categoryIds : undefined,
@@ -583,12 +678,13 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     minShots: filters.shotsFrom ? Number(filters.shotsFrom) : undefined,
                     maxShots: filters.shotsTo ? Number(filters.shotsTo) : undefined,
                     sortBy: sortBy,
-                    page: 1,
+                    page: targetPage,
                     limit: 20,
                 });
 
                 setFilteredProducts(data.products || []);
-                setPagination(data.pagination || pagination);
+                setPagination(data.pagination || { ...pagination, page: targetPage });
+                lastPageRef.current = targetPage;
             } catch (error) {
                 console.error('Error applying filters:', error);
             } finally {
@@ -955,6 +1051,9 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             page,
         }));
         
+        // Обновляем URL с параметром page
+        updateURL(filters, sortBy, page);
+        
         // Показываем loader в мобильной версии вместо скролла
         if (typeof window !== 'undefined' && window.innerWidth < 768) {
             setIsPaginationLoading(true);
@@ -968,7 +1067,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 window.scrollTo(0, 0);
             }
         }
-    }, []);
+    }, [filters, sortBy, updateURL]);
 
     // Сброс страницы при изменении сортировки
     // useEffect(() => {

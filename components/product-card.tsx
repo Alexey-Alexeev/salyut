@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { ShoppingCart, Plus, Minus, Trash2, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -122,12 +123,23 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
   const [quantity, setQuantity] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [isMounted, setIsMounted] = useState(false);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const items = useCartStore(state => state.items);
   const isInitialized = useCartStore(state => state.isInitialized);
   const addItem = useCartStore(state => state.addItem);
   const updateQuantity = useCartStore(state => state.updateQuantity);
   const removeItem = useCartStore(state => state.removeItem);
+
+  // Сохраняем текущий URL каталога при монтировании, если мы на странице каталога
+  useEffect(() => {
+    // Выполняем только после монтирования, чтобы избежать hydration mismatch
+    if (isMounted && pathname === '/catalog' && typeof window !== 'undefined') {
+      const currentUrl = `/catalog${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+      sessionStorage.setItem('catalogReturnUrl', currentUrl);
+    }
+  }, [isMounted, pathname, searchParams.toString()]);
 
   // URL изображения
   const imageUrl = product.images?.[0] || '';

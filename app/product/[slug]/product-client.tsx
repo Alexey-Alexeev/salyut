@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { ShoppingCart, Minus, Plus, Star, ChevronLeft, ChevronRight, FileText, Shield, AlertTriangle, ExternalLink, Sparkles, Play } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ShoppingCart, Minus, Plus, Star, ChevronLeft, ChevronRight, FileText, Shield, AlertTriangle, ExternalLink, Sparkles, Play, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -222,9 +223,27 @@ export default function ProductClient({
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [activeTab, setActiveTab] = useState<string>('description');
+  const [catalogReturnUrl, setCatalogReturnUrl] = useState<string>('/catalog');
+  const [isMounted, setIsMounted] = useState(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const tabsRef = useRef<HTMLDivElement>(null);
   const addItem = useCartStore(state => state.addItem);
+
+  // Отслеживаем монтирование компонента
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Восстанавливаем сохраненный URL каталога после монтирования
+  useEffect(() => {
+    if (isMounted && typeof window !== 'undefined') {
+      const savedUrl = sessionStorage.getItem('catalogReturnUrl');
+      if (savedUrl) {
+        setCatalogReturnUrl(savedUrl);
+      }
+    }
+  }, [isMounted]);
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
@@ -434,12 +453,24 @@ export default function ProductClient({
       />
 
       <div className="mb-8">
-        <Breadcrumb
-          items={[
-            { href: '/catalog', label: 'Каталог' },
-            { label: product.name },
-          ]}
-        />
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => router.push(catalogReturnUrl)}
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Вернуться в каталог"
+          >
+            <ArrowLeft className="size-4" />
+            <span className="text-sm font-medium">Назад в каталог</span>
+          </button>
+        </div>
+        <div className="mt-2">
+          <Breadcrumb
+            items={[
+              { href: catalogReturnUrl, label: 'Каталог' },
+              { label: product.name },
+            ]}
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
@@ -700,7 +731,7 @@ export default function ProductClient({
                           </Link>
                           <span className="text-muted-foreground">•</span>
                           <Link 
-                            href="/catalog"
+                            href={catalogReturnUrl}
                             className="font-medium text-primary underline hover:opacity-80 transition-opacity"
                           >
                             В каталог
