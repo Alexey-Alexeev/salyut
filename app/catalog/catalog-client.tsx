@@ -1256,6 +1256,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 const newFilters = {
                     ...prev,
                     search: value,
+                    // Сбрасываем фильтр по событию при поиске - ищем для всех событий
+                    eventType: null,
                 };
                 updateURL(newFilters, sortBy);
                 return newFilters;
