@@ -717,7 +717,7 @@ export default function CartPageClient() {
                                                             htmlFor="professionalLaunch"
                                                             className="cursor-pointer text-xs sm:text-sm font-medium leading-tight"
                                                         >
-                                                            Безопасный запуск салютов
+                                                            Организация запуска салютов
                                                         </Label>
                                                     </div>
                                                     <p className="text-muted-foreground text-[10px] sm:text-xs leading-relaxed">
@@ -884,7 +884,7 @@ export default function CartPageClient() {
                         "@context": "https://schema.org",
                         "@type": "WebPage",
                         "name": "Корзина - Фейерверки и салюты",
-                        "description": "Оформление заказа фейерверков и салютов. Быстрая доставка по Москве и МО. Безопасный запуск салютов.",
+                        "description": "Оформление заказа фейерверков и салютов. Быстрая доставка по Москве и МО. Организация запуска салютов.",
                         "url": "https://salutgrad.ru/cart",
                         "breadcrumb": {
                             "@type": "BreadcrumbList",

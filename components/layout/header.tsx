@@ -32,7 +32,7 @@ export function Header() {
   const navItems = [
     { href: '/', label: 'Главная' },
     { href: '/catalog', label: 'Каталог' },
-    { href: '/services/launching', label: 'Безопасный запуск салютов' },
+    { href: '/services/launching', label: 'Организация запуска салютов' },
     { href: '/delivery', label: 'Доставка / Самовывоз' },
     { href: '/about', label: 'О нас' },
   ];

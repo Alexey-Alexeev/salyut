@@ -47,8 +47,8 @@ export default function LaunchingServicePage({ videoReviews }: LaunchingServiceP
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
-            "name": "СалютГрад - Безопасный запуск салютов",
-            "description": "Безопасный запуск салютов и фейерверков в Москве и МО. Организация запуска пиротехники для свадеб, дней рождения, корпоративов.",
+            "name": "СалютГрад - Организация запуска салютов",
+            "description": "Организация запуска салютов и фейерверков в Москве и МО. Безопасный запуск пиротехники для свадеб, дней рождения, корпоративов.",
             "url": "https://salutgrad.ru/services/launching",
             "telephone": "+7 (977) 360-20-08",
             "address": {
@@ -68,14 +68,14 @@ export default function LaunchingServicePage({ videoReviews }: LaunchingServiceP
             "areaServed": ["Москва", "Московская область"],
             "hasOfferCatalog": {
               "@type": "OfferCatalog",
-              "name": "Услуги безопасного запуска салютов",
+              "name": "Услуги организации запуска салютов",
               "itemListElement": [
                 {
                   "@type": "Offer",
                   "itemOffered": {
                     "@type": "Service",
-                    "name": "Безопасный запуск салютов",
-                    "description": "Безопасный запуск фейерверков с полным сопровождением и соблюдением всех норм",
+                    "name": "Организация запуска салютов",
+                    "description": "Организация запуска фейерверков с полным сопровождением и соблюдением всех норм",
                     "provider": {
                       "@type": "Organization",
                       "name": "СалютГрад"

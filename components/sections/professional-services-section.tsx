@@ -14,7 +14,7 @@ export function ProfessionalServicesSection() {
                                     <span role="img" aria-label="фейерверк">🎆</span>
                                 </div>
                                 <h2 className="text-3xl font-bold md:text-4xl">
-                                    Безопасный запуск салютов
+                                    Организация запуска салютов
                                 </h2>
                                 <p className="text-lg text-white/90">
                                     Доверьте запуск опытным людям! Мы обеспечим полную безопасность,
