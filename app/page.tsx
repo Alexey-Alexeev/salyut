@@ -81,6 +81,7 @@ export default async function HomePage() {
           name: products.name,
           slug: products.slug,
           price: products.price,
+          old_price: products.old_price,
           category_id: products.category_id,
           category_name: categories.name,
           category_slug: categories.slug,

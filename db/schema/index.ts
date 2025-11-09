@@ -59,6 +59,7 @@ export const products = pgTable('products', {
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
   price: integer('price').notNull(), // цена в рублях
+  old_price: integer('old_price'), // старая цена в рублях (для акций)
   category_id: uuid('category_id').references(() => categories.id, {
     onDelete: 'set null',
   }),
