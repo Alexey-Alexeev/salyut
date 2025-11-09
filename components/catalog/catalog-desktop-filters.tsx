@@ -4,6 +4,8 @@ import { Filter } from 'lucide-react';
 import { CategoryFilter } from './category-filter';
 import { PriceRangeFilter } from './price-range-filter';
 import { ShotsRangeFilter } from './shots-range-filter';
+import { EventTypeFilter } from './event-type-filter';
+import { type EventType } from '@/lib/schema-constants';
 
 interface Category {
     id: string;
@@ -29,6 +31,8 @@ interface CatalogDesktopFiltersProps {
     onShotsChange: (from: string, to: string) => void;
     onShotsFromChange?: (value: string) => void;
     onShotsToChange?: (value: string) => void;
+    selectedEventType: EventType | null;
+    onEventTypeChange: (eventType: EventType | null) => void;
 }
 
 export function CatalogDesktopFilters({
@@ -49,6 +53,8 @@ export function CatalogDesktopFilters({
     onShotsChange,
     onShotsFromChange,
     onShotsToChange,
+    selectedEventType,
+    onEventTypeChange,
 }: CatalogDesktopFiltersProps) {
     return (
         <div className="hidden w-64 shrink-0 lg:block">
@@ -65,6 +71,11 @@ export function CatalogDesktopFilters({
                             categories={categories}
                             selectedCategories={selectedCategories}
                             onCategoryChange={onCategoryChange}
+                        />
+
+                        <EventTypeFilter
+                            selectedEventType={selectedEventType}
+                            onEventTypeChange={onEventTypeChange}
                         />
 
                         <ShotsRangeFilter

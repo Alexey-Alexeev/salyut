@@ -51,6 +51,7 @@ interface FilterState {
     shotsMin: number;
     shotsMax: number;
     search: string;
+    eventType: 'wedding' | 'birthday' | 'new_year' | null;
 }
 
 interface InitialData {
@@ -456,6 +457,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         shotsMin: initialShotsStats.min,
         shotsMax: initialShotsStats.max,
         search: '',
+        eventType: null,
     });
 
     // Состояние интерфейса
@@ -522,6 +524,10 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         }
         if (filters.shotsTo) {
             params.set('maxShots', filters.shotsTo);
+        }
+
+        if (filters.eventType) {
+            params.set('eventType', filters.eventType);
         }
 
         return params.toString();
@@ -624,6 +630,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             maxPriceParam = urlParams.get('maxPrice') || undefined;
             minShotsParam = urlParams.get('minShots') || undefined;
             maxShotsParam = urlParams.get('maxShots') || undefined;
+            const eventTypeParam = urlParams.get('eventType') as 'wedding' | 'birthday' | 'new_year' | undefined;
             sortByParam = urlParams.get('sortBy') || undefined;
             const pageStr = urlParams.get('page');
             pageParam = pageStr ? parseInt(pageStr, 10) : 1;
@@ -635,6 +642,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             maxPriceParam = searchParams.maxPrice as string;
             minShotsParam = searchParams.minShots as string;
             maxShotsParam = searchParams.maxShots as string;
+            const eventTypeParam = searchParams.eventType as 'wedding' | 'birthday' | 'new_year' | undefined;
             sortByParam = searchParams.sortBy as string;
             const pageStr = searchParams.page as string;
             pageParam = pageStr ? parseInt(pageStr, 10) : 1;
@@ -644,7 +652,10 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         const categoriesFromUrl = Array.isArray(categoryParam) ? categoryParam : (categoryParam ? [categoryParam] : []);
 
         // Проверяем, есть ли параметры в URL (включая page)
-        const hasUrlParams = (categoryParam && categoryParam.length > 0) || searchParam || minPriceParam || maxPriceParam || minShotsParam || maxShotsParam || sortByParam || (pageParam > 1);
+        const eventTypeParam = typeof window !== 'undefined' 
+            ? (new URLSearchParams(window.location.search).get('eventType') as 'wedding' | 'birthday' | 'new_year' | null)
+            : (searchParams.eventType as 'wedding' | 'birthday' | 'new_year' | undefined);
+        const hasUrlParams = (categoryParam && categoryParam.length > 0) || searchParam || minPriceParam || maxPriceParam || minShotsParam || maxShotsParam || eventTypeParam || sortByParam || (pageParam > 1);
 
         // Устанавливаем страницу независимо от других параметров
         if (!isNaN(pageParam) && pageParam > 0) {
@@ -681,6 +692,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 priceTo: maxPriceParam || '',
                 shotsFrom: minShotsParam || '',
                 shotsTo: maxShotsParam || '',
+                eventType: eventTypeParam || null,
             }));
 
             if (sortByParam) {
@@ -729,6 +741,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         const maxPriceParam = urlSearchParams.get('maxPrice');
         const minShotsParam = urlSearchParams.get('minShots');
         const maxShotsParam = urlSearchParams.get('maxShots');
+        const eventTypeParam = urlSearchParams.get('eventType') as 'wedding' | 'birthday' | 'new_year' | null;
         const sortByParam = urlSearchParams.get('sortBy');
         const pageParam = urlSearchParams.get('page');
 
@@ -743,7 +756,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                             minPriceParam || 
                             maxPriceParam ||
                             minShotsParam ||
-                            maxShotsParam;
+                            maxShotsParam ||
+                            eventTypeParam;
 
         // Синхронизируем фильтры с URL
         setFilters(prev => {
@@ -754,6 +768,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             const priceToChanged = (prev.priceTo || '') !== (maxPriceParam || '');
             const shotsFromChanged = (prev.shotsFrom || '') !== (minShotsParam || '');
             const shotsToChanged = (prev.shotsTo || '') !== (maxShotsParam || '');
+            const eventTypeChanged = (prev.eventType || null) !== (eventTypeParam || null);
 
             if (!hasUrlParams) {
                 // Если URL параметров фильтров нет, сбрасываем фильтры
@@ -762,7 +777,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     !prev.priceFrom && 
                     !prev.priceTo &&
                     !prev.shotsFrom &&
-                    !prev.shotsTo) {
+                    !prev.shotsTo &&
+                    !prev.eventType) {
                     return prev; // Фильтры уже сброшены
                 }
                 return {
@@ -773,11 +789,12 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     priceTo: '',
                     shotsFrom: '',
                     shotsTo: '',
+                    eventType: null,
                 };
             }
 
             // Если есть параметры в URL, но фильтры не изменились, не обновляем
-            if (!categoriesChanged && !searchChanged && !priceFromChanged && !priceToChanged && !shotsFromChanged && !shotsToChanged) {
+            if (!categoriesChanged && !searchChanged && !priceFromChanged && !priceToChanged && !shotsFromChanged && !shotsToChanged && !eventTypeChanged) {
                 return prev;
             }
 
@@ -790,6 +807,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 priceTo: maxPriceParam || '',
                 shotsFrom: minShotsParam || '',
                 shotsTo: maxShotsParam || '',
+                eventType: eventTypeParam || null,
             };
         });
 
@@ -880,7 +898,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 filters.priceFrom ||
                 filters.priceTo ||
                 filters.shotsFrom ||
-                filters.shotsTo;
+                filters.shotsTo ||
+                filters.eventType;
 
             if (!hasActiveFilters && sortBy === 'popular') {
                 // Проверяем текущую страницу из состояния и из URL
@@ -972,6 +991,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     maxPrice: filters.priceTo ? Number(filters.priceTo) : undefined,
                     minShots: filters.shotsFrom ? Number(filters.shotsFrom) : undefined,
                     maxShots: filters.shotsTo ? Number(filters.shotsTo) : undefined,
+                    eventType: filters.eventType || undefined,
                     sortBy: sortBy,
                     page: targetPage,
                     limit: 20,
@@ -1095,6 +1115,19 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         updateURL(newFilters, sortBy);
     }, [resetPage, filters, sortBy, updateURL]);
 
+    const handleEventTypeChange = useCallback((eventType: 'wedding' | 'birthday' | 'new_year' | null) => {
+        resetPage();
+        const newFilters = {
+            ...filters,
+            eventType: eventType,
+        };
+        setFilters(prev => ({
+            ...prev,
+            eventType: eventType,
+        }));
+        updateURL(newFilters, sortBy);
+    }, [resetPage, filters, sortBy, updateURL]);
+
     const handleShotsFromChange = useCallback((value: string) => {
         setShotsFromValue(value);
 
@@ -1179,6 +1212,19 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         if (shotsTimeoutRef.current) {
             clearTimeout(shotsTimeoutRef.current);
         }
+    }, [resetPage, filters, sortBy, updateURL]);
+
+    const handleClearEventType = useCallback(() => {
+        resetPage();
+        const newFilters = {
+            ...filters,
+            eventType: null,
+        };
+        setFilters(prev => ({
+            ...prev,
+            eventType: null,
+        }));
+        updateURL(newFilters, sortBy);
     }, [resetPage, filters, sortBy, updateURL]);
 
     const handleSearchChange = useCallback((value: string) => {
@@ -1318,6 +1364,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             shotsFrom: '',
             shotsTo: '',
             search: '',
+            eventType: null,
         };
         setFilters(prev => ({
             ...prev,
@@ -1401,6 +1448,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         maxPrice: filters.priceTo ? Number(filters.priceTo) : undefined,
                         minShots: filters.shotsFrom ? Number(filters.shotsFrom) : undefined,
                         maxShots: filters.shotsTo ? Number(filters.shotsTo) : undefined,
+                        eventType: filters.eventType || undefined,
                         sortBy: sortBy,
                         page: pagination.page,
                         limit: 20,
@@ -1718,6 +1766,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     onShotsChange={handleShotsChange}
                     onShotsFromChange={handleShotsFromChange}
                     onShotsToChange={handleShotsToChange}
+                    selectedEventType={filters.eventType}
+                    onEventTypeChange={handleEventTypeChange}
                 />
 
                 {/* Основной контент */}
@@ -1746,6 +1796,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                                 onShotsChange={handleShotsChange}
                                 onShotsFromChange={handleShotsFromChange}
                                 onShotsToChange={handleShotsToChange}
+                                selectedEventType={filters.eventType}
+                                onEventTypeChange={handleEventTypeChange}
                             />
 
                             <ViewModeControls
@@ -1790,10 +1842,12 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         shotsFrom={filters.shotsFrom}
                         shotsTo={filters.shotsTo}
                         search={filters.search}
+                        eventType={filters.eventType}
                         onRemoveCategory={handleRemoveCategory}
                         onClearPrice={handleClearPrice}
                         onClearShots={handleClearShots}
                         onClearSearch={handleClearSearch}
+                        onClearEventType={handleClearEventType}
                         onClearAll={handleClearAllFilters}
                     />
 

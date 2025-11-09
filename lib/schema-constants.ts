@@ -197,3 +197,54 @@ export async function getCategoryPrices(categories: any[], products: any[]): Pro
 
   return categoryPrices;
 }
+
+/**
+ * Константы для типов событий (подборки салютов)
+ */
+export const EVENT_TYPES = {
+  WEDDING: 'wedding',
+  BIRTHDAY: 'birthday',
+  NEW_YEAR: 'new_year',
+} as const;
+
+export type EventType = typeof EVENT_TYPES[keyof typeof EVENT_TYPES];
+
+/**
+ * Названия событий на русском языке
+ */
+export const EVENT_TYPE_NAMES: Record<EventType, string> = {
+  [EVENT_TYPES.WEDDING]: 'Свадьба',
+  [EVENT_TYPES.BIRTHDAY]: 'День Рождения',
+  [EVENT_TYPES.NEW_YEAR]: 'Новый Год',
+};
+
+/**
+ * Изображения для подборок событий
+ * Можно использовать URL из public/images или внешние ссылки
+ */
+export const EVENT_TYPE_IMAGES: Record<EventType, string> = {
+  [EVENT_TYPES.WEDDING]: 'https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/category-images/podborka-svadba.webp',
+  [EVENT_TYPES.BIRTHDAY]: 'https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/category-images/podborka-happy-birthday.webp',
+  [EVENT_TYPES.NEW_YEAR]: 'https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/category-images/podvorka-new-year.webp',
+};
+
+/**
+ * Получить название события на русском языке
+ */
+export function getEventTypeName(eventType: EventType): string {
+  return EVENT_TYPE_NAMES[eventType] || eventType;
+}
+
+/**
+ * Получить все доступные типы событий
+ */
+export function getAllEventTypes(): EventType[] {
+  return Object.values(EVENT_TYPES);
+}
+
+/**
+ * Проверить, является ли значение валидным типом события
+ */
+export function isValidEventType(value: string): value is EventType {
+  return Object.values(EVENT_TYPES).includes(value as EventType);
+}

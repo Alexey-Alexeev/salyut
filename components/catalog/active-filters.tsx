@@ -4,6 +4,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
+import { EVENT_TYPE_NAMES, type EventType } from '@/lib/schema-constants';
 
 interface Category {
   id: string;
@@ -19,10 +20,12 @@ interface ActiveFiltersProps {
   shotsFrom: string;
   shotsTo: string;
   search: string;
+  eventType: EventType | null;
   onRemoveCategory: (categorySlug: string) => void;
   onClearPrice: () => void;
   onClearShots: () => void;
   onClearSearch: () => void;
+  onClearEventType: () => void;
   onClearAll: () => void;
 }
 
@@ -35,14 +38,16 @@ export const ActiveFilters = React.memo<ActiveFiltersProps>(
     shotsFrom,
     shotsTo,
     search,
+    eventType,
     onRemoveCategory,
     onClearPrice,
     onClearShots,
     onClearSearch,
+    onClearEventType,
     onClearAll,
   }) => {
     const hasActiveFilters =
-      selectedCategories.length > 0 || priceFrom || priceTo || shotsFrom || shotsTo || search;
+      selectedCategories.length > 0 || priceFrom || priceTo || shotsFrom || shotsTo || search || eventType;
 
     if (!hasActiveFilters) return null;
 
@@ -81,6 +86,13 @@ export const ActiveFilters = React.memo<ActiveFiltersProps>(
           <Badge variant="secondary" className="gap-1">
             Залпы: {shotsFrom || '0'} - {shotsTo || '∞'}
             <X className="size-3 cursor-pointer" onClick={onClearShots} />
+          </Badge>
+        )}
+
+        {eventType && (
+          <Badge variant="secondary" className="gap-1">
+            {EVENT_TYPE_NAMES[eventType]}
+            <X className="size-3 cursor-pointer" onClick={onClearEventType} />
           </Badge>
         )}
 

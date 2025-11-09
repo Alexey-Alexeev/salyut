@@ -8,6 +8,7 @@ import { HeroSection } from '@/components/sections/hero-section';
 import { DeliverySection } from '@/components/sections/delivery-section';
 import { DiscountSection } from '@/components/sections/discount-section';
 import { CategoriesSection } from '@/components/sections/categories-section';
+import { EventCollectionsSection } from '@/components/sections/event-collections-section';
 import { PopularProductsSection } from '@/components/sections/popular-products-section';
 import { ProfessionalServicesSection } from '@/components/sections/professional-services-section';
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
@@ -71,6 +72,11 @@ export default async function HomePage() {
   let categoriesData: any[] = [];
   let popularProducts: any[] = [];
   let videoReviews: any[] = [];
+  let eventCounts = {
+    wedding: 0,
+    birthday: 0,
+    new_year: 0,
+  };
 
   try {
     [categoriesData, popularProducts] = await Promise.all([
@@ -103,6 +109,27 @@ export default async function HomePage() {
     console.error('Error loading categories or products:', error);
   }
 
+  // Подсчитываем количество салютов для каждого события
+  try {
+    const allProducts = await db
+      .select({
+        event_types: products.event_types,
+      })
+      .from(products)
+      .where(eq(products.is_active, true));
+
+    allProducts.forEach((product) => {
+      const eventTypes = product.event_types as string[] | null;
+      if (eventTypes && Array.isArray(eventTypes)) {
+        if (eventTypes.includes('wedding')) eventCounts.wedding++;
+        if (eventTypes.includes('birthday')) eventCounts.birthday++;
+        if (eventTypes.includes('new_year')) eventCounts.new_year++;
+      }
+    });
+  } catch (error) {
+    console.error('Error loading event counts:', error);
+  }
+
   try {
     videoReviews = await db
       .select()
@@ -125,6 +152,8 @@ export default async function HomePage() {
       <DiscountSection />
 
       <CategoriesSection categories={categoriesData} />
+
+      <EventCollectionsSection eventCounts={eventCounts} />
 
       <PopularProductsSection products={popularProducts} />
 

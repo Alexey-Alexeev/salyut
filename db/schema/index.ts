@@ -34,6 +34,9 @@ export const userRoleEnum = ['admin', 'user'] as const;
 // Enum для способов получения заказа
 export const deliveryMethodEnum = ['delivery', 'pickup'] as const;
 
+// Enum для типов событий (подборки салютов)
+export const eventTypeEnum = ['wedding', 'birthday', 'new_year'] as const;
+
 // Таблица категорий
 export const categories = pgTable('categories', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -73,6 +76,7 @@ export const products = pgTable('products', {
   characteristics: jsonb('characteristics').$type<Record<string, any>>(),
   is_popular: boolean('is_popular').default(false),
   is_active: boolean('is_active').default(true),
+  event_types: jsonb('event_types').$type<Array<(typeof eventTypeEnum)[number]>>(), // подборки салютов для событий
   seo_title: text('seo_title'),
   seo_description: text('seo_description'),
   created_at: timestamp('created_at').defaultNow(),

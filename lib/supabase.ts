@@ -52,6 +52,7 @@ export type Database = {
           characteristics: Record<string, any> | null;
           is_popular: boolean;
           is_active: boolean;
+          event_types: ('wedding' | 'birthday' | 'new_year')[] | null;
           created_at: string;
         };
         Insert: {
@@ -66,6 +67,7 @@ export type Database = {
           characteristics?: Record<string, any> | null;
           is_popular?: boolean;
           is_active?: boolean;
+          event_types?: ('wedding' | 'birthday' | 'new_year')[] | null;
           created_at?: string;
         };
         Update: {
@@ -80,6 +82,7 @@ export type Database = {
           characteristics?: Record<string, any> | null;
           is_popular?: boolean;
           is_active?: boolean;
+          event_types?: ('wedding' | 'birthday' | 'new_year')[] | null;
           created_at?: string;
         };
       };

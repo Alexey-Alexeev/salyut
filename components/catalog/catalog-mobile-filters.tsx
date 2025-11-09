@@ -10,6 +10,8 @@ import { Filter } from 'lucide-react';
 import { CategoryFilter } from './category-filter';
 import { PriceRangeFilter } from './price-range-filter';
 import { ShotsRangeFilter } from './shots-range-filter';
+import { EventTypeFilter } from './event-type-filter';
+import { type EventType } from '@/lib/schema-constants';
 
 interface Category {
     id: string;
@@ -37,6 +39,8 @@ interface CatalogMobileFiltersProps {
     onShotsChange: (from: string, to: string) => void;
     onShotsFromChange?: (value: string) => void;
     onShotsToChange?: (value: string) => void;
+    selectedEventType: EventType | null;
+    onEventTypeChange: (eventType: EventType | null) => void;
 }
 
 export function CatalogMobileFilters({
@@ -59,9 +63,11 @@ export function CatalogMobileFilters({
     onShotsChange,
     onShotsFromChange,
     onShotsToChange,
+    selectedEventType,
+    onEventTypeChange,
 }: CatalogMobileFiltersProps) {
-    // Суммарное количество выбранных фильтров: все категории + 1 если цена + 1 если залпы
-    const filtersCount = selectedCategories.length + ((priceFrom || priceTo) ? 1 : 0) + ((shotsFrom || shotsTo) ? 1 : 0);
+    // Суммарное количество выбранных фильтров: все категории + 1 если цена + 1 если залпы + 1 если событие
+    const filtersCount = selectedCategories.length + ((priceFrom || priceTo) ? 1 : 0) + ((shotsFrom || shotsTo) ? 1 : 0) + (selectedEventType ? 1 : 0);
 
     return (
         <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -86,6 +92,10 @@ export function CatalogMobileFilters({
                             categories={categories}
                             selectedCategories={selectedCategories}
                             onCategoryChange={onCategoryChange}
+                        />
+                        <EventTypeFilter
+                            selectedEventType={selectedEventType}
+                            onEventTypeChange={onEventTypeChange}
                         />
                         <ShotsRangeFilter
                             shotsFrom={shotsFrom}

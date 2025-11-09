@@ -14,6 +14,7 @@ export interface ProductFilters {
     maxPrice?: number;
     minShots?: number;
     maxShots?: number;
+    eventType?: 'wedding' | 'birthday' | 'new_year';
     sortBy?: string;
     page?: number;
     limit?: number;
@@ -28,6 +29,7 @@ export async function fetchProducts(filters: ProductFilters = {}) {
             maxPrice,
             minShots,
             maxShots,
+            eventType,
             sortBy = 'name',
             page = 1,
             limit = 20,
@@ -82,6 +84,11 @@ export async function fetchProducts(filters: ProductFilters = {}) {
             query = query.lte('price', maxPrice);
         }
 
+        // Фильтрация по типу события (из JSONB поля event_types)
+        // В Supabase JS SDK фильтрация по JSONB массиву требует специального подхода
+        // Используем фильтрацию на клиенте после получения данных
+        // (альтернатива - создать RPC функцию в Supabase)
+
         // Фильтрация по количеству залпов (из JSONB поля characteristics)
         // В Supabase JS SDK фильтрация по JSONB требует специального подхода
         // Используем фильтрацию на клиенте после получения данных
@@ -107,9 +114,9 @@ export async function fetchProducts(filters: ProductFilters = {}) {
                 break;
         }
 
-        // Если есть фильтр по залпам, получаем все данные для фильтрации на клиенте
+        // Если есть фильтр по залпам или типу события, получаем все данные для фильтрации на клиенте
         // (так как Supabase JS SDK не поддерживает напрямую фильтрацию по JSONB с преобразованием типов)
-        const needsClientSideFiltering = minShots !== undefined || maxShots !== undefined;
+        const needsClientSideFiltering = minShots !== undefined || maxShots !== undefined || eventType !== undefined;
         
         let data: any[] = [];
         let error: any = null;
@@ -121,27 +128,38 @@ export async function fetchProducts(filters: ProductFilters = {}) {
             data = allProducts || [];
             error = allError;
             
-            // Фильтруем по количеству залпов на клиенте
+            // Фильтруем по количеству залпов и типу события на клиенте
             data = data.filter((product: any) => {
-                const characteristics = product.characteristics || {};
-                const shotsStr = characteristics['Кол-во залпов'];
-                
-                if (!shotsStr) {
-                    // Если нет значения "Кол-во залпов", пропускаем товар
-                    return false;
+                // Фильтрация по типу события
+                if (eventType) {
+                    const eventTypes = product.event_types || [];
+                    if (!Array.isArray(eventTypes) || !eventTypes.includes(eventType)) {
+                        return false;
+                    }
                 }
                 
-                const shots = parseInt(shotsStr, 10);
-                if (isNaN(shots)) {
-                    return false;
-                }
-                
-                if (minShots !== undefined && shots < minShots) {
-                    return false;
-                }
-                
-                if (maxShots !== undefined && shots > maxShots) {
-                    return false;
+                // Фильтрация по количеству залпов
+                if (minShots !== undefined || maxShots !== undefined) {
+                    const characteristics = product.characteristics || {};
+                    const shotsStr = characteristics['Кол-во залпов'];
+                    
+                    if (!shotsStr) {
+                        // Если нет значения "Кол-во залпов", пропускаем товар
+                        return false;
+                    }
+                    
+                    const shots = parseInt(shotsStr, 10);
+                    if (isNaN(shots)) {
+                        return false;
+                    }
+                    
+                    if (minShots !== undefined && shots < minShots) {
+                        return false;
+                    }
+                    
+                    if (maxShots !== undefined && shots > maxShots) {
+                        return false;
+                    }
                 }
                 
                 return true;
