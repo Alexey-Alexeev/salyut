@@ -551,6 +551,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         params.delete('maxPrice');
         params.delete('minShots');
         params.delete('maxShots');
+        params.delete('eventType');
         params.delete('sortBy');
         params.delete('page');
 
@@ -579,6 +580,10 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
         if (newFilters.shotsTo?.trim()) {
             params.set('maxShots', newFilters.shotsTo.trim());
+        }
+
+        if (newFilters.eventType) {
+            params.set('eventType', newFilters.eventType);
         }
 
         if (newSortBy && newSortBy !== 'popular') {
@@ -1139,10 +1144,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Если поле пустое, сразу очищаем фильтр
         if (value.trim() === '') {
             resetPage();
-            setFilters(prev => ({
-                ...prev,
-                shotsFrom: '',
-            }));
+            setFilters(prev => {
+                const newFilters = {
+                    ...prev,
+                    shotsFrom: '',
+                };
+                updateURL(newFilters, sortBy);
+                return newFilters;
+            });
             return;
         }
 
@@ -1171,10 +1180,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Если поле пустое, сразу очищаем фильтр
         if (value.trim() === '') {
             resetPage();
-            setFilters(prev => ({
-                ...prev,
-                shotsTo: '',
-            }));
+            setFilters(prev => {
+                const newFilters = {
+                    ...prev,
+                    shotsTo: '',
+                };
+                updateURL(newFilters, sortBy);
+                return newFilters;
+            });
             return;
         }
 
@@ -1277,10 +1290,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Если поле пустое, сразу очищаем фильтр
         if (value.trim() === '') {
             resetPage();
-            setFilters(prev => ({
-                ...prev,
-                priceFrom: '',
-            }));
+            setFilters(prev => {
+                const newFilters = {
+                    ...prev,
+                    priceFrom: '',
+                };
+                updateURL(newFilters, sortBy);
+                return newFilters;
+            });
             return;
         }
 
@@ -1309,10 +1326,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Если поле пустое, сразу очищаем фильтр
         if (value.trim() === '') {
             resetPage();
-            setFilters(prev => ({
-                ...prev,
-                priceTo: '',
-            }));
+            setFilters(prev => {
+                const newFilters = {
+                    ...prev,
+                    priceTo: '',
+                };
+                updateURL(newFilters, sortBy);
+                return newFilters;
+            });
             return;
         }
 
