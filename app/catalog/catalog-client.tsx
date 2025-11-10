@@ -303,6 +303,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                                 // Включаем сохранение позиции прокрутки через небольшую задержку
                                 // чтобы не перезаписывать правильную позицию сразу после восстановления
                                 setTimeout(() => {
+
                                     shouldSaveScrollRef.current = true;
                                 }, 500);
                             }
@@ -1958,3 +1959,4 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         </div>
     );
 }
+
