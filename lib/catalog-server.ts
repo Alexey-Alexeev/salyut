@@ -72,22 +72,26 @@ export async function getProductsData(page: number = 1, limit: number = 20, sort
         const offset = (page - 1) * limit;
 
         // Определяем сортировку
+        // ВАЖНО: должна совпадать с сортировкой в lib/api-client.ts для консистентности
+        // Добавляем id в конец всех сортировок для детерминированности
         let orderBy;
         switch (sortBy) {
             case 'price-asc':
-                orderBy = [asc(products.price), asc(products.name)];
+                orderBy = [asc(products.price), asc(products.name), asc(products.id)];
                 break;
             case 'price-desc':
-                orderBy = [desc(products.price), asc(products.name)];
+                orderBy = [desc(products.price), asc(products.name), asc(products.id)];
                 break;
             case 'popular':
-                orderBy = [desc(products.is_popular), desc(products.created_at), asc(products.name)];
+                // Сортировка: популярные сначала (is_popular DESC), затем по алфавиту (name ASC), 
+                // и наконец по id для детерминированности
+                orderBy = [desc(products.is_popular), asc(products.name), asc(products.id)];
                 break;
             case 'newest':
-                orderBy = [desc(products.created_at), asc(products.name)];
+                orderBy = [desc(products.created_at), asc(products.name), asc(products.id)];
                 break;
             default:
-                orderBy = [asc(products.name)];
+                orderBy = [asc(products.name), asc(products.id)];
         }
 
         // Получаем общее количество товаров

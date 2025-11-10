@@ -13,7 +13,8 @@ const CatalogClient = dynamicImport(() => import('./catalog-client').then(mod =>
 // Кэшируем данные на уровне Next.js
 export const revalidate = 300; // 5 минут (соответствует серверному кэшу)
 
-// Статическая генерация для улучшения производительности
+// Статическая генерация для статического экспорта
+// Клиент будет загружать данные через API с учетом параметров URL
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
@@ -38,10 +39,12 @@ interface CatalogPageProps {
 }
 
 export default async function CatalogPage({ searchParams }: CatalogPageProps) {
-  // Загружаем данные параллельно с приоритетом для критических данных
+  // Для статического экспорта загружаем данные с дефолтными значениями
+  // Клиент будет загружать данные через API с учетом параметров URL из searchParams
+  // Это необходимо, так как статический экспорт не поддерживает динамические параметры на сервере
   const [categories, productsResponse, stats] = await Promise.all([
     getCategoriesData(),
-    getProductsData(1, 20, 'popular'),
+    getProductsData(1, 20, 'popular'), // Дефолтные значения для SSR
     getProductsStatsData(),
   ]);
 

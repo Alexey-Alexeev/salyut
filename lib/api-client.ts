@@ -95,22 +95,35 @@ export async function fetchProducts(filters: ProductFilters = {}) {
         // (альтернатива - создать RPC функцию в Supabase)
 
         // Сортировка
+        // ВАЖНО: должна совпадать с сортировкой в lib/catalog-server.ts для консистентности
         switch (sortBy) {
             case 'price-asc':
             case 'price_asc':
-                query = query.order('price', { ascending: true });
+                query = query.order('price', { ascending: true })
+                             .order('name', { ascending: true })
+                             .order('id', { ascending: true }); // Добавляем id для детерминированности
                 break;
             case 'price-desc':
             case 'price_desc':
-                query = query.order('price', { ascending: false });
+                query = query.order('price', { ascending: false })
+                             .order('name', { ascending: true })
+                             .order('id', { ascending: true }); // Добавляем id для детерминированности
                 break;
             case 'popular':
-                // Стандартная сортировка Supabase: true, null, false
-                query = query.order('is_popular', { ascending: false }).order('name', { ascending: true });
+                // Должно совпадать с серверной сортировкой: популярные сначала, затем по алфавиту
+                query = query.order('is_popular', { ascending: false }) // Популярные сначала
+                             .order('name', { ascending: true }) // Затем по алфавиту
+                             .order('id', { ascending: true }); // Добавляем id для детерминированности
+                break;
+            case 'newest':
+                query = query.order('created_at', { ascending: false })
+                             .order('name', { ascending: true })
+                             .order('id', { ascending: true }); // Добавляем id для детерминированности
                 break;
             case 'name':
             default:
-                query = query.order('name', { ascending: true });
+                query = query.order('name', { ascending: true })
+                             .order('id', { ascending: true }); // Добавляем id для детерминированности
                 break;
         }
 
