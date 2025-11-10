@@ -9,7 +9,7 @@ import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 /**
  * MobileExitBottomSheet
  * Мягкий bottom-sheet для мобильных с триггером бездействия (40 секунд).
- * Показывается не чаще 1 раза за сессию. Исключает админ, корзину/оформление и потенциальную страницу «спасибо».
+ * Показывается не чаще 1 раза за сессию. Исключает админ, корзину/оформление, страницы продуктов и потенциальную страницу «спасибо».
  */
 export default function MobileExitBottomSheet() {
   const [open, setOpen] = useState(false);
@@ -36,6 +36,7 @@ export default function MobileExitBottomSheet() {
     const path = pathname || window.location.pathname;
     if (path.startsWith('/admin')) return false;
     if (path.startsWith('/cart')) return false;
+    if (path.startsWith('/product/')) return false;
     if (path.includes('checkout')) return false;
     if (path.includes('thank') || path.includes('success')) return false;
 
@@ -104,7 +105,7 @@ export default function MobileExitBottomSheet() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent
         side="bottom"
-        className="h-[40vh] rounded-t-3xl px-4 pb-6 pt-3 sm:max-w-none"
+        className="h-[40vh] rounded-t-3xl px-4 pb-6 pt-3 sm:max-w-none [&>button]:hidden"
       >
         {/* Серый верхний хэндл */}
         <div className="mx-auto mb-4 mt-1 h-1.5 w-16 rounded-full bg-gray-200" />
