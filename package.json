@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next export && node scripts/copy-sitemap.js && node scripts/insert-metrika.js",
+    "build": "next build && node scripts/copy-sitemap.js",
     "start": "next start",
     "lint": "next lint",
     "export": "next export",
