@@ -115,7 +115,7 @@ export default function RootLayout({
                   }
                   k=e.createElement(t),a=e.getElementsByTagName(t)[0];
                   k.async=1;k.src=r;a.parentNode.insertBefore(k,a);
-              })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+              })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=104700931", "ym");
 
               ym(104700931, "init", {
                   ssr:true,
