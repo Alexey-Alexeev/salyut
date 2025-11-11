@@ -88,12 +88,18 @@ RewriteRule ^ index.html [L]
 # 🔒 Доступ к файлам
 # ===============================
 
+# Разрешаем доступ к PWA-манифесту
+<FilesMatch "^(manifest\.json|site\.webmanifest)$">
+    Require all granted
+    Header set Content-Type "application/manifest+json; charset=utf-8"
+</FilesMatch>
+
 # Разрешаем доступ к SEO-файлам
 <FilesMatch "^(sitemap\.xml|robots\.txt)$">
     Require all granted
 </FilesMatch>
 
 # Запрещаем доступ к системным и конфигурационным файлам
-<FilesMatch "(\.(env|git|htaccess|json|lock|config|log|sh|sql))$">
+<FilesMatch "(\.(env|git|htaccess|lock|config|log|sh|sql))$">
     Require all denied
 </FilesMatch>
