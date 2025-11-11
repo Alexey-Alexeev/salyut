@@ -63,13 +63,60 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function(m,e,t,r,i,k,a){
+                  if (typeof window === 'undefined' || typeof document === 'undefined') {
+                    console.error('Metrika: window or document not available');
+                    return;
+                  }
                   m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
                   m[i].l=1*new Date();
-                  for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-                  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+                  for (var j = 0; j < document.scripts.length; j++) {
+                    if (document.scripts[j].src === r) { 
+                      console.log('Metrika: script already loaded');
+                      return; 
+                    }
+                  }
+                  try {
+                    k=e.createElement(t);
+                    a=e.getElementsByTagName(t)[0];
+                    k.async=1;
+                    k.src=r;
+                    k.onload = function() {
+                      console.log('Metrika: script loaded successfully');
+                    };
+                    k.onerror = function() {
+                      console.error('Metrika: script load error');
+                    };
+                    a.parentNode.insertBefore(k,a);
+                    console.log('Metrika: script tag created');
+                  } catch(err) {
+                    console.error('Metrika: error creating script tag', err);
+                  }
               })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=104700931', 'ym');
 
-              ym(104700931, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+              // Инициализация с проверкой и повторными попытками
+              (function initMetrika() {
+                if (typeof window === 'undefined') {
+                  console.error('Metrika: window not available for init');
+                  return;
+                }
+                if (typeof window.ym === 'function') {
+                  try {
+                    window.ym(104700931, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+                    console.log('Metrika: initialized successfully');
+                  } catch(err) {
+                    console.error('Metrika: init error', err);
+                  }
+                } else {
+                  console.log('Metrika: ym not ready, retrying...');
+                  setTimeout(initMetrika, 100);
+                  // Останавливаем попытки через 5 секунд
+                  setTimeout(function() {
+                    if (typeof window.ym !== 'function') {
+                      console.error('Metrika: failed to load after 5 seconds');
+                    }
+                  }, 5000);
+                }
+              })();
             `,
           }}
         />
