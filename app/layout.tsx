@@ -10,6 +10,7 @@ import { ConditionalNoIndex } from '@/components/conditional-head';
 import { OrganizationJsonLd } from '@/components/organization-jsonld';
 import { CacheBuster } from '@/components/cache-buster';
 import MobileExitBottomSheet from '@/components/mobile-exit-bottom-sheet';
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -103,8 +104,10 @@ export default function RootLayout({
         {/* Глобальная JSON-LD разметка организации для всех страниц */}
         <OrganizationJsonLd />
 
-         {/* ✅ Яндекс.Метрика вставляется на этапе SSR (есть в HTML сразу) */}
-         <script
+            {/* ✅ Яндекс.Метрика через next/script */}
+        <Script
+          id="yandex-metrika"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function(m,e,t,r,i,k,a){
@@ -125,9 +128,12 @@ export default function RootLayout({
                   webvisor:true,
                   ecommerce:"dataLayer"
               });
+
+              console.log("%c[Яндекс.Метрика] Счётчик 104700931 успешно инициализирован", "color: #00aa00");
             `,
           }}
         />
+
         <noscript>
           <div>
             <img
