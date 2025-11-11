@@ -99,25 +99,7 @@ export default function RootLayout({
         {/* Conditional noindex meta tags - только для Vercel */}
         <ConditionalNoIndex />
         
-        {/* Service Worker для управления кэшем - регистрируется после загрузки, чтобы не мешать Метрике */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                // Откладываем регистрацию SW, чтобы не мешать инициализации Метрики
-                setTimeout(function() {
-                  window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/sw.js')
-                      .then((registration) => {
-                      })
-                      .catch((error) => {
-                      });
-                  });
-                }, 1000);
-              }
-            `,
-          }}
-        />
+
         
         {/* Глобальная JSON-LD разметка организации для всех страниц */}
         <OrganizationJsonLd />
@@ -135,8 +117,28 @@ export default function RootLayout({
         <MobileExitBottomSheet />
         <Toaster />
         <CacheBuster />
+
+                {/* Service Worker для управления кэшем - регистрируется после загрузки, чтобы не мешать Метрике */}
+                <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                // Откладываем регистрацию SW, чтобы не мешать инициализации Метрики
+                setTimeout(function() {
+                  window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                      .then((registration) => {
+                      })
+                      .catch((error) => {
+                      });
+                  });
+                }, 1000);
+              }
+            `,
+          }}
+        />
         {/* Yandex.Metrika - загружается только на клиенте через клиентский компонент */}
-        <YandexMetrika />
+        {/* <YandexMetrika /> */}
       </body>
     </html>
   );
