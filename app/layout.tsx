@@ -10,7 +10,6 @@ import { ConditionalNoIndex } from '@/components/conditional-head';
 import { OrganizationJsonLd } from '@/components/organization-jsonld';
 import { CacheBuster } from '@/components/cache-buster';
 import MobileExitBottomSheet from '@/components/mobile-exit-bottom-sheet';
-import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -105,23 +104,20 @@ export default function RootLayout({
         <OrganizationJsonLd />
 
             {/* ✅ Яндекс.Метрика через next/script */}
-        <Script
-          id="yandex-metrika"
-          strategy="beforeInteractive"
+                  <script
           dangerouslySetInnerHTML={{
             __html: `
               (function(m,e,t,r,i,k,a){
                   m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
                   m[i].l=1*new Date();
                   for (var j = 0; j < document.scripts.length; j++) {
-                    if (document.scripts[j].src === r) { return; }
+                    if (document.scripts[j].src === r) return;
                   }
                   k=e.createElement(t),a=e.getElementsByTagName(t)[0];
                   k.async=1;k.src=r;a.parentNode.insertBefore(k,a);
-              })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=104700931", "ym");
+              })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
               ym(104700931, "init", {
-                  ssr:true,
                   clickmap:true,
                   trackLinks:true,
                   accurateTrackBounce:true,
@@ -129,12 +125,11 @@ export default function RootLayout({
                   ecommerce:"dataLayer"
               });
 
-              console.log("%c[Яндекс.Метрика] Счётчик 104700931 успешно инициализирован", "color: #00aa00");
+              console.log("%c[Яндекс.Метрика] Инициализация выполнена", "color:#00aa00");
             `,
           }}
         />
 
-        {/* ⚠️ правильный noscript */}
         <noscript
           dangerouslySetInnerHTML={{
             __html: `<div><img src="https://mc.yandex.ru/watch/104700931" style="position:absolute; left:-9999px;" alt="" /></div>`,
