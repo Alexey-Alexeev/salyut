@@ -10,8 +10,6 @@ import { ConditionalNoIndex } from '@/components/conditional-head';
 import { OrganizationJsonLd } from '@/components/organization-jsonld';
 import { CacheBuster } from '@/components/cache-buster';
 import MobileExitBottomSheet from '@/components/mobile-exit-bottom-sheet';
-import { YandexMetrika } from '@/components/yandex-metrika';
-import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -104,35 +102,23 @@ export default function RootLayout({
         
         {/* Глобальная JSON-LD разметка организации для всех страниц */}
         <OrganizationJsonLd />
-      </head>
-      <body className={inter.className}>
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
-        <FloatingConsultation />
-        <ExitIntentConsultation />
-        {/** Mobile bottom sheet exit-intent */}
-        {/** Rendered globally; component self-guards to mobile and eligible pages */}
-        <MobileExitBottomSheet />
-        <Toaster />
-        <CacheBuster />
 
-                {/* ✅ Яндекс.Метрика — безопасное подключение */}
-        <Script
-          id="yandex-metrika"
-          strategy="afterInteractive"
+         {/* ✅ Яндекс.Метрика вставляется на этапе SSR (есть в HTML сразу) */}
+         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function(m,e,t,r,i,k,a){
                   m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
                   m[i].l=1*new Date();
-                  for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-                  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+                  for (var j = 0; j < document.scripts.length; j++) {
+                    if (document.scripts[j].src === r) { return; }
+                  }
+                  k=e.createElement(t),a=e.getElementsByTagName(t)[0];
+                  k.async=1;k.src=r;a.parentNode.insertBefore(k,a);
               })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-              
+
               ym(104700931, "init", {
+                  ssr:true,
                   clickmap:true,
                   trackLinks:true,
                   accurateTrackBounce:true,
@@ -151,11 +137,23 @@ export default function RootLayout({
             />
           </div>
         </noscript>
+      </head>
+      <body className={inter.className}>
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+        <FloatingConsultation />
+        <ExitIntentConsultation />
+        {/** Mobile bottom sheet exit-intent */}
+        {/** Rendered globally; component self-guards to mobile and eligible pages */}
+        <MobileExitBottomSheet />
+        <Toaster />
+        <CacheBuster />
 
         {/* Service Worker */}
-        <Script
-          id="sw-register"
-          strategy="afterInteractive"
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
@@ -168,8 +166,6 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Yandex.Metrika - загружается только на клиенте через клиентский компонент */}
-        {/* <YandexMetrika /> */}
       </body>
     </html>
   );
