@@ -105,7 +105,8 @@ export default function MobileExitBottomSheet() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent
         side="bottom"
-        className="h-[40vh] rounded-t-3xl px-4 pb-6 pt-3 sm:max-w-none [&>button]:hidden"
+        className="h-[40vh] rounded-t-3xl px-4 pb-6 pt-3 sm:max-w-none"
+        onOpenAutoFocus={(e) => e.preventDefault()}
       >
         {/* Серый верхний хэндл */}
         <div className="mx-auto mb-4 mt-1 h-1.5 w-16 rounded-full bg-gray-200" />
