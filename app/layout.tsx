@@ -121,18 +121,21 @@ export default function RootLayout({
         {/* Conditional noindex meta tags - только для Vercel */}
         <ConditionalNoIndex />
         
-        {/* Service Worker для управления кэшем */}
+        {/* Service Worker для управления кэшем - регистрируется после загрузки, чтобы не мешать Метрике */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then((registration) => {
-                    })
-                    .catch((error) => {
-                    });
-                });
+                // Откладываем регистрацию SW, чтобы не мешать инициализации Метрики
+                setTimeout(function() {
+                  window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                      .then((registration) => {
+                      })
+                      .catch((error) => {
+                      });
+                  });
+                }, 1000);
               }
             `,
           }}

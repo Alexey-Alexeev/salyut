@@ -56,6 +56,11 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // Пропускаем все запросы к Яндекс.Метрике - не обрабатываем их через SW
+  if (url.hostname.includes('mc.yandex.ru') || url.hostname.includes('metrika.yandex') || url.hostname.includes('webvisor.com')) {
+    return;
+  }
+
   // Обрабатываем только GET-запросы нашего домена
   if (request.method !== 'GET' || url.origin !== location.origin) {
     return;
