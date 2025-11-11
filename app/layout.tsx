@@ -134,15 +134,12 @@ export default function RootLayout({
           }}
         />
 
-        <noscript>
-          <div>
-            <img
-              src="https://mc.yandex.ru/watch/104700931"
-              style={{ position: 'absolute', left: '-9999px' }}
-              alt=""
-            />
-          </div>
-        </noscript>
+        {/* ⚠️ правильный noscript */}
+        <noscript
+          dangerouslySetInnerHTML={{
+            __html: `<div><img src="https://mc.yandex.ru/watch/104700931" style="position:absolute; left:-9999px;" alt="" /></div>`,
+          }}
+        />
       </head>
       <body className={inter.className}>
         <div className="flex min-h-screen flex-col">
