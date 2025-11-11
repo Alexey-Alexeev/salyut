@@ -1,6 +1,6 @@
-const CACHE_NAME = 'salutgrad-v1';
-const STATIC_CACHE = 'salutgrad-static-v1';
-const DYNAMIC_CACHE = 'salutgrad-dynamic-v1';
+const CACHE_NAME = 'salutgrad-v2';
+const STATIC_CACHE = 'salutgrad-static-v2';
+const DYNAMIC_CACHE = 'salutgrad-dynamic-v2';
 
 // Настройка агрессивного обновления
 const FORCE_UPDATE_MODE = true; // true = принудительное обновление, false = обычное кэширование
@@ -55,65 +55,59 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
-  
-  // Пропускаем API запросы и другие ресурсы
-  if (NO_CACHE_URLS.some(noCacheUrl => url.pathname.startsWith(noCacheUrl))) {
+
+  // Обрабатываем только GET-запросы нашего домена
+  if (request.method !== 'GET' || url.origin !== location.origin) {
     return;
   }
-  
-  // Пропускаем внешние ресурсы
-  if (url.origin !== location.origin) {
+
+  // Никогда не перехватываем чанки Next.js и критичные ассеты JS/CSS
+  const isNextAsset = url.pathname.startsWith('/_next/');
+  const isScriptOrStyle = request.destination === 'script' || request.destination === 'style';
+  if (isNextAsset || isScriptOrStyle) {
+    return; // пусть браузер загрузит напрямую
+  }
+
+  // Пропускаем явно исключённые URL
+  if (NO_CACHE_URLS.some((noCacheUrl) => url.pathname.startsWith(noCacheUrl))) {
     return;
   }
-  
-  event.respondWith(
-    caches.match(request)
-      .then((cachedResponse) => {
-        if (FORCE_UPDATE_MODE) {
-          // АГРЕССИВНЫЙ РЕЖИМ: всегда загружаем свежую версию
-          return fetch(request)
-            .then((response) => {
-              // Обновляем кэш свежей версией
-              if (response && response.status === 200) {
-                const responseToCache = response.clone();
-                caches.open(DYNAMIC_CACHE).then((cache) => {
-                  cache.put(request, responseToCache);
-                });
-              }
-              return response;
-            })
-            .catch(() => {
-              // Если нет сети, возвращаем кэшированную версию как fallback
-              return cachedResponse || new Response('Offline', { status: 503 });
-            });
-        } else {
-          // ОБЫЧНЫЙ РЕЖИМ: используем кэш
-          if (cachedResponse) {
-            return cachedResponse;
+
+  // Навигации и HTML — стратегия network-first с fallback из кэша
+  const isNavigation = request.mode === 'navigate' || request.destination === 'document';
+  if (isNavigation) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(DYNAMIC_CACHE).then((cache) => cache.put(request, clone));
           }
-          
-          // Иначе загружаем из сети и кэшируем
-          return fetch(request)
-            .then((response) => {
-              // Клонируем ответ для кэширования
-            const responseClone = response.clone();
-            
-            // Кэшируем только успешные ответы
-            if (response.status === 200) {
-              caches.open(DYNAMIC_CACHE)
-                .then((cache) => {
-                  cache.put(request, responseClone);
-                });
-            }
-            
-            return response;
-          })
-          .catch((error) => {
-            console.error('Service Worker: Ошибка загрузки:', error);
-            throw error;
-          });
-        }
-      })
+          return response;
+        })
+        .catch(async () => {
+          const cached = await caches.match(request);
+          return cached || new Response('Offline', { status: 503 });
+        })
+    );
+    return;
+  }
+
+  // Остальные типы (изображения, JSON) — stale-while-revalidate
+  event.respondWith(
+    caches.match(request).then((cachedResponse) => {
+      const networkFetch = fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(DYNAMIC_CACHE).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => cachedResponse);
+
+      return cachedResponse || networkFetch;
+    })
   );
 });
 
