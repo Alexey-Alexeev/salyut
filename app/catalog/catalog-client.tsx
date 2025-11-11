@@ -236,6 +236,15 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     // Восстанавливаем позицию прокрутки при возврате в каталог
     useEffect(() => {
         if (typeof window !== 'undefined' && !scrollRestoredRef.current) {
+            // Жестко отключаем восстановление, если только что была пагинация
+            const disableOnce = sessionStorage.getItem('catalogDisableRestore');
+            if (disableOnce) {
+                sessionStorage.removeItem('catalogDisableRestore');
+                scrollRestoredRef.current = true;
+                setIsRestoringScroll(false);
+                return;
+            }
+
             // Проверяем, вернулись ли мы из карточки товара
             const savedScrollPosition = sessionStorage.getItem('catalogScrollPosition');
             const returnUrl = sessionStorage.getItem('catalogReturnUrl');
@@ -1416,6 +1425,10 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // чтобы эффект восстановления не перезаписывал скролл наверх
         if (typeof window !== 'undefined') {
             sessionStorage.removeItem('catalogScrollPosition');
+            // Также очищаем URL возврата, чтобы не определять переход как возврат из карточки
+            sessionStorage.removeItem('catalogReturnUrl');
+            // Устанавливаем одноразовый флаг, чтобы полностью отключить восстановление на следующий рендер
+            sessionStorage.setItem('catalogDisableRestore', '1');
             scrollRestoredRef.current = true; // Устанавливаем флаг, чтобы эффект восстановления не сработал
             setIsRestoringScroll(false); // Скрываем лоадер восстановления
             // Обновляем предыдущую страницу
