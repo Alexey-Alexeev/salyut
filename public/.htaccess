@@ -20,7 +20,15 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
 # 🔄 SPA fallback (Next.js static export)
 # ===============================
 
-# Favicon теперь находится только в корне /favicon.ico
+# Не переписываем статические ассеты и чанки Next.js
+RewriteCond %{REQUEST_URI} ^/_next/ [OR]
+RewriteCond %{REQUEST_URI} ^/icons/ [OR]
+RewriteCond %{REQUEST_URI} ^/images/ [OR]
+RewriteCond %{REQUEST_URI} ^/fonts/ [OR]
+RewriteCond %{REQUEST_URI} ^/favicon\.ico$
+RewriteRule ^ - [L]
+
+# Fallback только для маршрутов приложения
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [L]
