@@ -142,7 +142,7 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-8">
-      <HomeScrollRestore />
+      {/* <HomeScrollRestore /> */}
       {/* Preload критических изображений */}
       
       <HeroSection />
