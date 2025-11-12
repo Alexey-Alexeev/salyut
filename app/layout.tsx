@@ -95,9 +95,9 @@ export default function RootLayout({
         <meta name="geo.placename" content="Москва" />
         <meta name="geo.position" content="55.7558;37.6176" />
         <meta name="ICBM" content="55.7558, 37.6176" />
-
- {/* Yandex.Metrika counter - только для production домена */}
- <script
+        
+        {/* Yandex.Metrika counter - только для production домена */}
+        <script
           type="text/javascript"
           dangerouslySetInnerHTML={{
             __html: `
@@ -138,13 +138,29 @@ export default function RootLayout({
             />
           </div>
         </noscript>
-
+        
         {/* Conditional noindex meta tags - только для Vercel */}
         <ConditionalNoIndex />
         
+        {/* Service Worker для управления кэшем */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                    })
+                    .catch((error) => {
+                    });
+                });
+              }
+            `,
+          }}
+        />
+        
         {/* Глобальная JSON-LD разметка организации для всех страниц */}
         <OrganizationJsonLd />
- 
       </head>
       <body className={inter.className}>
         <div className="flex min-h-screen flex-col">
@@ -159,21 +175,6 @@ export default function RootLayout({
         <MobileExitBottomSheet />
         <Toaster />
         <CacheBuster />
-
-        {/* Service Worker */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                setTimeout(function() {
-                  window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/sw.js').catch(() => {});
-                  });
-                }, 1000);
-              }
-            `,
-          }}
-        />
       </body>
     </html>
   );
