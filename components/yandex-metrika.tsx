@@ -1,78 +1,142 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
+
+const YM_ID = 104700931;
+const PRODUCTION_HOSTNAME = 'salutgrad.ru';
+const SCRIPT_SRC = `https://mc.yandex.ru/metrika/tag.js?id=${YM_ID}`;
 
 /**
- * Компонент для загрузки Яндекс.Метрики только на клиенте
- * Решает проблему с SSR, когда скрипт не выполняется на клиенте
+ * Компонент для загрузки и управления Яндекс.Метрикой в SPA.
+ *  - Инициализирует счётчик с defer:true (без автоматических просмотров)
+ *  - Отправляет hit при каждом изменении маршрута
  */
 export function YandexMetrika() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const lastSentUrlRef = useRef<string | null>(null);
+
+  const relativeUrl = useMemo(() => {
+    if (!pathname) {
+      return '/';
+    }
+    const search = searchParams?.toString();
+    return search ? `${pathname}?${search}` : pathname;
+  }, [pathname, searchParams]);
+
   useEffect(() => {
-    // Загружаем Метрику только на клиенте
     if (typeof window === 'undefined') {
       return;
     }
-
-    // Проверяем, не загружена ли уже Метрика
-    const existingScript = document.querySelector('script[src*="mc.yandex.ru/metrika/tag.js"]');
-    if (existingScript) {
-      console.log('Metrika: script already exists');
+    if (window.location.hostname !== PRODUCTION_HOSTNAME) {
       return;
     }
 
-    // Создаём функцию ym, если её ещё нет
-    (window as any).ym = (window as any).ym || function() {
-      ((window as any).ym.a = (window as any).ym.a || []).push(arguments);
-    };
-    (window as any).ym.l = Number(new Date());
+    const w = window as any;
+    const initFlagKey = `__ymInit_${YM_ID}`;
 
-    // Создаём и добавляем скрипт
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.async = true;
-    script.src = 'https://mc.yandex.ru/metrika/tag.js?id=104700931';
-    
-    script.onload = function() {
-      console.log('Metrika: script loaded successfully');
-      // Инициализируем Метрику после загрузки скрипта
-      if (typeof (window as any).ym === 'function') {
-        try {
-          (window as any).ym(104700931, 'init', {
-            ssr: true,
-            webvisor: true,
-            clickmap: true,
-            ecommerce: "dataLayer",
-            accurateTrackBounce: true,
-            trackLinks: true
-          });
-          console.log('Metrika: initialized successfully');
-        } catch (err) {
-          console.error('Metrika: init error', err);
-        }
+    const ensureYmFunction = () => {
+      if (typeof w.ym === 'function') {
+        return w.ym;
       }
-    };
-    
-    script.onerror = function() {
-      console.error('Metrika: script load error');
+
+      const queueFn: any = function (...args: unknown[]) {
+        (queueFn.a = queueFn.a || []).push(args);
+      };
+      queueFn.l = Number(new Date());
+      w.ym = queueFn;
+
+      return queueFn;
     };
 
-    const firstScript = document.getElementsByTagName('script')[0];
-    if (firstScript && firstScript.parentNode) {
-      firstScript.parentNode.insertBefore(script, firstScript);
-      console.log('Metrika: script tag created');
-    } else {
-      document.head.appendChild(script);
-      console.log('Metrika: script tag appended to head');
+    const ymFn = ensureYmFunction();
+
+    if (!w[initFlagKey]) {
+      try {
+        ymFn(YM_ID, 'init', {
+          defer: true,
+          webvisor: true,
+          clickmap: true,
+          trackLinks: true,
+          ecommerce: 'dataLayer',
+          accurateTrackBounce: true,
+        });
+        w[initFlagKey] = true;
+      } catch (error) {
+        console.warn('Yandex Metrika: init error', error);
+      }
+    }
+
+    if (!document.querySelector<HTMLScriptElement>(`script[src="${SCRIPT_SRC}"]`)) {
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = SCRIPT_SRC;
+      script.onerror = function (error) {
+        console.warn('Yandex Metrika: script load error', error);
+      };
+
+      const firstScript = document.getElementsByTagName('script')[0];
+      if (firstScript?.parentNode) {
+        firstScript.parentNode.insertBefore(script, firstScript);
+      } else {
+        document.head.appendChild(script);
+      }
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (window.location.hostname !== PRODUCTION_HOSTNAME) {
+      return;
+    }
+    if (!relativeUrl) {
+      return;
+    }
+
+    const w = window as any;
+    if (typeof w.ym !== 'function') {
+      return;
+    }
+
+    if (lastSentUrlRef.current === relativeUrl) {
+      return;
+    }
+
+    const absoluteUrl = `${window.location.origin}${relativeUrl}`;
+    const referer = lastSentUrlRef.current
+      ? `${window.location.origin}${lastSentUrlRef.current}`
+      : document.referrer || undefined;
+
+    try {
+      w.ym(
+        YM_ID,
+        'hit',
+        absoluteUrl,
+        referer
+          ? {
+              referer,
+              title: document.title,
+            }
+          : {
+              title: document.title,
+            }
+      );
+      lastSentUrlRef.current = relativeUrl;
+    } catch (error) {
+      console.warn('Yandex Metrika: hit error', error);
+    }
+  }, [relativeUrl]);
+
   return (
     <>
-      {/* noscript пиксель для пользователей без JS */}
       <noscript>
         <div>
           <img
-            src="https://mc.yandex.ru/watch/104700931"
+            src={`https://mc.yandex.ru/watch/${YM_ID}`}
             style={{ position: 'absolute', left: '-9999px' }}
             alt=""
           />

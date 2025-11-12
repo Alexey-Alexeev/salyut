@@ -137,11 +137,17 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
   useEffect(() => {
     // Выполняем только после монтирования, чтобы избежать hydration mismatch
     if (isMounted && typeof window !== 'undefined') {
-      if (pathname === '/catalog') {
-        const currentUrl = `/catalog${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
-        sessionStorage.setItem('catalogReturnUrl', currentUrl);
-      } else if (pathname === '/') {
-        sessionStorage.setItem('homeReturnUrl', '/');
+      try {
+        if (pathname === '/catalog') {
+          const currentUrl = `/catalog${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+          sessionStorage.setItem('catalogReturnUrl', currentUrl);
+        } else if (pathname === '/') {
+          sessionStorage.setItem('homeReturnUrl', '/');
+        }
+      } catch (error) {
+        // Игнорируем ошибки sessionStorage (например, QuotaExceededError или блокировка в инкогнито)
+        // Не прерываем выполнение кода, чтобы не влиять на другие компоненты
+        console.warn('Не удалось сохранить URL в sessionStorage:', error);
       }
     }
   }, [isMounted, pathname, searchParams.toString()]);
@@ -149,11 +155,17 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
   // Сохраняем позицию прокрутки перед переходом в карточку товара
   const handleProductClick = () => {
     if (typeof window !== 'undefined') {
-      const scrollY = window.scrollY;
-      if (pathname === '/catalog') {
-        sessionStorage.setItem('catalogScrollPosition', scrollY.toString());
-      } else if (pathname === '/') {
-        sessionStorage.setItem('homeScrollPosition', scrollY.toString());
+      try {
+        const scrollY = window.scrollY;
+        if (pathname === '/catalog') {
+          sessionStorage.setItem('catalogScrollPosition', scrollY.toString());
+        } else if (pathname === '/') {
+          sessionStorage.setItem('homeScrollPosition', scrollY.toString());
+        }
+      } catch (error) {
+        // Игнорируем ошибки sessionStorage (например, QuotaExceededError или блокировка в инкогнито)
+        // Не прерываем выполнение кода, чтобы не влиять на другие компоненты
+        console.warn('Не удалось сохранить позицию прокрутки в sessionStorage:', error);
       }
     }
   };

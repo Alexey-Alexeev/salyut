@@ -109,8 +109,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             const currentPage = currentPageParam ? parseInt(currentPageParam, 10) : 1;
             
             // Проверяем, вернулись ли мы в каталог из карточки товара
-            const savedScrollPosition = sessionStorage.getItem('catalogScrollPosition');
-            const returnUrl = sessionStorage.getItem('catalogReturnUrl');
+            let savedScrollPosition: string | null = null;
+            let returnUrl: string | null = null;
+            try {
+                savedScrollPosition = sessionStorage.getItem('catalogScrollPosition');
+                returnUrl = sessionStorage.getItem('catalogReturnUrl');
+            } catch (error) {
+                console.warn('Не удалось прочитать данные из sessionStorage:', error);
+            }
             const returnPageParam = returnUrl ? new URLSearchParams(returnUrl.split('?')[1] || '').get('page') : null;
             const returnPage = returnPageParam ? parseInt(returnPageParam, 10) : 1;
             
@@ -118,8 +124,12 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 // Если текущая страница меньше сохраненной страницы возврата, значит вернулись назад
                 // и это не возврат из карточки товара, а возврат между страницами каталога
                 if (currentPage < returnPage) {
-                    sessionStorage.removeItem('catalogScrollPosition');
-                    sessionStorage.removeItem('catalogReturnUrl');
+                    try {
+                        sessionStorage.removeItem('catalogScrollPosition');
+                        sessionStorage.removeItem('catalogReturnUrl');
+                    } catch (error) {
+                        console.warn('Не удалось удалить данные из sessionStorage:', error);
+                    }
                     setTimeout(() => {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }, 100);
@@ -166,21 +176,27 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         if (typeof window !== 'undefined') {
             // Используем небольшую задержку, чтобы дать время router.replace обновить URL
             const timeoutId = setTimeout(() => {
-                // Используем window.location.search для получения всех параметров
-                const searchParams = new URLSearchParams(window.location.search);
-                
-                // Если в URL нет параметра page, но pagination.page > 1, добавляем его
-                if (!searchParams.has('page') && pagination.page > 1) {
-                    searchParams.set('page', pagination.page.toString());
-                }
-                
-                const queryString = searchParams.toString();
-                const currentUrl = `/catalog${queryString ? `?${queryString}` : ''}`;
-                
-                // Сохраняем только если URL изменился
-                if (currentUrl !== lastSavedUrlRef.current) {
-                    sessionStorage.setItem('catalogReturnUrl', currentUrl);
-                    lastSavedUrlRef.current = currentUrl;
+                try {
+                    // Используем window.location.search для получения всех параметров
+                    const searchParams = new URLSearchParams(window.location.search);
+                    
+                    // Если в URL нет параметра page, но pagination.page > 1, добавляем его
+                    if (!searchParams.has('page') && pagination.page > 1) {
+                        searchParams.set('page', pagination.page.toString());
+                    }
+                    
+                    const queryString = searchParams.toString();
+                    const currentUrl = `/catalog${queryString ? `?${queryString}` : ''}`;
+                    
+                    // Сохраняем только если URL изменился
+                    if (currentUrl !== lastSavedUrlRef.current) {
+                        sessionStorage.setItem('catalogReturnUrl', currentUrl);
+                        lastSavedUrlRef.current = currentUrl;
+                    }
+                } catch (error) {
+                    // Игнорируем ошибки sessionStorage (например, QuotaExceededError или блокировка в инкогнито)
+                    // Не прерываем выполнение кода, чтобы не влиять на другие компоненты
+                    console.warn('Не удалось сохранить URL каталога в sessionStorage:', error);
                 }
             }, 100);
             
@@ -205,8 +221,13 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
-                    const scrollY = window.scrollY;
-                    sessionStorage.setItem('catalogScrollPosition', scrollY.toString());
+                    try {
+                        const scrollY = window.scrollY;
+                        sessionStorage.setItem('catalogScrollPosition', scrollY.toString());
+                    } catch (error) {
+                        // Игнорируем ошибки sessionStorage
+                        console.warn('Не удалось сохранить позицию прокрутки:', error);
+                    }
                 }, 150);
             };
 
@@ -219,8 +240,13 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     return;
                 }
                 
-                const scrollY = window.scrollY;
-                sessionStorage.setItem('catalogScrollPosition', scrollY.toString());
+                try {
+                    const scrollY = window.scrollY;
+                    sessionStorage.setItem('catalogScrollPosition', scrollY.toString());
+                } catch (error) {
+                    // Игнорируем ошибки sessionStorage
+                    console.warn('Не удалось сохранить позицию прокрутки:', error);
+                }
             };
 
             window.addEventListener('beforeunload', handleBeforeUnload);
@@ -236,25 +262,26 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     // Восстанавливаем позицию прокрутки при возврате в каталог
     useEffect(() => {
         if (typeof window !== 'undefined' && !scrollRestoredRef.current) {
-            // Жестко отключаем восстановление, если только что была пагинация
-            const disableOnce = sessionStorage.getItem('catalogDisableRestore');
-            if (disableOnce) {
-                sessionStorage.removeItem('catalogDisableRestore');
-                scrollRestoredRef.current = true;
-                setIsRestoringScroll(false);
-                return;
-            }
+            try {
+                // Жестко отключаем восстановление, если только что была пагинация
+                const disableOnce = sessionStorage.getItem('catalogDisableRestore');
+                if (disableOnce) {
+                    sessionStorage.removeItem('catalogDisableRestore');
+                    scrollRestoredRef.current = true;
+                    setIsRestoringScroll(false);
+                    return;
+                }
 
-            // Проверяем, вернулись ли мы из карточки товара
-            const savedScrollPosition = sessionStorage.getItem('catalogScrollPosition');
-            const returnUrl = sessionStorage.getItem('catalogReturnUrl');
-            
-            // Нормализуем pathname (убираем слеш в конце)
-            const currentPathname = window.location.pathname.replace(/\/$/, '') || '/';
-            const isCatalogPage = currentPathname === '/catalog';
-            
-            // Если есть сохраненная позиция и мы на странице каталога
-            if (savedScrollPosition && returnUrl && isCatalogPage) {
+                // Проверяем, вернулись ли мы из карточки товара
+                const savedScrollPosition = sessionStorage.getItem('catalogScrollPosition');
+                const returnUrl = sessionStorage.getItem('catalogReturnUrl');
+                
+                // Нормализуем pathname (убираем слеш в конце)
+                const currentPathname = window.location.pathname.replace(/\/$/, '') || '/';
+                const isCatalogPage = currentPathname === '/catalog';
+                
+                // Если есть сохраненная позиция и мы на странице каталога
+                if (savedScrollPosition && returnUrl && isCatalogPage) {
                 const scrollY = parseInt(savedScrollPosition, 10);
                 
                 if (!isNaN(scrollY) && scrollY >= 0) {
@@ -304,7 +331,11 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                                 restoreScroll();
                             } else {
                                 // Удаляем сохраненную позицию после восстановления
-                                sessionStorage.removeItem('catalogScrollPosition');
+                                try {
+                                    sessionStorage.removeItem('catalogScrollPosition');
+                                } catch (error) {
+                                    console.warn('Не удалось удалить позицию прокрутки:', error);
+                                }
                                 scrollRestoredRef.current = true;
                                 // Скрываем лоадер после восстановления позиции
                                 setIsRestoringScroll(false);
@@ -354,46 +385,56 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
                     return () => clearTimeout(restoreTimeout);
                 }
-            } else {
-                // Скрываем лоадер, если условия не выполнены
-                setIsRestoringScroll(false);
-                
-                // Получаем текущую страницу из URL (один раз)
-                const currentPageParam = urlSearchParams.get('page');
-                const currentPage = currentPageParam ? parseInt(currentPageParam, 10) : 1;
-                
-                // Если нет сохраненной позиции, но мы на странице каталога,
-                // и это возврат назад между страницами, прокручиваем наверх
-                if (!savedScrollPosition && isCatalogPage) {
-                    // Если вернулись на предыдущую страницу (меньшую), прокручиваем наверх
-                    if (currentPage < previousPageRef.current) {
-                        setTimeout(() => {
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }, 100);
-                    }
-                }
-                
-                // Проверяем, вернулись ли мы на предыдущую страницу каталога (не из карточки товара)
-                // Если да, очищаем сохраненную позицию прокрутки из карточки товара и прокручиваем наверх
-                if (savedScrollPosition && returnUrl && isCatalogPage) {
-                    const returnPageParam = returnUrl ? new URLSearchParams(returnUrl.split('?')[1] || '').get('page') : null;
-                    const returnPage = returnPageParam ? parseInt(returnPageParam, 10) : 1;
+                } else {
+                    // Скрываем лоадер, если условия не выполнены
+                    setIsRestoringScroll(false);
                     
-                    // Если текущая страница меньше сохраненной страницы возврата, значит вернулись назад
-                    // и это не возврат из карточки товара, а возврат между страницами каталога
-                    if (currentPage < returnPage) {
-                        sessionStorage.removeItem('catalogScrollPosition');
-                        sessionStorage.removeItem('catalogReturnUrl');
-                        setTimeout(() => {
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }, 100);
+                    // Получаем текущую страницу из URL (один раз)
+                    const currentPageParam = urlSearchParams.get('page');
+                    const currentPage = currentPageParam ? parseInt(currentPageParam, 10) : 1;
+                    
+                    // Если нет сохраненной позиции, но мы на странице каталога,
+                    // и это возврат назад между страницами, прокручиваем наверх
+                    if (!savedScrollPosition && isCatalogPage) {
+                        // Если вернулись на предыдущую страницу (меньшую), прокручиваем наверх
+                        if (currentPage < previousPageRef.current) {
+                            setTimeout(() => {
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }, 100);
+                        }
+                    }
+                    
+                    // Проверяем, вернулись ли мы на предыдущую страницу каталога (не из карточки товара)
+                    // Если да, очищаем сохраненную позицию прокрутки из карточки товара и прокручиваем наверх
+                    if (savedScrollPosition && returnUrl && isCatalogPage) {
+                        const returnPageParam = returnUrl ? new URLSearchParams(returnUrl.split('?')[1] || '').get('page') : null;
+                        const returnPage = returnPageParam ? parseInt(returnPageParam, 10) : 1;
+                        
+                        // Если текущая страница меньше сохраненной страницы возврата, значит вернулись назад
+                        // и это не возврат из карточки товара, а возврат между страницами каталога
+                        if (currentPage < returnPage) {
+                            try {
+                                sessionStorage.removeItem('catalogScrollPosition');
+                                sessionStorage.removeItem('catalogReturnUrl');
+                            } catch (error) {
+                                console.warn('Не удалось удалить данные из sessionStorage:', error);
+                            }
+                            setTimeout(() => {
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }, 100);
+                        }
+                    }
+                    
+                    // Обновляем предыдущую страницу
+                    if (isCatalogPage) {
+                        previousPageRef.current = currentPage;
                     }
                 }
-                
-                // Обновляем предыдущую страницу
-                if (isCatalogPage) {
-                    previousPageRef.current = currentPage;
-                }
+            } catch (error) {
+                // Игнорируем ошибки sessionStorage (например, QuotaExceededError или блокировка в инкогнито)
+                // Не прерываем выполнение кода, чтобы не влиять на другие компоненты
+                console.warn('Ошибка при работе с sessionStorage:', error);
+                setIsRestoringScroll(false);
             }
         } else {
             // Скрываем лоадер, если восстановление уже было
@@ -404,10 +445,14 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     // Сбрасываем флаг восстановления прокрутки при изменении URL или страницы
     // НО только если нет сохраненной позиции прокрутки (т.е. это не возврат из карточки товара)
     useEffect(() => {
-        const savedScrollPosition = sessionStorage.getItem('catalogScrollPosition');
-        // Сбрасываем флаг только если нет сохраненной позиции (т.е. это не возврат из карточки товара)
-        if (!savedScrollPosition) {
-            scrollRestoredRef.current = false;
+        try {
+            const savedScrollPosition = sessionStorage.getItem('catalogScrollPosition');
+            // Сбрасываем флаг только если нет сохраненной позиции (т.е. это не возврат из карточки товара)
+            if (!savedScrollPosition) {
+                scrollRestoredRef.current = false;
+            }
+        } catch (error) {
+            console.warn('Не удалось прочитать данные из sessionStorage:', error);
         }
         
         // Обновляем предыдущую страницу при изменении страницы
@@ -1424,11 +1469,15 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Очищаем сохраненную позицию прокрутки при смене страницы через пагинацию
         // чтобы эффект восстановления не перезаписывал скролл наверх
         if (typeof window !== 'undefined') {
-            sessionStorage.removeItem('catalogScrollPosition');
-            // Также очищаем URL возврата, чтобы не определять переход как возврат из карточки
-            sessionStorage.removeItem('catalogReturnUrl');
-            // Устанавливаем одноразовый флаг, чтобы полностью отключить восстановление на следующий рендер
-            sessionStorage.setItem('catalogDisableRestore', '1');
+            try {
+                sessionStorage.removeItem('catalogScrollPosition');
+                // Также очищаем URL возврата, чтобы не определять переход как возврат из карточки
+                sessionStorage.removeItem('catalogReturnUrl');
+                // Устанавливаем одноразовый флаг, чтобы полностью отключить восстановление на следующий рендер
+                sessionStorage.setItem('catalogDisableRestore', '1');
+            } catch (error) {
+                console.warn('Не удалось обновить данные в sessionStorage:', error);
+            }
             scrollRestoredRef.current = true; // Устанавливаем флаг, чтобы эффект восстановления не сработал
             setIsRestoringScroll(false); // Скрываем лоадер восстановления
             // Обновляем предыдущую страницу
