@@ -18,6 +18,7 @@ interface UseCatalogUrlSyncProps {
     onShotsToValueChange: (value: string) => void;
     onInitializingChange: (isInitializing: boolean) => void;
     onLastPageRefUpdate?: (page: number) => void;
+    isInitializingFromUrlRef?: React.MutableRefObject<boolean>;
 }
 
 /**
@@ -39,6 +40,7 @@ export function useCatalogUrlSync({
     onShotsToValueChange,
     onInitializingChange,
     onLastPageRefUpdate,
+    isInitializingFromUrlRef: externalIsInitializingFromUrlRef,
 }: UseCatalogUrlSyncProps) {
     const router = useRouter();
     const urlSearchParams = useSearchParams();
@@ -47,7 +49,9 @@ export function useCatalogUrlSync({
     const hasInitializedRef = useRef(false);
     
     // Ref для отслеживания, идет ли инициализация из URL
-    const isInitializingFromUrlRef = useRef(false);
+    // Используем внешний ref, если он передан, иначе создаем свой
+    const internalIsInitializingFromUrlRef = useRef(false);
+    const isInitializingFromUrlRef = externalIsInitializingFromUrlRef || internalIsInitializingFromUrlRef;
     
     // Ref для отслеживания, обновляется ли URL программно
     const isUpdatingURLRef = useRef(false);
@@ -402,7 +406,6 @@ export function useCatalogUrlSync({
 
     return {
         updateURL,
-        isInitializingFromUrlRef,
         isUpdatingURLRef,
     };
 }

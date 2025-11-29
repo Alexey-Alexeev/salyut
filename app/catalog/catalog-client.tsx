@@ -13,13 +13,13 @@ import { CatalogPaginationInfo } from '@/components/catalog/catalog-pagination-i
 import { ProductsGrid } from '@/components/catalog/products-grid';
 import { CatalogEmptyState } from '@/components/catalog/catalog-empty-state';
 import { SinglePetardProductLayout } from '@/components/catalog/single-petard-product-layout';
-import { fetchProducts } from '@/lib/api-client';
 import { PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 import { CatalogCanonical } from '@/components/catalog/catalog-canonical';
 import { findSimilarProducts } from '@/lib/similar-products';
 import { useCatalogScrollRestore } from '@/hooks/use-catalog-scroll-restore';
 import { useCatalogUrlSync } from '@/hooks/use-catalog-url-sync';
 import { useCatalogFilters, FilterState } from '@/hooks/use-catalog-filters';
+import { useCatalogProducts } from '@/hooks/use-catalog-products';
 
 // Типы
 interface Category {
@@ -79,16 +79,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     // Основное состояние - инициализируем из server data
     const [categories] = useState<Category[]>(initialData.categories);
     const [products, setProducts] = useState<Product[]>(initialData.products);
-    const [filteredProducts, setFilteredProducts] = useState<Product[]>(initialData.products);
-    const [allProducts, setAllProducts] = useState<Product[]>(initialData.products); // Все товары для поиска похожих
-    const [popularProducts, setPopularProducts] = useState<Product[]>([]); // Популярные товары для блока "Возможно вы имели в виду"
     const [loading, setLoading] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
-    const [pagination, setPagination] = useState(initialData.pagination);
-
-    // Сохраняем исходные данные для возврата при очистке фильтров
-    const initialPagination = useRef(initialData.pagination);
-    const initialProducts = useRef(initialData.products);
 
     // Вычисляем min/max значения залпов из всех товаров
     const calculateShotsStats = useCallback((productsList: Product[]) => {
@@ -157,21 +149,10 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         filtersRef.current = filters;
     }, [filters]);
 
-    useEffect(() => {
-        const stats = calculateShotsStats(allProducts);
-        setShotsStats(stats);
-        // Обновляем min/max в фильтрах
-        updateStats({
-            shotsMin: stats.min,
-            shotsMax: stats.max,
-        });
-    }, [allProducts, calculateShotsStats, updateStats]);
-
     // Состояние интерфейса
     const [sortBy, setSortBy] = useState('popular');
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
-    const [isFiltering, setIsFiltering] = useState(false);
     const [isInitializing, setIsInitializing] = useState(true);
     const [isPaginationLoading, setIsPaginationLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
@@ -182,52 +163,11 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const priceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const shotsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const lastPageRef = useRef(1);
-    const isRequestInProgressRef = useRef(false);
-    const lastRequestIdRef = useRef<string | null>(null);
     // Ref для хранения актуальных фильтров (для использования в обработчиках с debounce)
     const filtersRef = useRef(filters);
-
-    // Хук для синхронизации URL с фильтрами
-    const { updateURL, isInitializingFromUrlRef, isUpdatingURLRef } = useCatalogUrlSync({
-        filters,
-        sortBy,
-        currentPage: pagination.page,
-        searchParams,
-        onFiltersChange: setFilters,
-        onSortByChange: setSortBy,
-        onPageChange: (page) => {
-            setPagination(prev => {
-                if (prev.page !== page) {
-                    lastPageRef.current = page;
-                    return { ...prev, page };
-                }
-                return prev;
-            });
-        },
-        onSearchValueChange: setSearchValue,
-        onPriceFromValueChange: setPriceFromValue,
-        onPriceToValueChange: setPriceToValue,
-        onShotsFromValueChange: setShotsFromValue,
-        onShotsToValueChange: setShotsToValue,
-        onInitializingChange: setIsInitializing,
-        onLastPageRefUpdate: (page) => {
-            lastPageRef.current = page;
-        },
-    });
-
-    // Хук для восстановления позиции прокрутки
-    const { isRestoringScroll, clearScrollPosition } = useCatalogScrollRestore({
-        currentPage: pagination.page,
-        filteredProductsCount: filteredProducts.length,
-        isFiltering,
-        isUpdatingURLRef,
-    });
-
-    // Стабилизируем список товаров для предотвращения лишних рендеров
-    const stableProducts = useMemo(() => {
-        return filteredProducts;
-    }, [filteredProducts]);
+    
+    // Ref для отслеживания, идет ли инициализация из URL (используется в обоих хуках)
+    const isInitializingFromUrlRef = useRef(false);
 
     // Мемоизируем построение URL параметров
     const buildApiParams = useCallback((page: number = 1) => {
@@ -271,158 +211,91 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         }
 
         return params.toString();
-    }, [sortBy, filters, categories]); // Убрали pagination.page из зависимостей
+    }, [sortBy, filters, categories]);
+
+    // Хук для управления загрузкой товаров
+    const {
+        filteredProducts,
+        allProducts,
+        popularProducts,
+        pagination,
+        setPagination,
+        isFiltering,
+        setIsFiltering,
+        lastPageRef,
+        resetRequestState,
+    } = useCatalogProducts({
+        filters,
+        sortBy,
+        categories,
+        initialData: {
+            products: initialData.products,
+            pagination: initialData.pagination,
+        },
+        isInitializingFromUrlRef,
+        setIsInitializing,
+        buildApiParams,
+        setIsPaginationLoading,
+    });
 
     // Мемоизируем функцию сброса страницы
     const resetPage = useCallback(() => {
         setPagination(prev => ({ ...prev, page: 1 }));
-    }, []);
+    }, [setPagination]);
 
-    // Применение всех фильтров через серверные запросы
+    // Хук для синхронизации URL с фильтрами
+    const { updateURL, isUpdatingURLRef } = useCatalogUrlSync({
+        filters,
+        sortBy,
+        currentPage: pagination.page,
+        searchParams,
+        onFiltersChange: setFilters,
+        onSortByChange: setSortBy,
+        onPageChange: (page) => {
+            setPagination(prev => {
+                if (prev.page !== page) {
+                    lastPageRef.current = page;
+                    return { ...prev, page };
+                }
+                return prev;
+            });
+        },
+        onSearchValueChange: setSearchValue,
+        onPriceFromValueChange: setPriceFromValue,
+        onPriceToValueChange: setPriceToValue,
+        onShotsFromValueChange: setShotsFromValue,
+        onShotsToValueChange: setShotsToValue,
+        onInitializingChange: setIsInitializing,
+        onLastPageRefUpdate: (page) => {
+            lastPageRef.current = page;
+        },
+        isInitializingFromUrlRef,
+    });
+
+    // Хук для восстановления позиции прокрутки
+    const { isRestoringScroll, clearScrollPosition } = useCatalogScrollRestore({
+        currentPage: pagination.page,
+        filteredProductsCount: filteredProducts.length,
+        isFiltering,
+        isUpdatingURLRef,
+    });
+
+    // Стабилизируем список товаров для предотвращения лишних рендеров
+    const stableProducts = useMemo(() => {
+        return filteredProducts;
+    }, [filteredProducts]);
+
     useEffect(() => {
+        const stats = calculateShotsStats(allProducts);
+        setShotsStats(stats);
+        // Обновляем min/max в фильтрах
+        updateStats({
+            shotsMin: stats.min,
+            shotsMax: stats.max,
+        });
+    }, [allProducts, calculateShotsStats, updateStats]);
 
-        const applyAllFilters = async () => {
-
-            // Не применяем фильтры при смене страницы (это делает отдельный useEffect)
-            // Но пропускаем только если страница действительно изменилась и мы еще не загрузили данные
-            if (pagination.page !== lastPageRef.current && lastPageRef.current !== 0) {
-                return;
-            }
-
-            // Не применяем фильтры, если нет активных фильтров (используем данные с сервера)
-            const hasActiveFilters = filters.search.trim() ||
-                filters.categories.length > 0 ||
-                filters.priceFrom ||
-                filters.priceTo ||
-                filters.shotsFrom ||
-                filters.shotsTo ||
-                filters.eventType;
-
-            if (!hasActiveFilters && sortBy === 'popular') {
-                // Проверяем текущую страницу из состояния и из URL
-                const currentPage = pagination.page;
-                const urlPageParam = typeof window !== 'undefined' 
-                    ? new URLSearchParams(window.location.search).get('page')
-                    : null;
-                const urlPage = urlPageParam ? parseInt(urlPageParam, 10) : null;
-                
-                // Используем страницу из URL, если она есть, иначе из состояния
-                const targetPage = (urlPage && !isNaN(urlPage) && urlPage > 0) ? urlPage : currentPage;
-                
-                // Если целевая страница > 1, загружаем данные для этой страницы
-                if (targetPage > 1) {
-                    // Загружаем данные для нужной страницы
-                    setIsFiltering(true);
-                    fetchProducts({
-                        sortBy: 'popular',
-                        page: targetPage,
-                        limit: 20,
-                    })
-                        .then(data => {
-                            setFilteredProducts(data.products || []);
-                            setPagination(data.pagination || { ...initialPagination.current, page: targetPage });
-                            lastPageRef.current = targetPage;
-                        })
-                        .catch(error => {
-                            console.error('Error fetching page:', error);
-                        })
-                        .finally(() => {
-                            setIsFiltering(false);
-                            if (isInitializing) {
-                                setIsInitializing(false);
-                                isInitializingFromUrlRef.current = false;
-                            }
-                        });
-                    return;
-                }
-                
-                // Если страница 1, возвращаемся к исходным данным с сервера
-                // Но только если мы не инициализируемся из URL с другой страницей
-                if (!isInitializingFromUrlRef.current || targetPage === 1) {
-                    setFilteredProducts(initialProducts.current);
-                    setPagination({
-                        ...initialPagination.current,
-                        page: 1,
-                    });
-                    lastPageRef.current = 1;
-                }
-                // Завершаем инициализацию, если она была активна
-                if (isInitializing) {
-                    setIsInitializing(false);
-                    isInitializingFromUrlRef.current = false;
-                }
-                return;
-            }
-
-            // Создаем уникальный идентификатор для запроса
-            const requestId = `${Date.now()}-${Math.random()}`;
-            const requestParams = buildApiParams();
-
-            // Если уже идет запрос с теми же параметрами, пропускаем
-            if (isRequestInProgressRef.current && lastRequestIdRef.current === requestParams) {
-                return;
-            }
-
-
-            isRequestInProgressRef.current = true;
-            lastRequestIdRef.current = requestParams;
-            setIsFiltering(true);
-
-            try {
-                // Преобразуем URLSearchParams в объект фильтров
-                const categoryIds = categories
-                    .filter(cat => filters.categories.includes(cat.slug))
-                    .map(cat => cat.id);
-
-                // Проверяем, есть ли параметр page в URL, если нет - используем текущую страницу из состояния
-                const urlPageParam = typeof window !== 'undefined' 
-                    ? new URLSearchParams(window.location.search).get('page')
-                    : null;
-                const urlPage = urlPageParam ? parseInt(urlPageParam, 10) : null;
-                const targetPage = (urlPage && !isNaN(urlPage) && urlPage > 0) ? urlPage : pagination.page;
-
-                const data = await fetchProducts({
-                    search: filters.search.trim() || undefined,
-                    categoryId: categoryIds.length > 0 ? categoryIds : undefined,
-                    minPrice: filters.priceFrom ? Number(filters.priceFrom) : undefined,
-                    maxPrice: filters.priceTo ? Number(filters.priceTo) : undefined,
-                    minShots: filters.shotsFrom ? Number(filters.shotsFrom) : undefined,
-                    maxShots: filters.shotsTo ? Number(filters.shotsTo) : undefined,
-                    eventType: filters.eventType || undefined,
-                    sortBy: sortBy,
-                    page: targetPage,
-                    limit: 20,
-                });
-
-                setFilteredProducts(data.products || []);
-                setPagination(data.pagination || { ...pagination, page: targetPage });
-                lastPageRef.current = targetPage;
-            } catch (error) {
-                console.error('Error applying filters:', error);
-            } finally {
-                setIsFiltering(false);
-                isRequestInProgressRef.current = false;
-                // Завершаем инициализацию после применения фильтров
-                if (isInitializing) {
-                    setIsInitializing(false);
-                    isInitializingFromUrlRef.current = false;
-                }
-            }
-        };
-
-        // Если мы инициализируемся из URL, делаем задержку перед применением фильтров
-        if (isInitializingFromUrlRef.current) {
-            const timeoutId = setTimeout(() => {
-                applyAllFilters();
-            }, 200);
-
-            return () => {
-                clearTimeout(timeoutId);
-            };
-        }
-
-        applyAllFilters();
-    }, [filters, sortBy, buildApiParams]); // Убрали pagination и isInitializing из зависимостей
+    // Логика загрузки товаров теперь находится в useCatalogProducts
 
     // Обработчики событий
     const handleCategoryChange = useCallback(
@@ -673,9 +546,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             clearTimeout(shotsTimeoutRef.current);
         }
         // Сбрасываем флаг запроса
-        isRequestInProgressRef.current = false;
-        lastRequestIdRef.current = null;
-    }, [resetPage, updateURL, clearAll]);
+        resetRequestState();
+    }, [resetPage, updateURL, clearAll, resetRequestState]);
 
     const handlePageChange = useCallback((page: number) => {
         // Очищаем сохраненную позицию прокрутки при смене страницы через пагинацию
@@ -707,129 +579,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         }
     }, [filters, sortBy, updateURL, clearScrollPosition]);
 
-    // Отдельный useEffect для смены страницы
-    useEffect(() => {
-        // Пропускаем во время инициализации из URL
-        if (isInitializingFromUrlRef.current) {
-            return;
-        }
-        
-        if (pagination.page !== lastPageRef.current) {
-            const fetchPage = async () => {
-                setIsFiltering(true);
-
-                try {
-                    // Преобразуем URLSearchParams в объект фильтров
-                    const categoryIds = categories
-                        .filter(cat => filters.categories.includes(cat.slug))
-                        .map(cat => cat.id);
-
-                    const data = await fetchProducts({
-                        search: filters.search.trim() || undefined,
-                        categoryId: categoryIds.length > 0 ? categoryIds : undefined,
-                        minPrice: filters.priceFrom ? Number(filters.priceFrom) : undefined,
-                        maxPrice: filters.priceTo ? Number(filters.priceTo) : undefined,
-                        minShots: filters.shotsFrom ? Number(filters.shotsFrom) : undefined,
-                        maxShots: filters.shotsTo ? Number(filters.shotsTo) : undefined,
-                        eventType: filters.eventType || undefined,
-                        sortBy: sortBy,
-                        page: pagination.page,
-                        limit: 20,
-                    });
-
-                    setFilteredProducts(data.products || []);
-                    setPagination(data.pagination || pagination);
-                    lastPageRef.current = pagination.page;
-                } catch (error) {
-                    console.error('Error fetching page:', error);
-                } finally {
-                    setIsFiltering(false);
-                    setIsPaginationLoading(false);
-                }
-            };
-
-            fetchPage();
-        }
-    }, [pagination.page, categories, filters, sortBy]);
-
-    // Загрузка всех товаров для поиска похожих и популярных товаров (один раз при монтировании)
-    useEffect(() => {
-        let isMounted = true;
-        
-        const loadAllProducts = async () => {
-            try {
-                // Загружаем все товары без фильтров и пагинации
-                const data = await fetchProducts({
-                    limit: 1000, // Большой лимит для получения всех товаров
-                    sortBy: 'name',
-                });
-                
-                if (isMounted && data.products && data.products.length > 0) {
-                    setAllProducts(data.products);
-                    
-                    // Получаем популярные товары
-                    const popular = data.products
-                        .filter(p => p.is_popular === true)
-                        .sort(() => Math.random() - 0.5) // Перемешиваем случайно
-                        .slice(0, 3);
-                    
-                    if (popular.length < 3) {
-                        // Если популярных меньше 3, добавляем случайные товары
-                        const remaining = data.products
-                            .filter(p => !popular.some(pp => pp.id === p.id))
-                            .sort(() => Math.random() - 0.5)
-                            .slice(0, 3 - popular.length);
-                        popular.push(...remaining);
-                    }
-                    
-                    setPopularProducts(popular.slice(0, 3));
-                } else if (isMounted) {
-                    // Если не загрузилось, используем начальные товары
-                    setAllProducts(initialProducts.current);
-                    
-                    // Берем популярные из начальных
-                    const popular = initialProducts.current
-                        .filter(p => p.is_popular === true)
-                        .slice(0, 3);
-                    
-                    if (popular.length < 3) {
-                        const remaining = initialProducts.current
-                            .filter(p => !popular.some(pp => pp.id === p.id))
-                            .slice(0, 3 - popular.length);
-                        popular.push(...remaining);
-                    }
-                    
-                    setPopularProducts(popular.slice(0, 3));
-                }
-            } catch (error) {
-                console.error('Error loading all products for similar search:', error);
-                // В случае ошибки используем начальные товары из initialData
-                if (isMounted) {
-                    setAllProducts(initialProducts.current);
-                    
-                    const popular = initialProducts.current
-                        .filter(p => p.is_popular === true)
-                        .slice(0, 3);
-                    
-                    if (popular.length < 3) {
-                        const remaining = initialProducts.current
-                            .filter(p => !popular.some(pp => pp.id === p.id))
-                            .slice(0, 3 - popular.length);
-                        popular.push(...remaining);
-                    }
-                    
-                    setPopularProducts(popular.slice(0, 3));
-                }
-            }
-        };
-
-        // Всегда загружаем все товары для лучшего поиска похожих
-        loadAllProducts();
-        
-        return () => {
-            isMounted = false;
-        };
-    }, []); // Только при монтировании
+    // Логика загрузки товаров при смене страницы и загрузка всех товаров теперь находится в useCatalogProducts
 
     // Очистка таймаутов при размонтировании
     useEffect(() => {
@@ -843,9 +593,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             if (shotsTimeoutRef.current) {
                 clearTimeout(shotsTimeoutRef.current);
             }
-            // Сбрасываем флаг запроса
-            isRequestInProgressRef.current = false;
-            lastRequestIdRef.current = null;
         };
     }, []);
 
