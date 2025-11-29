@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { ActiveFilters } from '@/components/catalog/active-filters';
 import { CatalogSearch } from '@/components/catalog/catalog-search';
@@ -19,6 +19,8 @@ import { useCatalogFilters, FilterState } from '@/hooks/use-catalog-filters';
 import { useCatalogProducts } from '@/hooks/use-catalog-products';
 import { useCatalogFilterHandlers } from '@/hooks/use-catalog-filter-handlers';
 import { useCatalogUI } from '@/hooks/use-catalog-ui';
+import { useCatalogShotsStats } from '@/hooks/use-catalog-shots-stats';
+import { useCatalogPagination } from '@/hooks/use-catalog-pagination';
 import { Category, Product, InitialData, CatalogClientProps } from '@/types/catalog';
 import { calculateShotsStats, isPetard } from '@/lib/catalog-utils';
 import { generateCatalogStructuredData } from '@/lib/catalog-structured-data';
@@ -67,11 +69,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         },
     });
 
-    // Обновляем ref при изменении фильтров
-    useEffect(() => {
-        filtersRef.current = filters;
-    }, [filters]);
-
     // Состояние интерфейса
     const [sortBy, setSortBy] = useState('popular');
     const [isInitializing, setIsInitializing] = useState(true);
@@ -92,8 +89,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         isSearching,
         setIsSearching,
     } = useCatalogUI();
-    // Ref для хранения актуальных фильтров (для использования в обработчиках с debounce)
-    const filtersRef = useRef(filters);
     
     // Ref для отслеживания, идет ли инициализация из URL (используется в обоих хуках)
     const isInitializingFromUrlRef = useRef(false);
@@ -164,19 +159,11 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         isUpdatingURLRef,
     });
 
-    // Стабилизируем список товаров для предотвращения лишних рендеров
-    const stableProducts = useMemo(() => {
-        return filteredProducts;
-    }, [filteredProducts]);
-
-    useEffect(() => {
-        const stats = calculateShotsStats(allProducts);
-        // Обновляем min/max в фильтрах
-        updateStats({
-            shotsMin: stats.min,
-            shotsMax: stats.max,
-        });
-    }, [allProducts, updateStats]);
+    // Хук для управления статистикой залпов
+    useCatalogShotsStats({
+        allProducts,
+        updateStats,
+    });
 
     // Хук для обработчиков фильтров
     const {
@@ -225,7 +212,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         setShotsFromValue,
         setShotsToValue,
         setIsSearching,
-        filtersRef,
     });
 
     // Обертка для handleClearAllFilters с дополнительной логикой
@@ -234,35 +220,16 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         resetRequestState();
     }, [handleClearAllFiltersFromHook, resetRequestState]);
 
-    const handlePageChange = useCallback((page: number) => {
-        // Очищаем сохраненную позицию прокрутки при смене страницы через пагинацию
-        clearScrollPosition();
-        
-        setPagination(prev => ({
-            ...prev,
-            page,
-        }));
-        
-        // Обновляем URL с параметром page и создаем запись в истории браузера
-        updateURL(filters, sortBy, page, true);
-        
-        // Показываем loader в мобильной версии вместо скролла
-        if (typeof window !== 'undefined' && window.innerWidth < 768) {
-            setIsPaginationLoading(true);
-        }
-
-         // Плавный скролл наверх при смене страницы
-         if (typeof window !== 'undefined') {
-            // Используем небольшую задержку, чтобы убедиться, что скролл выполнится после обновления страницы
-            setTimeout(() => {
-                try {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                } catch {
-                    window.scrollTo(0, 0);
-                }
-            }, 50);
-        }
-    }, [filters, sortBy, updateURL, clearScrollPosition]);
+    // Хук для управления пагинацией
+    const { handlePageChange } = useCatalogPagination({
+        filters,
+        sortBy,
+        pagination,
+        setPagination,
+        updateURL,
+        clearScrollPosition,
+        setIsPaginationLoading,
+    });
 
     // Логика загрузки товаров при смене страницы и загрузка всех товаров теперь находится в useCatalogProducts
 
@@ -436,10 +403,10 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
                     {/* Сетка товаров с мотивационным блоком для одного товара-петарды */}
                     {!isFiltering && filteredProducts.length === 1 && isPetard(filteredProducts[0]) ? (
-                        <SinglePetardProductLayout products={stableProducts} />
+                        <SinglePetardProductLayout products={filteredProducts} />
                     ) : (
                         <ProductsGrid
-                            products={stableProducts}
+                            products={filteredProducts}
                             viewMode={viewMode}
                             isLoading={isFiltering}
                         />

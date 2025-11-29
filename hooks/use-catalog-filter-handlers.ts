@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { FilterState } from './use-catalog-filters';
 
 interface UseCatalogFilterHandlersProps {
@@ -36,8 +36,6 @@ interface UseCatalogFilterHandlersProps {
     setShotsFromValue: (value: string) => void;
     setShotsToValue: (value: string) => void;
     setIsSearching: (value: boolean) => void;
-    // Ref для актуальных фильтров (для debounce)
-    filtersRef: React.MutableRefObject<FilterState>;
 }
 
 /**
@@ -72,8 +70,15 @@ export function useCatalogFilterHandlers({
     setShotsFromValue,
     setShotsToValue,
     setIsSearching,
-    filtersRef,
 }: UseCatalogFilterHandlersProps) {
+    // Ref для хранения актуальных фильтров (для использования в обработчиках с debounce)
+    const filtersRef = useRef(filters);
+    
+    // Обновляем ref при изменении фильтров
+    useEffect(() => {
+        filtersRef.current = filters;
+    }, [filters]);
+
     // Refs для debounce таймаутов
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const priceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
