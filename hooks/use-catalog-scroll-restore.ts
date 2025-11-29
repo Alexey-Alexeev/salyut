@@ -185,7 +185,8 @@ export function useCatalogScrollRestore({
         return () => {
             window.removeEventListener('popstate', handlePopState);
         };
-    }, [isUpdatingURLRef]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // isUpdatingURLRef - это ref, не нужно в зависимостях
 
     // Восстанавливаем позицию прокрутки при возврате в каталог
     useEffect(() => {

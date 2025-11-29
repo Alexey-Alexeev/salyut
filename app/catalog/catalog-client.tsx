@@ -18,6 +18,7 @@ import { PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 import { CatalogCanonical } from '@/components/catalog/catalog-canonical';
 import { findSimilarProducts } from '@/lib/similar-products';
 import { useCatalogScrollRestore } from '@/hooks/use-catalog-scroll-restore';
+import { useCatalogUrlSync } from '@/hooks/use-catalog-url-sync';
 
 // Типы
 interface Category {
@@ -168,12 +169,36 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const priceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const shotsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const lastPageRef = useRef(1);
-    const hasInitializedRef = useRef(false);
-    const isInitializingFromUrlRef = useRef(false);
-    const initializationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const isRequestInProgressRef = useRef(false);
     const lastRequestIdRef = useRef<string | null>(null);
-    const isUpdatingURLRef = useRef(false);
+
+    // Хук для синхронизации URL с фильтрами
+    const { updateURL, isInitializingFromUrlRef, isUpdatingURLRef } = useCatalogUrlSync({
+        filters,
+        sortBy,
+        currentPage: pagination.page,
+        searchParams,
+        onFiltersChange: setFilters,
+        onSortByChange: setSortBy,
+        onPageChange: (page) => {
+            setPagination(prev => {
+                if (prev.page !== page) {
+                    lastPageRef.current = page;
+                    return { ...prev, page };
+                }
+                return prev;
+            });
+        },
+        onSearchValueChange: setSearchValue,
+        onPriceFromValueChange: setPriceFromValue,
+        onPriceToValueChange: setPriceToValue,
+        onShotsFromValueChange: setShotsFromValue,
+        onShotsToValueChange: setShotsToValue,
+        onInitializingChange: setIsInitializing,
+        onLastPageRefUpdate: (page) => {
+            lastPageRef.current = page;
+        },
+    });
 
     // Хук для восстановления позиции прокрутки
     const { isRestoringScroll, clearScrollPosition } = useCatalogScrollRestore({
@@ -236,354 +261,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const resetPage = useCallback(() => {
         setPagination(prev => ({ ...prev, page: 1 }));
     }, []);
-
-    // Функция для обновления URL с фильтрами
-    const updateURL = useCallback((newFilters: Partial<FilterState>, newSortBy?: string, newPage?: number, addToHistory: boolean = false) => {
-        // Используем текущий URL для получения параметров
-        const currentUrl = typeof window !== 'undefined' ? window.location.search : '';
-        const params = new URLSearchParams(currentUrl);
-
-        // Очищаем существующие параметры фильтров
-        params.delete('search');
-        params.delete('category');
-        params.delete('minPrice');
-        params.delete('maxPrice');
-        params.delete('minShots');
-        params.delete('maxShots');
-        params.delete('eventType');
-        params.delete('sortBy');
-        params.delete('page');
-
-        // Добавляем новые параметры только если они не пустые
-        if (newFilters.search?.trim()) {
-            params.set('search', newFilters.search.trim());
-        }
-
-        if (newFilters.categories && newFilters.categories.length > 0) {
-            newFilters.categories.forEach(category => {
-                params.append('category', category);
-            });
-        }
-
-        if (newFilters.priceFrom?.trim()) {
-            params.set('minPrice', newFilters.priceFrom.trim());
-        }
-
-        if (newFilters.priceTo?.trim()) {
-            params.set('maxPrice', newFilters.priceTo.trim());
-        }
-
-        if (newFilters.shotsFrom?.trim()) {
-            params.set('minShots', newFilters.shotsFrom.trim());
-        }
-
-        if (newFilters.shotsTo?.trim()) {
-            params.set('maxShots', newFilters.shotsTo.trim());
-        }
-
-        if (newFilters.eventType) {
-            params.set('eventType', newFilters.eventType);
-        }
-
-        if (newSortBy && newSortBy !== 'popular') {
-            params.set('sortBy', newSortBy);
-        }
-
-        if (newPage && newPage > 1) {
-            params.set('page', newPage.toString());
-        }
-
-        // Обновляем URL без перезагрузки страницы
-        const newURL = params.toString() ? `?${params.toString()}` : '';
-        const fullURL = `/catalog${newURL}`;
-        
-        isUpdatingURLRef.current = true;
-        
-        // Используем push для создания записи в истории при смене страницы, replace для фильтров
-        if (addToHistory) {
-            router.push(fullURL, { scroll: false });
-        } else {
-            router.replace(fullURL, { scroll: false });
-        }
-        
-        // Сбрасываем флаг после небольшой задержки, чтобы useEffect мог его увидеть
-        setTimeout(() => {
-            isUpdatingURLRef.current = false;
-        }, 100);
-    }, [router]);
-
-    // Инициализация фильтров из URL (только один раз)
-    useEffect(() => {
-        if (hasInitializedRef.current) return;
-
-        // Парсим URL параметры вручную для статического экспорта
-        let categoryParam: string | string[] | undefined;
-        let searchParam: string | undefined;
-        let minPriceParam: string | undefined;
-        let maxPriceParam: string | undefined;
-        let minShotsParam: string | undefined;
-        let maxShotsParam: string | undefined;
-        let sortByParam: string | undefined;
-        let pageParam: number = 1;
-
-        if (typeof window !== 'undefined') {
-            const urlParams = new URLSearchParams(window.location.search);
-            categoryParam = urlParams.getAll('category');
-            searchParam = urlParams.get('search') || undefined;
-            minPriceParam = urlParams.get('minPrice') || undefined;
-            maxPriceParam = urlParams.get('maxPrice') || undefined;
-            minShotsParam = urlParams.get('minShots') || undefined;
-            maxShotsParam = urlParams.get('maxShots') || undefined;
-            const eventTypeParam = urlParams.get('eventType') as 'wedding' | 'birthday' | 'new_year' | undefined;
-            sortByParam = urlParams.get('sortBy') || undefined;
-            const pageStr = urlParams.get('page');
-            pageParam = pageStr ? parseInt(pageStr, 10) : 1;
-        } else {
-            // Fallback для SSR
-            categoryParam = searchParams.category as string | string[];
-            searchParam = searchParams.search as string;
-            minPriceParam = searchParams.minPrice as string;
-            maxPriceParam = searchParams.maxPrice as string;
-            minShotsParam = searchParams.minShots as string;
-            maxShotsParam = searchParams.maxShots as string;
-            const eventTypeParam = searchParams.eventType as 'wedding' | 'birthday' | 'new_year' | undefined;
-            sortByParam = searchParams.sortBy as string;
-            const pageStr = searchParams.page as string;
-            pageParam = pageStr ? parseInt(pageStr, 10) : 1;
-        }
-
-        // Парсим категории (может быть массив)
-        const categoriesFromUrl = Array.isArray(categoryParam) ? categoryParam : (categoryParam ? [categoryParam] : []);
-
-        // Проверяем, есть ли параметры в URL (включая page)
-        const eventTypeParam = typeof window !== 'undefined' 
-            ? (new URLSearchParams(window.location.search).get('eventType') as 'wedding' | 'birthday' | 'new_year' | null)
-            : (searchParams.eventType as 'wedding' | 'birthday' | 'new_year' | undefined);
-        const hasUrlParams = (categoryParam && categoryParam.length > 0) || searchParam || minPriceParam || maxPriceParam || minShotsParam || maxShotsParam || eventTypeParam || sortByParam || (pageParam > 1);
-
-        // Устанавливаем страницу независимо от других параметров
-        if (!isNaN(pageParam) && pageParam > 0) {
-            setPagination(p => {
-                // Обновляем только если страница действительно изменилась
-                if (p.page !== pageParam) {
-                    lastPageRef.current = pageParam; // Обновляем ref ДО обновления состояния
-                    return { ...p, page: pageParam };
-                }
-                return p;
-            });
-        }
-
-        if (hasUrlParams) {
-
-            // Устанавливаем флаг инициализации из URL
-            isInitializingFromUrlRef.current = true;
-
-            // Очищаем предыдущий таймаут
-            if (initializationTimeoutRef.current) {
-                clearTimeout(initializationTimeoutRef.current);
-            }
-
-            // Устанавливаем флаг инициализации с задержкой
-            initializationTimeoutRef.current = setTimeout(() => {
-                setIsInitializing(true);
-            }, 100);
-
-            setFilters(prev => ({
-                ...prev,
-                categories: categoriesFromUrl,
-                search: searchParam || '',
-                priceFrom: minPriceParam || '',
-                priceTo: maxPriceParam || '',
-                shotsFrom: minShotsParam || '',
-                shotsTo: maxShotsParam || '',
-                eventType: eventTypeParam || null,
-            }));
-
-            if (sortByParam) {
-                setSortBy(sortByParam);
-            }
-
-            // Синхронизируем значения полей
-            if (searchParam) {
-                setSearchValue(searchParam);
-            }
-            if (minPriceParam) {
-                setPriceFromValue(minPriceParam);
-            }
-            if (maxPriceParam) {
-                setPriceToValue(maxPriceParam);
-            }
-            if (minShotsParam) {
-                setShotsFromValue(minShotsParam);
-            }
-            if (maxShotsParam) {
-                setShotsToValue(maxShotsParam);
-            }
-        } else {
-            // Если нет параметров URL, сразу завершаем инициализацию
-            setIsInitializing(false);
-        }
-
-        hasInitializedRef.current = true;
-    }, [searchParams]);
-
-    // Отслеживание изменений URL после инициализации для синхронизации фильтров
-    useEffect(() => {
-        // Пропускаем во время первичной инициализации
-        if (!hasInitializedRef.current) return;
-        // Пропускаем во время инициализации из URL
-        if (isInitializingFromUrlRef.current) return;
-        // Пропускаем, если URL был обновлен программно (через updateURL)
-        if (isUpdatingURLRef.current) {
-            return;
-        }
-
-        // Парсим текущие URL параметры
-        const categoryParam = urlSearchParams.getAll('category');
-        const searchParam = urlSearchParams.get('search');
-        const minPriceParam = urlSearchParams.get('minPrice');
-        const maxPriceParam = urlSearchParams.get('maxPrice');
-        const minShotsParam = urlSearchParams.get('minShots');
-        const maxShotsParam = urlSearchParams.get('maxShots');
-        const eventTypeParam = urlSearchParams.get('eventType') as 'wedding' | 'birthday' | 'new_year' | null;
-        const sortByParam = urlSearchParams.get('sortBy');
-        const pageParam = urlSearchParams.get('page');
-
-        // Парсим категории (может быть массив)
-        const categoriesFromUrl = Array.isArray(categoryParam) 
-            ? categoryParam 
-            : (categoryParam ? [categoryParam] : []);
-
-        // Проверяем, есть ли параметры фильтров в URL (sortBy не считается фильтром)
-        const hasUrlParams = (categoriesFromUrl.length > 0) || 
-                            searchParam || 
-                            minPriceParam || 
-                            maxPriceParam ||
-                            minShotsParam ||
-                            maxShotsParam ||
-                            eventTypeParam;
-
-        // Синхронизируем фильтры с URL
-        setFilters(prev => {
-            // Проверяем, нужно ли обновлять фильтры
-            const categoriesChanged = JSON.stringify(prev.categories.sort()) !== JSON.stringify(categoriesFromUrl.sort());
-            const searchChanged = (prev.search || '') !== (searchParam || '');
-            const priceFromChanged = (prev.priceFrom || '') !== (minPriceParam || '');
-            const priceToChanged = (prev.priceTo || '') !== (maxPriceParam || '');
-            const shotsFromChanged = (prev.shotsFrom || '') !== (minShotsParam || '');
-            const shotsToChanged = (prev.shotsTo || '') !== (maxShotsParam || '');
-            const eventTypeChanged = (prev.eventType || null) !== (eventTypeParam || null);
-
-            if (!hasUrlParams) {
-                // Если URL параметров фильтров нет, сбрасываем фильтры
-                if (prev.categories.length === 0 && 
-                    !prev.search.trim() && 
-                    !prev.priceFrom && 
-                    !prev.priceTo &&
-                    !prev.shotsFrom &&
-                    !prev.shotsTo &&
-                    !prev.eventType) {
-                    return prev; // Фильтры уже сброшены
-                }
-                return {
-                    ...prev,
-                    categories: [],
-                    search: '',
-                    priceFrom: '',
-                    priceTo: '',
-                    shotsFrom: '',
-                    shotsTo: '',
-                    eventType: null,
-                };
-            }
-
-            // Если есть параметры в URL, но фильтры не изменились, не обновляем
-            if (!categoriesChanged && !searchChanged && !priceFromChanged && !priceToChanged && !shotsFromChanged && !shotsToChanged && !eventTypeChanged) {
-                return prev;
-            }
-
-            // Восстанавливаем фильтры из URL
-            return {
-                ...prev,
-                categories: categoriesFromUrl,
-                search: searchParam || '',
-                priceFrom: minPriceParam || '',
-                priceTo: maxPriceParam || '',
-                shotsFrom: minShotsParam || '',
-                shotsTo: maxShotsParam || '',
-                eventType: eventTypeParam || null,
-            };
-        });
-
-        // Синхронизируем значения полей с URL параметрами
-        if (hasUrlParams) {
-            setSearchValue(searchParam || '');
-            setPriceFromValue(minPriceParam || '');
-            setPriceToValue(maxPriceParam || '');
-            setShotsFromValue(minShotsParam || '');
-            setShotsToValue(maxShotsParam || '');
-        } else {
-            setSearchValue('');
-            setPriceFromValue('');
-            setPriceToValue('');
-            setShotsFromValue('');
-            setShotsToValue('');
-        }
-        
-        // Синхронизируем сортировку
-        if (sortByParam) {
-            setSortBy(sortByParam);
-        } else {
-            setSortBy(prevSortBy => {
-                if (prevSortBy !== 'popular') {
-                    return 'popular';
-                }
-                return prevSortBy;
-            });
-        }
-
-        // Синхронизируем страницу
-        if (pageParam) {
-            const page = parseInt(pageParam, 10);
-            if (!isNaN(page) && page > 0) {
-                setPagination(prev => {
-                    // Обновляем только если страница действительно изменилась
-                    if (prev.page !== page) {
-                        // НЕ обновляем lastPageRef здесь, чтобы useEffect для загрузки данных сработал
-                        return { ...prev, page };
-                    }
-                    return prev;
-                });
-            }
-        } else {
-            // Если в URL нет параметра page, но мы на странице > 1, сбрасываем на 1
-            if (pagination.page > 1) {
-                // НЕ обновляем lastPageRef здесь, чтобы useEffect для загрузки данных сработал
-                setPagination(prev => ({ ...prev, page: 1 }));
-            }
-            // Не обновляем lastPageRef здесь - это сделает useEffect для загрузки данных
-        }
-    }, [urlSearchParams.toString(), pagination.page]); // Добавили pagination.page для отслеживания изменений
-
-    // Синхронизация значений полей цены с фильтрами
-    useEffect(() => {
-        // Не синхронизируем во время инициализации из URL
-        if (isInitializingFromUrlRef.current) {
-            return;
-        }
-        setPriceFromValue(filters.priceFrom);
-        setPriceToValue(filters.priceTo);
-    }, [filters.priceFrom, filters.priceTo]);
-
-    // Синхронизация значений полей залпов с фильтрами
-    useEffect(() => {
-        // Не синхронизируем во время инициализации из URL
-        if (isInitializingFromUrlRef.current) {
-            return;
-        }
-        setShotsFromValue(filters.shotsFrom);
-        setShotsToValue(filters.shotsTo);
-    }, [filters.shotsFrom, filters.shotsTo]);
 
     // Применение всех фильтров через серверные запросы
     useEffect(() => {
@@ -1274,9 +951,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             }
             if (shotsTimeoutRef.current) {
                 clearTimeout(shotsTimeoutRef.current);
-            }
-            if (initializationTimeoutRef.current) {
-                clearTimeout(initializationTimeoutRef.current);
             }
             // Сбрасываем флаг запроса
             isRequestInProgressRef.current = false;
