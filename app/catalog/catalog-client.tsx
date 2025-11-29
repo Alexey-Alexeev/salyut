@@ -19,6 +19,7 @@ import { CatalogCanonical } from '@/components/catalog/catalog-canonical';
 import { findSimilarProducts } from '@/lib/similar-products';
 import { useCatalogScrollRestore } from '@/hooks/use-catalog-scroll-restore';
 import { useCatalogUrlSync } from '@/hooks/use-catalog-url-sync';
+import { useCatalogFilters, FilterState } from '@/hooks/use-catalog-filters';
 
 // Типы
 interface Category {
@@ -42,19 +43,7 @@ interface Product {
     short_description?: string | null;
 }
 
-interface FilterState {
-    categories: string[];
-    priceFrom: string;
-    priceTo: string;
-    priceMin: number;
-    priceMax: number;
-    shotsFrom: string;
-    shotsTo: string;
-    shotsMin: number;
-    shotsMax: number;
-    search: string;
-    eventType: 'wedding' | 'birthday' | 'new_year' | null;
-}
+// FilterState импортирован из hooks/use-catalog-filters
 
 interface InitialData {
     categories: Category[];
@@ -127,31 +116,56 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const initialShotsStats = calculateShotsStats(initialData.products);
     const [shotsStats, setShotsStats] = useState(initialShotsStats);
     
+    // Состояние фильтров через useReducer
+    const {
+        filters,
+        setFilters,
+        updateStats,
+        addCategory,
+        removeCategory,
+        setPrice,
+        clearPrice,
+        setShots,
+        clearShots,
+        setSearch,
+        clearSearch,
+        setEventType,
+        clearEventType,
+        clearAll,
+        setPriceFrom,
+        setPriceTo,
+        setShotsFrom,
+        setShotsTo,
+    } = useCatalogFilters({
+        initialState: {
+            categories: [],
+            priceFrom: '',
+            priceTo: '',
+            priceMin: initialData.stats.minPrice,
+            priceMax: initialData.stats.maxPrice,
+            shotsFrom: '',
+            shotsTo: '',
+            shotsMin: initialShotsStats.min,
+            shotsMax: initialShotsStats.max,
+            search: '',
+            eventType: null,
+        },
+    });
+
+    // Обновляем ref при изменении фильтров
+    useEffect(() => {
+        filtersRef.current = filters;
+    }, [filters]);
+
     useEffect(() => {
         const stats = calculateShotsStats(allProducts);
         setShotsStats(stats);
         // Обновляем min/max в фильтрах
-        setFilters(prev => ({
-            ...prev,
+        updateStats({
             shotsMin: stats.min,
             shotsMax: stats.max,
-        }));
-    }, [allProducts, calculateShotsStats]);
-
-    // Состояние фильтров
-    const [filters, setFilters] = useState<FilterState>({
-        categories: [],
-        priceFrom: '',
-        priceTo: '',
-        priceMin: initialData.stats.minPrice,
-        priceMax: initialData.stats.maxPrice,
-        shotsFrom: '',
-        shotsTo: '',
-        shotsMin: initialShotsStats.min,
-        shotsMax: initialShotsStats.max,
-        search: '',
-        eventType: null,
-    });
+        });
+    }, [allProducts, calculateShotsStats, updateStats]);
 
     // Состояние интерфейса
     const [sortBy, setSortBy] = useState('popular');
@@ -171,6 +185,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const lastPageRef = useRef(1);
     const isRequestInProgressRef = useRef(false);
     const lastRequestIdRef = useRef<string | null>(null);
+    // Ref для хранения актуальных фильтров (для использования в обработчиках с debounce)
+    const filtersRef = useRef(filters);
 
     // Хук для синхронизации URL с фильтрами
     const { updateURL, isInitializingFromUrlRef, isUpdatingURLRef } = useCatalogUrlSync({
@@ -412,38 +428,25 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const handleCategoryChange = useCallback(
         (categorySlug: string, checked: boolean) => {
             resetPage();
+            if (checked) {
+                addCategory(categorySlug);
+            } else {
+                removeCategory(categorySlug);
+            }
+            // Вычисляем новые фильтры для updateURL
             const newCategories = checked
                 ? [...filters.categories, categorySlug]
                 : filters.categories.filter(slug => slug !== categorySlug);
-
-            const newFilters = {
-                ...filters,
-                categories: newCategories,
-            };
-
-            setFilters(prev => ({
-                ...prev,
-                categories: newCategories,
-            }));
-            updateURL(newFilters, sortBy);
+            updateURL({ ...filters, categories: newCategories }, sortBy);
         },
-        [resetPage, filters, sortBy, updateURL]
+        [resetPage, filters, sortBy, updateURL, addCategory, removeCategory]
     );
 
     const handlePriceChange = useCallback((from: string, to: string) => {
         resetPage();
-        const newFilters = {
-            ...filters,
-            priceFrom: from,
-            priceTo: to,
-        };
-        setFilters(prev => ({
-            ...prev,
-            priceFrom: from,
-            priceTo: to,
-        }));
-        updateURL(newFilters, sortBy);
-    }, [resetPage, filters, sortBy, updateURL]);
+        setPrice(from, to);
+        updateURL({ ...filters, priceFrom: from, priceTo: to }, sortBy);
+    }, [resetPage, filters, sortBy, updateURL, setPrice]);
 
     const handleSortChange = useCallback((newSortBy: string) => {
         // всегда сбрасываем страницу при смене сортировки (но сброс ТОЛЬКО по намерению)
@@ -454,60 +457,28 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
     const handleRemoveCategory = useCallback((categorySlug: string) => {
         resetPage();
+        removeCategory(categorySlug);
         const newCategories = filters.categories.filter(slug => slug !== categorySlug);
-        const newFilters = {
-            ...filters,
-            categories: newCategories,
-        };
-        setFilters(prev => ({
-            ...prev,
-            categories: newCategories,
-        }));
-        updateURL(newFilters, sortBy);
-    }, [resetPage, filters, sortBy, updateURL]);
+        updateURL({ ...filters, categories: newCategories }, sortBy);
+    }, [resetPage, filters, sortBy, updateURL, removeCategory]);
 
     const handleClearPrice = useCallback(() => {
         resetPage();
-        const newFilters = {
-            ...filters,
-            priceFrom: '',
-            priceTo: '',
-        };
-        setFilters(prev => ({
-            ...prev,
-            priceFrom: '',
-            priceTo: '',
-        }));
-        updateURL(newFilters, sortBy);
-    }, [resetPage, filters, sortBy, updateURL]);
+        clearPrice();
+        updateURL({ ...filters, priceFrom: '', priceTo: '' }, sortBy);
+    }, [resetPage, filters, sortBy, updateURL, clearPrice]);
 
     const handleShotsChange = useCallback((from: string, to: string) => {
         resetPage();
-        const newFilters = {
-            ...filters,
-            shotsFrom: from,
-            shotsTo: to,
-        };
-        setFilters(prev => ({
-            ...prev,
-            shotsFrom: from,
-            shotsTo: to,
-        }));
-        updateURL(newFilters, sortBy);
-    }, [resetPage, filters, sortBy, updateURL]);
+        setShots(from, to);
+        updateURL({ ...filters, shotsFrom: from, shotsTo: to }, sortBy);
+    }, [resetPage, filters, sortBy, updateURL, setShots]);
 
     const handleEventTypeChange = useCallback((eventType: 'wedding' | 'birthday' | 'new_year' | null) => {
         resetPage();
-        const newFilters = {
-            ...filters,
-            eventType: eventType,
-        };
-        setFilters(prev => ({
-            ...prev,
-            eventType: eventType,
-        }));
-        updateURL(newFilters, sortBy);
-    }, [resetPage, filters, sortBy, updateURL]);
+        setEventType(eventType);
+        updateURL({ ...filters, eventType }, sortBy);
+    }, [resetPage, filters, sortBy, updateURL, setEventType]);
 
     const handleShotsFromChange = useCallback((value: string) => {
         setShotsFromValue(value);
@@ -520,30 +491,19 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Если поле пустое, сразу очищаем фильтр
         if (value.trim() === '') {
             resetPage();
-            setFilters(prev => {
-                const newFilters = {
-                    ...prev,
-                    shotsFrom: '',
-                };
-                updateURL(newFilters, sortBy);
-                return newFilters;
-            });
+            setShotsFrom('');
+            updateURL({ ...filters, shotsFrom: '' }, sortBy);
             return;
         }
 
         // Устанавливаем новый таймаут для debouncing
         shotsTimeoutRef.current = setTimeout(() => {
             resetPage();
-            setFilters(prev => {
-                const newFilters = {
-                    ...prev,
-                    shotsFrom: value,
-                };
-                updateURL(newFilters, sortBy);
-                return newFilters;
-            });
+            setShotsFrom(value);
+            // Используем актуальные фильтры из ref
+            updateURL({ ...filtersRef.current, shotsFrom: value }, sortBy);
         }, 500);
-    }, [resetPage, sortBy, updateURL]);
+    }, [resetPage, sortBy, updateURL, setShotsFrom]);
 
     const handleShotsToChange = useCallback((value: string) => {
         setShotsToValue(value);
@@ -556,65 +516,38 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Если поле пустое, сразу очищаем фильтр
         if (value.trim() === '') {
             resetPage();
-            setFilters(prev => {
-                const newFilters = {
-                    ...prev,
-                    shotsTo: '',
-                };
-                updateURL(newFilters, sortBy);
-                return newFilters;
-            });
+            setShotsTo('');
+            updateURL({ ...filters, shotsTo: '' }, sortBy);
             return;
         }
 
         // Устанавливаем новый таймаут для debouncing
         shotsTimeoutRef.current = setTimeout(() => {
             resetPage();
-            setFilters(prev => {
-                const newFilters = {
-                    ...prev,
-                    shotsTo: value,
-                };
-                updateURL(newFilters, sortBy);
-                return newFilters;
-            });
+            setShotsTo(value);
+            // Используем актуальные фильтры из ref
+            updateURL({ ...filtersRef.current, shotsTo: value }, sortBy);
         }, 500);
-    }, [resetPage, sortBy, updateURL]);
+    }, [resetPage, sortBy, updateURL, setShotsTo]);
 
     const handleClearShots = useCallback(() => {
         setShotsFromValue('');
         setShotsToValue('');
         resetPage();
-        const newFilters = {
-            ...filters,
-            shotsFrom: '',
-            shotsTo: '',
-        };
-        setFilters(prev => ({
-            ...prev,
-            shotsFrom: '',
-            shotsTo: '',
-        }));
-        updateURL(newFilters, sortBy);
+        clearShots();
+        updateURL({ ...filters, shotsFrom: '', shotsTo: '' }, sortBy);
 
         // Очищаем таймаут
         if (shotsTimeoutRef.current) {
             clearTimeout(shotsTimeoutRef.current);
         }
-    }, [resetPage, filters, sortBy, updateURL]);
+    }, [resetPage, filters, sortBy, updateURL, clearShots]);
 
     const handleClearEventType = useCallback(() => {
         resetPage();
-        const newFilters = {
-            ...filters,
-            eventType: null,
-        };
-        setFilters(prev => ({
-            ...prev,
-            eventType: null,
-        }));
-        updateURL(newFilters, sortBy);
-    }, [resetPage, filters, sortBy, updateURL]);
+        clearEventType();
+        updateURL({ ...filters, eventType: null }, sortBy);
+    }, [resetPage, filters, sortBy, updateURL, clearEventType]);
 
     const handleSearchChange = useCallback((value: string) => {
         setSearchValue(value);
@@ -628,10 +561,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         if (value.trim() === '') {
             setIsSearching(false);
             resetPage();
-            setFilters(prev => ({
-                ...prev,
-                search: '',
-            }));
+            clearSearch();
             return;
         }
 
@@ -641,19 +571,12 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Устанавливаем новый таймаут для debouncing (уменьшили до 300ms)
         searchTimeoutRef.current = setTimeout(() => {
             resetPage();
-            setFilters(prev => {
-                const newFilters = {
-                    ...prev,
-                    search: value,
-                    // Сбрасываем фильтр по событию при поиске - ищем для всех событий
-                    eventType: null,
-                };
-                updateURL(newFilters, sortBy);
-                return newFilters;
-            });
+            setSearch(value); // Это также сбросит eventType согласно reducer
+            // Используем актуальные фильтры из ref
+            updateURL({ ...filtersRef.current, search: value, eventType: null }, sortBy);
             setIsSearching(false);
         }, 300); // 300ms задержка для более быстрого отклика
-    }, [resetPage, sortBy, updateURL]);
+    }, [resetPage, sortBy, updateURL, setSearch, clearSearch]);
 
     const handlePriceFromChange = useCallback((value: string) => {
         setPriceFromValue(value);
@@ -666,30 +589,19 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Если поле пустое, сразу очищаем фильтр
         if (value.trim() === '') {
             resetPage();
-            setFilters(prev => {
-                const newFilters = {
-                    ...prev,
-                    priceFrom: '',
-                };
-                updateURL(newFilters, sortBy);
-                return newFilters;
-            });
+            setPriceFrom('');
+            updateURL({ ...filters, priceFrom: '' }, sortBy);
             return;
         }
 
         // Устанавливаем новый таймаут для debouncing
         priceTimeoutRef.current = setTimeout(() => {
             resetPage();
-            setFilters(prev => {
-                const newFilters = {
-                    ...prev,
-                    priceFrom: value,
-                };
-                updateURL(newFilters, sortBy);
-                return newFilters;
-            });
+            setPriceFrom(value);
+            // Используем актуальные фильтры из ref
+            updateURL({ ...filtersRef.current, priceFrom: value }, sortBy);
         }, 500); // 500ms задержка для цены (чуть больше, чем для поиска)
-    }, [resetPage, sortBy, updateURL]);
+    }, [resetPage, sortBy, updateURL, setPriceFrom]);
 
     const handlePriceToChange = useCallback((value: string) => {
         setPriceToValue(value);
@@ -702,50 +614,32 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Если поле пустое, сразу очищаем фильтр
         if (value.trim() === '') {
             resetPage();
-            setFilters(prev => {
-                const newFilters = {
-                    ...prev,
-                    priceTo: '',
-                };
-                updateURL(newFilters, sortBy);
-                return newFilters;
-            });
+            setPriceTo('');
+            updateURL({ ...filters, priceTo: '' }, sortBy);
             return;
         }
 
         // Устанавливаем новый таймаут для debouncing
         priceTimeoutRef.current = setTimeout(() => {
             resetPage();
-            setFilters(prev => {
-                const newFilters = {
-                    ...prev,
-                    priceTo: value,
-                };
-                updateURL(newFilters, sortBy);
-                return newFilters;
-            });
+            setPriceTo(value);
+            // Используем актуальные фильтры из ref
+            updateURL({ ...filtersRef.current, priceTo: value }, sortBy);
         }, 500); // 500ms задержка для цены (чуть больше, чем для поиска)
-    }, [resetPage, sortBy, updateURL]);
+    }, [resetPage, sortBy, updateURL, setPriceTo]);
 
     const handleClearSearch = useCallback(() => {
         setSearchValue('');
         setIsSearching(false);
         resetPage();
-        const newFilters = {
-            ...filters,
-            search: '',
-        };
-        setFilters(prev => ({
-            ...prev,
-            search: '',
-        }));
-        updateURL(newFilters, sortBy);
+        clearSearch();
+        updateURL({ ...filters, search: '' }, sortBy);
 
         // Очищаем таймаут
         if (searchTimeoutRef.current) {
             clearTimeout(searchTimeoutRef.current);
         }
-    }, [resetPage, filters, sortBy, updateURL]);
+    }, [resetPage, filters, sortBy, updateURL, clearSearch]);
 
     const handleClearAllFilters = useCallback(() => {
         setSearchValue('');
@@ -756,7 +650,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         setIsSearching(false);
         resetPage();
         setSortBy('popular'); // Сбрасываем сортировку к умолчанию
-        const newFilters = {
+        clearAll();
+        const clearedFilters = {
             categories: [],
             priceFrom: '',
             priceTo: '',
@@ -765,11 +660,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             search: '',
             eventType: null,
         };
-        setFilters(prev => ({
-            ...prev,
-            ...newFilters,
-        }));
-        updateURL(newFilters, 'popular');
+        updateURL(clearedFilters, 'popular');
 
         // Очищаем таймауты
         if (searchTimeoutRef.current) {
@@ -784,7 +675,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         // Сбрасываем флаг запроса
         isRequestInProgressRef.current = false;
         lastRequestIdRef.current = null;
-    }, [resetPage, updateURL]);
+    }, [resetPage, updateURL, clearAll]);
 
     const handlePageChange = useCallback((page: number) => {
         // Очищаем сохраненную позицию прокрутки при смене страницы через пагинацию

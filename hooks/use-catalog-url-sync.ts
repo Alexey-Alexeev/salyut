@@ -1,20 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-
-interface FilterState {
-    categories: string[];
-    priceFrom: string;
-    priceTo: string;
-    shotsFrom: string;
-    shotsTo: string;
-    search: string;
-    eventType: 'wedding' | 'birthday' | 'new_year' | null;
-    priceMin: number;
-    priceMax: number;
-    shotsMin: number;
-    shotsMax: number;
-}
+import { FilterState } from './use-catalog-filters';
 
 interface UseCatalogUrlSyncProps {
     filters: FilterState;
