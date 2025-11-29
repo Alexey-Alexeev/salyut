@@ -9,7 +9,6 @@ import { Toaster } from '@/components/ui/sonner';
 import { ConditionalNoIndex } from '@/components/conditional-head';
 import { OrganizationJsonLd } from '@/components/organization-jsonld';
 import { CacheBuster } from '@/components/cache-buster';
-import { YandexMetrika } from '@/components/yandex-metrika';
 import MobileExitBottomSheet from '@/components/mobile-exit-bottom-sheet';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -118,6 +117,33 @@ export default function RootLayout({
         
         {/* Глобальная JSON-LD разметка организации для всех страниц */}
         <OrganizationJsonLd />
+        
+        {/* Yandex.Metrika counter */}
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(m,e,t,r,i,k,a){
+                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                m[i].l=1*new Date();
+                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+              })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=104700931', 'ym');
+              
+              ym(104700931, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+            `,
+          }}
+        />
+        <noscript>
+          <div>
+            <img
+              src="https://mc.yandex.ru/watch/104700931"
+              style={{ position: 'absolute', left: '-9999px' }}
+              alt=""
+            />
+          </div>
+        </noscript>
+        {/* /Yandex.Metrika counter */}
       </head>
       <body className={inter.className}>
         <div className="flex min-h-screen flex-col">
@@ -132,7 +158,6 @@ export default function RootLayout({
         <MobileExitBottomSheet />
         <Toaster />
         <CacheBuster />
-        <YandexMetrika />
       </body>
     </html>
   );
