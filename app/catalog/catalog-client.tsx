@@ -12,21 +12,21 @@ import { CatalogPaginationInfo } from '@/components/catalog/catalog-pagination-i
 import { ProductsGrid } from '@/components/catalog/products-grid';
 import { CatalogEmptyState } from '@/components/catalog/catalog-empty-state';
 import { SinglePetardProductLayout } from '@/components/catalog/single-petard-product-layout';
-import { PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 import { CatalogCanonical } from '@/components/catalog/catalog-canonical';
-import { findSimilarProducts } from '@/lib/similar-products';
 import { useCatalogScrollRestore } from '@/hooks/use-catalog-scroll-restore';
 import { useCatalogUrlSync } from '@/hooks/use-catalog-url-sync';
 import { useCatalogFilters, FilterState } from '@/hooks/use-catalog-filters';
 import { useCatalogProducts } from '@/hooks/use-catalog-products';
 import { useCatalogFilterHandlers } from '@/hooks/use-catalog-filter-handlers';
+import { useCatalogUI } from '@/hooks/use-catalog-ui';
 import { Category, Product, InitialData, CatalogClientProps } from '@/types/catalog';
 import { calculateShotsStats, isPetard } from '@/lib/catalog-utils';
+import { generateCatalogStructuredData } from '@/lib/catalog-structured-data';
+import { prepareEmptyStateProducts } from '@/lib/catalog-empty-state-utils';
 
 export function CatalogClient({ initialData, searchParams }: CatalogClientProps) {
     // Основное состояние - инициализируем из server data
     const [categories] = useState<Category[]>(initialData.categories);
-    const [isSearching, setIsSearching] = useState(false);
 
     // Вычисляем min/max значения залпов из всех товаров
     const initialShotsStats = calculateShotsStats(initialData.products);
@@ -74,15 +74,24 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
     // Состояние интерфейса
     const [sortBy, setSortBy] = useState('popular');
-    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-    const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
     const [isInitializing, setIsInitializing] = useState(true);
-    const [isPaginationLoading, setIsPaginationLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [priceFromValue, setPriceFromValue] = useState('');
     const [priceToValue, setPriceToValue] = useState('');
     const [shotsFromValue, setShotsFromValue] = useState('');
     const [shotsToValue, setShotsToValue] = useState('');
+
+    // Хук для управления UI состоянием
+    const {
+        viewMode,
+        setViewMode,
+        isMobileFiltersOpen,
+        setIsMobileFiltersOpen,
+        isPaginationLoading,
+        setIsPaginationLoading,
+        isSearching,
+        setIsSearching,
+    } = useCatalogUI();
     // Ref для хранения актуальных фильтров (для использования в обработчиках с debounce)
     const filtersRef = useRef(filters);
     
@@ -288,141 +297,9 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "CollectionPage",
-                        "name": "Каталог фейерверков и салютов",
-                        "description": "Каталог качественных фейерверков и салютов в Москве и МО. Большой выбор пиротехники от проверенных производителей.",
-                        "url": "https://salutgrad.ru/catalog",
-                        "mainEntity": {
-                            "@type": "ItemList",
-                            "name": "Каталог фейерверков и салютов",
-                            "description": "Список всех доступных фейерверков и салютов",
-                            "numberOfItems": pagination.totalCount,
-                            "itemListElement": filteredProducts.slice(0, 20).map((product, index) => ({
-                                "@type": "Product",
-                                "position": index + 1,
-                                "name": product.name,
-                                "description": product.short_description || `Качественный ${product.name} для праздников`,
-                                "image": product.images?.[0] || "https://salutgrad.ru/images/product-placeholder.jpg",
-                                "brand": {
-                                    "@type": "Brand",
-                                    "name": "СалютГрад"
-                                },
-                                "category": product.category_id ? categories.find(cat => cat.id === product.category_id)?.name || "Пиротехника" : "Пиротехника",
-                                "sku": product.id,
-                                "url": `https://salutgrad.ru/product/${product.slug}`,
-                                "offers": {
-                                    "@type": "Offer",
-                                    "price": product.price,
-                                    "priceCurrency": "RUB",
-                                    "priceValidUntil": PRICE_VALID_UNTIL,
-                                    "availability": "https://schema.org/InStock",
-                                    "seller": {
-                                        "@type": "Organization",
-                                        "name": "СалютГрад",
-                                        "url": "https://salutgrad.ru"
-                                    },
-                                        "shippingDetails": {
-                                            "@type": "OfferShippingDetails",
-                                            "shippingRate": {
-                                                "@type": "MonetaryAmount",
-                                                "value": "500",
-                                                "currency": "RUB"
-                                            },
-                                            "deliveryTime": {
-                                                "@type": "ShippingDeliveryTime",
-                                                "handlingTime": {
-                                                    "@type": "QuantitativeValue",
-                                                    "minValue": 0,
-                                                    "maxValue": 1,
-                                                    "unitCode": "DAY"
-                                                },
-                                                "transitTime": {
-                                                    "@type": "QuantitativeValue",
-                                                    "minValue": 1,
-                                                    "maxValue": 3,
-                                                    "unitCode": "DAY"
-                                                },
-                                                "businessDays": {
-                                                    "@type": "OpeningHoursSpecification",
-                                                    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-                                                },
-                                                "cutoffTime": "23:59"
-                                            },
-                                            "shippingDestination": {
-                                                "@type": "DefinedRegion",
-                                                "addressCountry": "RU",
-                                                "addressRegion": "Московская область",
-                                                "addressLocality": "Москва"
-                                            }
-                                        },
-                                    "pickupDetails": {
-                                        "@type": "OfferShippingDetails",
-                                        "shippingRate": {
-                                            "@type": "MonetaryAmount",
-                                            "value": "0",
-                                            "currency": "RUB"
-                                        },
-                                        "deliveryTime": {
-                                            "@type": "ShippingDeliveryTime",
-                                            "handlingTime": {
-                                                "@type": "QuantitativeValue",
-                                                "minValue": 0,
-                                                "maxValue": 1,
-                                                "unitCode": "DAY"
-                                            },
-                                            "transitTime": {
-                                                "@type": "QuantitativeValue",
-                                                "minValue": 0,
-                                                "maxValue": 0,
-                                                "unitCode": "DAY"
-                                            },
-                                            "businessDays": {
-                                                "@type": "OpeningHoursSpecification",
-                                                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-                                                "opens": "09:00",
-                                                "closes": "21:00"
-                                            }
-                                        },
-                                        "shippingDestination": {
-                                            "@type": "DefinedRegion",
-                                            "addressCountry": "RU",
-                                            "addressRegion": "Московская область",
-                                            "addressLocality": "Балашиха",
-                                            "streetAddress": "Рассветная улица, 14",
-                                            "postalCode": "143921"
-                                        }
-                                    },
-                                    "hasMerchantReturnPolicy": {
-                                        "@type": "MerchantReturnPolicy",
-                                        "applicableCountry": "RU",
-                                        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-                                        "merchantReturnDays": 7,
-                                        "returnMethod": "https://schema.org/ReturnByMail",
-                                        "returnFees": "https://schema.org/ReturnFeesCustomerResponsibility"
-                                    }
-                                },
-                            }))
-                        },
-                        "breadcrumb": {
-                            "@type": "BreadcrumbList",
-                            "itemListElement": [
-                                {
-                                    "@type": "ListItem",
-                                    "position": 1,
-                                    "name": "Главная",
-                                    "item": "https://salutgrad.ru"
-                                },
-                                {
-                                    "@type": "ListItem",
-                                    "position": 2,
-                                    "name": "Каталог товаров",
-                                    "item": "https://salutgrad.ru/catalog"
-                                }
-                            ]
-                        }
-                    })
+                    __html: JSON.stringify(
+                        generateCatalogStructuredData(filteredProducts, categories, pagination)
+                    )
                 }}
             />
 
@@ -599,32 +476,18 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     )}
 
                     {/* Сообщение о пустых результатах */}
-                    {filteredProducts.length === 0 && (() => {
-                        // Ищем похожие товары только если есть поисковый запрос
-                        const searchQuery = filters.search?.trim();
-                        const similarProducts = searchQuery && allProducts.length > 0
-                            ? findSimilarProducts(searchQuery, allProducts, 2)
-                            : [];
-                        
-                        // Если похожих товаров меньше 2, дополняем популярными
-                        const productsToShow = [...similarProducts];
-                        
-                        // Если не хватает до 2, добавляем популярные товары
-                        if (productsToShow.length < 2 && popularProducts.length > 0) {
-                            const remaining = popularProducts
-                                .filter(p => !productsToShow.some(sp => sp.id === p.id))
-                                .slice(0, 2 - productsToShow.length);
-                            productsToShow.push(...remaining);
-                        }
-                        
-                        return (
-                            <CatalogEmptyState 
-                                onClearFilters={handleClearAllFilters}
-                                similarProducts={productsToShow.slice(0, 2)}
-                                searchQuery={searchQuery || undefined}
-                            />
-                        );
-                    })()}
+                    {filteredProducts.length === 0 && (
+                        <CatalogEmptyState 
+                            onClearFilters={handleClearAllFilters}
+                            similarProducts={prepareEmptyStateProducts(
+                                filters.search?.trim(),
+                                allProducts,
+                                popularProducts,
+                                2
+                            )}
+                            searchQuery={filters.search?.trim() || undefined}
+                        />
+                    )}
                 </div>
             </div>
         </div>

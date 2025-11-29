@@ -2,19 +2,7 @@
  * Функция для поиска похожих товаров на основе поискового запроса
  */
 
-interface Product {
-    id: string;
-    name: string;
-    slug: string;
-    price: number;
-    images: string[] | null;
-    video_url?: string | null;
-    is_popular?: boolean | null;
-    characteristics?: Record<string, any> | null;
-    short_description?: string | null;
-    category_name?: string | null;
-    category_slug?: string | null;
-}
+import { Product } from '@/types/catalog';
 
 /**
  * Вычисляет схожесть строк (улучшенная версия)
