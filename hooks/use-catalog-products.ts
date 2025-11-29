@@ -1,36 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { fetchProducts } from '@/lib/api-client';
 import { FilterState } from './use-catalog-filters';
-
-interface Category {
-    id: string;
-    name: string;
-    slug: string;
-}
-
-interface Product {
-    id: string;
-    name: string;
-    slug: string;
-    price: number;
-    category_id: string | null;
-    category_name?: string | null;
-    category_slug?: string | null;
-    images: string[] | null;
-    video_url?: string | null;
-    is_popular: boolean | null;
-    characteristics?: Record<string, any> | null;
-    short_description?: string | null;
-}
-
-interface Pagination {
-    page: number;
-    limit: number;
-    totalCount: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-}
+import { Category, Product, Pagination } from '@/types/catalog';
+import { buildApiParams as buildApiParamsUtil } from '@/lib/catalog-utils';
 
 interface InitialData {
     products: Product[];
@@ -44,7 +16,6 @@ interface UseCatalogProductsProps {
     initialData: InitialData;
     isInitializingFromUrlRef: React.MutableRefObject<boolean>;
     setIsInitializing: (value: boolean) => void;
-    buildApiParams: (page: number) => string;
     setIsPaginationLoading?: (value: boolean) => void;
 }
 
@@ -59,9 +30,13 @@ export function useCatalogProducts({
     initialData,
     isInitializingFromUrlRef,
     setIsInitializing,
-    buildApiParams,
     setIsPaginationLoading,
 }: UseCatalogProductsProps) {
+    // Мемоизируем функцию построения параметров API
+    const buildApiParams = useCallback(
+        (page: number = 1) => buildApiParamsUtil(filters, sortBy, categories, page),
+        [filters, sortBy, categories]
+    );
     const [filteredProducts, setFilteredProducts] = useState<Product[]>(initialData.products);
     const [allProducts, setAllProducts] = useState<Product[]>(initialData.products);
     const [popularProducts, setPopularProducts] = useState<Product[]>([]);

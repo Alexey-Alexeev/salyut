@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { ActiveFilters } from '@/components/catalog/active-filters';
 import { CatalogSearch } from '@/components/catalog/catalog-search';
@@ -21,93 +20,16 @@ import { useCatalogUrlSync } from '@/hooks/use-catalog-url-sync';
 import { useCatalogFilters, FilterState } from '@/hooks/use-catalog-filters';
 import { useCatalogProducts } from '@/hooks/use-catalog-products';
 import { useCatalogFilterHandlers } from '@/hooks/use-catalog-filter-handlers';
-
-// Типы
-interface Category {
-    id: string;
-    name: string;
-    slug: string;
-}
-
-interface Product {
-    id: string;
-    name: string;
-    slug: string;
-    price: number;
-    category_id: string | null;
-    category_name?: string | null;
-    category_slug?: string | null;
-    images: string[] | null;
-    video_url?: string | null;
-    is_popular: boolean | null;
-    characteristics?: Record<string, any> | null;
-    short_description?: string | null;
-}
-
-// FilterState импортирован из hooks/use-catalog-filters
-
-interface InitialData {
-    categories: Category[];
-    products: Product[];
-    pagination: {
-        page: number;
-        limit: number;
-        totalCount: number;
-        totalPages: number;
-        hasNextPage: boolean;
-        hasPrevPage: boolean;
-    };
-    stats: {
-        minPrice: number;
-        maxPrice: number;
-    };
-}
-
-interface CatalogClientProps {
-    initialData: InitialData;
-    searchParams: { [key: string]: string | string[] | undefined };
-}
-
-// Вспомогательная функция для проверки, является ли товар петардой
-function isPetard(product: Product): boolean {
-    return product.category_slug === 'firecrackers' || product.category_name === 'Петарды';
-}
+import { Category, Product, InitialData, CatalogClientProps } from '@/types/catalog';
+import { calculateShotsStats, isPetard } from '@/lib/catalog-utils';
 
 export function CatalogClient({ initialData, searchParams }: CatalogClientProps) {
-    const router = useRouter();
-    const urlSearchParams = useSearchParams();
-
     // Основное состояние - инициализируем из server data
     const [categories] = useState<Category[]>(initialData.categories);
-    const [products, setProducts] = useState<Product[]>(initialData.products);
-    const [loading, setLoading] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
 
     // Вычисляем min/max значения залпов из всех товаров
-    const calculateShotsStats = useCallback((productsList: Product[]) => {
-        const shotsValues: number[] = [];
-        productsList.forEach(product => {
-            const characteristics = product.characteristics || {};
-            const shotsStr = characteristics['Кол-во залпов'];
-            if (shotsStr) {
-                const shots = parseInt(shotsStr, 10);
-                if (!isNaN(shots) && shots > 0) {
-                    shotsValues.push(shots);
-                }
-            }
-        });
-        
-        if (shotsValues.length > 0) {
-            return {
-                min: Math.min(...shotsValues),
-                max: Math.max(...shotsValues),
-            };
-        }
-        return { min: 0, max: 100 };
-    }, []);
-
     const initialShotsStats = calculateShotsStats(initialData.products);
-    const [shotsStats, setShotsStats] = useState(initialShotsStats);
     
     // Состояние фильтров через useReducer
     const {
@@ -167,50 +89,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     // Ref для отслеживания, идет ли инициализация из URL (используется в обоих хуках)
     const isInitializingFromUrlRef = useRef(false);
 
-    // Мемоизируем построение URL параметров
-    const buildApiParams = useCallback((page: number = 1) => {
-        const params = new URLSearchParams();
-        params.set('page', page.toString());
-        params.set('limit', '20');
-        params.set('sortBy', sortBy);
-
-        if (filters.search.trim()) {
-            params.set('search', filters.search.trim());
-        }
-
-        if (filters.categories.length > 0) {
-            const categoryIds = categories
-                .filter(cat => filters.categories.includes(cat.slug))
-                .map(cat => cat.id);
-            if (categoryIds.length > 0) {
-                // Передаем все выбранные категории
-                categoryIds.forEach(categoryId => {
-                    params.append('categoryId', categoryId);
-                });
-            }
-        }
-
-        if (filters.priceFrom) {
-            params.set('minPrice', filters.priceFrom);
-        }
-        if (filters.priceTo) {
-            params.set('maxPrice', filters.priceTo);
-        }
-
-        if (filters.shotsFrom) {
-            params.set('minShots', filters.shotsFrom);
-        }
-        if (filters.shotsTo) {
-            params.set('maxShots', filters.shotsTo);
-        }
-
-        if (filters.eventType) {
-            params.set('eventType', filters.eventType);
-        }
-
-        return params.toString();
-    }, [sortBy, filters, categories]);
-
     // Хук для управления загрузкой товаров
     const {
         filteredProducts,
@@ -232,7 +110,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         },
         isInitializingFromUrlRef,
         setIsInitializing,
-        buildApiParams,
         setIsPaginationLoading,
     });
 
@@ -285,13 +162,12 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
 
     useEffect(() => {
         const stats = calculateShotsStats(allProducts);
-        setShotsStats(stats);
         // Обновляем min/max в фильтрах
         updateStats({
             shotsMin: stats.min,
             shotsMax: stats.max,
         });
-    }, [allProducts, calculateShotsStats, updateStats]);
+    }, [allProducts, updateStats]);
 
     // Хук для обработчиков фильтров
     const {
@@ -682,13 +558,13 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     )}
 
                     {/* Сетка товаров с мотивационным блоком для одного товара-петарды */}
-                    {!loading && !isFiltering && filteredProducts.length === 1 && isPetard(filteredProducts[0]) ? (
+                    {!isFiltering && filteredProducts.length === 1 && isPetard(filteredProducts[0]) ? (
                         <SinglePetardProductLayout products={stableProducts} />
                     ) : (
                         <ProductsGrid
                             products={stableProducts}
                             viewMode={viewMode}
-                            isLoading={loading || isFiltering}
+                            isLoading={isFiltering}
                         />
                     )}
 
