@@ -20,6 +20,7 @@ import { useCatalogScrollRestore } from '@/hooks/use-catalog-scroll-restore';
 import { useCatalogUrlSync } from '@/hooks/use-catalog-url-sync';
 import { useCatalogFilters, FilterState } from '@/hooks/use-catalog-filters';
 import { useCatalogProducts } from '@/hooks/use-catalog-products';
+import { useCatalogFilterHandlers } from '@/hooks/use-catalog-filter-handlers';
 
 // Типы
 interface Category {
@@ -160,9 +161,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const [priceToValue, setPriceToValue] = useState('');
     const [shotsFromValue, setShotsFromValue] = useState('');
     const [shotsToValue, setShotsToValue] = useState('');
-    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const priceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const shotsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     // Ref для хранения актуальных фильтров (для использования в обработчиках с debounce)
     const filtersRef = useRef(filters);
     
@@ -295,259 +293,61 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         });
     }, [allProducts, calculateShotsStats, updateStats]);
 
-    // Логика загрузки товаров теперь находится в useCatalogProducts
+    // Хук для обработчиков фильтров
+    const {
+        handleCategoryChange,
+        handleRemoveCategory,
+        handlePriceChange,
+        handleClearPrice,
+        handleShotsChange,
+        handleClearShots,
+        handleEventTypeChange,
+        handleClearEventType,
+        handleSortChange,
+        handleSearchChange,
+        handleClearSearch,
+        handlePriceFromChange,
+        handlePriceToChange,
+        handleShotsFromChange,
+        handleShotsToChange,
+        handleClearAllFilters: handleClearAllFiltersFromHook,
+        clearAllTimeouts,
+    } = useCatalogFilterHandlers({
+        filters,
+        sortBy,
+        resetPage,
+        updateURL,
+        addCategory,
+        removeCategory,
+        setPrice,
+        clearPrice,
+        setShots,
+        clearShots,
+        setSearch,
+        clearSearch,
+        setEventType,
+        clearEventType,
+        setPriceFrom,
+        setPriceTo,
+        setShotsFrom,
+        setShotsTo,
+        clearAll,
+        setSortBy,
+        setPagination,
+        setSearchValue,
+        setPriceFromValue,
+        setPriceToValue,
+        setShotsFromValue,
+        setShotsToValue,
+        setIsSearching,
+        filtersRef,
+    });
 
-    // Обработчики событий
-    const handleCategoryChange = useCallback(
-        (categorySlug: string, checked: boolean) => {
-            resetPage();
-            if (checked) {
-                addCategory(categorySlug);
-            } else {
-                removeCategory(categorySlug);
-            }
-            // Вычисляем новые фильтры для updateURL
-            const newCategories = checked
-                ? [...filters.categories, categorySlug]
-                : filters.categories.filter(slug => slug !== categorySlug);
-            updateURL({ ...filters, categories: newCategories }, sortBy);
-        },
-        [resetPage, filters, sortBy, updateURL, addCategory, removeCategory]
-    );
-
-    const handlePriceChange = useCallback((from: string, to: string) => {
-        resetPage();
-        setPrice(from, to);
-        updateURL({ ...filters, priceFrom: from, priceTo: to }, sortBy);
-    }, [resetPage, filters, sortBy, updateURL, setPrice]);
-
-    const handleSortChange = useCallback((newSortBy: string) => {
-        // всегда сбрасываем страницу при смене сортировки (но сброс ТОЛЬКО по намерению)
-        setSortBy(newSortBy);
-        setPagination(prev => ({ ...prev, page: 1 }));
-        updateURL(filters, newSortBy, 1);
-    }, [filters, updateURL]);
-
-    const handleRemoveCategory = useCallback((categorySlug: string) => {
-        resetPage();
-        removeCategory(categorySlug);
-        const newCategories = filters.categories.filter(slug => slug !== categorySlug);
-        updateURL({ ...filters, categories: newCategories }, sortBy);
-    }, [resetPage, filters, sortBy, updateURL, removeCategory]);
-
-    const handleClearPrice = useCallback(() => {
-        resetPage();
-        clearPrice();
-        updateURL({ ...filters, priceFrom: '', priceTo: '' }, sortBy);
-    }, [resetPage, filters, sortBy, updateURL, clearPrice]);
-
-    const handleShotsChange = useCallback((from: string, to: string) => {
-        resetPage();
-        setShots(from, to);
-        updateURL({ ...filters, shotsFrom: from, shotsTo: to }, sortBy);
-    }, [resetPage, filters, sortBy, updateURL, setShots]);
-
-    const handleEventTypeChange = useCallback((eventType: 'wedding' | 'birthday' | 'new_year' | null) => {
-        resetPage();
-        setEventType(eventType);
-        updateURL({ ...filters, eventType }, sortBy);
-    }, [resetPage, filters, sortBy, updateURL, setEventType]);
-
-    const handleShotsFromChange = useCallback((value: string) => {
-        setShotsFromValue(value);
-
-        // Очищаем предыдущий таймаут
-        if (shotsTimeoutRef.current) {
-            clearTimeout(shotsTimeoutRef.current);
-        }
-
-        // Если поле пустое, сразу очищаем фильтр
-        if (value.trim() === '') {
-            resetPage();
-            setShotsFrom('');
-            updateURL({ ...filters, shotsFrom: '' }, sortBy);
-            return;
-        }
-
-        // Устанавливаем новый таймаут для debouncing
-        shotsTimeoutRef.current = setTimeout(() => {
-            resetPage();
-            setShotsFrom(value);
-            // Используем актуальные фильтры из ref
-            updateURL({ ...filtersRef.current, shotsFrom: value }, sortBy);
-        }, 500);
-    }, [resetPage, sortBy, updateURL, setShotsFrom]);
-
-    const handleShotsToChange = useCallback((value: string) => {
-        setShotsToValue(value);
-
-        // Очищаем предыдущий таймаут
-        if (shotsTimeoutRef.current) {
-            clearTimeout(shotsTimeoutRef.current);
-        }
-
-        // Если поле пустое, сразу очищаем фильтр
-        if (value.trim() === '') {
-            resetPage();
-            setShotsTo('');
-            updateURL({ ...filters, shotsTo: '' }, sortBy);
-            return;
-        }
-
-        // Устанавливаем новый таймаут для debouncing
-        shotsTimeoutRef.current = setTimeout(() => {
-            resetPage();
-            setShotsTo(value);
-            // Используем актуальные фильтры из ref
-            updateURL({ ...filtersRef.current, shotsTo: value }, sortBy);
-        }, 500);
-    }, [resetPage, sortBy, updateURL, setShotsTo]);
-
-    const handleClearShots = useCallback(() => {
-        setShotsFromValue('');
-        setShotsToValue('');
-        resetPage();
-        clearShots();
-        updateURL({ ...filters, shotsFrom: '', shotsTo: '' }, sortBy);
-
-        // Очищаем таймаут
-        if (shotsTimeoutRef.current) {
-            clearTimeout(shotsTimeoutRef.current);
-        }
-    }, [resetPage, filters, sortBy, updateURL, clearShots]);
-
-    const handleClearEventType = useCallback(() => {
-        resetPage();
-        clearEventType();
-        updateURL({ ...filters, eventType: null }, sortBy);
-    }, [resetPage, filters, sortBy, updateURL, clearEventType]);
-
-    const handleSearchChange = useCallback((value: string) => {
-        setSearchValue(value);
-
-        // Очищаем предыдущий таймаут
-        if (searchTimeoutRef.current) {
-            clearTimeout(searchTimeoutRef.current);
-        }
-
-        // Если поле пустое, сразу очищаем поиск
-        if (value.trim() === '') {
-            setIsSearching(false);
-            resetPage();
-            clearSearch();
-            return;
-        }
-
-        // Показываем индикатор поиска
-        setIsSearching(true);
-
-        // Устанавливаем новый таймаут для debouncing (уменьшили до 300ms)
-        searchTimeoutRef.current = setTimeout(() => {
-            resetPage();
-            setSearch(value); // Это также сбросит eventType согласно reducer
-            // Используем актуальные фильтры из ref
-            updateURL({ ...filtersRef.current, search: value, eventType: null }, sortBy);
-            setIsSearching(false);
-        }, 300); // 300ms задержка для более быстрого отклика
-    }, [resetPage, sortBy, updateURL, setSearch, clearSearch]);
-
-    const handlePriceFromChange = useCallback((value: string) => {
-        setPriceFromValue(value);
-
-        // Очищаем предыдущий таймаут
-        if (priceTimeoutRef.current) {
-            clearTimeout(priceTimeoutRef.current);
-        }
-
-        // Если поле пустое, сразу очищаем фильтр
-        if (value.trim() === '') {
-            resetPage();
-            setPriceFrom('');
-            updateURL({ ...filters, priceFrom: '' }, sortBy);
-            return;
-        }
-
-        // Устанавливаем новый таймаут для debouncing
-        priceTimeoutRef.current = setTimeout(() => {
-            resetPage();
-            setPriceFrom(value);
-            // Используем актуальные фильтры из ref
-            updateURL({ ...filtersRef.current, priceFrom: value }, sortBy);
-        }, 500); // 500ms задержка для цены (чуть больше, чем для поиска)
-    }, [resetPage, sortBy, updateURL, setPriceFrom]);
-
-    const handlePriceToChange = useCallback((value: string) => {
-        setPriceToValue(value);
-
-        // Очищаем предыдущий таймаут
-        if (priceTimeoutRef.current) {
-            clearTimeout(priceTimeoutRef.current);
-        }
-
-        // Если поле пустое, сразу очищаем фильтр
-        if (value.trim() === '') {
-            resetPage();
-            setPriceTo('');
-            updateURL({ ...filters, priceTo: '' }, sortBy);
-            return;
-        }
-
-        // Устанавливаем новый таймаут для debouncing
-        priceTimeoutRef.current = setTimeout(() => {
-            resetPage();
-            setPriceTo(value);
-            // Используем актуальные фильтры из ref
-            updateURL({ ...filtersRef.current, priceTo: value }, sortBy);
-        }, 500); // 500ms задержка для цены (чуть больше, чем для поиска)
-    }, [resetPage, sortBy, updateURL, setPriceTo]);
-
-    const handleClearSearch = useCallback(() => {
-        setSearchValue('');
-        setIsSearching(false);
-        resetPage();
-        clearSearch();
-        updateURL({ ...filters, search: '' }, sortBy);
-
-        // Очищаем таймаут
-        if (searchTimeoutRef.current) {
-            clearTimeout(searchTimeoutRef.current);
-        }
-    }, [resetPage, filters, sortBy, updateURL, clearSearch]);
-
+    // Обертка для handleClearAllFilters с дополнительной логикой
     const handleClearAllFilters = useCallback(() => {
-        setSearchValue('');
-        setPriceFromValue('');
-        setPriceToValue('');
-        setShotsFromValue('');
-        setShotsToValue('');
-        setIsSearching(false);
-        resetPage();
-        setSortBy('popular'); // Сбрасываем сортировку к умолчанию
-        clearAll();
-        const clearedFilters = {
-            categories: [],
-            priceFrom: '',
-            priceTo: '',
-            shotsFrom: '',
-            shotsTo: '',
-            search: '',
-            eventType: null,
-        };
-        updateURL(clearedFilters, 'popular');
-
-        // Очищаем таймауты
-        if (searchTimeoutRef.current) {
-            clearTimeout(searchTimeoutRef.current);
-        }
-        if (priceTimeoutRef.current) {
-            clearTimeout(priceTimeoutRef.current);
-        }
-        if (shotsTimeoutRef.current) {
-            clearTimeout(shotsTimeoutRef.current);
-        }
-        // Сбрасываем флаг запроса
+        handleClearAllFiltersFromHook();
         resetRequestState();
-    }, [resetPage, updateURL, clearAll, resetRequestState]);
+    }, [handleClearAllFiltersFromHook, resetRequestState]);
 
     const handlePageChange = useCallback((page: number) => {
         // Очищаем сохраненную позицию прокрутки при смене страницы через пагинацию
@@ -584,17 +384,9 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     // Очистка таймаутов при размонтировании
     useEffect(() => {
         return () => {
-            if (searchTimeoutRef.current) {
-                clearTimeout(searchTimeoutRef.current);
-            }
-            if (priceTimeoutRef.current) {
-                clearTimeout(priceTimeoutRef.current);
-            }
-            if (shotsTimeoutRef.current) {
-                clearTimeout(shotsTimeoutRef.current);
-            }
+            clearAllTimeouts();
         };
-    }, []);
+    }, [clearAllTimeouts]);
 
     // Показываем загрузку во время инициализации с URL параметрами
     if (isInitializing) {
