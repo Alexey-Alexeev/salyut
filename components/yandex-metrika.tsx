@@ -7,17 +7,23 @@ import { usePathname, useSearchParams } from 'next/navigation';
 const YM_ID = 104700931;
 const SCRIPT_SRC = `https://mc.yandex.ru/metrika/tag.js?id=${YM_ID}`;
 const PRODUCTION_HOSTNAME = 'salutgrad.ru';
+const WEBVISOR_INIT_DELAY = 300; // Задержка для инициализации вебвизора
 
 /**
- * Клиентский компонент Метрики:
- *  - вставляет официальный код счетчика
- *  - инициализирует его с defer:true
- *  - отправляет hit при каждом изменении маршрута (SPA-режим)
+ * Оптимизированный клиентский компонент Метрики для SPA-сайтов:
+ *  - использует defer:true (обязательно для SPA согласно документации)
+ *  - использует onLoad для точного определения загрузки скрипта
+ *  - отправляет hit при первой загрузке после инициализации счетчика
+ *  - отправляет hit при каждом SPA-переходе между страницами
+ *  - минимизирует задержки и множественные проверки
  */
 export function YandexMetrika() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const lastUrlRef = useRef<string | null>(null);
+  const isInitialLoadRef = useRef(true);
+  const counterReadyRef = useRef(false);
+  const initialHitSentRef = useRef(false);
 
   const relativeUrl = useMemo(() => {
     if (!pathname) {
@@ -27,7 +33,7 @@ export function YandexMetrika() {
     return search ? `${pathname}?${search}` : pathname;
   }, [pathname, searchParams]);
 
-  const sendHit = useCallback((url: string, attempt = 0) => {
+  const sendHit = useCallback((url: string) => {
     if (typeof window === 'undefined') {
       return;
     }
@@ -38,10 +44,7 @@ export function YandexMetrika() {
 
     const ym = (window as any).ym;
     if (typeof ym !== 'function') {
-      if (attempt < 10) {
-        setTimeout(() => sendHit(url, attempt + 1), 250);
-      }
-      return;
+      return false; // Счетчик еще не готов
     }
 
     try {
@@ -55,24 +58,64 @@ export function YandexMetrika() {
         referer,
       });
       lastUrlRef.current = url;
+      return true;
     } catch (error) {
       console.warn('Yandex Metrika hit error', error);
+      return false;
     }
   }, []);
 
-  // Отслеживаем изменения URL и отправляем hit для вебвизора
+  // Обработчик загрузки скрипта - более точный, чем периодические проверки
+  const handleScriptLoad = useCallback(() => {
+    // Проверяем готовность счетчика с минимальными задержками
+    const checkAndSendInitialHit = (attempt = 0) => {
+      const ym = (window as any).ym;
+      
+      if (typeof ym === 'function') {
+        counterReadyRef.current = true;
+        
+        // Отправляем hit для первой загрузки с задержкой для вебвизора
+        if (isInitialLoadRef.current && !initialHitSentRef.current) {
+          setTimeout(() => {
+            if (sendHit(relativeUrl)) {
+              initialHitSentRef.current = true;
+              isInitialLoadRef.current = false;
+            }
+          }, WEBVISOR_INIT_DELAY);
+        }
+      } else if (attempt < 10) {
+        // Быстрая проверка каждые 100ms, максимум 1 секунда
+        setTimeout(() => checkAndSendInitialHit(attempt + 1), 100);
+      }
+    };
+
+    // Начинаем проверку сразу после загрузки скрипта
+    checkAndSendInitialHit();
+  }, [relativeUrl, sendHit]);
+
+  // Отслеживаем изменения URL и отправляем hit для SPA-переходов
   useEffect(() => {
-    if (!relativeUrl) {
+    if (!relativeUrl || isInitialLoadRef.current) {
       return;
     }
-    
-    // Для вебвизора важно дать время на инициализацию перед первым hit
-    // Особенно важно для SPA-сайтов
-    const timeoutId = setTimeout(() => {
+
+    // Проверяем, что это реально новая страница, а не просто ре-рендер
+    if (lastUrlRef.current === relativeUrl) {
+      return;
+    }
+
+    // Для SPA-переходов отправляем hit сразу, если счетчик готов
+    // Небольшая задержка только для гарантии готовности
+    if (counterReadyRef.current) {
+      // Счетчик уже готов, отправляем сразу
       sendHit(relativeUrl);
-    }, 100); // Небольшая задержка для инициализации вебвизора
-    
-    return () => clearTimeout(timeoutId);
+    } else {
+      // Счетчик еще не готов, ждем с минимальной задержкой
+      const timeoutId = setTimeout(() => {
+        sendHit(relativeUrl);
+      }, 100);
+      return () => clearTimeout(timeoutId);
+    }
   }, [relativeUrl, sendHit]);
 
   return (
@@ -80,6 +123,7 @@ export function YandexMetrika() {
       <Script
         id="yandex-metrika"
         strategy="afterInteractive"
+        onLoad={handleScriptLoad}
         dangerouslySetInnerHTML={{
           __html: `
             (function(m,e,t,r,i,k,a){
@@ -90,14 +134,13 @@ export function YandexMetrika() {
             })(window, document,'script','${SCRIPT_SRC}', 'ym');
             
             ym(${YM_ID}, 'init', {
-              defer:true, 
-              webvisor:true, 
-              clickmap:true, 
-              trackLinks:true, 
-              accurateTrackBounce:true, 
-              ecommerce:"dataLayer",
-              // Отключаем отслеживание hash для SPA (используем hit вместо этого)
-              trackHash:false
+              defer: true,
+              clickmap: true,
+              trackLinks: true,
+              accurateTrackBounce: true,
+              webvisor: true,
+              ecommerce: "dataLayer",
+              trackHash: false
             });
           `,
         }}
