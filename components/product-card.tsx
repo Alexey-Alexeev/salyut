@@ -152,22 +152,23 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
     }
   }, [isMounted, pathname, searchParams.toString()]);
 
-  // Сохраняем позицию прокрутки перед переходом в карточку товара
+  // ВРЕМЕННО ОТКЛЮЧЕНО: Сохраняем позицию прокрутки перед переходом в карточку товара
   const handleProductClick = () => {
-    if (typeof window !== 'undefined') {
-      try {
-        const scrollY = window.scrollY;
-        if (pathname === '/catalog') {
-          sessionStorage.setItem('catalogScrollPosition', scrollY.toString());
-        } else if (pathname === '/') {
-          sessionStorage.setItem('homeScrollPosition', scrollY.toString());
-        }
-      } catch (error) {
-        // Игнорируем ошибки sessionStorage (например, QuotaExceededError или блокировка в инкогнито)
-        // Не прерываем выполнение кода, чтобы не влиять на другие компоненты
-        console.warn('Не удалось сохранить позицию прокрутки в sessionStorage:', error);
-      }
-    }
+    // Вся логика сохранения скролла временно отключена
+    // if (typeof window !== 'undefined') {
+    //   try {
+    //     const scrollY = window.scrollY;
+    //     if (pathname === '/catalog') {
+    //       sessionStorage.setItem('catalogScrollPosition', scrollY.toString());
+    //     } else if (pathname === '/') {
+    //       sessionStorage.setItem('homeScrollPosition', scrollY.toString());
+    //     }
+    //   } catch (error) {
+    //     // Игнорируем ошибки sessionStorage (например, QuotaExceededError или блокировка в инкогнито)
+    //     // Не прерываем выполнение кода, чтобы не влиять на другие компоненты
+    //     console.warn('Не удалось сохранить позицию прокрутки в sessionStorage:', error);
+    //   }
+    // }
   };
 
   // URL изображения
