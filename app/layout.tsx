@@ -118,11 +118,9 @@ export default function RootLayout({
         
         {/* Глобальная JSON-LD разметка организации для всех страниц */}
         <OrganizationJsonLd />
-        
-        {/* Yandex.Metrika counter - размещено в head как рекомендует Яндекс */}
-        <YandexMetrika />
       </head>
       <body className={inter.className}>
+        <YandexMetrika />
         <div className="flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">{children}</main>

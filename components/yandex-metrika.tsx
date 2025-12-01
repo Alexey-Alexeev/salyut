@@ -1,16 +1,77 @@
+'use client';
+
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import Script from 'next/script';
+import { usePathname, useSearchParams } from 'next/navigation';
+
 const YM_ID = 104700931;
+const SCRIPT_SRC = `https://mc.yandex.ru/metrika/tag.js?id=${YM_ID}`;
+const PRODUCTION_HOSTNAME = 'salutgrad.ru';
 
 /**
- * Компонент для загрузки Яндекс.Метрики
- * Размещается в <head> как рекомендует официальная инструкция Яндекса
- * Использует официальный код полностью
+ * Клиентский компонент Метрики:
+ *  - вставляет официальный код счетчика
+ *  - инициализирует его с defer:true
+ *  - отправляет hit при каждом изменении маршрута (SPA-режим)
  */
 export function YandexMetrika() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const lastUrlRef = useRef<string | null>(null);
+
+  const relativeUrl = useMemo(() => {
+    if (!pathname) {
+      return '/';
+    }
+    const search = searchParams?.toString();
+    return search ? `${pathname}?${search}` : pathname;
+  }, [pathname, searchParams]);
+
+  const sendHit = useCallback((url: string, attempt = 0) => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (window.location.hostname !== PRODUCTION_HOSTNAME) {
+      lastUrlRef.current = url;
+      return;
+    }
+
+    const ym = (window as any).ym;
+    if (typeof ym !== 'function') {
+      if (attempt < 10) {
+        setTimeout(() => sendHit(url, attempt + 1), 250);
+      }
+      return;
+    }
+
+    try {
+      const absoluteUrl = `${window.location.origin}${url}`;
+      const referer = lastUrlRef.current
+        ? `${window.location.origin}${lastUrlRef.current}`
+        : document.referrer || undefined;
+
+      ym(YM_ID, 'hit', absoluteUrl, {
+        title: document.title,
+        referer,
+      });
+      lastUrlRef.current = url;
+    } catch (error) {
+      console.warn('Yandex Metrika hit error', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!relativeUrl) {
+      return;
+    }
+    sendHit(relativeUrl);
+  }, [relativeUrl, sendHit]);
+
   return (
     <>
-      {/* Yandex.Metrika counter */}
-      <script
-        type="text/javascript"
+      <Script
+        id="yandex-metrika"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             (function(m,e,t,r,i,k,a){
@@ -18,9 +79,9 @@ export function YandexMetrika() {
               m[i].l=1*new Date();
               for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
               k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=${YM_ID}', 'ym');
+            })(window, document,'${SCRIPT_SRC}', 'ym');
             
-            ym(${YM_ID}, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+            ym(${YM_ID}, 'init', {defer:true, webvisor:true, clickmap:true, trackLinks:true, accurateTrackBounce:true, ecommerce:"dataLayer"});
           `,
         }}
       />
@@ -33,7 +94,6 @@ export function YandexMetrika() {
           />
         </div>
       </noscript>
-      {/* /Yandex.Metrika counter */}
     </>
   );
 }
