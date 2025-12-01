@@ -32,8 +32,8 @@ export function useCatalogPagination({
 }: UseCatalogPaginationProps) {
     const handlePageChange = useCallback(
         (page: number) => {
-            // Очищаем сохраненную позицию прокрутки при смене страницы через пагинацию
-            clearScrollPosition();
+            // ВРЕМЕННО ОТКЛЮЧЕНО: Очищаем сохраненную позицию прокрутки при смене страницы через пагинацию
+            // clearScrollPosition();
 
             setPagination(prev => ({
                 ...prev,
@@ -48,19 +48,19 @@ export function useCatalogPagination({
                 setIsPaginationLoading(true);
             }
 
-            // Плавный скролл наверх при смене страницы
-            if (typeof window !== 'undefined') {
-                // Используем небольшую задержку, чтобы убедиться, что скролл выполнится после обновления страницы
-                setTimeout(() => {
-                    try {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    } catch {
-                        window.scrollTo(0, 0);
-                    }
-                }, 50);
-            }
+            // ВРЕМЕННО ОТКЛЮЧЕНО: Плавный скролл наверх при смене страницы
+            // if (typeof window !== 'undefined') {
+            //     // Используем небольшую задержку, чтобы убедиться, что скролл выполнится после обновления страницы
+            //     setTimeout(() => {
+            //         try {
+            //             window.scrollTo({ top: 0, behavior: 'smooth' });
+            //         } catch {
+            //             window.scrollTo(0, 0);
+            //         }
+            //     }, 50);
+            // }
         },
-        [filters, sortBy, updateURL, clearScrollPosition, setPagination, setIsPaginationLoading]
+        [filters, sortBy, updateURL, setPagination, setIsPaginationLoading] // clearScrollPosition временно убран из зависимостей
     );
 
     return {
