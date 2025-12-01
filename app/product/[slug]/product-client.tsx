@@ -272,13 +272,13 @@ export default function ProductClient({
     const tabParam = searchParams.get('tab');
     if (tabParam === 'video' && hasVideo) {
       setActiveTab('video');
-      // ВРЕМЕННО ОТКЛЮЧЕНО: Плавная прокрутка к блоку вкладок только на мобильных устройствах
-      // const isMobile = window.innerWidth < 1024; // lg breakpoint
-      // if (isMobile) {
-      //   setTimeout(() => {
-      //     tabsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      //   }, 100);
-      // }
+      // Плавная прокрутка к блоку вкладок только на мобильных устройствах
+      const isMobile = window.innerWidth < 1024; // lg breakpoint
+      if (isMobile) {
+        setTimeout(() => {
+          tabsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
     } else {
       setActiveTab('description');
     }
