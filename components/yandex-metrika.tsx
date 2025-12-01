@@ -60,11 +60,19 @@ export function YandexMetrika() {
     }
   }, []);
 
+  // Отслеживаем изменения URL и отправляем hit для вебвизора
   useEffect(() => {
     if (!relativeUrl) {
       return;
     }
-    sendHit(relativeUrl);
+    
+    // Для вебвизора важно дать время на инициализацию перед первым hit
+    // Особенно важно для SPA-сайтов
+    const timeoutId = setTimeout(() => {
+      sendHit(relativeUrl);
+    }, 100); // Небольшая задержка для инициализации вебвизора
+    
+    return () => clearTimeout(timeoutId);
   }, [relativeUrl, sendHit]);
 
   return (
@@ -81,7 +89,16 @@ export function YandexMetrika() {
               k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
             })(window, document,'script','${SCRIPT_SRC}', 'ym');
             
-            ym(${YM_ID}, 'init', {defer:true, webvisor:true, clickmap:true, trackLinks:true, accurateTrackBounce:true, ecommerce:"dataLayer"});
+            ym(${YM_ID}, 'init', {
+              defer:true, 
+              webvisor:true, 
+              clickmap:true, 
+              trackLinks:true, 
+              accurateTrackBounce:true, 
+              ecommerce:"dataLayer",
+              // Отключаем отслеживание hash для SPA (используем hit вместо этого)
+              trackHash:false
+            });
           `,
         }}
       />
