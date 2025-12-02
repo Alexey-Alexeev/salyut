@@ -85,9 +85,10 @@ export function YandexMap({
     if (window.ymaps) {
       initMap();
     } else {
+      const apiKey = process.env.NEXT_PUBLIC_YANDEX_API_KEY || '';
       const script = document.createElement('script');
       script.src =
-        'https://api-maps.yandex.ru/2.1/?apikey=YOUR_API_KEY&lang=ru_RU';
+        `https://api-maps.yandex.ru/2.1/?apikey=${apiKey}&lang=ru_RU`;
       script.async = true;
       script.onload = initMap;
       document.head.appendChild(script);

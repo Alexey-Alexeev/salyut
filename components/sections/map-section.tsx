@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin } from 'lucide-react';
-import YandexMapEmbedWithFallback from '@/components/yandex-map-embed';
+import { Button } from '@/components/ui/button';
+import { MapPin, ExternalLink } from 'lucide-react';
+import YandexMapWithFallback from '@/components/yandex-map';
 
 export function MapSection() {
     return (
@@ -15,11 +16,31 @@ export function MapSection() {
             </CardHeader>
             <CardContent>
                 <div className="space-y-4">
-                    {/* Yandex Map Embed */}
-                    <YandexMapEmbedWithFallback
+                    {/* Yandex Map */}
+                    <YandexMapWithFallback
                         height="400px"
                         className="w-full"
+                        showControls={true}
+                        zoom={15}
                     />
+                    {/* Button to open in Yandex Maps */}
+                    <div className="flex justify-center">
+                        <Button
+                            asChild
+                            variant="outline"
+                            className="w-full sm:w-auto"
+                        >
+                            <a
+                                href="https://yandex.ru/maps/-/CLcT4Xz6"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2"
+                            >
+                                Перейти в Яндекс Карты
+                                <ExternalLink className="size-4" />
+                            </a>
+                        </Button>
+                    </div>
                 </div>
             </CardContent>
         </Card>
