@@ -55,6 +55,27 @@ export function CacheBuster() {
             
             // Функция для безопасной перезагрузки с учетом загрузки Метрики
             const safeReload = () => {
+              // Проверяем, не взаимодействует ли пользователь с сайтом
+              const hasActiveDialogs = document.querySelector('[role="dialog"][aria-hidden="false"]') !== null;
+              // Проверяем активные формы (совместимый способ без :has())
+              const activeInputs = document.querySelectorAll('input:focus, textarea:focus, select:focus');
+              const hasActiveForms = activeInputs.length > 0;
+              
+              // Если пользователь активно взаимодействует, откладываем перезагрузку
+              if (hasActiveDialogs || hasActiveForms) {
+                // Проверяем снова через 30 секунд
+                setTimeout(() => {
+                  const stillActiveDialogs = document.querySelector('[role="dialog"][aria-hidden="false"]') !== null;
+                  const stillActiveInputs = document.querySelectorAll('input:focus, textarea:focus, select:focus');
+                  const stillActiveForms = stillActiveInputs.length > 0;
+                  
+                  if (!stillActiveDialogs && !stillActiveForms) {
+                    safeReload();
+                  }
+                }, 30000);
+                return;
+              }
+              
               // Даём Метрике минимум 3 секунды на загрузку и инициализацию
               const minWaitTime = 3000; // минимум 3 секунды
               

@@ -78,9 +78,12 @@ export default async function HomePage() {
     new_year: 0,
   };
 
+  // Оптимизированная загрузка всех данных параллельно
   try {
-    [categoriesData, popularProducts] = await Promise.all([
+    const [categoriesResult, popularProductsResult, videoReviewsResult, allProductsForEvents] = await Promise.all([
+      // Категории
       db.select().from(categories),
+      // Популярные товары
       db
         .select({
           id: products.id,
@@ -102,23 +105,27 @@ export default async function HomePage() {
         .leftJoin(categories, eq(products.category_id, categories.id))
         .where(and(eq(products.is_popular, true), eq(products.is_active, true)))
         .limit(4),
+      // Видео отзывы
+      db
+        .select()
+        .from(reviews)
+        .orderBy(desc(reviews.created_at))
+        .limit(4),
+      // Только event_types для подсчета (оптимизированный запрос)
+      db
+        .select({
+          event_types: products.event_types,
+        })
+        .from(products)
+        .where(eq(products.is_active, true)),
     ]);
-    // Фильтруем скрытые категории
-    categoriesData = filterVisibleCategories(categoriesData);
-  } catch (error) {
-    console.error('Error loading categories or products:', error);
-  }
 
-  // Подсчитываем количество салютов для каждого события
-  try {
-    const allProducts = await db
-      .select({
-        event_types: products.event_types,
-      })
-      .from(products)
-      .where(eq(products.is_active, true));
+    categoriesData = filterVisibleCategories(categoriesResult);
+    popularProducts = popularProductsResult;
+    videoReviews = videoReviewsResult;
 
-    allProducts.forEach((product) => {
+    // Подсчитываем количество салютов для каждого события
+    allProductsForEvents.forEach((product) => {
       const eventTypes = product.event_types as string[] | null;
       if (eventTypes && Array.isArray(eventTypes)) {
         if (eventTypes.includes('wedding')) eventCounts.wedding++;
@@ -127,17 +134,7 @@ export default async function HomePage() {
       }
     });
   } catch (error) {
-    console.error('Error loading event counts:', error);
-  }
-
-  try {
-    videoReviews = await db
-      .select()
-      .from(reviews)
-      .orderBy(desc(reviews.created_at))
-      .limit(4);
-  } catch (error) {
-    console.error('Error loading reviews:', error);
+    console.error('Error loading page data:', error);
   }
 
   return (

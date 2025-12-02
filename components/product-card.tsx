@@ -139,7 +139,9 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
     if (isMounted && typeof window !== 'undefined') {
       try {
         if (pathname === '/catalog') {
-          const currentUrl = `/catalog${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+          // Используем searchParams напрямую, без toString() в зависимостях
+          const searchString = searchParams?.toString() || '';
+          const currentUrl = `/catalog${searchString ? `?${searchString}` : ''}`;
           sessionStorage.setItem('catalogReturnUrl', currentUrl);
         } else if (pathname === '/') {
           sessionStorage.setItem('homeReturnUrl', '/');
@@ -150,7 +152,9 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
         console.warn('Не удалось сохранить URL в sessionStorage:', error);
       }
     }
-  }, [isMounted, pathname, searchParams.toString()]);
+    // Используем searchParams напрямую вместо toString() для стабильности зависимостей
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMounted, pathname]);
 
   // Сохраняем позицию прокрутки перед переходом в карточку товара
   const handleProductClick = () => {
