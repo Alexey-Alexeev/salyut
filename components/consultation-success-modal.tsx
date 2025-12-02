@@ -133,7 +133,7 @@ export function ConsultationSuccessModal({
                             href="https://wa.me/79773602008"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex flex-1 items-center justify-center gap-1 sm:gap-2 h-8 sm:h-9 px-3 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md text-xs sm:text-sm transition-colors"
+                            className="flex flex-1 items-center justify-center gap-1 sm:gap-2 h-8 sm:h-9 px-3 py-2 border border-transparent bg-[#25D366] hover:bg-[#20BA5A] text-white rounded-md text-xs sm:text-sm transition-colors shadow-sm hover:shadow-md"
                             aria-label="Написать в WhatsApp"
                         >
                             <MessageCircle className="size-3 sm:size-4" />
@@ -145,7 +145,7 @@ export function ConsultationSuccessModal({
                             href="https://t.me/+79773602008"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex flex-1 items-center justify-center gap-1 sm:gap-2 h-8 sm:h-9 px-3 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md text-xs sm:text-sm transition-colors"
+                            className="flex flex-1 items-center justify-center gap-1 sm:gap-2 h-8 sm:h-9 px-3 py-2 border border-transparent bg-[#0088cc] hover:bg-[#0077B5] text-white rounded-md text-xs sm:text-sm transition-colors shadow-sm hover:shadow-md"
                             aria-label="Написать в Telegram"
                         >
                             <Send className="size-3 sm:size-4" />
