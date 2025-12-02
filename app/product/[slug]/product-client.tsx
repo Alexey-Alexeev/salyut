@@ -599,19 +599,19 @@ export default function ProductClient({
                 {product.old_price && product.old_price > product.price ? (
                   <>
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-400 text-lg line-through">
+                      <span className="text-gray-400 text-base lg:text-lg line-through whitespace-nowrap">
                         {product.old_price.toLocaleString('ru-RU')} ₽
                       </span>
                       <span className="bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded">
                         -{Math.round((1 - product.price / product.old_price) * 100)}%
                       </span>
                     </div>
-                    <div className="text-primary text-3xl font-bold">
+                    <div className="text-primary text-2xl lg:text-3xl font-bold whitespace-nowrap">
                       {product.price.toLocaleString('ru-RU')} ₽
                     </div>
                   </>
                 ) : (
-                  <div className="text-primary text-3xl font-bold">
+                  <div className="text-primary text-2xl lg:text-3xl font-bold whitespace-nowrap">
                     {product.price.toLocaleString('ru-RU')} ₽
                   </div>
                 )}

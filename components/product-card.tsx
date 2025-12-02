@@ -422,19 +422,19 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
           {product.old_price && product.old_price > product.price ? (
             <div className="flex flex-col items-end gap-1">
               <div className="flex items-center gap-2">
-                <span className="text-gray-400 text-sm line-through">
+                <span className="text-gray-400 text-sm line-through whitespace-nowrap">
                   {product.old_price.toLocaleString('ru-RU')} ₽
                 </span>
                 <span className="bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded">
                   -{Math.round((1 - product.price / product.old_price) * 100)}%
                 </span>
               </div>
-              <p className="text-primary text-lg font-bold">
+              <p className="text-primary text-lg font-bold whitespace-nowrap">
                 {product.price.toLocaleString('ru-RU')} ₽
               </p>
             </div>
           ) : (
-            <p className="text-primary text-lg font-bold text-right">
+            <p className="text-primary text-lg font-bold text-right whitespace-nowrap">
               {product.price.toLocaleString('ru-RU')} ₽
             </p>
           )}
