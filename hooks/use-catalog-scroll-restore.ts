@@ -31,6 +31,9 @@ export function useCatalogScrollRestore({
     // Отключаем сохранение сразу после восстановления позиции, чтобы не перезаписывать правильную позицию
     const shouldSaveScrollRef = useRef<boolean>(true);
 
+    // Ref для хранения cleanup функции восстановления прокрутки
+    const restoreCleanupRef = useRef<(() => void) | null>(null);
+
     // Сохраняем текущий URL каталога в sessionStorage при каждом изменении
     // Используем ref для предотвращения бесконечных циклов
     const lastSavedUrlRef = useRef<string>('');
@@ -223,6 +226,67 @@ export function useCatalogScrollRestore({
                         const restoreScroll = () => {
                             attempts++;
 
+                            // Ref для отслеживания активной анимации и возможности её отмены
+                            let animationFrameId: number | null = null;
+                            let isUserScrolling = false;
+                            let lastUserScrollTime = 0;
+                            let scrollTimeoutId: NodeJS.Timeout | null = null;
+                            let expectedScrollPosition = scrollY;
+                            let lastProgrammaticScroll = performance.now();
+
+                            // Отслеживаем пользовательский скролл
+                            const handleUserScroll = () => {
+                                const now = performance.now();
+                                const currentScroll = window.scrollY;
+                                
+                                // Если прошло меньше 50ms с последней программной прокрутки, это программная прокрутка
+                                if (now - lastProgrammaticScroll < 50) {
+                                    lastProgrammaticScroll = now;
+                                    return;
+                                }
+
+                                // Если пользователь скроллит в направлении, отличном от ожидаемого, или слишком быстро
+                                const scrollDifference = Math.abs(currentScroll - expectedScrollPosition);
+                                if (scrollDifference > 50) {
+                                    isUserScrolling = true;
+                                    
+                                    // Отменяем анимацию
+                                    if (animationFrameId !== null) {
+                                        cancelAnimationFrame(animationFrameId);
+                                        animationFrameId = null;
+                                    }
+                                    
+                                    // Отменяем проверку через setTimeout
+                                    if (scrollTimeoutId !== null) {
+                                        clearTimeout(scrollTimeoutId);
+                                        scrollTimeoutId = null;
+                                    }
+                                    
+                                    // Завершаем восстановление
+                                    try {
+                                        sessionStorage.removeItem('catalogScrollPosition');
+                                    } catch (error) {
+                                        console.warn('Не удалось удалить позицию прокрутки:', error);
+                                    }
+                                    
+                                    scrollRestoredRef.current = true;
+                                    setIsRestoringScroll(false);
+                                    
+                                    // Включаем сохранение позиции прокрутки сразу
+                                    shouldSaveScrollRef.current = true;
+                                    
+                                    // Удаляем слушатель
+                                    window.removeEventListener('scroll', handleUserScroll, { passive: true });
+                                    return;
+                                }
+                                
+                                lastUserScrollTime = now;
+                                expectedScrollPosition = currentScroll;
+                            };
+
+                            // Добавляем слушатель для отслеживания пользовательского скролла
+                            window.addEventListener('scroll', handleUserScroll, { passive: true });
+
                             // Используем быструю плавную прокрутку через requestAnimationFrame
                             // для более быстрого и плавного восстановления позиции
                             const startScroll = window.scrollY;
@@ -231,6 +295,11 @@ export function useCatalogScrollRestore({
                             const startTime = performance.now();
 
                             const animateScroll = (currentTime: number) => {
+                                // Проверяем, не начал ли пользователь скроллить
+                                if (isUserScrolling) {
+                                    return;
+                                }
+
                                 const elapsed = currentTime - startTime;
                                 const progress = Math.min(elapsed / duration, 1);
 
@@ -241,24 +310,42 @@ export function useCatalogScrollRestore({
 
                                 const currentScroll = startScroll + distance * easeInOutQuad;
                                 window.scrollTo(0, currentScroll);
+                                lastProgrammaticScroll = performance.now();
+                                expectedScrollPosition = currentScroll;
 
-                                if (progress < 1) {
-                                    requestAnimationFrame(animateScroll);
+                                if (progress < 1 && !isUserScrolling) {
+                                    animationFrameId = requestAnimationFrame(animateScroll);
+                                } else {
+                                    animationFrameId = null;
                                 }
                             };
 
-                            requestAnimationFrame(animateScroll);
+                            animationFrameId = requestAnimationFrame(animateScroll);
 
                             // Проверяем, была ли позиция восстановлена
                             // Задержка для проверки после начала анимации (максимум 400ms)
-                            setTimeout(() => {
+                            scrollTimeoutId = setTimeout(() => {
+                                // Проверяем, не начал ли пользователь скроллить
+                                if (isUserScrolling) {
+                                    window.removeEventListener('scroll', handleUserScroll, { passive: true });
+                                    return;
+                                }
+
                                 const currentScroll = window.scrollY;
 
                                 // Если позиция не восстановилась и есть попытки, пробуем еще раз
                                 // Увеличиваем допуск для плавной прокрутки (может быть небольшая погрешность)
-                                if (Math.abs(currentScroll - scrollY) > 100 && attempts < maxAttempts) {
-                                    restoreScroll();
+                                if (Math.abs(currentScroll - scrollY) > 100 && attempts < maxAttempts && !isUserScrolling) {
+                                    window.removeEventListener('scroll', handleUserScroll, { passive: true });
+                                    // При рекурсивном вызове сохраняем cleanup функцию
+                                    const cleanup = restoreScroll();
+                                    if (cleanup) {
+                                        restoreCleanupRef.current = cleanup.cancel;
+                                    }
                                 } else {
+                                    // Удаляем слушатель
+                                    window.removeEventListener('scroll', handleUserScroll, { passive: true });
+                                    
                                     // Удаляем сохраненную позицию после восстановления
                                     try {
                                         sessionStorage.removeItem('catalogScrollPosition');
@@ -276,6 +363,19 @@ export function useCatalogScrollRestore({
                                     }, 500);
                                 }
                             }, 450);
+
+                            // Возвращаем cleanup функцию для возможности отмены
+                            return {
+                                cancel: () => {
+                                    if (animationFrameId !== null) {
+                                        cancelAnimationFrame(animationFrameId);
+                                    }
+                                    if (scrollTimeoutId !== null) {
+                                        clearTimeout(scrollTimeoutId);
+                                    }
+                                    window.removeEventListener('scroll', handleUserScroll, { passive: true });
+                                }
+                            };
                         };
 
                         // Отключаем сохранение позиции прокрутки во время восстановления
@@ -293,25 +393,40 @@ export function useCatalogScrollRestore({
                             };
 
                             if (checkDataLoaded()) {
-                                restoreScroll();
+                                const cleanup = restoreScroll();
+                                if (cleanup) {
+                                    restoreCleanupRef.current = cleanup.cancel;
+                                }
                             } else {
                                 // Если данные еще не загружены, ждем еще
                                 const waitForData = setInterval(() => {
                                     if (checkDataLoaded()) {
                                         clearInterval(waitForData);
-                                        restoreScroll();
+                                        const cleanup = restoreScroll();
+                                        if (cleanup) {
+                                            restoreCleanupRef.current = cleanup.cancel;
+                                        }
                                     }
                                 }, 50); // Уменьшена задержка проверки
 
                                 // Максимальное время ожидания - 2 секунды (уменьшено)
                                 setTimeout(() => {
                                     clearInterval(waitForData);
-                                    restoreScroll();
+                                    const cleanup = restoreScroll();
+                                    if (cleanup) {
+                                        restoreCleanupRef.current = cleanup.cancel;
+                                    }
                                 }, 2000);
                             }
                         }, 400);
 
-                        return () => clearTimeout(restoreTimeout);
+                        return () => {
+                            clearTimeout(restoreTimeout);
+                            if (restoreCleanupRef.current) {
+                                restoreCleanupRef.current();
+                                restoreCleanupRef.current = null;
+                            }
+                        };
                     }
                 } else {
                     // Скрываем лоадер, если условия не выполнены
