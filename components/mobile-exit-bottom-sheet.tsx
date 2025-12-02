@@ -3,7 +3,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { Phone, MessageCircle } from 'lucide-react';
+import { Phone, MessageCircle, Send } from 'lucide-react';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 
 /**
@@ -142,7 +142,7 @@ export default function MobileExitBottomSheet() {
               href="https://wa.me/79773602008"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-12 items-center justify-center rounded-lg border bg-background text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+              className="flex h-12 items-center justify-center rounded-lg bg-green-500 text-white text-sm font-medium hover:bg-green-600 transition-colors shadow-sm"
               aria-label="Написать в WhatsApp"
             >
               <MessageCircle className="mr-2 h-4 w-4" />
@@ -154,10 +154,10 @@ export default function MobileExitBottomSheet() {
               href="https://t.me/+79773602008"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-12 items-center justify-center rounded-lg border bg-background text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+              className="flex h-12 items-center justify-center rounded-lg bg-blue-500 text-white text-sm font-medium hover:bg-blue-600 transition-colors shadow-sm"
               aria-label="Написать в Telegram"
             >
-              <MessageCircle className="mr-2 h-4 w-4" />
+              <Send className="mr-2 h-4 w-4" />
               Telegram
             </a>
           </div>
