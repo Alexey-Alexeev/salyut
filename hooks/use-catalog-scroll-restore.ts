@@ -25,7 +25,8 @@ export function useCatalogScrollRestore({
     const scrollRestoredRef = useRef<boolean>(false);
 
     // Ref для отслеживания предыдущей страницы
-    const previousPageRef = useRef<number>(currentPage);
+    // Инициализируем как 0, чтобы определить первый заход
+    const previousPageRef = useRef<number>(0);
 
     // Ref для отслеживания, нужно ли сохранять позицию прокрутки
     // Отключаем сохранение сразу после восстановления позиции, чтобы не перезаписывать правильную позицию
@@ -173,15 +174,23 @@ export function useCatalogScrollRestore({
             } else {
                 // Если нет сохраненной позиции, значит это возврат между страницами каталога
                 // Если вернулись на предыдущую страницу (меньшую), прокручиваем наверх
-                if (currentPage < previousPageRef.current) {
+                // НО только если previousPageRef уже был установлен (не первый заход)
+                if (previousPageRef.current > 0 && currentPage < previousPageRef.current) {
                     setTimeout(() => {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }, 100);
                 }
             }
 
-            // Обновляем предыдущую страницу
-            previousPageRef.current = currentPage;
+            // Обновляем предыдущую страницу только если она была установлена ранее
+            // Это предотвращает автоматическую прокрутку при первом заходе
+            if (previousPageRef.current === 0) {
+                // Первый заход - просто устанавливаем текущую страницу
+                previousPageRef.current = currentPage;
+            } else {
+                // Последующие заходы - обновляем предыдущую страницу
+                previousPageRef.current = currentPage;
+            }
         };
 
         window.addEventListener('popstate', handlePopState);
@@ -207,6 +216,13 @@ export function useCatalogScrollRestore({
                 // Проверяем, вернулись ли мы из карточки товара
                 const savedScrollPosition = sessionStorage.getItem('catalogScrollPosition');
                 const returnUrl = sessionStorage.getItem('catalogReturnUrl');
+                
+                // Если это первый заход на страницу (previousPageRef.current === 0) и нет сохраненной позиции,
+                // не выполняем никаких действий с прокруткой
+                if (previousPageRef.current === 0 && !savedScrollPosition) {
+                    setIsRestoringScroll(false);
+                    return;
+                }
 
                 // Нормализуем pathname (убираем слеш в конце)
                 const currentPathname = window.location.pathname.replace(/\/$/, '') || '/';
@@ -459,20 +475,10 @@ export function useCatalogScrollRestore({
                     const currentPageParam = urlSearchParams.get('page');
                     const currentPage = currentPageParam ? parseInt(currentPageParam, 10) : 1;
 
-                    // Если нет сохраненной позиции, но мы на странице каталога,
-                    // и это возврат назад между страницами, прокручиваем наверх
-                    if (!savedScrollPosition && isCatalogPage) {
-                        // Если вернулись на предыдущую страницу (меньшую), прокручиваем наверх
-                        if (currentPage < previousPageRef.current) {
-                            setTimeout(() => {
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                            }, 100);
-                        }
-                    }
-
                     // Проверяем, вернулись ли мы на предыдущую страницу каталога (не из карточки товара)
                     // Если да, очищаем сохраненную позицию прокрутки из карточки товара и прокручиваем наверх
-                    if (savedScrollPosition && returnUrl && isCatalogPage) {
+                    // НО только если это действительно возврат между страницами, а не первый заход
+                    if (savedScrollPosition && returnUrl && isCatalogPage && previousPageRef.current > 0) {
                         const returnPageParam = returnUrl ? new URLSearchParams(returnUrl.split('?')[1] || '').get('page') : null;
                         const returnPage = returnPageParam ? parseInt(returnPageParam, 10) : 1;
 
@@ -491,9 +497,29 @@ export function useCatalogScrollRestore({
                         }
                     }
 
+                    // Если нет сохраненной позиции, но мы на странице каталога,
+                    // и это возврат назад между страницами, прокручиваем наверх
+                    // НО только если previousPageRef уже был установлен (не первый заход)
+                    if (!savedScrollPosition && isCatalogPage && previousPageRef.current > 0) {
+                        // Если вернулись на предыдущую страницу (меньшую), прокручиваем наверх
+                        if (currentPage < previousPageRef.current) {
+                            setTimeout(() => {
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }, 100);
+                        }
+                    }
+
                     // Обновляем предыдущую страницу
+                    // При первом заходе (previousPageRef.current === 0) просто устанавливаем текущую страницу
+                    // без автоматической прокрутки
                     if (isCatalogPage) {
-                        previousPageRef.current = currentPage;
+                        if (previousPageRef.current === 0) {
+                            // Первый заход - просто устанавливаем текущую страницу
+                            previousPageRef.current = currentPage;
+                        } else {
+                            // Последующие заходы - обновляем предыдущую страницу
+                            previousPageRef.current = currentPage;
+                        }
                     }
                 }
             } catch (error) {
@@ -522,7 +548,13 @@ export function useCatalogScrollRestore({
         }
 
         // Обновляем предыдущую страницу при изменении страницы
-        previousPageRef.current = currentPage;
+        // При первом заходе (previousPageRef.current === 0) просто устанавливаем текущую страницу
+        // без автоматической прокрутки
+        if (previousPageRef.current === 0) {
+            previousPageRef.current = currentPage;
+        } else {
+            previousPageRef.current = currentPage;
+        }
     }, [urlSearchParams.toString(), currentPage]);
 
     // Функция для очистки сохраненной позиции прокрутки (используется при смене страницы)
