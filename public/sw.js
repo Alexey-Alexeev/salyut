@@ -52,6 +52,71 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+/**
+ * Проверяет, является ли запрос запросом от вебвизора Яндекс.Метрики
+ * Вебвизор должен всегда получать актуальный контент без кэширования
+ * @param {URL} url - URL запроса для проверки
+ * @returns {boolean} - true, если запрос от вебвизора
+ */
+function isWebvisorRequest(url) {
+  // Проверка 1: Прямые запросы к домену вебвизора
+  if (url.hostname.includes('webvisor.com')) {
+    return true;
+  }
+
+  // Проверка 2: Запросы с параметрами отладки Метрики
+  const debugParams = ['_ym_debug', 'webvisor', '_ym_is_debug', '_ym_recording'];
+  if (debugParams.some(param => url.searchParams.has(param))) {
+    return true;
+  }
+
+  // Проверка 3: Проверка URL на наличие признаков вебвизора в query или hash
+  const searchLower = url.search.toLowerCase();
+  const hashLower = url.hash.toLowerCase();
+  if (searchLower.includes('webvisor') || hashLower.includes('webvisor')) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Асинхронная проверка, находится ли клиент внутри iframe вебвизора
+ * Используется как дополнительная проверка для запросов внутри iframe
+ * @returns {Promise<boolean>} - true, если клиент находится в iframe вебвизора
+ */
+async function isWebvisorIframe() {
+  try {
+    const clients = await self.clients.matchAll({ 
+      type: 'window', 
+      includeUncontrolled: true 
+    });
+    
+    // Проверяем клиентов на наличие признаков вебвизора
+    for (const client of clients) {
+      // Если клиент в iframe (nested), проверяем его URL на признаки вебвизора
+      if (client.frameType === 'nested') {
+        try {
+          const clientUrl = new URL(client.url);
+          // Используем функцию isWebvisorRequest для единообразной проверки
+          if (isWebvisorRequest(clientUrl)) {
+            return true;
+          }
+        } catch (e) {
+          // Если не удалось создать URL из client.url, пропускаем
+          continue;
+        }
+      }
+    }
+    
+    return false;
+  } catch (e) {
+    // Если не удалось проверить, возвращаем false для безопасности
+    // Лучше пропустить проверку, чем заблокировать обычные запросы
+    return false;
+  }
+}
+
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
@@ -64,6 +129,11 @@ self.addEventListener('fetch', (event) => {
   // Обрабатываем только GET-запросы нашего домена
   if (request.method !== 'GET' || url.origin !== location.origin) {
     return;
+  }
+
+  // Пропускаем запросы от вебвизора - вебвизор должен получать только актуальный контент
+  if (isWebvisorRequest(url)) {
+    return; // Не обрабатываем через SW, пусть браузер загрузит напрямую
   }
 
   // Никогда не перехватываем чанки Next.js и критичные ассеты JS/CSS
@@ -81,26 +151,53 @@ self.addEventListener('fetch', (event) => {
   // Навигации и HTML — стратегия network-first с fallback из кэша
   const isNavigation = request.mode === 'navigate' || request.destination === 'document';
   if (isNavigation) {
+    // Для вебвизора используем только network, без кэширования
     event.respondWith(
-      fetch(request)
-        .then((response) => {
+      (async () => {
+        // Дополнительная проверка на iframe вебвизора
+        const isWebvisor = await isWebvisorIframe();
+        
+        if (isWebvisor) {
+          // Для вебвизора - только network, без кэширования и без fallback
+          return fetch(request).catch(() => {
+            // Если сеть недоступна, возвращаем ошибку вместо кэша
+            return new Response('Network error', { status: 503 });
+          });
+        }
+
+        // Для обычных запросов - network-first с fallback
+        try {
+          const response = await fetch(request);
           if (response && response.status === 200) {
             const clone = response.clone();
             caches.open(DYNAMIC_CACHE).then((cache) => cache.put(request, clone));
           }
           return response;
-        })
-        .catch(async () => {
+        } catch (error) {
           const cached = await caches.match(request);
           return cached || new Response('Offline', { status: 503 });
-        })
+        }
+      })()
     );
     return;
   }
 
   // Остальные типы (изображения, JSON) — stale-while-revalidate
+  // Для вебвизора - только network без кэширования
   event.respondWith(
-    caches.match(request).then((cachedResponse) => {
+    (async () => {
+      // Проверяем, не является ли это запросом от вебвизора
+      const isWebvisor = await isWebvisorIframe();
+      
+      if (isWebvisor) {
+        // Для вебвизора - только network, без кэширования
+        return fetch(request).catch(() => {
+          return new Response('Network error', { status: 503 });
+        });
+      }
+
+      // Для обычных запросов - stale-while-revalidate
+      const cachedResponse = await caches.match(request);
       const networkFetch = fetch(request)
         .then((response) => {
           if (response && response.status === 200) {
@@ -112,7 +209,7 @@ self.addEventListener('fetch', (event) => {
         .catch(() => cachedResponse);
 
       return cachedResponse || networkFetch;
-    })
+    })()
   );
 });
 
