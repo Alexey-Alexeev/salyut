@@ -20,13 +20,20 @@ export function EventCollectionsSection({ eventCounts }: EventCollectionsSection
             </div>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
-                {Object.values(EVENT_TYPES).map((eventType) => (
-                    <EventCollectionCard
-                        key={eventType}
-                        eventType={eventType}
-                        productCount={eventCounts[eventType]}
-                    />
-                ))}
+                {Object.values(EVENT_TYPES)
+                    .sort((a, b) => {
+                        // Ставим new_year первым (особенно актуально перед Новым Годом)
+                        if (a === EVENT_TYPES.NEW_YEAR) return -1;
+                        if (b === EVENT_TYPES.NEW_YEAR) return 1;
+                        return 0;
+                    })
+                    .map((eventType) => (
+                        <EventCollectionCard
+                            key={eventType}
+                            eventType={eventType}
+                            productCount={eventCounts[eventType]}
+                        />
+                    ))}
             </div>
         </section>
     );
