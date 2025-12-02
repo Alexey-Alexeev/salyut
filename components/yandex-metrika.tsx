@@ -38,6 +38,14 @@ export function YandexMetrika() {
   const isInitializedRef = useRef(false);
   const initialHitSentRef = useRef(false);
 
+  // Логируем инициализацию компонента
+  useEffect(() => {
+    console.log('[Metrika] Component mounted');
+    return () => {
+      console.log('[Metrika] Component unmounted');
+    };
+  }, []);
+
   // Формируем полный URL страницы (путь + query параметры)
   const currentUrl = useMemo(() => {
     if (!pathname) return '/';
@@ -51,12 +59,19 @@ export function YandexMetrika() {
    * @param isInitialHit - флаг первой загрузки страницы
    */
   const sendPageView = useCallback((url: string, isInitialHit = false) => {
+    console.log('[Metrika] sendPageView called:', { url, isInitialHit, hostname: typeof window !== 'undefined' ? window.location.hostname : 'undefined' });
+    
     // Проверки окружения
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+      console.log('[Metrika] Skipping - window is undefined');
+      return;
+    }
     
     // В разработке только логируем, но не отправляем
     const isProduction = window.location.hostname === PRODUCTION_HOSTNAME;
     const isDevelopment = !isProduction;
+    
+    console.log('[Metrika] Environment check:', { isProduction, isDevelopment, hostname: window.location.hostname, expectedHostname: PRODUCTION_HOSTNAME });
     
     if (isDevelopment) {
       console.log('[Metrika DEV] Page view:', url, { isInitialHit });
@@ -143,6 +158,28 @@ export function YandexMetrika() {
   }, [waitForCounterAndSendInitialHit]);
 
   /**
+   * Обработчик ошибки загрузки скрипта
+   */
+  const handleScriptError = useCallback(() => {
+    console.error('[Metrika] Script loading failed');
+  }, []);
+
+  /**
+   * Запасной механизм инициализации - на случай если onLoad не сработал
+   */
+  useEffect(() => {
+    const fallbackTimer = setTimeout(() => {
+      if (!isInitializedRef.current) {
+        console.log('[Metrika] Fallback initialization after 3s');
+        isInitializedRef.current = true;
+        waitForCounterAndSendInitialHit();
+      }
+    }, 3000);
+
+    return () => clearTimeout(fallbackTimer);
+  }, [waitForCounterAndSendInitialHit]);
+
+  /**
    * Отслеживаем изменения URL для отправки hit при SPA-переходах
    */
   useEffect(() => {
@@ -167,6 +204,7 @@ export function YandexMetrika() {
         id="yandex-metrika"
         strategy="afterInteractive"
         onLoad={handleScriptLoad}
+        onError={handleScriptError}
         dangerouslySetInnerHTML={{
           __html: `
             (function(m,e,t,r,i,k,a){
