@@ -20,24 +20,64 @@
 // ID счетчика Яндекс.Метрики
 const METRIKA_ID = 104700931;
 
+// Типизация для Яндекс Метрики
+declare global {
+  interface Window {
+    ym?: (
+      counterId: number,
+      method: string,
+      ...args: any[]
+    ) => void;
+  }
+}
+
 /**
- * Отправляет событие в Яндекс.Метрику
+ * Отправляет событие просмотра страницы в Яндекс.Метрику
+ * Используется для SPA-сайтов с defer:true
+ * @param url - URL страницы (относительный или абсолютный)
+ * @param options - дополнительные параметры
+ */
+export function sendMetrikaHit(url?: string, options?: {
+  title?: string;
+  referer?: string;
+  params?: Record<string, any>;
+}) {
+  if (typeof window === 'undefined') return;
+  
+  const ym = window.ym;
+  if (!ym) {
+    console.warn('[Metrika] Counter not loaded');
+    return;
+  }
+
+  try {
+    const targetUrl = url || window.location.href;
+    ym(METRIKA_ID, 'hit', targetUrl, options);
+    console.log('[Metrika] Manual hit sent:', targetUrl);
+  } catch (error) {
+    console.error('[Metrika] Error sending hit:', error);
+  }
+}
+
+/**
+ * Отправляет событие достижения цели в Яндекс.Метрику
  * @param goalName - название цели
  * @param params - дополнительные параметры события
  */
 export function sendMetrikaGoal(goalName: string, params?: Record<string, any>) {
   if (typeof window === 'undefined') return;
   
-  const ym = (window as any).ym;
+  const ym = window.ym;
   if (!ym) {
-    console.warn('Yandex Metrika not loaded');
+    console.warn('[Metrika] Counter not loaded');
     return;
   }
 
   try {
     ym(METRIKA_ID, 'reachGoal', goalName, params);
+    console.log('[Metrika] Goal reached:', goalName, params);
   } catch (error) {
-    console.error('Error sending Metrika goal:', error);
+    console.error('[Metrika] Error sending goal:', error);
   }
 }
 

@@ -7,116 +7,159 @@ import { usePathname, useSearchParams } from 'next/navigation';
 const YM_ID = 104700931;
 const SCRIPT_SRC = `https://mc.yandex.ru/metrika/tag.js?id=${YM_ID}`;
 const PRODUCTION_HOSTNAME = 'salutgrad.ru';
-const WEBVISOR_INIT_DELAY = 300; // Задержка для инициализации вебвизора
+
+// Типизация для Яндекс Метрики
+declare global {
+  interface Window {
+    ym?: (
+      counterId: number,
+      method: string,
+      ...args: any[]
+    ) => void;
+  }
+}
 
 /**
- * Оптимизированный клиентский компонент Метрики для SPA-сайтов:
- *  - использует defer:true (обязательно для SPA согласно документации)
- *  - использует onLoad для точного определения загрузки скрипта
- *  - отправляет hit при первой загрузке после инициализации счетчика
- *  - отправляет hit при каждом SPA-переходе между страницами
- *  - минимизирует задержки и множественные проверки
+ * Клиентский компонент Метрики для SPA-сайтов (Next.js)
+ * 
+ * Реализация согласно официальной документации Яндекс Метрики:
+ * https://yandex.ru/support/metrica/code/install-counter-spa.html
+ * 
+ * Особенности:
+ * 1. defer:true - отключает автоматическую отправку hit при загрузке
+ * 2. Отправляет hit вручную при первой загрузке страницы
+ * 3. Отправляет hit при каждом SPA-переходе между страницами
+ * 4. Передает корректный referer для отслеживания переходов
  */
 export function YandexMetrika() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const lastUrlRef = useRef<string | null>(null);
-  const isInitialLoadRef = useRef(true);
-  const counterReadyRef = useRef(false);
+  const previousUrlRef = useRef<string>('');
+  const isInitializedRef = useRef(false);
   const initialHitSentRef = useRef(false);
 
-  const relativeUrl = useMemo(() => {
-    if (!pathname) {
-      return '/';
-    }
+  // Формируем полный URL страницы (путь + query параметры)
+  const currentUrl = useMemo(() => {
+    if (!pathname) return '/';
     const search = searchParams?.toString();
     return search ? `${pathname}?${search}` : pathname;
   }, [pathname, searchParams]);
 
-  const sendHit = useCallback((url: string) => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    if (window.location.hostname !== PRODUCTION_HOSTNAME) {
-      lastUrlRef.current = url;
+  /**
+   * Отправляет событие просмотра страницы в Яндекс Метрику
+   * @param url - относительный URL страницы
+   * @param isInitialHit - флаг первой загрузки страницы
+   */
+  const sendPageView = useCallback((url: string, isInitialHit = false) => {
+    // Проверки окружения
+    if (typeof window === 'undefined') return;
+    
+    // В разработке только логируем, но не отправляем
+    const isProduction = window.location.hostname === PRODUCTION_HOSTNAME;
+    const isDevelopment = !isProduction;
+    
+    if (isDevelopment) {
+      console.log('[Metrika DEV] Page view:', url, { isInitialHit });
+      previousUrlRef.current = url;
       return;
     }
 
-    const ym = (window as any).ym;
-    if (typeof ym !== 'function') {
-      return false; // Счетчик еще не готов
+    // Проверяем доступность счетчика
+    if (!window.ym) {
+      console.warn('[Metrika] Counter not ready yet');
+      return;
     }
 
     try {
+      // Формируем абсолютный URL для hit
       const absoluteUrl = `${window.location.origin}${url}`;
-      const referer = lastUrlRef.current
-        ? `${window.location.origin}${lastUrlRef.current}`
+      
+      // Формируем referer (предыдущая страница)
+      const referer = previousUrlRef.current
+        ? `${window.location.origin}${previousUrlRef.current}`
         : document.referrer || undefined;
 
-      ym(YM_ID, 'hit', absoluteUrl, {
+      const options: any = {
         title: document.title,
-        referer,
+      };
+
+      // Referer передаем только для последующих переходов
+      if (!isInitialHit && referer) {
+        options.referer = referer;
+      }
+
+      // Отправляем hit
+      window.ym(YM_ID, 'hit', absoluteUrl, options);
+      
+      console.log('[Metrika] Hit sent:', {
+        url: absoluteUrl,
+        title: document.title,
+        referer: options.referer,
+        isInitialHit
       });
-      lastUrlRef.current = url;
-      return true;
+
+      // Сохраняем текущий URL как предыдущий для следующего перехода
+      previousUrlRef.current = url;
     } catch (error) {
-      console.warn('Yandex Metrika hit error', error);
-      return false;
+      console.error('[Metrika] Error sending hit:', error);
     }
   }, []);
 
-  // Обработчик загрузки скрипта - более точный, чем периодические проверки
-  const handleScriptLoad = useCallback(() => {
-    // Проверяем готовность счетчика с минимальными задержками
-    const checkAndSendInitialHit = (attempt = 0) => {
-      const ym = (window as any).ym;
+  /**
+   * Ожидает готовности счетчика и отправляет первый hit
+   */
+  const waitForCounterAndSendInitialHit = useCallback(() => {
+    let attempts = 0;
+    const maxAttempts = 50; // 50 * 100ms = 5 секунд максимум
+    
+    const checkCounter = () => {
+      attempts++;
       
-      if (typeof ym === 'function') {
-        counterReadyRef.current = true;
-        
-        // Отправляем hit для первой загрузки с задержкой для вебвизора
-        if (isInitialLoadRef.current && !initialHitSentRef.current) {
-          setTimeout(() => {
-            if (sendHit(relativeUrl)) {
-              initialHitSentRef.current = true;
-              isInitialLoadRef.current = false;
-            }
-          }, WEBVISOR_INIT_DELAY);
-        }
-      } else if (attempt < 10) {
-        // Быстрая проверка каждые 100ms, максимум 1 секунда
-        setTimeout(() => checkAndSendInitialHit(attempt + 1), 100);
+      if (window.ym) {
+        // Счетчик готов - отправляем первый hit
+        console.log('[Metrika] Counter ready after', attempts * 100, 'ms');
+        sendPageView(currentUrl, true);
+        initialHitSentRef.current = true;
+      } else if (attempts < maxAttempts) {
+        // Продолжаем ждать
+        setTimeout(checkCounter, 100);
+      } else {
+        console.error('[Metrika] Counter not initialized after 5 seconds');
       }
     };
 
-    // Начинаем проверку сразу после загрузки скрипта
-    checkAndSendInitialHit();
-  }, [relativeUrl, sendHit]);
+    checkCounter();
+  }, [currentUrl, sendPageView]);
 
-  // Отслеживаем изменения URL и отправляем hit для SPA-переходов
+  /**
+   * Обработчик успешной загрузки скрипта Метрики
+   */
+  const handleScriptLoad = useCallback(() => {
+    console.log('[Metrika] Script loaded');
+    isInitializedRef.current = true;
+    
+    // Ждем готовности счетчика и отправляем первый hit
+    waitForCounterAndSendInitialHit();
+  }, [waitForCounterAndSendInitialHit]);
+
+  /**
+   * Отслеживаем изменения URL для отправки hit при SPA-переходах
+   */
   useEffect(() => {
-    if (!relativeUrl || isInitialLoadRef.current) {
+    // Пропускаем первую загрузку - она обрабатывается в handleScriptLoad
+    if (!initialHitSentRef.current) {
       return;
     }
 
-    // Проверяем, что это реально новая страница, а не просто ре-рендер
-    if (lastUrlRef.current === relativeUrl) {
+    // Проверяем, что URL действительно изменился
+    if (previousUrlRef.current === currentUrl) {
       return;
     }
 
-    // Для SPA-переходов отправляем hit сразу, если счетчик готов
-    // Небольшая задержка только для гарантии готовности
-    if (counterReadyRef.current) {
-      // Счетчик уже готов, отправляем сразу
-      sendHit(relativeUrl);
-    } else {
-      // Счетчик еще не готов, ждем с минимальной задержкой
-      const timeoutId = setTimeout(() => {
-        sendHit(relativeUrl);
-      }, 100);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [relativeUrl, sendHit]);
+    // Отправляем hit для нового URL
+    console.log('[Metrika] URL changed:', previousUrlRef.current, '->', currentUrl);
+    sendPageView(currentUrl, false);
+  }, [currentUrl, sendPageView]);
 
   return (
     <>
