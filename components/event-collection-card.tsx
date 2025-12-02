@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { EVENT_TYPE_NAMES, EVENT_TYPE_IMAGES, type EventType } from '@/lib/schema-constants';
 
 interface EventCollectionCardProps {
@@ -25,6 +26,7 @@ const EVENT_DESCRIPTIONS: Record<EventType, string> = {
 
 export function EventCollectionCard({ eventType, productCount }: EventCollectionCardProps) {
     const [imageError, setImageError] = useState(false);
+    const pathname = usePathname();
     const eventName = EVENT_TYPE_NAMES[eventType];
     const icon = EVENT_ICONS[eventType];
     const description = EVENT_DESCRIPTIONS[eventType];
@@ -34,8 +36,22 @@ export function EventCollectionCard({ eventType, productCount }: EventCollection
         setImageError(true);
     };
 
+    // Очищаем сохраненную позицию прокрутки при переходе с главной страницы в каталог
+    const handleClick = () => {
+        if (typeof window !== 'undefined' && pathname === '/') {
+            try {
+                // Очищаем данные о прокрутке каталога, так как это не возврат из карточки товара
+                sessionStorage.removeItem('catalogScrollPosition');
+                sessionStorage.removeItem('catalogReturnUrl');
+            } catch (error) {
+                // Игнорируем ошибки sessionStorage
+                console.warn('Не удалось очистить позицию прокрутки:', error);
+            }
+        }
+    };
+
     return (
-        <Link href={`/catalog?eventType=${eventType}`}>
+        <Link href={`/catalog?eventType=${eventType}`} onClick={handleClick}>
             <Card className="group cursor-pointer overflow-hidden transition-all duration-200 hover:shadow-lg">
                 <div className="relative aspect-square min-h-[120px]">
                     {imageUrl && !imageError ? (

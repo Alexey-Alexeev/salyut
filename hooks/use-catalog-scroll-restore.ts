@@ -212,8 +212,33 @@ export function useCatalogScrollRestore({
                 const currentPathname = window.location.pathname.replace(/\/$/, '') || '/';
                 const isCatalogPage = currentPathname === '/catalog';
 
-                // Если есть сохраненная позиция и мы на странице каталога
-                if (savedScrollPosition && returnUrl && isCatalogPage) {
+                // Получаем текущий URL каталога для сравнения
+                const currentUrl = window.location.pathname + window.location.search;
+                const normalizedCurrentUrl = currentUrl.replace(/\/$/, '') || '/catalog';
+                const normalizedReturnUrl = returnUrl ? returnUrl.replace(/\/$/, '') : '';
+
+                // Проверяем, что returnUrl соответствует текущему URL каталога
+                // Это гарантирует, что мы вернулись из карточки товара, а не пришли с главной страницы
+                // Сравниваем без учета query параметров, так как они могут отличаться (например, при применении фильтров)
+                const currentPathOnly = normalizedCurrentUrl.split('?')[0];
+                const returnPathOnly = normalizedReturnUrl.split('?')[0];
+                const isReturnFromProduct = returnUrl && 
+                    returnPathOnly === '/catalog' && 
+                    currentPathOnly === '/catalog';
+
+                // Если returnUrl не соответствует текущему URL, очищаем старые данные
+                // Это означает, что мы пришли с другой страницы (например, с главной), а не вернулись из карточки товара
+                if (returnUrl && !isReturnFromProduct && isCatalogPage) {
+                    try {
+                        sessionStorage.removeItem('catalogScrollPosition');
+                        sessionStorage.removeItem('catalogReturnUrl');
+                    } catch (error) {
+                        console.warn('Не удалось очистить старые данные прокрутки:', error);
+                    }
+                }
+
+                // Если есть сохраненная позиция, мы на странице каталога, и это действительно возврат из карточки товара
+                if (savedScrollPosition && returnUrl && isCatalogPage && isReturnFromProduct) {
                     const scrollY = parseInt(savedScrollPosition, 10);
 
                     if (!isNaN(scrollY) && scrollY >= 0) {
