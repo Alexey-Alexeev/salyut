@@ -150,9 +150,9 @@ export default async function HomePage() {
 
       <CategoriesSection categories={categoriesData} />
 
-      <EventCollectionsSection eventCounts={eventCounts} />
-
       <PopularProductsSection products={popularProducts} />
+
+      <EventCollectionsSection eventCounts={eventCounts} />
 
       <ProfessionalServicesSection />
 

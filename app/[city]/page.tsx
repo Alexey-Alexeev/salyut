@@ -159,9 +159,9 @@ export default async function CityPage({ params }: CityPageProps) {
 
             <CategoriesSection categories={categoriesData} />
 
-            <EventCollectionsSection eventCounts={eventCounts} />
-
             <PopularProductsSection products={popularProducts} />
+
+            <EventCollectionsSection eventCounts={eventCounts} />
 
             <ProfessionalServicesSection />
 

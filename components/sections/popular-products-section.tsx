@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/product-card';
+import { ArrowRight } from 'lucide-react';
 
 interface Product {
     id: string;
@@ -43,10 +44,14 @@ export function PopularProductsSection({ products }: PopularProductsSectionProps
                 <Button
                     asChild
                     aria-label="Смотреть все товары"
-                    variant="outline"
+                    variant="default"
                     size="lg"
+                    className="bg-orange-600 text-white font-semibold shadow-lg hover:bg-orange-700"
                 >
-                    <Link href="/catalog">Смотреть все товары</Link>
+                    <Link href="/catalog" className="flex items-center gap-2">
+                        Смотреть все товары
+                        <ArrowRight className="size-4" />
+                    </Link>
                 </Button>
             </div>
         </section>

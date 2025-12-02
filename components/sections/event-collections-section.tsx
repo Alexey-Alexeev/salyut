@@ -11,7 +11,7 @@ interface EventCollectionsSectionProps {
 
 export function EventCollectionsSection({ eventCounts }: EventCollectionsSectionProps) {
     return (
-        <section className="container mx-auto bg-white px-4 py-12">
+        <section className="container mx-auto bg-gray-50 px-4 py-12">
             <div className="mb-12 space-y-4 text-center">
                 <h2 className="text-3xl font-bold md:text-4xl">Подборки салютов</h2>
                 <p className="text-muted-foreground mx-auto max-w-2xl">
