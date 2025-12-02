@@ -53,9 +53,15 @@ export function useCatalogProducts({
     // Ref для отслеживания прогресса запросов
     const isRequestInProgressRef = useRef(false);
     const lastRequestIdRef = useRef<string | null>(null);
+    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // Применение всех фильтров через серверные запросы
     useEffect(() => {
+        // Очищаем предыдущий debounce таймер
+        if (debounceTimeoutRef.current) {
+            clearTimeout(debounceTimeoutRef.current);
+        }
+
         const applyAllFilters = async () => {
             // Не применяем фильтры при смене страницы (это делает отдельный useEffect)
             // Но пропускаем только если страница действительно изменилась и мы еще не загрузили данные
@@ -170,6 +176,7 @@ export function useCatalogProducts({
             } finally {
                 setIsFiltering(false);
                 isRequestInProgressRef.current = false;
+                lastRequestIdRef.current = null;
                 // Завершаем инициализацию после применения фильтров
                 setIsInitializing(false);
                 isInitializingFromUrlRef.current = false;
@@ -178,16 +185,22 @@ export function useCatalogProducts({
 
         // Если мы инициализируемся из URL, делаем задержку перед применением фильтров
         if (isInitializingFromUrlRef.current) {
-            const timeoutId = setTimeout(() => {
+            debounceTimeoutRef.current = setTimeout(() => {
                 applyAllFilters();
             }, 200);
-
-            return () => {
-                clearTimeout(timeoutId);
-            };
+        } else {
+            // Debounce для частых изменений фильтров (кроме инициализации)
+            // Это предотвращает множественные запросы при быстром изменении фильтров
+            debounceTimeoutRef.current = setTimeout(() => {
+                applyAllFilters();
+            }, 300);
         }
 
-        applyAllFilters();
+        return () => {
+            if (debounceTimeoutRef.current) {
+                clearTimeout(debounceTimeoutRef.current);
+            }
+        };
     }, [filters, sortBy, buildApiParams, pagination.page, categories, setIsInitializing, isInitializingFromUrlRef]);
 
     // Отдельный useEffect для смены страницы
@@ -197,9 +210,27 @@ export function useCatalogProducts({
             return;
         }
         
+        // Пропускаем, если уже идет запрос
+        if (isRequestInProgressRef.current) {
+            return;
+        }
+        
         if (pagination.page !== lastPageRef.current) {
             const fetchPage = async () => {
-                setIsFiltering(true);
+                // Используем isPaginationLoading вместо isFiltering для пагинации
+                setIsPaginationLoading?.(true);
+                
+                // Создаем уникальный идентификатор для запроса
+                const requestParams = buildApiParams(pagination.page);
+                
+                // Если уже идет запрос с теми же параметрами, пропускаем
+                if (isRequestInProgressRef.current && lastRequestIdRef.current === requestParams) {
+                    setIsPaginationLoading?.(false);
+                    return;
+                }
+
+                isRequestInProgressRef.current = true;
+                lastRequestIdRef.current = requestParams;
 
                 try {
                     // Преобразуем URLSearchParams в объект фильтров
@@ -226,14 +257,15 @@ export function useCatalogProducts({
                 } catch (error) {
                     console.error('Error fetching page:', error);
                 } finally {
-                    setIsFiltering(false);
                     setIsPaginationLoading?.(false);
+                    isRequestInProgressRef.current = false;
+                    lastRequestIdRef.current = null;
                 }
             };
 
             fetchPage();
         }
-    }, [pagination.page, categories, filters, sortBy]);
+    }, [pagination.page, categories, filters, sortBy, buildApiParams]);
 
     // Загрузка всех товаров для поиска похожих и популярных товаров (один раз при монтировании)
     useEffect(() => {

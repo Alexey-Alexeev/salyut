@@ -240,25 +240,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         };
     }, [clearAllTimeouts]);
 
-    // Показываем загрузку во время инициализации с URL параметрами
-    if (isInitializing) {
-        return (
-            <div className="container mx-auto px-4 py-8 animate-in fade-in duration-200">
-                <div className="mb-6">
-                    <Breadcrumb items={[{ label: 'Каталог товаров' }]} />
-                </div>
-                <div className="flex items-center justify-center py-12">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                        <p className="text-muted-foreground">Применяем фильтры...</p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     return (
-        <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24 py-8 animate-in fade-in duration-300">
+        <div className="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24 py-8">
             <CatalogCanonical />
             {/* JSON-LD Structured Data для каталога */}
             <script
@@ -275,6 +258,16 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
             <div className="mb-6">
                 <Breadcrumb items={[{ label: 'Каталог товаров' }]} />
             </div>
+            
+            {/* Показываем загрузку во время инициализации, но не заменяем весь контент */}
+            {isInitializing && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-200 border-t-orange-600"></div>
+                        <p className="text-sm font-medium text-gray-700">Применяем фильтры...</p>
+                    </div>
+                </div>
+            )}
 
             {/* Поиск */}
             <CatalogSearch

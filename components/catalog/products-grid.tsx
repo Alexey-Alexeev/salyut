@@ -32,22 +32,35 @@ export function ProductsGrid({
                     : 'grid-cols-1'
                 }`}
         >
-            {isLoading ? (
+            {/* Показываем товары, даже если идет загрузка - это предотвращает мерцание */}
+            {products.map((product, index) => (
+                <ProductCard 
+                    key={product.id} 
+                    product={product} 
+                    isFirst={index === 0} 
+                    isAboveFold={index < 8}
+                />
+            ))}
+            
+            {/* Показываем skeleton'ы только если нет товаров и идет загрузка */}
+            {isLoading && products.length === 0 && (
                 Array.from({ length: 8 }).map((_, index) => (
-                    <div key={index} className="animate-pulse">
+                    <div key={`skeleton-${index}`} className="animate-pulse">
                         <div className="bg-muted aspect-square rounded-lg mb-2" />
                         <div className="bg-muted h-4 rounded mb-2" />
                         <div className="bg-muted h-6 w-1/2 rounded" />
                     </div>
                 ))
-            ) : (
-                products.map((product, index) => (
-                    <ProductCard 
-                        key={product.id} 
-                        product={product} 
-                        isFirst={index === 0} 
-                        isAboveFold={index < 8}
-                    />
+            )}
+            
+            {/* Показываем дополнительные skeleton'ы поверх существующих товаров при загрузке */}
+            {isLoading && products.length > 0 && (
+                Array.from({ length: 4 }).map((_, index) => (
+                    <div key={`loading-${index}`} className="animate-pulse opacity-50">
+                        <div className="bg-muted aspect-square rounded-lg mb-2" />
+                        <div className="bg-muted h-4 rounded mb-2" />
+                        <div className="bg-muted h-6 w-1/2 rounded" />
+                    </div>
                 ))
             )}
         </div>
