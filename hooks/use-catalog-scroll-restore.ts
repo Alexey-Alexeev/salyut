@@ -276,7 +276,7 @@ export function useCatalogScrollRestore({
                                     shouldSaveScrollRef.current = true;
                                     
                                     // Удаляем слушатель
-                                    window.removeEventListener('scroll', handleUserScroll, { passive: true });
+                                    window.removeEventListener('scroll', handleUserScroll);
                                     return;
                                 }
                                 
@@ -344,7 +344,7 @@ export function useCatalogScrollRestore({
                                     }
                                 } else {
                                     // Удаляем слушатель
-                                    window.removeEventListener('scroll', handleUserScroll, { passive: true });
+                                    window.removeEventListener('scroll', handleUserScroll);
                                     
                                     // Удаляем сохраненную позицию после восстановления
                                     try {
@@ -373,7 +373,7 @@ export function useCatalogScrollRestore({
                                     if (scrollTimeoutId !== null) {
                                         clearTimeout(scrollTimeoutId);
                                     }
-                                    window.removeEventListener('scroll', handleUserScroll, { passive: true });
+                                    window.removeEventListener('scroll', handleUserScroll);
                                 }
                             };
                         };
