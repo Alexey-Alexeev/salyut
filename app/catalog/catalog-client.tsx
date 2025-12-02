@@ -259,15 +259,6 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 <Breadcrumb items={[{ label: 'Каталог товаров' }]} />
             </div>
             
-            {/* Показываем загрузку во время инициализации, но не заменяем весь контент */}
-            {isInitializing && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
-                    <div className="flex flex-col items-center gap-4">
-                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-200 border-t-orange-600"></div>
-                        <p className="text-sm font-medium text-gray-700">Применяем фильтры...</p>
-                    </div>
-                </div>
-            )}
 
             {/* Поиск */}
             <CatalogSearch
@@ -425,8 +416,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         </div>
                     )}
 
-                    {/* Loader при возврате из карточки товара */}
-                    {isRestoringScroll && (
+                    {/* Универсальный loader для загрузки каталога (инициализация из URL или возврат из карточки) */}
+                    {(isInitializing || isRestoringScroll) && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
                             <div className="flex flex-col items-center gap-4">
                                 <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-200 border-t-orange-600"></div>
