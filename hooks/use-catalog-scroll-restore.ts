@@ -249,6 +249,9 @@ export function useCatalogScrollRestore({
                     const scrollY = parseInt(savedScrollPosition, 10);
 
                     if (!isNaN(scrollY) && scrollY >= 0) {
+                        // Показываем лоадер сразу при начале восстановления прокрутки
+                        setIsRestoringScroll(true);
+                        
                         // Восстанавливаем позицию прокрутки после задержки
                         // чтобы дать время странице отрендериться и данным загрузиться
                         // Используем несколько попыток для надежности
