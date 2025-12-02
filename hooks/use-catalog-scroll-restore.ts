@@ -212,25 +212,15 @@ export function useCatalogScrollRestore({
                 const currentPathname = window.location.pathname.replace(/\/$/, '') || '/';
                 const isCatalogPage = currentPathname === '/catalog';
 
-                // Получаем текущий URL каталога для сравнения
-                const currentUrl = window.location.pathname + window.location.search;
-                const normalizedCurrentUrl = currentUrl.replace(/\/$/, '') || '/catalog';
-                const normalizedReturnUrl = returnUrl ? returnUrl.replace(/\/$/, '') : '';
-
-                // Проверяем, что returnUrl соответствует текущему URL каталога
+                // Проверяем, что returnUrl начинается с /catalog
                 // Это гарантирует, что мы вернулись из карточки товара, а не пришли с главной страницы
-                // Сравниваем без учета query параметров, так как они могут отличаться (например, при применении фильтров)
-                const currentPathOnly = normalizedCurrentUrl.split('?')[0];
-                const returnPathOnly = normalizedReturnUrl.split('?')[0];
-                const isReturnFromProduct = returnUrl && 
-                    returnPathOnly === '/catalog' && 
-                    currentPathOnly === '/catalog';
+                const isReturnFromProduct = returnUrl && returnUrl.startsWith('/catalog');
 
-                // Если returnUrl не соответствует текущему URL, очищаем старые данные
+                // Если returnUrl не начинается с /catalog и мы на странице каталога, очищаем старые данные
                 // Это означает, что мы пришли с другой страницы (например, с главной), а не вернулись из карточки товара
-                if (returnUrl && !isReturnFromProduct && isCatalogPage) {
+                // НО делаем это только если нет сохраненной позиции прокрутки, чтобы не удалить данные при возврате
+                if (returnUrl && !isReturnFromProduct && isCatalogPage && !savedScrollPosition) {
                     try {
-                        sessionStorage.removeItem('catalogScrollPosition');
                         sessionStorage.removeItem('catalogReturnUrl');
                     } catch (error) {
                         console.warn('Не удалось очистить старые данные прокрутки:', error);
@@ -238,6 +228,7 @@ export function useCatalogScrollRestore({
                 }
 
                 // Если есть сохраненная позиция, мы на странице каталога, и это действительно возврат из карточки товара
+                // Восстанавливаем прокрутку только если все условия выполнены
                 if (savedScrollPosition && returnUrl && isCatalogPage && isReturnFromProduct) {
                     const scrollY = parseInt(savedScrollPosition, 10);
 
@@ -409,12 +400,17 @@ export function useCatalogScrollRestore({
                         // Первая попытка через 400ms (уменьшена задержка для более быстрого восстановления)
                         // Восстанавливаем только после загрузки данных
                         const restoreTimeout = setTimeout(() => {
-                            // Проверяем, что данные загружены и страница отрендерена
+                            // Проверяем, что страница отрендерена (не обязательно должны быть товары)
+                            // Это позволяет восстановить прокрутку даже если данные еще загружаются
                             const checkDataLoaded = () => {
-                                const hasData = filteredProductsCount > 0 || !isFiltering;
+                                // Проверяем, что страница имеет контент (высота больше высоты окна)
+                                // или что есть товары, или что загрузка завершена
                                 const hasContent = document.body.scrollHeight > window.innerHeight;
+                                const hasData = filteredProductsCount > 0;
+                                const loadingComplete = !isFiltering;
 
-                                return hasData && hasContent;
+                                // Восстанавливаем прокрутку если есть контент на странице ИЛИ загрузка завершена
+                                return hasContent || (hasData && loadingComplete);
                             };
 
                             if (checkDataLoaded()) {
@@ -434,14 +430,16 @@ export function useCatalogScrollRestore({
                                     }
                                 }, 50); // Уменьшена задержка проверки
 
-                                // Максимальное время ожидания - 2 секунды (уменьшено)
+                                // Максимальное время ожидания - 3 секунды (увеличено для надежности)
                                 setTimeout(() => {
                                     clearInterval(waitForData);
+                                    // Восстанавливаем прокрутку даже если данные еще не загружены
+                                    // Это лучше, чем не восстанавливать вообще
                                     const cleanup = restoreScroll();
                                     if (cleanup) {
                                         restoreCleanupRef.current = cleanup.cancel;
                                     }
-                                }, 2000);
+                                }, 3000);
                             }
                         }, 400);
 
