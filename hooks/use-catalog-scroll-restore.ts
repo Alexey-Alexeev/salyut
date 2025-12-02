@@ -327,7 +327,7 @@ export function useCatalogScrollRestore({
                             scrollTimeoutId = setTimeout(() => {
                                 // Проверяем, не начал ли пользователь скроллить
                                 if (isUserScrolling) {
-                                    window.removeEventListener('scroll', handleUserScroll, { passive: true });
+                                    window.removeEventListener('scroll', handleUserScroll);
                                     return;
                                 }
 
@@ -336,7 +336,7 @@ export function useCatalogScrollRestore({
                                 // Если позиция не восстановилась и есть попытки, пробуем еще раз
                                 // Увеличиваем допуск для плавной прокрутки (может быть небольшая погрешность)
                                 if (Math.abs(currentScroll - scrollY) > 100 && attempts < maxAttempts && !isUserScrolling) {
-                                    window.removeEventListener('scroll', handleUserScroll, { passive: true });
+                                    window.removeEventListener('scroll', handleUserScroll);
                                     // При рекурсивном вызове сохраняем cleanup функцию
                                     const cleanup = restoreScroll();
                                     if (cleanup) {
