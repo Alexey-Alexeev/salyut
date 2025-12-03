@@ -191,6 +191,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
       id: product.id,
       name: product.name,
       price: product.price,
+      old_price: product.old_price ?? null,
       image: imageUrl || '/placeholder-product.jpg',
       slug: product.slug,
     });
@@ -251,6 +252,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
           id: product.id,
           name: product.name,
           price: product.price,
+          old_price: product.old_price ?? null,
           image: product.images?.[0] || '/placeholder-product.jpg',
           slug: product.slug,
           // quantity не нужен, т.к. addItem по умолчанию добавляет 1 штуку

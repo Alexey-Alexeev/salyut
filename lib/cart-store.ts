@@ -7,6 +7,7 @@ export interface CartItem {
   id: string;
   name: string;
   price: number;
+  old_price?: number | null;
   quantity: number;
   image: string;
   slug: string;

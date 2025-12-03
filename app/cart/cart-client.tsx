@@ -393,9 +393,25 @@ export default function CartPageClient() {
                                                         {item.name}
                                                     </h3>
                                                 </Link>
-                                                <p className="text-xs sm:text-sm text-gray-600">
-                                                    {item.price.toLocaleString('ru-RU')} ₽ за шт.
-                                                </p>
+                                                {item.old_price && item.old_price > item.price ? (
+                                                    <div className="mt-0.5 flex flex-col items-start gap-0.5">
+                                                        <div className="flex items-center gap-1.5">
+                                                            <span className="text-[11px] sm:text-xs text-gray-400 line-through whitespace-nowrap">
+                                                                {item.old_price.toLocaleString('ru-RU')} ₽
+                                                            </span>
+                                                            <span className="bg-red-500 text-white text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded">
+                                                                -{Math.round((1 - item.price / item.old_price) * 100)}%
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-xs sm:text-sm text-gray-600">
+                                                            {item.price.toLocaleString('ru-RU')} ₽ за шт.
+                                                        </p>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-xs sm:text-sm text-gray-600">
+                                                        {item.price.toLocaleString('ru-RU')} ₽ за шт.
+                                                    </p>
+                                                )}
                                             </div>
 
                                             {/* Кнопка удаления (мобильная - в правом верхнем углу) */}
@@ -437,7 +453,12 @@ export default function CartPageClient() {
                                             </div>
 
                                             {/* Цена */}
-                                            <div className="text-right min-w-[80px] sm:min-w-[100px]">
+                                            <div className="text-right min-w-[80px] sm:min-w-[100px] flex flex-col items-end">
+                                                {item.old_price && item.old_price > item.price && (
+                                                    <p className="text-[11px] sm:text-xs text-gray-400 line-through whitespace-nowrap">
+                                                        {(item.old_price * item.quantity).toLocaleString('ru-RU')} ₽
+                                                    </p>
+                                                )}
                                                 <p className="font-semibold text-sm sm:text-base whitespace-nowrap">
                                                     {(item.price * item.quantity).toLocaleString('ru-RU')} ₽
                                                 </p>
