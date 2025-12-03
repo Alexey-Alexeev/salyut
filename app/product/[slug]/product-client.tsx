@@ -260,7 +260,9 @@ export default function ProductClient({
         slug: product.slug,
       });
     }
-    toast.success(`${quantity} товар(ов) добавлено в корзину`);
+
+    const quantityLabel = `${quantity} шт.`;
+    toast.success(`${quantityLabel} добавлено в корзину`);
     setQuantity(1);
   };
 
@@ -646,7 +648,7 @@ export default function ProductClient({
 
             <Button onClick={handleAddToCart} size="lg" className="w-full">
               <ShoppingCart className="mr-2 size-5" />
-              Добавить в корзину •{' '}
+              Добавить {quantity} шт. в корзину •{' '}
               {(product.price * quantity).toLocaleString('ru-RU')} ₽
             </Button>
           </div>
