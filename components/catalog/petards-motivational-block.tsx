@@ -4,32 +4,6 @@ export function PetardsMotivationalBlock() {
     return (
         <div className="flex-1 lg:min-w-0">
             <div className="relative space-y-5">
-                <div className="flex flex-col items-start gap-3 lg:flex-row lg:items-center lg:justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-5 py-2.5 text-base font-semibold text-emerald-800 shadow-sm backdrop-blur lg:text-lg">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100">
-                                <svg
-                                    className="h-5 w-5 text-emerald-600"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                    />
-                                </svg>
-                            </span>
-                            Проверенный выбор магазина
-                        </div>
-                    </div>
-                    <p className="text-xs text-gray-500 lg:text-base">
-                        Коротко о главном: безопасность, эффект и наш личный отбор.
-                    </p>
-                </div>
-
                 <h3 className="text-xl font-semibold leading-snug text-gray-900 lg:text-3xl">
                     Почему мы предлагаем только петарды «Звиздец»?
                 </h3>
@@ -110,6 +84,28 @@ export function PetardsMotivationalBlock() {
                         <p>
                             Мы тщательно отбираем каждый товар в нашем каталоге. Эти петарды прошли нашу проверку качества, и мы уверены в их надежности и безопасности. Мы предпочитаем предлагать вам только проверенные товары, в которых мы уверены на 100%.
                         </p>
+                    </div>
+                </div>
+
+                {/* Бейдж внизу по центру */}
+                <div className="flex justify-center pt-2">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-5 py-2.5 text-base font-semibold text-emerald-800 shadow-sm backdrop-blur lg:text-lg">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100">
+                            <svg
+                                className="h-5 w-5 text-emerald-600"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                        </span>
+                        Проверенный выбор магазина
                     </div>
                 </div>
             </div>
