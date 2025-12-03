@@ -8,7 +8,7 @@ export function PetardsMotivationalBlock() {
                     Почему мы предлагаем только петарды «Звиздец»?
                 </h3>
 
-                <div className="mt-4 space-y-6 text-sm leading-relaxed text-gray-700 lg:text-base">
+                <div className="mt-4 space-y-6 text-sm leading-relaxed text-gray-700 lg:text-lg">
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="flex items-start gap-3 rounded-2xl bg-white/80 p-4 shadow-sm backdrop-blur">
                             <span className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100">
@@ -27,10 +27,10 @@ export function PetardsMotivationalBlock() {
                                 </svg>
                             </span>
                             <div>
-                                <div className="text-xs font-semibold uppercase tracking-wide text-emerald-600 lg:text-sm">
+                                <div className="text-xs font-semibold uppercase tracking-wide text-emerald-600 lg:text-base">
                                     Качество и безопасность
                                 </div>
-                                <p className="text-xs text-gray-600 lg:text-sm">
+                                <p className="text-xs text-gray-600 lg:text-base">
                                     Каждая партия проходит нашу внутреннюю проверку — от качества сборки и упаковки до стабильности срабатывания и соответствия заявленным характеристикам.
                                 </p>
                             </div>
@@ -59,10 +59,10 @@ export function PetardsMotivationalBlock() {
                                 </svg>
                             </span>
                             <div>
-                                <div className="text-xs font-semibold uppercase tracking-wide text-emerald-600 lg:text-sm">
+                                <div className="text-xs font-semibold uppercase tracking-wide text-emerald-600 lg:text-base">
                                     Видео перед покупкой
                                 </div>
-                                <p className="text-xs text-gray-600 lg:text-sm">
+                                <p className="text-xs text-gray-600 lg:text-base">
                                     В карточке товара есть{" "}
                                     <Link
                                         href="/product/Zvizdec/?tab=video"
