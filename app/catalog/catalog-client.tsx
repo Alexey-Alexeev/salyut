@@ -406,18 +406,8 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                         </div>
                     )}
 
-                    {/* Loader для пагинации в мобильной версии */}
-                    {isPaginationLoading && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm md:hidden">
-                            <div className="flex flex-col items-center gap-4">
-                                <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-200 border-t-orange-600"></div>
-                                <p className="text-sm font-medium text-gray-700">Загружаем товары...</p>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Универсальный loader для загрузки каталога (инициализация из URL или возврат из карточки) */}
-                    {(isInitializing || isRestoringScroll) && (
+                    {/* Универсальный loader для загрузки каталога (инициализация из URL, возврат из карточки или пагинация на мобильных) */}
+                    {(isInitializing || isRestoringScroll || isPaginationLoading) && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
                             <div className="flex flex-col items-center gap-4">
                                 <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-200 border-t-orange-600"></div>
