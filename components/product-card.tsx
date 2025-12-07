@@ -311,7 +311,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
                 // LCP изображение с максимальным приоритетом
                 <img
                   src={imageUrl}
-                  alt={product.name}
+                  alt={`${product.name} - купить фейерверк в Москве и области с доставкой${product.category_name ? `, категория ${product.category_name}` : ''}`}
                   width={400}
                   height={400}
                   fetchPriority="high"
@@ -323,7 +323,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
                 // Above the fold - высокий приоритет
                 <img
                   src={imageUrl}
-                  alt={product.name}
+                  alt={`${product.name} - купить фейерверк в Москве и области с доставкой${product.category_name ? `, категория ${product.category_name}` : ''}`}
                   width={400}
                   height={400}
                   loading="eager"
@@ -334,7 +334,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
                 // Below the fold - ленивая загрузка
                 <img
                   src={imageUrl}
-                  alt={product.name}
+                  alt={`${product.name} - купить фейерверк в Москве и области с доставкой${product.category_name ? `, категория ${product.category_name}` : ''}`}
                   width={400}
                   height={400}
                   loading="lazy"

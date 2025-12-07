@@ -380,7 +380,7 @@ export default function CartPageClient() {
                                             <Link href={`/product/${item.slug}`} className="relative h-16 w-16 shrink-0 sm:h-20 sm:w-20 block">
                                                 <Image
                                                     src={item.image || '/images/placeholder.jpg'}
-                                                    alt={item.name}
+                                                    alt={`${item.name} - фейерверк в корзине, купить в Москве и области`}
                                                     fill
                                                     className="rounded-lg object-cover"
                                                     sizes="(max-width: 640px) 64px, 80px"

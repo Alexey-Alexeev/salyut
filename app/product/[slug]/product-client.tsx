@@ -564,7 +564,7 @@ export default function ProductClient({
             })() : mediaItems[selectedImage]?.type === 'image' ? (
               <Image
                 src={mediaItems[selectedImage]?.src || ''}
-                alt={product.name}
+                alt={`${product.name} - купить качественный фейерверк в Москве и области с доставкой${category ? `, категория ${category.name}` : ''}`}
                 fill
                 className="object-cover"
                 priority
@@ -629,7 +629,7 @@ export default function ProductClient({
                   ) : (
                     <Image
                       src={item.src || ''}
-                      alt={`${product.name} ${index + 1}`}
+                      alt={`${product.name} - фото ${index + 1}, купить фейерверк в Москве и области${category ? `, категория ${category.name}` : ''}`}
                       fill
                       className="object-cover"
                     />

@@ -99,7 +99,7 @@ export function VideoReviewCard({ video }: VideoReviewCardProps) {
           <>
             <Image
               src={video.thumbnail_url || '/default-thumbnail.jpg'}
-              alt={video.customer_name}
+              alt={`Видео-отзыв от ${video.customer_name} о фейерверках и салютах`}
               fill
               className="object-cover"
               onClick={handlePlay}
