@@ -53,6 +53,14 @@
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/terms/"/>
   </url>
+  
+  <url>
+    <loc>https://salutgrad.ru/services/launching/</loc>
+    <lastmod>2025-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/services/launching/"/>
+  </url>
 
   <!-- Категории -->
   <url>
