@@ -99,7 +99,33 @@ export default function RootLayout({
         {/* Hreflang теги для правильной языковой индексации */}
         <link rel="alternate" hrefLang="ru" href="https://salutgrad.ru/" />
         <link rel="alternate" hrefLang="x-default" href="https://salutgrad.ru/" />
-        {/* Conditional noindex meta tags - только для Vercel */}
+        {/* 
+          Синхронный inline script для установки noindex на dev-доменах
+          Выполняется ДО React hydration, поэтому поисковики гарантированно видят noindex
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                // Проверяем, что это не production домен
+                if (window.location.hostname !== 'salutgrad.ru') {
+                  // Создаем мета-теги для блокировки индексации dev-доменов
+                  // Этот скрипт выполняется синхронно в <head>, поэтому мета-теги еще не установлены
+                  var robotsMeta = document.createElement('meta');
+                  robotsMeta.name = 'robots';
+                  robotsMeta.content = 'noindex, nofollow';
+                  document.head.appendChild(robotsMeta);
+                  
+                  var googlebotMeta = document.createElement('meta');
+                  googlebotMeta.name = 'googlebot';
+                  googlebotMeta.content = 'noindex, nofollow';
+                  document.head.appendChild(googlebotMeta);
+                }
+              })();
+            `,
+          }}
+        />
+        {/* Fallback: Conditional noindex компонент (на случай, если inline script не сработает) */}
         <ConditionalNoIndex />
         
         {/* Service Worker для управления кэшем */}

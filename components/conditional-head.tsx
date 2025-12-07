@@ -28,7 +28,22 @@ export function ConditionalCanonical({ href }: { href: string }) {
 }
 
 
-// Компонент для условных мета-тегов noindex
+/**
+ * Компонент для условных мета-тегов noindex (FALLBACK)
+ * 
+ * УЛУЧШЕННАЯ РЕАЛИЗАЦИЯ:
+ * - Проверяет, не установлены ли уже мета-теги (избегает дублирования)
+ * - Работает как fallback на случай, если синхронный inline script не сработает
+ * - Основная защита: синхронный inline script в layout.tsx
+ * 
+ * АНАЛИЗ:
+ * Текущее решение (useEffect) недостаточно надежно, так как выполняется асинхронно
+ * после React hydration. Поисковики могут проиндексировать страницу до выполнения JS.
+ * 
+ * РЕКОМЕНДАЦИЯ:
+ * Основная защита через синхронный inline script в <head> (layout.tsx).
+ * Этот компонент остается как fallback для дополнительной надежности.
+ */
 export function ConditionalNoIndex() {
   const [isProduction, setIsProduction] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -46,32 +61,24 @@ export function ConditionalNoIndex() {
       return;
     }
 
-    // Создаем мета-теги программно
-    const robotsMeta = document.createElement('meta');
-    robotsMeta.name = 'robots';
-    robotsMeta.content = 'noindex, nofollow';
+    // Проверяем, не установлены ли уже мета-теги (избегаем дублирования)
+    const existingRobotsMeta = document.querySelector('meta[name="robots"][content*="noindex"]');
+    const existingGooglebotMeta = document.querySelector('meta[name="googlebot"][content*="noindex"]');
 
-    const googlebotMeta = document.createElement('meta');
-    googlebotMeta.name = 'googlebot';
-    googlebotMeta.content = 'noindex, nofollow';
+    // Создаем мета-теги только если их еще нет
+    if (!existingRobotsMeta) {
+      const robotsMeta = document.createElement('meta');
+      robotsMeta.name = 'robots';
+      robotsMeta.content = 'noindex, nofollow';
+      document.head.appendChild(robotsMeta);
+    }
 
-    // Добавляем в head
-    document.head.appendChild(robotsMeta);
-    document.head.appendChild(googlebotMeta);
-
-    // Cleanup функция
-    return () => {
-      try {
-        if (robotsMeta.parentNode) {
-          robotsMeta.parentNode.removeChild(robotsMeta);
-        }
-        if (googlebotMeta.parentNode) {
-          googlebotMeta.parentNode.removeChild(googlebotMeta);
-        }
-      } catch (error) {
-        // Игнорируем ошибки удаления
-      }
-    };
+    if (!existingGooglebotMeta) {
+      const googlebotMeta = document.createElement('meta');
+      googlebotMeta.name = 'googlebot';
+      googlebotMeta.content = 'noindex, nofollow';
+      document.head.appendChild(googlebotMeta);
+    }
   }, [isLoaded, isProduction]);
 
   return null; // Не рендерим ничего в JSX
