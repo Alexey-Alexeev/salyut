@@ -29,12 +29,12 @@ export function HeroSection({ cityName }: HeroSectionProps) {
                 <h1 className="rounded-lg bg-black/40 p-4 text-4xl font-bold leading-tight text-white md:text-6xl">
                     {cityName ? (
                         <>
-                            Заказать незабываемые <span className="text-orange-400">салюты и фейерверки</span>{' '}
+                            Купить незабываемые <span className="text-orange-400">салюты и фейерверки</span>{' '}
                             в {cityName}
                         </>
                     ) : (
                         <>
-                            Заказать незабываемые <span className="text-orange-400">салюты и фейерверки</span> для
+                            Купить незабываемые <span className="text-orange-400">салюты и фейерверки</span> для
                             ваших праздников
                         </>
                     )}
