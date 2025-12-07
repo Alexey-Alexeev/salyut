@@ -474,6 +474,7 @@ export default function ProductClient({
           <Breadcrumb
             items={[
               { href: catalogReturnUrl, label: 'Каталог' },
+              ...(category ? [{ href: `/catalog?category=${category.slug}`, label: category.name }] : []),
               { label: product.name },
             ]}
           />
