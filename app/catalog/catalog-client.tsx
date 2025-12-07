@@ -375,7 +375,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     />
 
                     {/* Пагинация сверху */}
-                    {filteredProducts.length > 0 && (
+                    {!isInitializing && filteredProducts.length > 0 && (
                         <div className="mb-6">
                             <CatalogPaginationInfo
                                 pagination={pagination}
@@ -386,18 +386,19 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     )}
 
                     {/* Сетка товаров с мотивационным блоком для одного товара-петарды */}
-                    {!isFiltering && filteredProducts.length === 1 && isPetard(filteredProducts[0]) ? (
+                    {/* Не показываем карточки во время инициализации из URL, чтобы избежать "скакания" старых данных */}
+                    {!isInitializing && !isFiltering && filteredProducts.length === 1 && isPetard(filteredProducts[0]) ? (
                         <SinglePetardProductLayout products={filteredProducts} />
                     ) : (
                         <ProductsGrid
-                            products={filteredProducts}
+                            products={isInitializing ? [] : filteredProducts}
                             viewMode={viewMode}
-                            isLoading={isFiltering}
+                            isLoading={isFiltering || isInitializing}
                         />
                     )}
 
                     {/* Пагинация снизу */}
-                    {filteredProducts.length > 0 && (
+                    {!isInitializing && filteredProducts.length > 0 && (
                         <div className="mt-8">
                             <CatalogPaginationInfo
                                 pagination={pagination}
