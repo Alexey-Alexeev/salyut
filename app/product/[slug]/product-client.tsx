@@ -192,6 +192,9 @@ type Product = {
   short_description?: string | null;
   characteristics: Record<string, any> | null;
   is_popular: boolean | null;
+  is_active?: boolean | null;
+  created_at?: Date | string | null;
+  updated_at?: Date | string | null;
   manufacturer_id?: string | null;
   category_id?: string | null;
 };
@@ -318,6 +321,39 @@ export default function ProductClient({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [mediaItems.length]);
+
+  // Формируем массив для BreadcrumbList
+  const breadcrumbItems = [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Главная",
+      "item": "https://salutgrad.ru/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Каталог",
+      "item": "https://salutgrad.ru/catalog/"
+    }
+  ];
+
+  if (category) {
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      "position": 3,
+      "name": category.name,
+      "item": `https://salutgrad.ru/catalog?category=${category.slug}`
+    });
+  }
+
+  breadcrumbItems.push({
+    "@type": "ListItem",
+    "position": category ? 4 : 3,
+    "name": product.name,
+    "item": `https://salutgrad.ru/product/${product.slug}/`
+  });
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* JSON-LD Structured Data для продукта */}
@@ -342,7 +378,9 @@ export default function ProductClient({
               "price": product.price,
               "priceCurrency": "RUB",
               "priceValidUntil": PRICE_VALID_UNTIL,
-              "availability": "https://schema.org/InStock",
+              "availability": product.is_active !== false 
+                ? "https://schema.org/InStock" 
+                : "https://schema.org/OutOfStock",
               "seller": {
                 "@type": "Organization",
                 "name": "СалютГрад",
@@ -451,10 +489,26 @@ export default function ProductClient({
                 "contentUrl": product.video_url,
                 "embedUrl": getVideoInfo(product.video_url).embedUrl,
                 "thumbnailUrl": product.images?.[0],
-                "uploadDate": new Date().toISOString(),
+                "uploadDate": product.created_at 
+                  ? (product.created_at instanceof Date 
+                      ? product.created_at.toISOString() 
+                      : new Date(product.created_at).toISOString())
+                  : new Date().toISOString(),
                 "duration": "PT60S"
               }
             } : {})
+          })
+        }}
+      />
+
+      {/* JSON-LD Structured Data для BreadcrumbList */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": breadcrumbItems
           })
         }}
       />

@@ -655,44 +655,6 @@
   </url>
   
   <url>
-    <loc>https://salutgrad.ru/product/forsash/</loc>
-    <lastmod>2025-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-    <image:image>
-      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/worsash.webp</image:loc>
-      <image:title>Форсаж</image:title>
-    </image:image>
-    <video:video>
-      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/worsash.webp</video:thumbnail_loc>
-      <video:title>Форсаж - демонстрация</video:title>
-      <video:description>100 залпов создают 90-секундное шоу с 10 различными визуальными композициями</video:description>
-      <video:content_loc>https://rutube.ru/video/5d345b65304487d9a781387ca8d0d90d/</video:content_loc>
-      <video:duration>90</video:duration>
-    </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/forsash/"/>
-  </url>
-  
-  <url>
-    <loc>https://salutgrad.ru/product/stolichnii/</loc>
-    <lastmod>2025-10-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-    <image:image>
-      <image:loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/stolichnii.webp</image:loc>
-      <image:title>Столичный</image:title>
-    </image:image>
-    <video:video>
-      <video:thumbnail_loc>https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/product-images/stolichnii.webp</video:thumbnail_loc>
-      <video:title>Столичный - демонстрация</video:title>
-      <video:description>100 залпов, каждый из которых уникален, создают насыщенное и непредсказуемое шоу</video:description>
-      <video:content_loc>https://rutube.ru/video/04c325be60985d8d85505eabe844c846/</video:content_loc>
-      <video:duration>75</video:duration>
-    </video:video>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://salutgrad.ru/product/stolichnii/"/>
-  </url>
-  
-  <url>
     <loc>https://salutgrad.ru/product/ilya-murometc/</loc>
     <lastmod>2025-10-17</lastmod>
     <changefreq>weekly</changefreq>
