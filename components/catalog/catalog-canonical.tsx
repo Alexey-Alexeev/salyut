@@ -3,6 +3,15 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
+/**
+ * Компонент для динамической установки canonical URL на страницах каталога с фильтрами.
+ * 
+ * ВАЖНО: Для статического экспорта Next.js canonical устанавливается клиентски через JS.
+ * Это работает, но поисковые системы могут не увидеть canonical до выполнения JS.
+ * 
+ * Рекомендация: В будущем рассмотреть серверную генерацию canonical через generateMetadata,
+ * но для статического экспорта это требует дополнительной настройки.
+ */
 export function CatalogCanonical() {
   const searchParams = useSearchParams();
 
@@ -26,6 +35,7 @@ export function CatalogCanonical() {
     }
 
     // Находим существующий canonical тег (он уже есть в HTML из metadata)
+    // Если его нет, создаем новый (fallback для надежности)
     let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
     
     if (!canonicalLink) {

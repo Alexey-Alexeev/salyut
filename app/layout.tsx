@@ -96,6 +96,9 @@ export default function RootLayout({
         <meta name="geo.placename" content="Москва" />
         <meta name="geo.position" content="55.7558;37.6176" />
         <meta name="ICBM" content="55.7558, 37.6176" />
+        {/* Hreflang теги для правильной языковой индексации */}
+        <link rel="alternate" hrefLang="ru" href="https://salutgrad.ru/" />
+        <link rel="alternate" hrefLang="x-default" href="https://salutgrad.ru/" />
         {/* Conditional noindex meta tags - только для Vercel */}
         <ConditionalNoIndex />
         

@@ -650,7 +650,7 @@ export default function ProductClient({
 
             <div className="mb-6 flex items-start justify-between gap-4">
               <h1 className="text-2xl font-bold lg:text-3xl">
-                {product.name}
+                {product.name || 'Фейерверк'}
               </h1>
               <div className="flex flex-col items-end gap-1">
                 {product.old_price && product.old_price > product.price ? (
