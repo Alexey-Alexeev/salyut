@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export function PetardsMotivationalBlock() {
     return (
@@ -11,9 +13,9 @@ export function PetardsMotivationalBlock() {
                 <div className="mt-4 space-y-6 text-sm leading-relaxed text-gray-700 lg:text-lg">
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="flex items-start gap-3 rounded-2xl bg-white/80 p-4 shadow-sm backdrop-blur">
-                            <span className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100">
+                            <span className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-orange-100">
                                 <svg
-                                    className="h-5 w-5 text-emerald-600"
+                                    className="h-5 w-5 text-orange-600"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
@@ -27,7 +29,7 @@ export function PetardsMotivationalBlock() {
                                 </svg>
                             </span>
                             <div>
-                                <div className="text-xs font-semibold uppercase tracking-wide text-emerald-600 lg:text-base">
+                                <div className="text-xs font-semibold uppercase tracking-wide text-orange-600 lg:text-base">
                                     Качество и безопасность
                                 </div>
                                 <p className="text-xs text-gray-600 lg:text-base">
@@ -36,10 +38,10 @@ export function PetardsMotivationalBlock() {
                             </div>
                         </div>
 
-                        <div className="flex items-start gap-3 rounded-2xl border border-dashed border-emerald-300 bg-emerald-50/90 p-4 shadow-sm">
-                            <span className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100">
+                        <div className="flex items-start gap-3 rounded-2xl border border-dashed border-orange-300 bg-orange-50/90 p-4 shadow-sm">
+                            <span className="mt-1 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-orange-100">
                                 <svg
-                                    className="h-5 w-5 text-emerald-600"
+                                    className="h-5 w-5 text-orange-600"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
@@ -59,14 +61,14 @@ export function PetardsMotivationalBlock() {
                                 </svg>
                             </span>
                             <div>
-                                <div className="text-xs font-semibold uppercase tracking-wide text-emerald-600 lg:text-base">
+                                <div className="text-xs font-semibold uppercase tracking-wide text-orange-600 lg:text-base">
                                     Видео перед покупкой
                                 </div>
                                 <p className="text-xs text-gray-600 lg:text-base">
                                     В карточке товара есть{" "}
                                     <Link
                                         href="/product/Zvizdec/?tab=video"
-                                        className="font-semibold text-emerald-700 underline underline-offset-2 hover:text-emerald-800"
+                                        className="font-semibold text-orange-700 underline underline-offset-2 hover:text-orange-800"
                                     >
                                         видео с реальными запусками
                                     </Link>
@@ -87,26 +89,17 @@ export function PetardsMotivationalBlock() {
                     </div>
                 </div>
 
-                {/* Бейдж внизу по центру */}
+                {/* Кнопка "Перейти в товар" внизу по центру */}
                 <div className="flex justify-center pt-2">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-5 py-2.5 text-base font-semibold text-emerald-800 shadow-sm backdrop-blur lg:text-lg">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100">
-                            <svg
-                                className="h-5 w-5 text-emerald-600"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
-                        </span>
-                        Проверенный выбор магазина
-                    </div>
+                    <Link href="/product/Zvizdec">
+                        <Button 
+                            size="lg" 
+                            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-6 py-3 shadow-md"
+                        >
+                            Перейти в товар
+                            <ArrowRight className="ml-2 h-5 w-5" />
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </div>
