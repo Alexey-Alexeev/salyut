@@ -29,12 +29,12 @@ export function HeroSection({ cityName }: HeroSectionProps) {
                 <h1 className="rounded-lg bg-black/40 p-4 text-4xl font-bold leading-tight text-white md:text-6xl">
                     {cityName ? (
                         <>
-                            Незабываемые <span className="text-orange-400">салюты</span>{' '}
+                            Заказать незабываемые <span className="text-orange-400">салюты и фейерверки</span>{' '}
                             в {cityName}
                         </>
                     ) : (
                         <>
-                            Незабываемые <span className="text-orange-400">салюты</span> для
+                            Заказать незабываемые <span className="text-orange-400">салюты и фейерверки</span> для
                             ваших праздников
                         </>
                     )}
@@ -43,13 +43,11 @@ export function HeroSection({ cityName }: HeroSectionProps) {
                 <p className="mx-auto max-w-2xl rounded-lg bg-black/30 p-4 text-lg text-white md:text-xl">
                     {cityName ? (
                         <>
-                            Купить фейерверки и салюты в {cityName} с доставкой. Качественная
-                            пиротехника от проверенных производителей!
+                            Качественная пиротехника от проверенных производителей с доставкой и безопасным запуском.
                         </>
                     ) : (
                         <>
-                            Качественная пиротехника от проверенных производителей. Создайте
-                            магию праздника вместе с нами!
+                            Качественная пиротехника от проверенных производителей с доставкой по Москве и МО. Создайте магию праздника вместе с нами!
                         </>
                     )}
                 </p>
