@@ -259,6 +259,7 @@ export default function ProductClient({
         id: product.id,
         name: product.name,
         price: product.price,
+        old_price: product.old_price ?? null,
         image: product.images?.[0] || '',
         slug: product.slug,
       });

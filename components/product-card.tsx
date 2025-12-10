@@ -118,9 +118,10 @@ interface ProductCardProps {
   product: Product;
   isFirst?: boolean;
   isAboveFold?: boolean;
+  showAttentionAnimation?: boolean;
 }
 
-export function ProductCard({ product, isFirst = false, isAboveFold = false }: ProductCardProps) {
+export function ProductCard({ product, isFirst = false, isAboveFold = false, showAttentionAnimation = false }: ProductCardProps) {
   const [quantity, setQuantity] = useState(0);
   const [inputValue, setInputValue] = useState('');
   const [isMounted, setIsMounted] = useState(false);
@@ -302,7 +303,102 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
   }
 
   return (
-    <Card className="group flex h-full flex-col overflow-hidden transition-all duration-200 hover:shadow-lg">
+    <Card 
+      className="group flex h-full flex-col overflow-hidden transition-all duration-200 hover:shadow-lg relative"
+      data-product-id={product.id}
+    >
+      {/* Анимация привлечения внимания - СТАРЫЙ ВАРИАНТ: Большой центральный блок */}
+      {showAttentionAnimation && (
+        <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden">
+          {/* Фон с эффектом свечения */}
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 via-red-500/20 to-purple-600/20 animate-attention-pulse"></div>
+          
+          {/* Центральный блок с анимацией */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-gradient-to-br from-orange-500 via-red-600 to-purple-700 rounded-xl px-6 py-4 shadow-2xl animate-attention-pulse border-2 border-white/50">
+              <div className="text-center">
+                <div className="text-5xl mb-3 flex items-center justify-center gap-2">
+                  <span className="inline-block animate-fireworks" style={{ animationDelay: '0s' }}>🎆</span>
+                  <span className="inline-block animate-fireworks" style={{ animationDelay: '0.2s' }}>🎇</span>
+                  <span className="inline-block animate-fireworks" style={{ animationDelay: '0.4s' }}>✨</span>
+                </div>
+                <p className="text-white font-bold text-lg md:text-xl drop-shadow-lg whitespace-nowrap">
+                  Посмотри меня!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* АЛЬТЕРНАТИВНЫЕ ВАРИАНТЫ (закомментированы):
+      
+      ВАРИАНТ 1: Деликатная рамка + бейдж
+      {showAttentionAnimation && (
+        <>
+          <div className="absolute top-2 right-2 z-[60] pointer-events-none animate-attention-badge">
+            <div className="bg-gradient-to-br from-orange-500 via-red-600 to-purple-700 rounded-lg px-3 py-2 shadow-xl border-2 border-white/50 backdrop-blur-sm">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🎆</span>
+                <p className="text-white font-bold text-sm md:text-base drop-shadow-lg whitespace-nowrap">
+                  Посмотри меня!
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+      
+      Для варианта 1 также нужно добавить класс на Card:
+      className={`... ${showAttentionAnimation ? 'animate-attention-border' : ''}`}
+
+      ВАРИАНТ 2: Волна по краям
+      {showAttentionAnimation && (
+        <>
+          <div className="absolute inset-0 z-50 pointer-events-none overflow-hidden rounded-lg">
+            <div className="absolute top-0 left-0 right-0 h-[2px] animate-attention-wave-border" style={{...}}></div>
+            <div className="absolute top-0 right-0 bottom-0 w-[2px] animate-attention-wave-border-vertical" style={{...}}></div>
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] animate-attention-wave-border" style={{...}}></div>
+            <div className="absolute top-0 left-0 bottom-0 w-[2px] animate-attention-wave-border-vertical" style={{...}}></div>
+            <div className="absolute top-2 right-2 z-[60] pointer-events-none animate-attention-badge">
+              <div className="bg-gradient-to-br from-orange-500 to-purple-700 rounded-lg px-3 py-2 shadow-xl border-2 border-white/50">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">🌊</span>
+                  <p className="text-white font-bold text-sm drop-shadow-lg whitespace-nowrap">
+                    Посмотри меня!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      ВАРИАНТ 3: Стрелка-указатель
+      {showAttentionAnimation && (
+        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-4 z-[60] pointer-events-none animate-attention-arrow-slide">
+          <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-3 shadow-2xl border-2 border-orange-500">
+            <span className="text-2xl animate-attention-arrow-pulse">👆</span>
+            <p className="text-gray-900 font-bold text-sm whitespace-nowrap">Посмотри меня!</p>
+          </div>
+        </div>
+      )}
+
+      ВАРИАНТ 4: Мягкое свечение (Glow)
+      {showAttentionAnimation && (
+        <>
+          <div className="absolute inset-0 z-50 pointer-events-none rounded-lg animate-attention-glow"></div>
+          <div className="absolute top-2 right-2 z-[60] pointer-events-none animate-attention-glow-badge">
+            <div className="bg-gradient-to-br from-orange-500 via-red-600 to-purple-700 rounded-lg px-3 py-2 shadow-xl border-2 border-white/50">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">✨</span>
+                <p className="text-white font-bold text-sm drop-shadow-lg">Посмотри меня!</p>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+      */}
       <div className="relative">
         <Link href={`/product/${product.slug}`} onClick={handleProductClick}>
           <div className="relative aspect-square overflow-hidden bg-gray-100">
@@ -323,7 +419,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false }: P
                 // Above the fold - высокий приоритет
                 <img
                   src={imageUrl}
-                  alt={`${product.name} - купить фейерверк в Москве и области с доставкой${product.category_name ? `, категория ${product.category_name}` : ''}`}
+                  alt={product.name}
                   width={400}
                   height={400}
                   loading="eager"

@@ -1,4 +1,7 @@
+'use client';
+
 import { ProductCard } from '@/components/product-card';
+import { useCatalogAttentionAnimation } from '@/hooks/use-catalog-attention-animation';
 
 interface Product {
     id: string;
@@ -25,8 +28,15 @@ export function ProductsGrid({
     viewMode,
     isLoading = false,
 }: ProductsGridProps) {
+    // Используем хук для управления анимацией привлечения внимания
+    const animatedProductId = useCatalogAttentionAnimation({
+        products,
+        delay: 20000, // 20 секунд
+    });
+
     return (
         <div
+            data-products-container
             className={`grid gap-4 ${viewMode === 'grid'
                     ? 'grid-cols-2 md:grid-cols-3 xl:grid-cols-4'
                     : 'grid-cols-1'
@@ -39,6 +49,7 @@ export function ProductsGrid({
                     product={product} 
                     isFirst={index === 0} 
                     isAboveFold={index < 8}
+                    showAttentionAnimation={animatedProductId === product.id}
                 />
             ))}
             

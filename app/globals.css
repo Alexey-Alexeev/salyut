@@ -102,3 +102,218 @@
     transform: scale(1.12) translateY(-8px);
   }
 }
+
+/* Анимация для привлечения внимания на карточках товаров */
+@keyframes fireworks {
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(-20px) scale(1.2) rotate(90deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-40px) scale(1.4) rotate(180deg);
+    opacity: 0.8;
+  }
+  75% {
+    transform: translateY(-20px) scale(1.2) rotate(270deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+@keyframes attention-pulse-card {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7), 0 0 20px rgba(255, 87, 34, 0.5);
+  }
+  25% {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 15px rgba(255, 87, 34, 0), 0 0 30px rgba(255, 87, 34, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 20px rgba(255, 87, 34, 0), 0 0 40px rgba(255, 87, 34, 0.8);
+  }
+  75% {
+    transform: scale(1.07);
+    box-shadow: 0 0 0 15px rgba(255, 87, 34, 0), 0 0 30px rgba(255, 87, 34, 0.7);
+  }
+}
+
+.animate-attention-pulse {
+  animation: attention-pulse-card 1.5s ease-in-out infinite;
+}
+
+.animate-fireworks {
+  animation: fireworks 1.5s ease-in-out infinite;
+}
+
+/* ========================================
+   НОВЫЕ ВАРИАНТЫ АНИМАЦИИ ДЛЯ КАРТОЧЕК
+   ======================================== */
+
+/* Вариант 1: Деликатная пульсирующая рамка + бейдж */
+@keyframes attention-border-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 2px rgba(255, 87, 34, 0.3),
+      0 0 0 4px rgba(255, 87, 34, 0.1),
+      inset 0 0 20px rgba(255, 87, 34, 0.05);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 3px rgba(255, 87, 34, 0.6),
+      0 0 0 8px rgba(255, 87, 34, 0.2),
+      inset 0 0 30px rgba(255, 87, 34, 0.1);
+  }
+}
+
+@keyframes attention-badge-bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.05);
+  }
+}
+
+@keyframes attention-badge-shake {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: rotate(-5deg);
+  }
+  20%, 40%, 60%, 80% {
+    transform: rotate(5deg);
+  }
+}
+
+.animate-attention-border {
+  animation: attention-border-pulse 2s ease-in-out infinite;
+}
+
+.animate-attention-badge {
+  animation: attention-badge-bounce 1.5s ease-in-out infinite;
+}
+
+.animate-attention-badge-shake {
+  animation: attention-badge-shake 0.5s ease-in-out;
+}
+
+/* Вариант 2: Волна по краям */
+@keyframes attention-wave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes attention-wave-border {
+  0% {
+    background-position: -100% 0%;
+  }
+  100% {
+    background-position: 200% 0%;
+  }
+}
+
+@keyframes attention-wave-border-vertical {
+  0% {
+    background-position: 0% -100%;
+  }
+  100% {
+    background-position: 0% 200%;
+  }
+}
+
+.animate-attention-wave {
+  animation: attention-wave 3s linear infinite;
+}
+
+.animate-attention-wave-border {
+  animation: attention-wave-border 3s linear infinite;
+}
+
+.animate-attention-wave-border-vertical {
+  animation: attention-wave-border-vertical 3s linear infinite;
+}
+
+/* Вариант 3: Стрелка-указатель */
+@keyframes attention-arrow-slide {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.8);
+  }
+  20%, 80% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(20px) scale(0.8);
+  }
+}
+
+@keyframes attention-arrow-pulse {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+}
+
+.animate-attention-arrow-slide {
+  animation: attention-arrow-slide 2s ease-in-out infinite;
+}
+
+.animate-attention-arrow-pulse {
+  animation: attention-arrow-pulse 1s ease-in-out infinite;
+}
+
+/* Вариант 4: Мягкое свечение (Glow) */
+@keyframes attention-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 10px rgba(255, 87, 34, 0.3),
+      0 0 20px rgba(255, 87, 34, 0.2),
+      0 0 30px rgba(255, 87, 34, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 20px rgba(255, 87, 34, 0.5),
+      0 0 40px rgba(255, 87, 34, 0.3),
+      0 0 60px rgba(255, 87, 34, 0.2);
+  }
+}
+
+@keyframes attention-glow-badge {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(255, 87, 34, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(255, 87, 34, 0.6);
+    transform: scale(1.05);
+  }
+}
+
+.animate-attention-glow {
+  animation: attention-glow 2s ease-in-out infinite;
+}
+
+.animate-attention-glow-badge {
+  animation: attention-glow-badge 1.5s ease-in-out infinite;
+}

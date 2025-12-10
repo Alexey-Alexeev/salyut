@@ -37,7 +37,7 @@ export const useCartStore = create<CartStore>()(
           set({
             items: items.map(item =>
               item.id === product.id
-                ? { ...item, quantity: item.quantity + 1 }
+                ? { ...item, quantity: item.quantity + 1, old_price: product.old_price ?? item.old_price }
                 : item
             ),
           });
