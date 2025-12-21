@@ -344,14 +344,14 @@ export function useCatalogUrlSync({
         }
 
         // Синхронизируем значения полей с URL параметрами
+        // Примечание: searchValue не синхронизируем здесь, т.к. он управляется через handleSearchChange с debounce
+        // и синхронизируется только при инициализации из URL
         if (hasUrlParams) {
-            onSearchValueChange(searchParam || '');
             onPriceFromValueChange(minPriceParam || '');
             onPriceToValueChange(maxPriceParam || '');
             onShotsFromValueChange(minShotsParam || '');
             onShotsToValueChange(maxShotsParam || '');
         } else {
-            onSearchValueChange('');
             onPriceFromValueChange('');
             onPriceToValueChange('');
             onShotsFromValueChange('');
