@@ -15,6 +15,7 @@ import { VideoReviewsSection } from '@/components/sections/video-reviews-section
 import { HomeScrollRestore } from '@/components/home-scroll-restore';
 import dynamic from 'next/dynamic';
 import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL, filterVisibleCategories } from '@/lib/schema-constants';
+import { QuizSection } from '@/components/quiz-section';
 
 // Динамические импорты для тяжелых компонентов
 const DynamicVideoReviewsSection = dynamic(() => import('@/components/sections/video-reviews-section').then(mod => ({ default: mod.VideoReviewsSection })), {
@@ -147,6 +148,8 @@ export default async function HomePage() {
       <DeliverySection />
 
       <DiscountSection />
+
+      <QuizSection />
 
       <CategoriesSection categories={categoriesData} />
 

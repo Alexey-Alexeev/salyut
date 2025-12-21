@@ -21,6 +21,7 @@ export interface Product {
     is_popular: boolean | null;
     characteristics?: Record<string, any> | null;
     short_description?: string | null;
+    event_types?: string[] | null;
 }
 
 export interface Pagination {
