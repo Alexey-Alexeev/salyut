@@ -13,6 +13,7 @@ import { ProductsGrid } from '@/components/catalog/products-grid';
 import { CatalogEmptyState } from '@/components/catalog/catalog-empty-state';
 import { SinglePetardProductLayout } from '@/components/catalog/single-petard-product-layout';
 import { CatalogCanonical } from '@/components/catalog/catalog-canonical';
+import { KorsarAlternativeModal } from '@/components/catalog/korsar-alternative-modal';
 import { useCatalogScrollRestore } from '@/hooks/use-catalog-scroll-restore';
 import { useCatalogUrlSync } from '@/hooks/use-catalog-url-sync';
 import { useCatalogFilters, FilterState } from '@/hooks/use-catalog-filters';
@@ -77,6 +78,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
     const [priceToValue, setPriceToValue] = useState('');
     const [shotsFromValue, setShotsFromValue] = useState('');
     const [shotsToValue, setShotsToValue] = useState('');
+    const [isKorsarModalOpen, setIsKorsarModalOpen] = useState(false);
 
     // Хук для управления UI состоянием
     const {
@@ -220,6 +222,50 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
         resetRequestState();
     }, [handleClearAllFiltersFromHook, resetRequestState]);
 
+    // Находим товар "Звиздец"
+    const zvizdecProduct = allProducts.find(
+        (product) => product.slug.toLowerCase() === 'zvizdec' || 
+                     product.name.toLowerCase().includes('звиздец')
+    ) || null;
+
+    // Ref для таймера показа модального окна
+    const korsarModalTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Обертка для handleSearchChange с отслеживанием ввода "корс" или "карс"
+    const handleSearchChangeWithKorsarCheck = useCallback(
+        (value: string) => {
+            handleSearchChange(value);
+            
+            // Очищаем предыдущий таймер, если есть
+            if (korsarModalTimeoutRef.current) {
+                clearTimeout(korsarModalTimeoutRef.current);
+                korsarModalTimeoutRef.current = null;
+            }
+            
+            // Проверяем, содержит ли ввод "корс" или "карс" (без учета регистра)
+            const lowerValue = value.toLowerCase().trim();
+            const containsKorsar = lowerValue.includes('корс') || lowerValue.includes('карс');
+            
+            // Показываем модальное окно с небольшой задержкой, чтобы не мешать вводу
+            // Показываем всегда, если товар найден
+            if (containsKorsar && zvizdecProduct) {
+                korsarModalTimeoutRef.current = setTimeout(() => {
+                    setIsKorsarModalOpen(true);
+                }, 500); // Задержка 500мс для комфортного ввода
+            }
+        },
+        [handleSearchChange, zvizdecProduct]
+    );
+
+    // Очистка таймера при размонтировании
+    useEffect(() => {
+        return () => {
+            if (korsarModalTimeoutRef.current) {
+                clearTimeout(korsarModalTimeoutRef.current);
+            }
+        };
+    }, []);
+
     // Хук для управления пагинацией
     const { handlePageChange } = useCatalogPagination({
         filters,
@@ -265,7 +311,7 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                 value={searchValue}
                 hasActiveSearch={!!filters.search}
                 isSearching={isSearching}
-                onChange={handleSearchChange}
+                onChange={handleSearchChangeWithKorsarCheck}
                 onClear={handleClearSearch}
             />
 
@@ -432,6 +478,13 @@ export function CatalogClient({ initialData, searchParams }: CatalogClientProps)
                     )}
                 </div>
             </div>
+
+            {/* Модальное окно для альтернативы Корсару */}
+            <KorsarAlternativeModal
+                open={isKorsarModalOpen}
+                onOpenChange={setIsKorsarModalOpen}
+                product={zvizdecProduct}
+            />
         </div>
     );
 }
