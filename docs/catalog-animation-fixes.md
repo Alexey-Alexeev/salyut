@@ -186,3 +186,4 @@ document.querySelector('[data-product-id="some-id"]')
 5. Добавить проверку видимости карточки в viewport перед показом анимации
 
 
+

@@ -202,12 +202,15 @@ export function useCatalogFilterHandlers({
 
             if (searchTimeoutRef.current) {
                 clearTimeout(searchTimeoutRef.current);
+                searchTimeoutRef.current = null;
             }
 
             if (value.trim() === '') {
                 setIsSearching(false);
                 resetPage();
                 clearSearch();
+                // Важно: обновляем URL сразу, чтобы удалить параметр search из URL
+                updateURL({ ...filtersRef.current, search: '', eventType: null }, sortBy);
                 return;
             }
 

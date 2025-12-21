@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { DeliveryHeroSection } from '@/components/sections/delivery-hero-section';
 import { DeliveryOptionsSection } from '@/components/sections/delivery-options-section';
+import { DeliveryCalculationSection } from '@/components/sections/delivery-calculation-section';
 import { MapSection } from '@/components/sections/map-section';
 import { AdditionalInfoSection } from '@/components/sections/additional-info-section';
 
@@ -51,6 +52,8 @@ export default function DeliveryPage() {
         <DeliveryHeroSection />
 
         <DeliveryOptionsSection />
+
+        <DeliveryCalculationSection />
 
         <MapSection />
 
