@@ -14,6 +14,7 @@ import { VideoReviewsSection } from '@/components/sections/video-reviews-section
 import { getCityBySlug, getAllCitySlugs } from '@/lib/cities';
 import { notFound } from 'next/navigation';
 import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL, filterVisibleCategories } from '@/lib/schema-constants';
+import { QuizSection } from '@/components/quiz-section';
 
 interface CityPageProps {
     params: {
@@ -156,6 +157,8 @@ export default async function CityPage({ params }: CityPageProps) {
             <DeliverySection />
 
             <DiscountSection />
+
+            <QuizSection />
 
             <CategoriesSection categories={categoriesData} />
 
