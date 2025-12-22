@@ -302,6 +302,7 @@ export function QuizSection() {
                     value={contactData.name}
                     onChange={e => setContactData({ ...contactData, name: e.target.value })}
                     placeholder="Ваше имя"
+                    className="ym-record-keys"
                     required
                   />
                 </div>
@@ -320,7 +321,7 @@ export function QuizSection() {
                       })
                     }
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="ym-record-keys">
                       <SelectValue placeholder="Выберите способ связи" />
                     </SelectTrigger>
                     <SelectContent>
@@ -360,6 +361,7 @@ export function QuizSection() {
                           ? 'tel'
                           : 'text'
                       }
+                      className="ym-record-keys"
                       required
                     />
                   </div>

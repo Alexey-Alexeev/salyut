@@ -585,7 +585,7 @@ export function ProductCard({ product, isFirst = false, isAboveFold = false, sho
               onChange={handleInputChange}
               onBlur={handleInputBlur}
               onKeyPress={handleInputKeyPress}
-              className="h-10 w-20 text-center text-base [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="h-10 w-20 text-center text-base [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ym-record-keys"
               inputMode="numeric"
               pattern="[0-9]*"
               aria-label="Количество товара"
