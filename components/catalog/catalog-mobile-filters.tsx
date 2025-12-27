@@ -82,11 +82,11 @@ export function CatalogMobileFilters({
                     </span>
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-80">
-                <SheetHeader>
+            <SheetContent side="left" className="flex flex-col w-80">
+                <SheetHeader className="shrink-0">
                     <SheetTitle>Фильтры</SheetTitle>
                 </SheetHeader>
-                <div className="mt-6">
+                <div className="mt-6 flex-1 overflow-y-auto">
                     <div className="space-y-6">
                         <CategoryFilter
                             categories={categories}
