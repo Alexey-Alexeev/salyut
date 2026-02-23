@@ -8,7 +8,7 @@ export const BUSINESS_INFO = {
   telephone: "+7 (977) 360-20-08",
   url: "https://salutgrad.ru",
   address: {
-    streetAddress: "Рассветная улица, 14",
+    streetAddress: "улица Агрогородок, вл31",
     addressLocality: "деревня Чёрное",
     addressRegion: "Московская область",
     addressCountry: "RU",

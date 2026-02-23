@@ -935,7 +935,7 @@ export default function CartPageClient() {
                                 "telephone": "+7 (977) 360-20-08",
                                 "address": {
                                     "@type": "PostalAddress",
-                                    "streetAddress": "Рассветная улица, 14",
+                                    "streetAddress": "улица Агрогородок, вл31",
                                     "addressLocality": "деревня Чёрное",
                                     "addressRegion": "Московская область",
                                     "addressCountry": "RU",

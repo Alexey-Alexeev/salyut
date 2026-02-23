@@ -76,7 +76,7 @@ export default function DeliveryPage() {
               "addressLocality": "деревня Чёрное",
               "addressRegion": "Московская область",
               "addressCountry": "RU",
-              "streetAddress": "Рассветная улица, 14",
+              "streetAddress": "улица Агрогородок, вл31",
               "postalCode": "143921"
             },
             "additionalProperty": {

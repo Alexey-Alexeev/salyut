@@ -288,7 +288,7 @@ export default async function HomePage() {
                     "addressCountry": "RU",
                     "addressRegion": "Московская область",
                     "addressLocality": "Балашиха",
-                    "streetAddress": "Рассветная улица, 14",
+                    "streetAddress": "улица Агрогородок, вл31",
                     "postalCode": "143921"
                   }
                 },

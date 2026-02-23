@@ -405,7 +405,7 @@ export default function TermsPage() {
                                                 </svg>
                                             </div>
                                             <h4 className="font-semibold text-gray-900 mb-2">Адрес</h4>
-                                            <p className="text-sm text-gray-700">143921, Московская область, деревня Чёрное, Рассветная улица, 14</p>
+                                            <p className="text-sm text-gray-700">143921, Московская область, деревня Чёрное, улица Агрогородок, вл31</p>
                                         </div>
                                     </div>
                                 </div>
