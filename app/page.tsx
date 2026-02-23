@@ -194,8 +194,8 @@ export default async function HomePage() {
               "@type": "GeoCircle",
               "geoMidpoint": {
                 "@type": "GeoCoordinates",
-                "latitude": "55.740340",
-                "longitude": "38.054064"
+                "latitude": "55.744657",
+                "longitude": "38.050318"
               },
               "geoRadius": "50000"
             },

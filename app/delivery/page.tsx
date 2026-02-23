@@ -79,15 +79,10 @@ export default function DeliveryPage() {
               "streetAddress": "улица Агрогородок, вл31",
               "postalCode": "143921"
             },
-            "additionalProperty": {
-              "@type": "PropertyValue",
-              "name": "Заезд",
-              "value": "Со стороны ул. Лесные пруды"
-            },
             "geo": {
               "@type": "GeoCoordinates",
-              "latitude": "55.740340",
-              "longitude": "38.054064"
+              "latitude": "55.744657",
+              "longitude": "38.050318"
             },
             "openingHours": "Mo-Su 09:00-21:00",
             "areaServed": [

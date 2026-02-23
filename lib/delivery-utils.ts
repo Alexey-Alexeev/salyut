@@ -21,8 +21,8 @@ export const DELIVERY_CONSTANTS = {
     region: 'Московская область',
     postalCode: '143921',
     coordinates: {
-      lat: 55.740340,
-      lng: 38.054064,
+      lat: 55.744657,
+      lng: 38.050318,
     },
   },
 } as const;

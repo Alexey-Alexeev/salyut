@@ -15,8 +15,8 @@ export const BUSINESS_INFO = {
     postalCode: "143921"
   },
   geo: {
-    latitude: "55.740340",
-    longitude: "38.054064"
+    latitude: "55.744657",
+    longitude: "38.050318"
   },
   openingHours: "Mo-Su 09:00-21:00",
   priceRange: "₽₽"
