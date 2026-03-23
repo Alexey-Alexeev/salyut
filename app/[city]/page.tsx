@@ -107,16 +107,20 @@ export default async function CityPage({ params }: CityPageProps) {
     const videoReviews: any[] = videoReviewsRaw as any[];
     const faqItems = [
         {
-            question: `Как купить салюты и фейерверки в ${cityData.nameLocative}?`,
-            answer: `Выберите товары в каталоге, оформите заказ на сайте или свяжитесь с менеджером. Мы подтвердим заказ и организуем доставку по ${cityData.name}.`,
+            question: `Купить салюты и фейерверки в ${cityData.nameLocative}: доставка и услуги по запуску фейерверка`,
+            answer: `В интернет-магазине СалютГрад вы можете купить салюты и фейерверки в ${cityData.nameLocative} с удобной доставкой и консультацией менеджера. Подберём пиротехнику под формат праздника, бюджет и площадку запуска: от компактных батарей салютов до масштабных программ. Доступны услуги по запуску фейерверка — при необходимости возьмём на себя организацию запуска салюта профессионально и с соблюдением требований безопасности, чтобы праздник прошёл ярко и безопасно.`,
         },
         {
-            question: `Есть ли доставка салютов по ${cityData.name}?`,
-            answer: `Да, мы доставляем салюты и фейерверки по ${cityData.name} и ближайшим районам. Точную стоимость и время доставки подскажет менеджер при оформлении.`,
+            question: `Как оформить заказ на салюты в ${cityData.nameLocative}?`,
+            answer: `Выберите товары в каталоге, оформите заказ на сайте или свяжитесь с менеджером. Мы подтвердим заказ и организуем доставку по ${cityData.nameLocative} и ближайшим районам.`,
+        },
+        {
+            question: `Есть ли доставка салютов по ${cityData.nameLocative}?`,
+            answer: `Да, доставляем салюты и фейерверки по ${cityData.nameLocative} и соседним населённым пунктам. Точную стоимость и сроки подскажет менеджер при оформлении.`,
         },
         {
             question: `Можно ли заказать безопасный запуск салюта в ${cityData.nameLocative}?`,
-            answer: `Да, у нас доступна услуга профессионального запуска. Специалист поможет подобрать площадку и проведет запуск с учетом требований безопасности.`,
+            answer: `Да, доступна услуга профессионального запуска. Специалист поможет подобрать площадку и проведёт запуск с учётом требований безопасности.`,
         },
     ];
 
@@ -141,52 +145,33 @@ export default async function CityPage({ params }: CityPageProps) {
 
             <VideoReviewsSection videoReviews={videoReviews} />
 
-            <section className="container mx-auto rounded-2xl border border-orange-100 bg-gradient-to-br from-white to-orange-50/40 px-5 py-8 shadow-sm md:px-8">
-                <p className="mb-3 inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-orange-700">
-                    Доставка и запуск в {cityData.name}
-                </p>
-                <h2 className="mb-4 text-2xl font-bold text-gray-900 md:text-3xl">
-                    Купить салюты и фейерверки в {cityData.nameLocative}
-                </h2>
-                <div className="space-y-3 text-base leading-relaxed text-gray-700">
-                    <p>
-                        В интернет-магазине СалютГрад вы можете купить салюты и фейерверки в {cityData.nameLocative}{' '}
-                        с удобной доставкой и консультацией менеджера.
-                    </p>
-                    <p>
-                        Подберем пиротехнику под ваш формат праздника, бюджет и площадку запуска: от компактных
-                        батарей салютов до масштабных эффектных программ.
-                    </p>
-                    <p>
-                        При необходимости организуем профессиональный запуск, чтобы ваш праздник прошел ярко и
-                        безопасно.
-                    </p>
+            <section className="bg-gray-50 py-12">
+                <div className="container mx-auto px-4">
+                    <div className="mb-10 space-y-4 text-center">
+                        <h2 className="text-3xl font-bold md:text-4xl">Вопросы о заказе в {cityData.nameLocative}</h2>
+                        <p className="text-muted-foreground mx-auto max-w-2xl text-base">
+                            Доставка, выбор пиротехники, услуги по запуску фейерверка и организация запуска салюта — кратко в одном блоке.
+                        </p>
+                    </div>
+                    <div className="mx-auto max-w-3xl rounded-lg border border-gray-200 bg-white px-4 py-2 md:px-6">
+                        <Accordion type="single" collapsible defaultValue="faq-0" className="w-full">
+                            {faqItems.map((item, index) => (
+                                <AccordionItem
+                                    key={item.question}
+                                    value={`faq-${index}`}
+                                    className="border-b border-gray-200 last:border-none"
+                                >
+                                    <AccordionTrigger className="py-4 text-left text-base font-semibold text-gray-900 hover:no-underline">
+                                        {item.question}
+                                    </AccordionTrigger>
+                                    <AccordionContent className="pb-4 text-base leading-relaxed text-gray-700">
+                                        {item.answer}
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    </div>
                 </div>
-            </section>
-
-            <section className="container mx-auto rounded-2xl border bg-white px-5 py-8 shadow-sm md:px-8">
-                <h2 className="mb-2 text-2xl font-bold text-gray-900 md:text-3xl">
-                    Часто задаваемые вопросы
-                </h2>
-                <p className="mb-4 text-sm text-gray-600">
-                    Быстрые ответы по доставке, выбору и безопасному запуску салютов в {cityData.nameLocative}.
-                </p>
-                <Accordion type="single" collapsible className="w-full">
-                    {faqItems.map((item, index) => (
-                        <AccordionItem
-                            key={item.question}
-                            value={`faq-${index}`}
-                            className="border-b border-gray-200 last:border-none"
-                        >
-                            <AccordionTrigger className="py-4 text-left text-base font-semibold text-gray-900 hover:no-underline">
-                                {item.question}
-                            </AccordionTrigger>
-                            <AccordionContent className="pb-4 text-base leading-relaxed text-gray-700">
-                                {item.answer}
-                            </AccordionContent>
-                        </AccordionItem>
-                    ))}
-                </Accordion>
             </section>
 
             {/* CTA Section с диалогом */}
