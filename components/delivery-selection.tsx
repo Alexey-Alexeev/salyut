@@ -8,6 +8,7 @@ import { AddressAutocomplete } from '@/components/ui/address-autocomplete';
 import { MapPin, Truck, Store, Phone } from 'lucide-react';
 import {
   calculateDelivery,
+  DELIVERY_CONSTANTS,
   extractCityFromAddress,
   formatDeliveryCost,
   getPickupInfo,
@@ -282,16 +283,21 @@ export function DeliverySelection({
                   <div className="space-y-1 text-xs sm:text-sm text-blue-700">
                     <p>
                       • Москва, Балашиха, Люберцы, Реутов, Орехово-Зуево, Павловский Посад, Электросталь —{' '}
-                      <strong>500 ₽ (фиксированная стоимость)</strong>
+                      <strong>
+                        {formatDeliveryCost(DELIVERY_CONSTANTS.MOSCOW_DELIVERY_COST)}{' '}
+                        (фиксированная стоимость)
+                      </strong>
                     </p>
                     <p>
                       • Другие города Московской области (за МКАД) —{' '}
                       <strong>
-                        500 ₽ базовая + 75 ₽/км
+                        {DELIVERY_CONSTANTS.MIN_DELIVERY_COST.toLocaleString('ru-RU')} ₽ базовая +{' '}
+                        {DELIVERY_CONSTANTS.COST_PER_KM} ₽/км
                       </strong>
                     </p>
                     <p>
-                      • Минимум — <strong>500 ₽</strong>
+                      • Минимум —{' '}
+                      <strong>{formatDeliveryCost(DELIVERY_CONSTANTS.MIN_DELIVERY_COST)}</strong>
                     </p>
                   </div>
                 </div>

@@ -56,12 +56,8 @@ export function DeliveryOptionsSection() {
                                     Другие города Московской области
                                 </p>
                                 <p className="text-sm text-blue-700">
-                                    <strong>{DELIVERY_CONSTANTS.COST_PER_KM} ₽ за км</strong>{' '}
-                                    от МКАД
-                                </p>
-                                <p className="text-xs text-blue-600">
-                                    Минимальная стоимость:{' '}
-                                    {formatDeliveryCost(DELIVERY_CONSTANTS.MIN_DELIVERY_COST)}
+                                    {formatDeliveryCost(DELIVERY_CONSTANTS.MIN_DELIVERY_COST)} +{' '}
+                                    <strong>{DELIVERY_CONSTANTS.COST_PER_KM} ₽ за км</strong> от МКАД
                                 </p>
                             </div>
                         </div>

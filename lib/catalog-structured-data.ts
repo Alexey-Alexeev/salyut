@@ -52,7 +52,7 @@ export function generateCatalogStructuredData(
                         "@type": "OfferShippingDetails",
                         "shippingRate": {
                             "@type": "MonetaryAmount",
-                            "value": "500",
+                            "value": "700",
                             "currency": "RUB"
                         },
                         "deliveryTime": {

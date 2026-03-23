@@ -1,5 +1,7 @@
 import { ConsultationCTA } from '@/components/consultation-cta';
 import { Metadata } from 'next';
+import Link from 'next/link';
+import type { ReactNode } from 'react';
 import { HeroSection } from '@/components/sections/hero-section';
 import { DeliverySection } from '@/components/sections/delivery-section';
 import { DiscountSection } from '@/components/sections/discount-section';
@@ -19,6 +21,14 @@ import {
     getVideoReviews,
     getVisibleCategories,
 } from '@/lib/page-data';
+import {
+    DELIVERY_CONSTANTS,
+    formatDeliveryCost,
+    isFixedDeliveryCity,
+} from '@/lib/delivery-utils';
+
+const DELIVERY_PAGE_PATH = '/delivery';
+const DELIVERY_PAGE_ABSOLUTE_URL = 'https://salutgrad.ru/delivery/';
 
 interface CityPageProps {
     params: {
@@ -106,27 +116,62 @@ export default async function CityPage({ params }: CityPageProps) {
     const popularProducts: any[] = popularProductsRaw as any[];
     const videoReviews: any[] = videoReviewsRaw as any[];
     const isMoscowPage = cityData.slug === 'moskva';
+    const fixedDeliveryZone = isFixedDeliveryCity(cityData.name);
+    const fixedDeliveryPriceLabel = formatDeliveryCost(
+        DELIVERY_CONSTANTS.MOSCOW_DELIVERY_COST
+    );
 
-    const faqIntroAnswer = isMoscowPage
+    const faqIntroPlain = isMoscowPage
         ? `Если вы ищете, где купить салют в мск, интернет-магазин СалютГрад поможет с выбором и доставкой по Москве и области. Вы также можете купить салюты и фейерверки в ${cityData.nameLocative} с консультацией менеджера. Подберём пиротехнику под формат праздника, бюджет и площадку запуска: от компактных батарей салютов до масштабных программ. Доступны услуги по запуску фейерверка — при необходимости возьмём на себя организацию запуска салюта профессионально и с соблюдением требований безопасности, чтобы праздник прошёл ярко и безопасно.`
         : `В интернет-магазине СалютГрад вы можете купить салюты и фейерверки в ${cityData.nameLocative} с удобной доставкой и консультацией менеджера. Подберём пиротехнику под формат праздника, бюджет и площадку запуска: от компактных батарей салютов до масштабных программ. Доступны услуги по запуску фейерверка — при необходимости возьмём на себя организацию запуска салюта профессионально и с соблюдением требований безопасности, чтобы праздник прошёл ярко и безопасно.`;
 
-    const faqItems = [
+    const deliveryFaqPlain = fixedDeliveryZone
+        ? `Да, доставляем салюты и фейерверки по ${cityData.nameLocative} и соседним населённым пунктам. Фиксированная стоимость доставки по адресу в ${cityData.nameLocative} — ${fixedDeliveryPriceLabel}. Точные сроки подскажет менеджер при оформлении.`
+        : `Да, доставляем салюты и фейерверки по ${cityData.nameLocative} и соседним населённым пунктам. Стоимость доставки по Московской области зависит от адреса (базовая сумма плюс километраж от МКАД). Подробные условия и расчёт — на странице ${DELIVERY_PAGE_ABSOLUTE_URL}`;
+
+    const deliveryFaqAnswer: ReactNode = fixedDeliveryZone
+        ? deliveryFaqPlain
+        : (
+              <>
+                  Да, доставляем салюты и фейерверки по {cityData.nameLocative} и соседним населённым пунктам.
+                  {' '}
+                  Стоимость доставки по Московской области зависит от адреса (базовая сумма плюс километраж от МКАД).
+                  {' '}
+                  Подробные условия и расчёт — на{' '}
+                  <Link
+                      href={DELIVERY_PAGE_PATH}
+                      className="font-medium text-orange-700 underline hover:text-orange-900"
+                  >
+                      странице доставки
+                  </Link>
+                  .
+              </>
+          );
+
+    const faqItems: {
+        question: string;
+        answer: ReactNode;
+        answerPlain: string;
+    }[] = [
         {
             question: `Купить салюты и фейерверки в ${cityData.nameLocative}: доставка и услуги по запуску фейерверка`,
-            answer: faqIntroAnswer,
+            answer: faqIntroPlain,
+            answerPlain: faqIntroPlain,
         },
         {
             question: `Как оформить заказ на салюты в ${cityData.nameLocative}?`,
             answer: `Выберите товары в каталоге, оформите заказ на сайте или свяжитесь с менеджером. Мы подтвердим заказ и организуем доставку по ${cityData.nameLocative} и ближайшим районам.`,
+            answerPlain: `Выберите товары в каталоге, оформите заказ на сайте или свяжитесь с менеджером. Мы подтвердим заказ и организуем доставку по ${cityData.nameLocative} и ближайшим районам.`,
         },
         {
             question: `Есть ли доставка салютов по ${cityData.nameLocative}?`,
-            answer: `Да, доставляем салюты и фейерверки по ${cityData.nameLocative} и соседним населённым пунктам. Точную стоимость и сроки подскажет менеджер при оформлении.`,
+            answer: deliveryFaqAnswer,
+            answerPlain: deliveryFaqPlain,
         },
         {
             question: `Можно ли заказать безопасный запуск салюта в ${cityData.nameLocative}?`,
             answer: `Да, доступна услуга профессионального запуска. Специалист поможет подобрать площадку и проведёт запуск с учётом требований безопасности.`,
+            answerPlain: `Да, доступна услуга профессионального запуска. Специалист поможет подобрать площадку и проведёт запуск с учётом требований безопасности.`,
         },
     ];
 
@@ -272,7 +317,7 @@ export default async function CityPage({ params }: CityPageProps) {
                                     "@type": "OfferShippingDetails",
                                     "shippingRate": {
                                         "@type": "MonetaryAmount",
-                                        "value": "500",
+                                        "value": "700",
                                         "currency": "RUB"
                                     },
                                     "deliveryTime": {
@@ -372,7 +417,7 @@ export default async function CityPage({ params }: CityPageProps) {
                             "name": item.question,
                             "acceptedAnswer": {
                                 "@type": "Answer",
-                                "text": item.answer
+                                "text": item.answerPlain
                             }
                         }))
                     })

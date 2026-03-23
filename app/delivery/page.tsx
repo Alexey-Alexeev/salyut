@@ -127,7 +127,7 @@ export default function DeliveryPage() {
                     "name": "Доставка фейерверков по Москве",
                     "description": "Фиксированная стоимость доставки фейерверков по Москве, Балашихе, Люберцам, Реутову, Орехово-Зуево, Павловскому Посаду, Электростали"
                   },
-                  "price": "500",
+                  "price": "700",
                   "priceCurrency": "RUB",
                   "priceValidUntil": "2025-12-31",
                   "eligibleRegion": "RU-MOW",
