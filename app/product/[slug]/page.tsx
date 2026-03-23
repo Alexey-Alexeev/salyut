@@ -4,6 +4,7 @@ import { products, categories, manufacturers } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import ProductClient from '@/app/product/[slug]/product-client';
 import slugify from 'slugify';
+import { cache } from 'react';
 
 type PageProps = { params: { slug: string } };
 
@@ -29,54 +30,60 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   try {
     const cleanSlug = getCleanSlug(params.slug);
-    const product = await db
-      .select()
-      .from(products)
-      .where(eq(products.slug, cleanSlug))
-      .limit(1);
+    const product = await getProductWithRelations(cleanSlug);
 
-    if (!product[0]) {
+    if (!product) {
       return {};
     }
 
-    const productData = product[0];
-
     return {
-      title: productData.seo_title || productData.name,
+      title: product.product.seo_title || product.product.name,
       description:
-        productData.seo_description ||
-        productData.short_description ||
+        product.product.seo_description ||
+        product.product.short_description ||
         undefined,
       openGraph: {
-        title: productData.seo_title || productData.name,
+        title: product.product.seo_title || product.product.name,
         description:
-          productData.seo_description ||
-          productData.short_description ||
+          product.product.seo_description ||
+          product.product.short_description ||
           undefined,
-        images: productData.images?.[0]
-          ? [{ url: productData.images[0] as string }]
+        images: product.product.images?.[0]
+          ? [{ url: product.product.images[0] as string }]
           : undefined,
       },
-      alternates: { canonical: `https://salutgrad.ru/product/${productData.slug}/` },
+      alternates: { canonical: `https://salutgrad.ru/product/${product.product.slug}/` },
     };
   } catch (error) {
     console.error('Error generating metadata:', error);
     return {};
   }
 }
+
+const getProductWithRelations = cache(async (slug: string) => {
+  const rows = await db
+    .select({
+      product: products,
+      category: categories,
+      manufacturer: manufacturers,
+    })
+    .from(products)
+    .leftJoin(categories, eq(categories.id, products.category_id))
+    .leftJoin(manufacturers, eq(manufacturers.id, products.manufacturer_id))
+    .where(eq(products.slug, slug))
+    .limit(1);
+
+  return rows[0] || null;
+});
+
 export default async function ProductPage({ params }: PageProps) {
   try {
 
     // ✅ Используем clean slug для поиска
     const cleanSlug = getCleanSlug(params.slug);
+    const productData = await getProductWithRelations(cleanSlug);
 
-    const product = await db
-      .select()
-      .from(products)
-      .where(eq(products.slug, cleanSlug))
-      .limit(1);
-
-    if (!product[0]) {
+    if (!productData) {
       return (
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
@@ -95,43 +102,11 @@ export default async function ProductPage({ params }: PageProps) {
       );
     }
 
-    const productData = product[0];
-
-    // Загружаем связанные данные
-    let categoryData = null;
-    let manufacturerData = null;
-
-    if (productData.category_id) {
-      try {
-        const category = await db
-          .select()
-          .from(categories)
-          .where(eq(categories.id, productData.category_id))
-          .limit(1);
-        categoryData = category[0] || null;
-      } catch (error) {
-        console.error('Error loading category:', error);
-      }
-    }
-
-    if (productData.manufacturer_id) {
-      try {
-        const manufacturer = await db
-          .select()
-          .from(manufacturers)
-          .where(eq(manufacturers.id, productData.manufacturer_id))
-          .limit(1);
-        manufacturerData = manufacturer[0] || null;
-      } catch (error) {
-        console.error('Error loading manufacturer:', error);
-      }
-    }
-
     return (
       <ProductClient
-        product={productData}
-        category={categoryData}
-        manufacturer={manufacturerData}
+        product={productData.product}
+        category={productData.category}
+        manufacturer={productData.manufacturer}
       />
     );
   } catch (error) {

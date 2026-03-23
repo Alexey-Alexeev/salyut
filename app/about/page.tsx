@@ -4,10 +4,8 @@ import { ConsultationCTA } from '@/components/consultation-cta';
 import { AboutHeroSection } from '@/components/sections/about-hero-section';
 import { CompanyStorySection } from '@/components/sections/company-story-section';
 import { AdvantagesSection } from '@/components/sections/advantages-section';
-import { db } from '@/lib/db';
-import { reviews } from '@/db/schema';
-import { desc } from 'drizzle-orm';
 import { Metadata } from 'next';
+import { getVideoReviews } from '@/lib/page-data';
 
 export const metadata: Metadata = {
   title:
@@ -29,18 +27,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  // Загружаем видео отзывы
-  let videoReviews: any[] = [];
-
-  try {
-    videoReviews = await db
-      .select()
-      .from(reviews)
-      .orderBy(desc(reviews.created_at))
-      .limit(8);
-  } catch (error) {
-    console.error('Error loading reviews:', error);
-  }
+  const videoReviews = (await getVideoReviews()) as any[];
 
   return (
     <div>
