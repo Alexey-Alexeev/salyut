@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
         };
     }
 
-    const title = `Купить салюты и фейерверки в ${cityData.nameLocative} - заказать доставку и запуск`;
+    const title = `Купить салют и фейерверк в ${cityData.nameLocative} - заказать доставку и запуск`;
     const description = cityData.metaDescription;
 
     return {
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
         description,
         keywords: `купить фейерверки в ${cityData.nameLocative}, салюты в ${cityData.nameLocative}, пиротехника в ${cityData.nameLocative}, заказать салют в ${cityData.nameLocative}, доставка фейерверков ${cityData.name}, безопасный запуск салюта ${cityData.name}`,
         openGraph: {
-            title: `Купить салюты и фейерверки в ${cityData.nameLocative} - заказать доставку и запуск`,
+            title: `Купить салют и фейерверк в ${cityData.nameLocative} - заказать доставку и запуск`,
             description,
             url: `https://salutgrad.ru/${params.city}`,
             siteName: 'СалютГрад',
@@ -78,7 +78,7 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
         },
         twitter: {
             card: 'summary_large_image',
-            title: `Купить салюты и фейерверки в ${cityData.nameLocative} - заказать доставку и запуск`,
+            title: `Купить салют и фейерверк в ${cityData.nameLocative} - заказать доставку и запуск`,
             description,
             images: ['https://salutgrad.ru/images/hero-bg.webp'],
         },
