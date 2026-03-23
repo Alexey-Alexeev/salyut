@@ -153,26 +153,6 @@ export type Database = {
           created_at?: string;
         };
       };
-      profiles: {
-        Row: {
-          id: string;
-          user_id: string;
-          role: 'admin' | 'user';
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          role?: 'admin' | 'user';
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          role?: 'admin' | 'user';
-          created_at?: string;
-        };
-      };
       reviews: {
         Row: {
           id: string;

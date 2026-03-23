@@ -1,6 +1,3 @@
-import { db } from '@/lib/db';
-import { categories, products, reviews } from '@/db/schema';
-import { desc, eq, and } from 'drizzle-orm';
 import { ConsultationCTA } from '@/components/consultation-cta';
 import { Metadata } from 'next';
 import { HeroSection } from '@/components/sections/hero-section';
@@ -13,8 +10,14 @@ import { ProfessionalServicesSection } from '@/components/sections/professional-
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
 import { getCityBySlug, getAllCitySlugs } from '@/lib/cities';
 import { notFound } from 'next/navigation';
-import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL, filterVisibleCategories } from '@/lib/schema-constants';
+import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 import { QuizSection } from '@/components/quiz-section';
+import {
+    getEventCounts,
+    getPopularProducts,
+    getVideoReviews,
+    getVisibleCategories,
+} from '@/lib/page-data';
 
 interface CityPageProps {
     params: {
@@ -93,61 +96,14 @@ export default async function CityPage({ params }: CityPageProps) {
         notFound();
     }
 
-    // Загружаем данные для страницы
-    let categoriesData: any[] = [];
-    let popularProducts: any[] = [];
-    let videoReviews: any[] = [];
-    let eventCounts = {
-        wedding: 0,
-        birthday: 0,
-        new_year: 0,
-    };
-
-    try {
-        [categoriesData, popularProducts] = await Promise.all([
-            db.select().from(categories),
-            db
-                .select()
-                .from(products)
-                .where(and(eq(products.is_popular, true), eq(products.is_active, true)))
-                .limit(4),
-        ]);
-        // Фильтруем скрытые категории
-        categoriesData = filterVisibleCategories(categoriesData);
-    } catch (error) {
-        console.error('Error loading categories or products:', error);
-    }
-
-    // Подсчитываем количество салютов для каждого события
-    try {
-        const allProducts = await db
-            .select({
-                event_types: products.event_types,
-            })
-            .from(products)
-            .where(eq(products.is_active, true));
-
-        allProducts.forEach((product) => {
-            const eventTypes = product.event_types as string[] | null;
-            if (eventTypes && Array.isArray(eventTypes)) {
-                if (eventTypes.includes('wedding')) eventCounts.wedding++;
-                if (eventTypes.includes('birthday')) eventCounts.birthday++;
-                if (eventTypes.includes('new_year')) eventCounts.new_year++;
-            }
-        });
-    } catch (error) {
-        console.error('Error loading event counts:', error);
-    }
-
-    try {
-        videoReviews = await db
-            .select()
-            .from(reviews)
-            .orderBy(desc(reviews.created_at))
-            .limit(4);
-    } catch (error) {
-        console.error('Error loading reviews:', error);
-    }
+    const [categoriesData, popularProductsRaw, videoReviewsRaw, eventCounts] = await Promise.all([
+        getVisibleCategories(),
+        getPopularProducts(),
+        getVideoReviews(),
+        getEventCounts(),
+    ]);
+    const popularProducts: any[] = popularProductsRaw as any[];
+    const videoReviews: any[] = videoReviewsRaw as any[];
 
     return (
         <div className="space-y-8">

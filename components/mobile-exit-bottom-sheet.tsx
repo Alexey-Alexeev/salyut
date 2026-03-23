@@ -9,7 +9,7 @@ import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 /**
  * MobileExitBottomSheet
  * Мягкий bottom-sheet для мобильных с триггером бездействия (40 секунд).
- * Показывается не чаще 1 раза за сессию. Исключает админ, корзину/оформление, страницы продуктов и потенциальную страницу «спасибо».
+ * Показывается не чаще 1 раза за сессию. Исключает корзину/оформление, страницы продуктов и потенциальную страницу «спасибо».
  */
 export default function MobileExitBottomSheet() {
   const [open, setOpen] = useState(false);
@@ -34,7 +34,6 @@ export default function MobileExitBottomSheet() {
     if (hasTriggeredRef.current) return false;
 
     const path = pathname || window.location.pathname;
-    if (path.startsWith('/admin')) return false;
     if (path.startsWith('/cart')) return false;
     if (path.startsWith('/product/')) return false;
     if (path.includes('checkout')) return false;

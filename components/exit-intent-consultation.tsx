@@ -6,16 +6,13 @@ import { ConsultationDialog } from '@/components/consultation-dialog';
 /**
  * ExitIntentConsultation
  * Показывает диалог консультации при попытке ухода со страницы (курсор уходит за верх экрана).
- * Показ — не чаще 1 раза за сессию, только для десктопов, исключая админ-разделы.
+ * Показ — не чаще 1 раза за сессию, только для десктопов.
  */
 export function ExitIntentConsultation() {
   const [open, setOpen] = useState(false);
 
   const isEligible = useMemo(() => {
     if (typeof window === 'undefined') return false;
-
-    // Не показываем в админке
-    if (window.location.pathname.startsWith('/admin')) return false;
 
     // Только для десктопов (устройства с точным указателем)
     const hasFinePointer = window.matchMedia && window.matchMedia('(pointer: fine)').matches;
