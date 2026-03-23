@@ -12,6 +12,7 @@ import { getCityBySlug, getAllCitySlugs } from '@/lib/cities';
 import { notFound } from 'next/navigation';
 import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 import { QuizSection } from '@/components/quiz-section';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import {
     getEventCounts,
     getPopularProducts,
@@ -140,7 +141,10 @@ export default async function CityPage({ params }: CityPageProps) {
 
             <VideoReviewsSection videoReviews={videoReviews} />
 
-            <section className="container mx-auto rounded-lg border bg-white px-4 py-8">
+            <section className="container mx-auto rounded-2xl border border-orange-100 bg-gradient-to-br from-white to-orange-50/40 px-5 py-8 shadow-sm md:px-8">
+                <p className="mb-3 inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-orange-700">
+                    Доставка и запуск в {cityData.name}
+                </p>
                 <h2 className="mb-4 text-2xl font-bold text-gray-900 md:text-3xl">
                     Купить салюты и фейерверки в {cityData.nameLocative}
                 </h2>
@@ -160,18 +164,29 @@ export default async function CityPage({ params }: CityPageProps) {
                 </div>
             </section>
 
-            <section className="container mx-auto rounded-lg border bg-white px-4 py-8">
-                <h2 className="mb-4 text-2xl font-bold text-gray-900 md:text-3xl">
+            <section className="container mx-auto rounded-2xl border bg-white px-5 py-8 shadow-sm md:px-8">
+                <h2 className="mb-2 text-2xl font-bold text-gray-900 md:text-3xl">
                     Часто задаваемые вопросы
                 </h2>
-                <div className="space-y-4">
-                    {faqItems.map((item) => (
-                        <div key={item.question}>
-                            <h3 className="text-lg font-semibold text-gray-900">{item.question}</h3>
-                            <p className="mt-1 text-gray-700">{item.answer}</p>
-                        </div>
+                <p className="mb-4 text-sm text-gray-600">
+                    Быстрые ответы по доставке, выбору и безопасному запуску салютов в {cityData.nameLocative}.
+                </p>
+                <Accordion type="single" collapsible className="w-full">
+                    {faqItems.map((item, index) => (
+                        <AccordionItem
+                            key={item.question}
+                            value={`faq-${index}`}
+                            className="border-b border-gray-200 last:border-none"
+                        >
+                            <AccordionTrigger className="py-4 text-left text-base font-semibold text-gray-900 hover:no-underline">
+                                {item.question}
+                            </AccordionTrigger>
+                            <AccordionContent className="pb-4 text-base leading-relaxed text-gray-700">
+                                {item.answer}
+                            </AccordionContent>
+                        </AccordionItem>
                     ))}
-                </div>
+                </Accordion>
             </section>
 
             {/* CTA Section с диалогом */}
