@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { DeliveryHeroSection } from '@/components/sections/delivery-hero-section';
 import { DeliveryOptionsSection } from '@/components/sections/delivery-options-section';
 import { DeliveryCalculationSection } from '@/components/sections/delivery-calculation-section';
 import { MapSection } from '@/components/sections/map-section';
 import { AdditionalInfoSection } from '@/components/sections/additional-info-section';
+import { cities } from '@/lib/cities';
 
 export const metadata: Metadata = {
   title: 'Доставка фейерверков в Москве и МО | Самовывоз салютов',
@@ -58,6 +60,21 @@ export default function DeliveryPage() {
         <MapSection />
 
         <AdditionalInfoSection />
+
+        <section className="rounded-lg border bg-white p-6">
+          <h2 className="mb-3 text-xl font-semibold text-gray-900">Доставка по городам</h2>
+          <div className="flex flex-wrap gap-2">
+            {cities.map((city) => (
+              <Link
+                key={city.slug}
+                href={`/${city.slug}/`}
+                className="rounded-full border border-gray-300 px-3 py-1.5 text-sm text-gray-700 transition-colors hover:border-orange-500 hover:text-orange-600"
+              >
+                {city.name}
+              </Link>
+            ))}
+          </div>
+        </section>
       </div>
 
       {/* JSON-LD Structured Data */}
