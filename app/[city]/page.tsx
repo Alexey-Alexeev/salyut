@@ -104,6 +104,20 @@ export default async function CityPage({ params }: CityPageProps) {
     ]);
     const popularProducts: any[] = popularProductsRaw as any[];
     const videoReviews: any[] = videoReviewsRaw as any[];
+    const faqItems = [
+        {
+            question: `Как купить салюты и фейерверки в ${cityData.nameLocative}?`,
+            answer: `Выберите товары в каталоге, оформите заказ на сайте или свяжитесь с менеджером. Мы подтвердим заказ и организуем доставку по ${cityData.name}.`,
+        },
+        {
+            question: `Есть ли доставка салютов по ${cityData.name}?`,
+            answer: `Да, мы доставляем салюты и фейерверки по ${cityData.name} и ближайшим районам. Точную стоимость и время доставки подскажет менеджер при оформлении.`,
+        },
+        {
+            question: `Можно ли заказать безопасный запуск салюта в ${cityData.nameLocative}?`,
+            answer: `Да, у нас доступна услуга профессионального запуска. Специалист поможет подобрать площадку и проведет запуск с учетом требований безопасности.`,
+        },
+    ];
 
     return (
         <div className="space-y-8">
@@ -125,6 +139,40 @@ export default async function CityPage({ params }: CityPageProps) {
             <ProfessionalServicesSection />
 
             <VideoReviewsSection videoReviews={videoReviews} />
+
+            <section className="container mx-auto rounded-lg border bg-white px-4 py-8">
+                <h2 className="mb-4 text-2xl font-bold text-gray-900 md:text-3xl">
+                    Купить салюты и фейерверки в {cityData.nameLocative}
+                </h2>
+                <div className="space-y-3 text-base leading-relaxed text-gray-700">
+                    <p>
+                        В интернет-магазине СалютГрад вы можете купить салюты и фейерверки в {cityData.nameLocative}{' '}
+                        с удобной доставкой и консультацией менеджера.
+                    </p>
+                    <p>
+                        Подберем пиротехнику под ваш формат праздника, бюджет и площадку запуска: от компактных
+                        батарей салютов до масштабных эффектных программ.
+                    </p>
+                    <p>
+                        При необходимости организуем профессиональный запуск, чтобы ваш праздник прошел ярко и
+                        безопасно.
+                    </p>
+                </div>
+            </section>
+
+            <section className="container mx-auto rounded-lg border bg-white px-4 py-8">
+                <h2 className="mb-4 text-2xl font-bold text-gray-900 md:text-3xl">
+                    Часто задаваемые вопросы
+                </h2>
+                <div className="space-y-4">
+                    {faqItems.map((item) => (
+                        <div key={item.question}>
+                            <h3 className="text-lg font-semibold text-gray-900">{item.question}</h3>
+                            <p className="mt-1 text-gray-700">{item.answer}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
 
             {/* CTA Section с диалогом */}
             <ConsultationCTA className="pb-8 md:pb-16" />
@@ -293,6 +341,23 @@ export default async function CityPage({ params }: CityPageProps) {
                             "duration": "PT30S",
                             "uploadDate": video.created_at || new Date().toISOString(),
                             "contentUrl": video.video_url
+                        }))
+                    })
+                }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "FAQPage",
+                        "mainEntity": faqItems.map((item) => ({
+                            "@type": "Question",
+                            "name": item.question,
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": item.answer
+                            }
                         }))
                     })
                 }}
