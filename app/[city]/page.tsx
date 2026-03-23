@@ -105,10 +105,16 @@ export default async function CityPage({ params }: CityPageProps) {
     ]);
     const popularProducts: any[] = popularProductsRaw as any[];
     const videoReviews: any[] = videoReviewsRaw as any[];
+    const isMoscowPage = cityData.slug === 'moskva';
+
+    const faqIntroAnswer = isMoscowPage
+        ? `Если вы ищете, где купить салют в мск, интернет-магазин СалютГрад поможет с выбором и доставкой по Москве и области. Вы также можете купить салюты и фейерверки в ${cityData.nameLocative} с консультацией менеджера. Подберём пиротехнику под формат праздника, бюджет и площадку запуска: от компактных батарей салютов до масштабных программ. Доступны услуги по запуску фейерверка — при необходимости возьмём на себя организацию запуска салюта профессионально и с соблюдением требований безопасности, чтобы праздник прошёл ярко и безопасно.`
+        : `В интернет-магазине СалютГрад вы можете купить салюты и фейерверки в ${cityData.nameLocative} с удобной доставкой и консультацией менеджера. Подберём пиротехнику под формат праздника, бюджет и площадку запуска: от компактных батарей салютов до масштабных программ. Доступны услуги по запуску фейерверка — при необходимости возьмём на себя организацию запуска салюта профессионально и с соблюдением требований безопасности, чтобы праздник прошёл ярко и безопасно.`;
+
     const faqItems = [
         {
             question: `Купить салюты и фейерверки в ${cityData.nameLocative}: доставка и услуги по запуску фейерверка`,
-            answer: `В интернет-магазине СалютГрад вы можете купить салюты и фейерверки в ${cityData.nameLocative} с удобной доставкой и консультацией менеджера. Подберём пиротехнику под формат праздника, бюджет и площадку запуска: от компактных батарей салютов до масштабных программ. Доступны услуги по запуску фейерверка — при необходимости возьмём на себя организацию запуска салюта профессионально и с соблюдением требований безопасности, чтобы праздник прошёл ярко и безопасно.`,
+            answer: faqIntroAnswer,
         },
         {
             question: `Как оформить заказ на салюты в ${cityData.nameLocative}?`,
@@ -145,12 +151,25 @@ export default async function CityPage({ params }: CityPageProps) {
 
             <VideoReviewsSection videoReviews={videoReviews} />
 
+            {/* CTA Section с диалогом */}
+            <ConsultationCTA className="pb-8 md:pb-16" />
+
             <section className="bg-gray-50 py-12">
                 <div className="container mx-auto px-4">
                     <div className="mb-10 space-y-4 text-center">
                         <h2 className="text-3xl font-bold md:text-4xl">Вопросы о заказе в {cityData.nameLocative}</h2>
                         <p className="text-muted-foreground mx-auto max-w-2xl text-base">
-                            Доставка, выбор пиротехники, услуги по запуску фейерверка и организация запуска салюта — кратко в одном блоке.
+                            {isMoscowPage ? (
+                                <>
+                                    Доставка, выбор пиротехники, услуги по запуску фейерверка и организация запуска салюта — кратко в одном блоке.
+                                    {' '}
+                                    Удобно, если нужно купить салют в мск и по Московской области.
+                                </>
+                            ) : (
+                                <>
+                                    Доставка, выбор пиротехники, услуги по запуску фейерверка и организация запуска салюта — кратко в одном блоке.
+                                </>
+                            )}
                         </p>
                     </div>
                     <div className="mx-auto max-w-3xl rounded-lg border border-gray-200 bg-white px-4 py-2 md:px-6">
@@ -173,9 +192,6 @@ export default async function CityPage({ params }: CityPageProps) {
                     </div>
                 </div>
             </section>
-
-            {/* CTA Section с диалогом */}
-            <ConsultationCTA className="pb-8 md:pb-16" />
 
             {/* JSON-LD Structured Data для локальной страницы */}
             <script
