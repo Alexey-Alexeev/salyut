@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -217,12 +217,14 @@ interface ProductClientProps {
   product: Product;
   category?: Category | null;
   manufacturer?: Manufacturer | null;
+  relatedProducts?: Product[];
 }
 
 export default function ProductClient({
   product,
   category,
   manufacturer,
+  relatedProducts = [],
 }: ProductClientProps) {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -295,6 +297,18 @@ export default function ProductClient({
     ...images.map((image, index) => ({ type: 'image', src: image, index })),
     ...(hasVideo ? [{ type: 'video', src: product.video_url, index: images.length }] : [])
   ];
+
+  const randomRelatedProducts = useMemo(() => {
+    if (!relatedProducts.length) return [];
+
+    const shuffled = [...relatedProducts];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled.slice(0, 3);
+  }, [relatedProducts]);
 
   // Функции для навигации по карусели
   const goToPrevious = () => {
@@ -906,6 +920,51 @@ export default function ProductClient({
           )}
         </div>
       </div>
+
+      {randomRelatedProducts.length > 0 && (
+        <section className="mt-12">
+          <h2 className="mb-6 text-2xl font-bold">Вам также может понравиться</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {randomRelatedProducts.map((item) => (
+              <Link
+                key={item.id}
+                href={`/product/${item.slug}`}
+                className="group rounded-lg border bg-white p-3 transition-shadow hover:shadow-md"
+              >
+                <div className="relative mb-3 aspect-square overflow-hidden rounded-md bg-gray-100">
+                  {item.images?.[0] ? (
+                    <Image
+                      src={item.images[0]}
+                      alt={item.name}
+                      fill
+                      className="object-cover transition-transform duration-200 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-sm text-gray-500">
+                      Фото отсутствует
+                    </div>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <div className="line-clamp-2 text-sm font-medium text-gray-900">
+                    {item.name}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {item.old_price && item.old_price > item.price && (
+                      <span className="text-xs text-gray-400 line-through">
+                        {item.old_price.toLocaleString('ru-RU')} ₽
+                      </span>
+                    )}
+                    <span className="text-base font-bold text-primary">
+                      {item.price.toLocaleString('ru-RU')} ₽
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

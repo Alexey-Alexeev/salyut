@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { ConsultationDialog } from '@/components/consultation-dialog';
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
 import { ServicesHeroSection } from '@/components/sections/services-hero-section';
@@ -36,6 +37,23 @@ export default function LaunchingServicePage({ videoReviews }: LaunchingServiceP
       <VideoReviewsSection videoReviews={videoReviews || []} />
 
       <ServicesCTASection onConsultationClick={() => setIsDialogOpen(true)} />
+
+      <section className="container mx-auto px-4 pb-12">
+        <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <h2 className="mb-3 text-xl font-semibold text-gray-900">Смотрите также</h2>
+          <p className="text-sm text-gray-700">
+            Для выбора пиротехники перейдите в{' '}
+            <Link href="/catalog" className="font-medium text-orange-700 underline hover:text-orange-900">
+              каталог
+            </Link>
+            . Условия доставки и самовывоза смотрите на странице{' '}
+            <Link href="/delivery" className="font-medium text-orange-700 underline hover:text-orange-900">
+              доставка / самовывоз
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
 
       {/* Диалог консультации */}
       <ConsultationDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />

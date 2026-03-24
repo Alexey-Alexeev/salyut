@@ -10,7 +10,7 @@ import { EventCollectionsSection } from '@/components/sections/event-collections
 import { PopularProductsSection } from '@/components/sections/popular-products-section';
 import { ProfessionalServicesSection } from '@/components/sections/professional-services-section';
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
-import { getCityBySlug, getAllCitySlugs } from '@/lib/cities';
+import { cities, getCityBySlug, getAllCitySlugs } from '@/lib/cities';
 import { notFound } from 'next/navigation';
 import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 import { QuizSection } from '@/components/quiz-section';
@@ -121,6 +121,7 @@ export default async function CityPage({ params }: CityPageProps) {
     const popularProducts: any[] = popularProductsRaw as any[];
     const videoReviews: any[] = videoReviewsRaw as any[];
     const isMoscowPage = cityData.slug === 'moskva';
+    const relatedCities = cities.filter((city) => city.slug !== cityData.slug).slice(0, 8);
     const fixedDeliveryZone = isFixedDeliveryCity(cityData.name);
     const fixedDeliveryPriceLabel = formatDeliveryCost(
         DELIVERY_CONSTANTS.MOSCOW_DELIVERY_COST
@@ -277,6 +278,48 @@ export default async function CityPage({ params }: CityPageProps) {
                                 </AccordionItem>
                             ))}
                         </Accordion>
+                    </div>
+                </div>
+            </section>
+
+            <section className="container mx-auto px-4 pb-12">
+                <div className="rounded-lg border border-gray-200 bg-white p-6">
+                    <h2 className="mb-3 text-xl font-semibold text-gray-900">Смотрите также</h2>
+                    <div className="flex flex-wrap gap-2">
+                        <Link
+                            href={CATALOG_PAGE_PATH}
+                            className={faqInlineLinkClass}
+                        >
+                            Каталог фейерверков
+                        </Link>
+                        <span className="text-gray-400">•</span>
+                        <Link
+                            href={DELIVERY_PAGE_PATH}
+                            className={faqInlineLinkClass}
+                        >
+                            Доставка и самовывоз
+                        </Link>
+                        <span className="text-gray-400">•</span>
+                        <Link
+                            href="/services/launching"
+                            className={faqInlineLinkClass}
+                        >
+                            Организация запуска
+                        </Link>
+                    </div>
+                    <div className="mt-4">
+                        <p className="mb-2 text-sm text-gray-600">Другие города Московской области:</p>
+                        <div className="flex flex-wrap gap-2">
+                            {relatedCities.map((city) => (
+                                <Link
+                                    key={city.slug}
+                                    href={`/${city.slug}/`}
+                                    className="rounded-full border border-gray-300 px-3 py-1.5 text-sm text-gray-700 transition-colors hover:border-orange-500 hover:text-orange-600"
+                                >
+                                    {city.name}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>

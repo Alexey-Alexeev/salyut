@@ -63,6 +63,17 @@ export default function DeliveryPage() {
 
         <section className="rounded-lg border bg-white p-6">
           <h2 className="mb-3 text-xl font-semibold text-gray-900">Доставка по городам</h2>
+          <p className="mb-4 text-sm text-gray-600">
+            Полезные разделы:{' '}
+            <Link href="/catalog" className="font-medium text-orange-700 underline hover:text-orange-900">
+              каталог фейерверков
+            </Link>
+            {' '}и{' '}
+            <Link href="/services/launching" className="font-medium text-orange-700 underline hover:text-orange-900">
+              организация запуска салюта
+            </Link>
+            .
+          </p>
           <div className="flex flex-wrap gap-2">
             {cities.map((city) => (
               <Link

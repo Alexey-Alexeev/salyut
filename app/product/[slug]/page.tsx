@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { products, categories, manufacturers } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq, ne } from 'drizzle-orm';
 import ProductClient from '@/app/product/[slug]/product-client';
 import slugify from 'slugify';
 import { cache } from 'react';
@@ -76,6 +76,55 @@ const getProductWithRelations = cache(async (slug: string) => {
   return rows[0] || null;
 });
 
+const getRelatedProducts = cache(async (productId: string, categoryId?: string | null) => {
+  const sameCategory = categoryId
+    ? await db
+        .select({
+          id: products.id,
+          name: products.name,
+          slug: products.slug,
+          price: products.price,
+          old_price: products.old_price,
+          images: products.images,
+          is_popular: products.is_popular,
+        })
+        .from(products)
+        .where(
+          and(
+            eq(products.is_active, true),
+            eq(products.category_id, categoryId),
+            ne(products.id, productId)
+          )
+        )
+        .limit(12)
+    : [];
+
+  if (sameCategory.length >= 3) {
+    return sameCategory;
+  }
+
+  const fallback = await db
+    .select({
+      id: products.id,
+      name: products.name,
+      slug: products.slug,
+      price: products.price,
+      old_price: products.old_price,
+      images: products.images,
+      is_popular: products.is_popular,
+    })
+    .from(products)
+    .where(and(eq(products.is_active, true), ne(products.id, productId)))
+    .limit(24);
+
+  const unique = new Map<string, (typeof fallback)[number]>();
+  for (const item of [...sameCategory, ...fallback]) {
+    unique.set(item.id, item);
+  }
+
+  return Array.from(unique.values());
+});
+
 export default async function ProductPage({ params }: PageProps) {
   try {
 
@@ -102,11 +151,17 @@ export default async function ProductPage({ params }: PageProps) {
       );
     }
 
+    const relatedProducts = await getRelatedProducts(
+      productData.product.id,
+      productData.product.category_id
+    );
+
     return (
       <ProductClient
         product={productData.product}
         category={productData.category}
         manufacturer={productData.manufacturer}
+        relatedProducts={relatedProducts}
       />
     );
   } catch (error) {
