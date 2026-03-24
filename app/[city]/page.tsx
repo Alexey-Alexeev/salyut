@@ -29,6 +29,11 @@ import {
 
 const DELIVERY_PAGE_PATH = '/delivery';
 const DELIVERY_PAGE_ABSOLUTE_URL = 'https://salutgrad.ru/delivery/';
+const CATALOG_PAGE_PATH = '/catalog';
+const CATALOG_PAGE_ABSOLUTE_URL = 'https://salutgrad.ru/catalog/';
+
+const faqInlineLinkClass =
+    'font-medium text-orange-700 underline underline-offset-2 hover:text-orange-900';
 
 interface CityPageProps {
     params: {
@@ -126,11 +131,24 @@ export default async function CityPage({ params }: CityPageProps) {
         : `В интернет-магазине СалютГрад вы можете купить салюты и фейерверки в ${cityData.nameLocative} с удобной доставкой и консультацией менеджера. Подберём пиротехнику под формат праздника, бюджет и площадку запуска: от компактных батарей салютов до масштабных программ. Доступны услуги по запуску фейерверка — при необходимости возьмём на себя организацию запуска салюта профессионально и с соблюдением требований безопасности, чтобы праздник прошёл ярко и безопасно.`;
 
     const deliveryFaqPlain = fixedDeliveryZone
-        ? `Да, доставляем салюты и фейерверки по ${cityData.nameLocative} и соседним населённым пунктам. Фиксированная стоимость доставки по адресу в ${cityData.nameLocative} — ${fixedDeliveryPriceLabel}. Точные сроки подскажет менеджер при оформлении.`
+        ? `Да, доставляем салюты и фейерверки по ${cityData.nameLocative} и соседним населённым пунктам. Фиксированная стоимость доставки по адресу в ${cityData.nameLocative} — ${fixedDeliveryPriceLabel}. Подробнее о доставке: ${DELIVERY_PAGE_ABSOLUTE_URL}`
         : `Да, доставляем салюты и фейерверки по ${cityData.nameLocative} и соседним населённым пунктам. Стоимость доставки по Московской области зависит от адреса (базовая сумма плюс километраж от МКАД). Подробные условия и расчёт — на странице ${DELIVERY_PAGE_ABSOLUTE_URL}`;
 
     const deliveryFaqAnswer: ReactNode = fixedDeliveryZone
-        ? deliveryFaqPlain
+        ? (
+              <>
+                  Да, доставляем салюты и фейерверки по {cityData.nameLocative} и соседним
+                  населённым пунктам. Фиксированная стоимость доставки по адресу в{' '}
+                  {cityData.nameLocative} — {fixedDeliveryPriceLabel}. Подробнее о доставке{' '}
+                  <Link
+                      href={DELIVERY_PAGE_PATH}
+                      className="font-medium text-orange-700 underline hover:text-orange-900"
+                  >
+                      здесь
+                  </Link>
+                  .
+              </>
+          )
         : (
               <>
                   Да, доставляем салюты и фейерверки по {cityData.nameLocative} и соседним населённым пунктам.
@@ -160,7 +178,19 @@ export default async function CityPage({ params }: CityPageProps) {
         },
         {
             question: `Как оформить заказ на салюты в ${cityData.nameLocative}?`,
-            answer: `Выберите товары в каталоге, оформите заказ на сайте или свяжитесь с менеджером. Мы подтвердим заказ и организуем доставку по ${cityData.nameLocative} и ближайшим районам.`,
+            answer: (
+                <>
+                    Выберите товары в{' '}
+                    <Link
+                        href="/catalog"
+                        className="font-medium text-orange-700 underline hover:text-orange-900"
+                    >
+                        каталоге
+                    </Link>
+                    , оформите заказ на сайте или свяжитесь с менеджером. Мы подтвердим заказ и
+                    организуем доставку по {cityData.nameLocative} и ближайшим районам.
+                </>
+            ),
             answerPlain: `Выберите товары в каталоге, оформите заказ на сайте или свяжитесь с менеджером. Мы подтвердим заказ и организуем доставку по ${cityData.nameLocative} и ближайшим районам.`,
         },
         {
@@ -170,8 +200,21 @@ export default async function CityPage({ params }: CityPageProps) {
         },
         {
             question: `Можно ли заказать безопасный запуск салюта в ${cityData.nameLocative}?`,
-            answer: `Да, доступна услуга профессионального запуска. Специалист поможет подобрать площадку и проведёт запуск с учётом требований безопасности.`,
-            answerPlain: `Да, доступна услуга профессионального запуска. Специалист поможет подобрать площадку и проведёт запуск с учётом требований безопасности.`,
+            answer: (
+                <>
+                    Да, доступна услуга профессионального запуска. Специалист поможет подобрать
+                    площадку и проведёт запуск с учётом требований безопасности. Подробнее об
+                    услуге{' '}
+                    <Link
+                        href="/services/launching"
+                        className="font-medium text-orange-700 underline hover:text-orange-900"
+                    >
+                        здесь
+                    </Link>
+                    .
+                </>
+            ),
+            answerPlain: 'Да, доступна услуга профессионального запуска. Специалист поможет подобрать площадку и проведёт запуск с учётом требований безопасности. Подробнее об услуге: https://salutgrad.ru/services/launching/',
         },
     ];
 
