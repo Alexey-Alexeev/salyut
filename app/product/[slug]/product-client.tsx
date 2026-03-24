@@ -199,6 +199,11 @@ type Product = {
   category_id?: string | null;
 };
 
+type RelatedProduct = Pick<
+  Product,
+  'id' | 'name' | 'slug' | 'price' | 'old_price' | 'images' | 'is_popular'
+>;
+
 type Category = {
   id: string;
   name: string;
@@ -217,7 +222,7 @@ interface ProductClientProps {
   product: Product;
   category?: Category | null;
   manufacturer?: Manufacturer | null;
-  relatedProducts?: Product[];
+  relatedProducts?: RelatedProduct[];
 }
 
 export default function ProductClient({
