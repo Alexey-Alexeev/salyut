@@ -35,6 +35,113 @@ const CATALOG_PAGE_ABSOLUTE_URL = 'https://salutgrad.ru/catalog/';
 const faqInlineLinkClass =
     'font-medium text-orange-700 underline underline-offset-2 hover:text-orange-900';
 
+const cityIntroPatterns = [
+    'Подберём пиротехнику под формат праздника, бюджет и площадку запуска: от компактных батарей салютов до масштабных программ.',
+    'Поможем собрать оптимальный комплект: от небольших семейных фейерверков до эффектных залпов для крупного события.',
+    'Сориентируем по мощности, времени работы и формату шоу, чтобы пиротехника точно подошла под ваш сценарий праздника.',
+];
+
+const cityOrderPatterns = [
+    'После подтверждения согласуем удобный интервал и уточним детали по адресу.',
+    'Менеджер уточнит все детали заказа и подскажет лучший вариант по срокам и формату получения.',
+    'При необходимости скорректируем состав заказа и время доставки под ваш праздник.',
+];
+
+const cityLaunchPatterns = [
+    'Перед запуском поможем оценить площадку и безопасные расстояния до зрителей.',
+    'Учитываем формат мероприятия и заранее согласуем технические детали запуска.',
+    'Работаем по требованиям безопасности и подбираем сценарий запуска под ваш бюджет.',
+];
+
+const citySubtitlePatterns = [
+    'Коротко о доставке, подборе пиротехники и запуске — в формате быстрых ответов.',
+    'Собрали основные вопросы по заказу, доставке и запуску в одном месте.',
+    'Самое важное про оформление заказа и запуск салюта в вашем городе.',
+];
+
+type CityFaqProfile = {
+    introAddon: string;
+    orderAddon: string;
+    launchAddon: string;
+    subtitleAddon: string;
+};
+
+const CITY_FAQ_PROFILES: Record<string, CityFaqProfile> = {
+    moskva: {
+        introAddon: 'Ориентируемся на разные форматы площадок: от частных территорий до мероприятий в городской черте.',
+        orderAddon: 'Для заказов по Москве и области можем быстро согласовать удобный формат получения.',
+        launchAddon: 'Для крупных мероприятий заранее обсуждаем логистику и схему безопасных зон.',
+        subtitleAddon: 'Отдельно собрали ответы для Москвы и Московской области.',
+    },
+    balashiha: {
+        introAddon: 'Часто помогаем подобрать решения для семейных праздников и частных мероприятий в округе.',
+        orderAddon: 'Для Балашихи и близлежащих районов обычно доступны удобные окна доставки.',
+        launchAddon: 'Подскажем, как безопасно организовать запуск в городской среде и на частной площадке.',
+        subtitleAddon: 'С учётом частых заказов по Балашихе и соседним районам.',
+    },
+    lyubertsy: {
+        introAddon: 'Подбираем позиции под формат дворовых праздников и частных мероприятий.',
+        orderAddon: 'По Люберцам помогаем выбрать удобный интервал и формат доставки.',
+        launchAddon: 'Даём рекомендации по безопасному запуску с учётом плотной застройки.',
+        subtitleAddon: 'С акцентом на частые запросы клиентов из Люберец.',
+    },
+    reutov: {
+        introAddon: 'Поможем выбрать компактные и эффектные решения для городского формата праздника.',
+        orderAddon: 'Для Реутова подскажем оптимальный вариант по времени и получению заказа.',
+        launchAddon: 'Для запуска учитываем требования безопасности в условиях городской застройки.',
+        subtitleAddon: 'Подготовили ответы для заказов по Реутову.',
+    },
+    'orekhovo-zuevo': {
+        introAddon: 'Часто подбираем как бюджетные варианты, так и более масштабные программы для мероприятий.',
+        orderAddon: 'По Орехово-Зуево подскажем оптимальный способ получения и подтверждения заказа.',
+        launchAddon: 'Помогаем заранее спланировать безопасный запуск под формат вашей площадки.',
+        subtitleAddon: 'С учётом регулярных заказов в Орехово-Зуево.',
+    },
+    'pavlovsky-posad': {
+        introAddon: 'Подбираем пиротехнику под семейные праздники, юбилеи и городские события.',
+        orderAddon: 'Для Павловского Посада уточняем детали заказа и подбираем удобный сценарий доставки.',
+        launchAddon: 'Подскажем безопасный формат запуска для частных и открытых площадок.',
+        subtitleAddon: 'Собрали полезные ответы именно для Павловского Посада.',
+    },
+    elektrostal: {
+        introAddon: 'Помогаем собрать программу запуска под разные бюджеты и формат мероприятия.',
+        orderAddon: 'По Электростали согласуем детали заказа и формат получения заранее.',
+        launchAddon: 'Подсказываем безопасные сценарии запуска для частных и открытых территорий.',
+        subtitleAddon: 'Отдельный набор ответов для клиентов из Электростали.',
+    },
+};
+
+const faqQuestionVariants = {
+    intro: [
+        'Купить салюты и фейерверки',
+        'Где заказать салюты и фейерверки',
+        'Как выбрать салюты и фейерверки',
+    ],
+    order: [
+        'Как оформить заказ на салюты',
+        'Как заказать фейерверки',
+        'Как быстро оформить покупку салюта',
+    ],
+    delivery: [
+        'Есть ли доставка салютов',
+        'Как работает доставка фейерверков',
+        'Какие условия доставки салютов',
+    ],
+    launch: [
+        'Можно ли заказать безопасный запуск салюта',
+        'Как заказать профессиональный запуск фейерверка',
+        'Организуете ли вы безопасный запуск салюта',
+    ],
+};
+
+function getCityVariantIndex(slug: string, variantsCount: number): number {
+    let hash = 0;
+    for (let i = 0; i < slug.length; i += 1) {
+        hash = (hash * 31 + slug.charCodeAt(i)) >>> 0;
+    }
+    return hash % variantsCount;
+}
+
 interface CityPageProps {
     params: {
         city: string;
@@ -126,10 +233,21 @@ export default async function CityPage({ params }: CityPageProps) {
     const fixedDeliveryPriceLabel = formatDeliveryCost(
         DELIVERY_CONSTANTS.MOSCOW_DELIVERY_COST
     );
+    const variantIndex = getCityVariantIndex(cityData.slug, cityIntroPatterns.length);
+    const questionVariantIndex = getCityVariantIndex(cityData.slug, faqQuestionVariants.intro.length);
+    const cityProfile = CITY_FAQ_PROFILES[cityData.slug];
+    const introPattern = cityIntroPatterns[variantIndex];
+    const orderPattern = cityOrderPatterns[variantIndex];
+    const launchPattern = cityLaunchPatterns[variantIndex];
+    const subtitlePattern = citySubtitlePatterns[variantIndex];
+    const introLine = cityProfile ? `${introPattern} ${cityProfile.introAddon}` : introPattern;
+    const orderLine = cityProfile ? `${orderPattern} ${cityProfile.orderAddon}` : orderPattern;
+    const launchLine = cityProfile ? `${launchPattern} ${cityProfile.launchAddon}` : launchPattern;
+    const subtitleLine = cityProfile ? `${subtitlePattern} ${cityProfile.subtitleAddon}` : subtitlePattern;
 
     const faqIntroPlain = isMoscowPage
-        ? `Если вы ищете, где купить салют в мск, интернет-магазин СалютГрад поможет с выбором и доставкой по Москве и области. Вы также можете купить салюты и фейерверки в ${cityData.nameLocative} с консультацией менеджера. Подберём пиротехнику под формат праздника, бюджет и площадку запуска: от компактных батарей салютов до масштабных программ. Доступны услуги по запуску фейерверка — при необходимости возьмём на себя организацию запуска салюта профессионально и с соблюдением требований безопасности, чтобы праздник прошёл ярко и безопасно.`
-        : `В интернет-магазине СалютГрад вы можете купить салюты и фейерверки в ${cityData.nameLocative} с удобной доставкой и консультацией менеджера. Подберём пиротехнику под формат праздника, бюджет и площадку запуска: от компактных батарей салютов до масштабных программ. Доступны услуги по запуску фейерверка — при необходимости возьмём на себя организацию запуска салюта профессионально и с соблюдением требований безопасности, чтобы праздник прошёл ярко и безопасно.`;
+        ? `Если вы ищете, где купить салют в мск, интернет-магазин СалютГрад поможет с выбором и доставкой по Москве и области. Вы также можете купить салюты и фейерверки в ${cityData.nameLocative} с консультацией менеджера. ${introLine} Доступны услуги по запуску фейерверка — при необходимости возьмём на себя организацию запуска салюта профессионально и с соблюдением требований безопасности, чтобы праздник прошёл ярко и безопасно.`
+        : `В интернет-магазине СалютГрад вы можете купить салюты и фейерверки в ${cityData.nameLocative} с удобной доставкой и консультацией менеджера. ${introLine} Доступны услуги по запуску фейерверка — при необходимости возьмём на себя организацию запуска салюта профессионально и с соблюдением требований безопасности, чтобы праздник прошёл ярко и безопасно.`;
 
     const deliveryFaqPlain = fixedDeliveryZone
         ? `Да, доставляем салюты и фейерверки по ${cityData.nameLocative} и соседним населённым пунктам. Фиксированная стоимость доставки по адресу в ${cityData.nameLocative} — ${fixedDeliveryPriceLabel}. Подробнее о доставке: ${DELIVERY_PAGE_ABSOLUTE_URL}`
@@ -173,12 +291,12 @@ export default async function CityPage({ params }: CityPageProps) {
         answerPlain: string;
     }[] = [
         {
-            question: `Купить салюты и фейерверки в ${cityData.nameLocative}: доставка и услуги по запуску фейерверка`,
+            question: `${faqQuestionVariants.intro[questionVariantIndex]} в ${cityData.nameLocative}: доставка и услуги по запуску фейерверка`,
             answer: faqIntroPlain,
             answerPlain: faqIntroPlain,
         },
         {
-            question: `Как оформить заказ на салюты в ${cityData.nameLocative}?`,
+            question: `${faqQuestionVariants.order[questionVariantIndex]} в ${cityData.nameLocative}?`,
             answer: (
                 <>
                     Выберите товары в{' '}
@@ -189,22 +307,22 @@ export default async function CityPage({ params }: CityPageProps) {
                         каталоге
                     </Link>
                     , оформите заказ на сайте или свяжитесь с менеджером. Мы подтвердим заказ и
-                    организуем доставку по {cityData.nameLocative} и ближайшим районам.
+                    организуем доставку по {cityData.nameLocative} и ближайшим районам. {orderLine}
                 </>
             ),
-            answerPlain: `Выберите товары в каталоге, оформите заказ на сайте или свяжитесь с менеджером. Мы подтвердим заказ и организуем доставку по ${cityData.nameLocative} и ближайшим районам.`,
+            answerPlain: `Выберите товары в каталоге, оформите заказ на сайте или свяжитесь с менеджером. Мы подтвердим заказ и организуем доставку по ${cityData.nameLocative} и ближайшим районам. ${orderLine}`,
         },
         {
-            question: `Есть ли доставка салютов по ${cityData.nameLocative}?`,
+            question: `${faqQuestionVariants.delivery[questionVariantIndex]} по ${cityData.nameLocative}?`,
             answer: deliveryFaqAnswer,
             answerPlain: deliveryFaqPlain,
         },
         {
-            question: `Можно ли заказать безопасный запуск салюта в ${cityData.nameLocative}?`,
+            question: `${faqQuestionVariants.launch[questionVariantIndex]} в ${cityData.nameLocative}?`,
             answer: (
                 <>
                     Да, доступна услуга профессионального запуска. Специалист поможет подобрать
-                    площадку и проведёт запуск с учётом требований безопасности. Подробнее об
+                    площадку и проведёт запуск с учётом требований безопасности. {launchLine} Подробнее об
                     услуге{' '}
                     <Link
                         href="/services/launching"
@@ -215,7 +333,7 @@ export default async function CityPage({ params }: CityPageProps) {
                     .
                 </>
             ),
-            answerPlain: 'Да, доступна услуга профессионального запуска. Специалист поможет подобрать площадку и проведёт запуск с учётом требований безопасности. Подробнее об услуге: https://salutgrad.ru/services/launching/',
+            answerPlain: `Да, доступна услуга профессионального запуска. Специалист поможет подобрать площадку и проведёт запуск с учётом требований безопасности. ${launchLine} Подробнее об услуге: https://salutgrad.ru/services/launching/`,
         },
     ];
 
@@ -256,7 +374,7 @@ export default async function CityPage({ params }: CityPageProps) {
                                 </>
                             ) : (
                                 <>
-                                    Доставка, выбор пиротехники, услуги по запуску фейерверка и организация запуска салюта — кратко в одном блоке.
+                                    {subtitleLine}
                                 </>
                             )}
                         </p>
