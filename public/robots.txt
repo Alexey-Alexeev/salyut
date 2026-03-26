@@ -2,6 +2,10 @@ User-agent: *
 Allow: /
 Disallow: /cart/
 
+# Яндекс: игнорировать трекинговые GET-параметры, чтобы не плодить дубли URL
+User-agent: Yandex
+Clean-param: ybai&block&etext&utm_source&utm_medium&utm_campaign&utm_content&utm_term&utm_id&yclid&ysclid /
+
 # Основной домен: salutgrad.ru
 # Development домен: salyut.vercel.app
 # Оба домена индексируются, но основной имеет приоритет
