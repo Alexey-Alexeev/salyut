@@ -23,6 +23,38 @@ interface LaunchingServicePageProps {
 
 export default function LaunchingServicePage({ videoReviews }: LaunchingServicePageProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const faqItems = [
+    {
+      question: 'Какой салют лучше для свадьбы?',
+      answer:
+        'Обычно выбирают среднюю или высокую мощность с финальным залпом. Мы подберём варианты по бюджету, площадке и таймингу (вынос торта/финал).',
+    },
+    {
+      question: 'Можно ли синхронизировать запуск с программой и музыкой?',
+      answer:
+        'Да. Согласуем время запуска и формат финала заранее и при необходимости координируем с ведущим/организатором.',
+    },
+    {
+      question: 'Можно ли устроить небольшой салют на день рождения?',
+      answer:
+        'Да. Подберём компактные батареи и безопасный сценарий под двор, дачу или частный дом: дистанции, направление и длительность шоу.',
+    },
+    {
+      question: 'Вы помогаете оценить площадку и безопасные расстояния?',
+      answer:
+        'Да. Перед запуском уточняем место и условия, подсказываем безопасные зоны для зрителей и требования к площадке.',
+    },
+    {
+      question: 'Подходит ли услуга запуска для корпоратива или базы отдыха?',
+      answer:
+        'Да. Согласуем формат запуска, логистику и требования безопасности для гостей и площадки. Подберём сценарий под мероприятие и бюджет.',
+    },
+    {
+      question: 'Где посмотреть условия доставки и самовывоза пиротехники?',
+      answer:
+        'Подробные условия доставки и самовывоза смотрите на странице https://salutgrad.ru/delivery/.',
+    },
+  ] as const;
 
   return (
     <div className="min-h-screen">
@@ -235,6 +267,24 @@ export default function LaunchingServicePage({ videoReviews }: LaunchingServiceP
               ]
             },
           })
+        }}
+      />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faqItems.map((item) => ({
+              "@type": "Question",
+              "name": item.question,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": item.answer,
+              },
+            })),
+          }),
         }}
       />
     </div>
