@@ -60,83 +60,114 @@ export default function LaunchingServicePage({ videoReviews }: LaunchingServiceP
     <div className="min-h-screen">
       <ServicesHeroSection onConsultationClick={() => setIsDialogOpen(true)} />
 
-      <section className="container mx-auto px-4 pt-6">
-        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-white to-orange-50 p-6 shadow-sm">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900">
-                Запуск под ваш праздник
-              </h2>
-              <p className="mt-1 text-sm text-gray-700">
-                Выберите сценарий — мы подстроим формат, безопасность и тайминг.
-              </p>
+      <div className="space-y-14">
+        <section className="container mx-auto px-4 pt-8">
+          <div className="relative overflow-hidden rounded-3xl border border-gray-200 bg-white/70 p-6 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/60">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-orange-50/70 via-white/40 to-transparent" />
+            <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Запуск под ваш праздник
+                </h2>
+                <p className="mt-1 text-sm text-gray-700">
+                  Выберите сценарий — мы подстроим формат, безопасность и тайминг.
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={() => setIsDialogOpen(true)}
+                  className="inline-flex w-full items-center justify-center rounded-full bg-orange-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-800 sm:w-auto"
+                >
+                  Заказать консультацию
+                </button>
+                <Link
+                  href="/catalog"
+                  className="inline-flex w-full items-center justify-center rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 sm:w-auto"
+                >
+                  Подобрать салют
+                </Link>
+              </div>
             </div>
-            <button
-              type="button"
-              onClick={() => setIsDialogOpen(true)}
-              className="inline-flex w-full items-center justify-center rounded-md bg-orange-700 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-800 md:w-auto"
-            >
-              Заказать консультацию
-            </button>
+
+            <div className="relative mt-6 grid grid-cols-1 gap-3 md:grid-cols-3">
+              <Link
+                href="#wedding"
+                className="group rounded-2xl border border-gray-200 bg-white p-4 transition-colors hover:border-orange-200 hover:bg-orange-50/40"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-semibold text-orange-700">Свадьба</div>
+                    <div className="mt-1 text-sm font-semibold text-gray-900">
+                      Финал вечера и вынос торта
+                    </div>
+                  </div>
+                  <span className="rounded-full border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700">
+                    #wedding
+                  </span>
+                </div>
+                <div className="mt-2 text-xs text-gray-600">
+                  Синхронизация с программой, безопасные зоны, эффектный финал.
+                </div>
+                <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
+                  Перейти
+                </div>
+              </Link>
+
+              <Link
+                href="#birthday"
+                className="group rounded-2xl border border-gray-200 bg-white p-4 transition-colors hover:border-orange-200 hover:bg-orange-50/40"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-semibold text-orange-700">День рождения</div>
+                    <div className="mt-1 text-sm font-semibold text-gray-900">
+                      Двор, дача, частный дом
+                    </div>
+                  </div>
+                  <span className="rounded-full border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700">
+                    #birthday
+                  </span>
+                </div>
+                <div className="mt-2 text-xs text-gray-600">
+                  Компактные варианты, дистанции, направление и длительность шоу.
+                </div>
+                <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
+                  Перейти
+                </div>
+              </Link>
+
+              <Link
+                href="#corporate"
+                className="group rounded-2xl border border-gray-200 bg-white p-4 transition-colors hover:border-orange-200 hover:bg-orange-50/40"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-semibold text-orange-700">Корпоратив</div>
+                    <div className="mt-1 text-sm font-semibold text-gray-900">
+                      Площадки и базы отдыха
+                    </div>
+                  </div>
+                  <span className="rounded-full border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700">
+                    #corporate
+                  </span>
+                </div>
+                <div className="mt-2 text-xs text-gray-600">
+                  Логистика, требования площадки, сценарий под бюджет и гостей.
+                </div>
+                <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
+                  Перейти
+                </div>
+              </Link>
+            </div>
           </div>
+        </section>
 
-          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <Link
-              href="#wedding"
-              className="group rounded-xl border border-orange-100 bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="text-xs font-semibold text-orange-700">Свадьба</div>
-              <div className="mt-1 text-sm font-medium text-gray-900">
-                Финал вечера и вынос торта
-              </div>
-              <div className="mt-1 text-xs text-gray-600">
-                Синхронизация с программой, безопасные зоны, эффектный финал.
-              </div>
-              <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
-                Перейти →
-              </div>
-            </Link>
+        <FactsSection />
 
-            <Link
-              href="#birthday"
-              className="group rounded-xl border border-orange-100 bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="text-xs font-semibold text-orange-700">День рождения</div>
-              <div className="mt-1 text-sm font-medium text-gray-900">
-                Двор, дача, частный дом
-              </div>
-              <div className="mt-1 text-xs text-gray-600">
-                Компактные варианты, дистанции, направление и длительность шоу.
-              </div>
-              <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
-                Перейти →
-              </div>
-            </Link>
+        <BenefitsSection />
 
-            <Link
-              href="#corporate"
-              className="group rounded-xl border border-orange-100 bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="text-xs font-semibold text-orange-700">Корпоратив</div>
-              <div className="mt-1 text-sm font-medium text-gray-900">
-                Площадки и базы отдыха
-              </div>
-              <div className="mt-1 text-xs text-gray-600">
-                Логистика, требования площадки, сценарий под бюджет и гостей.
-              </div>
-              <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
-                Перейти →
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <FactsSection />
-
-      <BenefitsSection />
-
-      <ProcessSection />
+        <ProcessSection />
 
       <section className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -243,48 +274,59 @@ export default function LaunchingServicePage({ videoReviews }: LaunchingServiceP
         </div>
       </section>
 
-      <VideoReviewsSection videoReviews={videoReviews || []} />
+        <VideoReviewsSection videoReviews={videoReviews || []} />
 
-      <ServicesCTASection onConsultationClick={() => setIsDialogOpen(true)} />
+        <ServicesCTASection onConsultationClick={() => setIsDialogOpen(true)} />
 
-      <section className="container mx-auto px-4 pb-12">
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-xl font-semibold text-gray-900">Смотрите также</h2>
-            <p className="text-sm text-gray-600">
-              Быстрые ссылки на разделы, которые чаще всего нужны перед запуском.
-            </p>
+        <section className="container mx-auto px-4 pb-14">
+          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-xl font-semibold text-gray-900">Смотрите также</h2>
+              <p className="text-sm text-gray-600">
+                Полезные разделы перед заказом и запуском.
+              </p>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-3">
+              <Link
+                href="/catalog"
+                className="group rounded-2xl border border-gray-200 bg-white p-5 transition-colors hover:border-orange-200 hover:bg-orange-50/40"
+              >
+                <div className="text-xs font-semibold text-orange-700">Каталог</div>
+                <div className="mt-1 text-sm font-semibold text-gray-900">Выбрать пиротехнику</div>
+                <div className="mt-2 text-xs text-gray-600">Салюты, фонтаны, ракеты и другие категории.</div>
+                <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
+                  Открыть →
+                </div>
+              </Link>
+
+              <Link
+                href="/delivery"
+                className="group rounded-2xl border border-gray-200 bg-white p-5 transition-colors hover:border-orange-200 hover:bg-orange-50/40"
+              >
+                <div className="text-xs font-semibold text-orange-700">Доставка</div>
+                <div className="mt-1 text-sm font-semibold text-gray-900">Условия и самовывоз</div>
+                <div className="mt-2 text-xs text-gray-600">Расчёт стоимости, сроки и адрес самовывоза.</div>
+                <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
+                  Посмотреть →
+                </div>
+              </Link>
+
+              <Link
+                href="/catalog?is_popular=true"
+                className="group rounded-2xl border border-gray-200 bg-white p-5 transition-colors hover:border-orange-200 hover:bg-orange-50/40"
+              >
+                <div className="text-xs font-semibold text-orange-700">Популярное</div>
+                <div className="mt-1 text-sm font-semibold text-gray-900">Хиты сезона</div>
+                <div className="mt-2 text-xs text-gray-600">Быстрый выбор самых востребованных салютов.</div>
+                <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
+                  Открыть →
+                </div>
+              </Link>
+            </div>
           </div>
-
-          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
-            <Link
-              href="/catalog"
-              className="group rounded-xl border border-gray-200 bg-gradient-to-br from-white to-orange-50 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="text-sm font-semibold text-gray-900">Каталог пиротехники</div>
-              <div className="mt-1 text-xs text-gray-600">
-                Подберите салюты, фонтаны, ракеты и другие категории.
-              </div>
-              <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
-                Открыть каталог →
-              </div>
-            </Link>
-
-            <Link
-              href="/delivery"
-              className="group rounded-xl border border-gray-200 bg-gradient-to-br from-white to-green-50 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="text-sm font-semibold text-gray-900">Доставка и самовывоз</div>
-              <div className="mt-1 text-xs text-gray-600">
-                Условия, расчёт стоимости и адрес самовывоза.
-              </div>
-              <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
-                Условия доставки →
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* Диалог консультации */}
       <ConsultationDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
