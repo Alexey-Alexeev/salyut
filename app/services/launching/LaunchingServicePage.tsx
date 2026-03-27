@@ -61,24 +61,74 @@ export default function LaunchingServicePage({ videoReviews }: LaunchingServiceP
       <ServicesHeroSection onConsultationClick={() => setIsDialogOpen(true)} />
 
       <section className="container mx-auto px-4 pt-6">
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
-          <h2 className="mb-2 text-lg font-semibold text-gray-900">
-            Организация запуска под ваш праздник
-          </h2>
-          <p className="text-sm text-gray-700">
-            Быстрые переходы: {' '}
-            <Link href="#wedding" className="font-medium text-orange-700 underline hover:text-orange-900">
-              на свадьбу
+        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-white to-orange-50 p-6 shadow-sm">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Запуск под ваш праздник
+              </h2>
+              <p className="mt-1 text-sm text-gray-700">
+                Выберите сценарий — мы подстроим формат, безопасность и тайминг.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsDialogOpen(true)}
+              className="inline-flex w-full items-center justify-center rounded-md bg-orange-700 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-800 md:w-auto"
+            >
+              Заказать консультацию
+            </button>
+          </div>
+
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <Link
+              href="#wedding"
+              className="group rounded-xl border border-orange-100 bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="text-xs font-semibold text-orange-700">Свадьба</div>
+              <div className="mt-1 text-sm font-medium text-gray-900">
+                Финал вечера и вынос торта
+              </div>
+              <div className="mt-1 text-xs text-gray-600">
+                Синхронизация с программой, безопасные зоны, эффектный финал.
+              </div>
+              <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
+                Перейти →
+              </div>
             </Link>
-            {' • '}
-            <Link href="#birthday" className="font-medium text-orange-700 underline hover:text-orange-900">
-              на день рождения
+
+            <Link
+              href="#birthday"
+              className="group rounded-xl border border-orange-100 bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="text-xs font-semibold text-orange-700">День рождения</div>
+              <div className="mt-1 text-sm font-medium text-gray-900">
+                Двор, дача, частный дом
+              </div>
+              <div className="mt-1 text-xs text-gray-600">
+                Компактные варианты, дистанции, направление и длительность шоу.
+              </div>
+              <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
+                Перейти →
+              </div>
             </Link>
-            {' • '}
-            <Link href="#corporate" className="font-medium text-orange-700 underline hover:text-orange-900">
-              на корпоратив
+
+            <Link
+              href="#corporate"
+              className="group rounded-xl border border-orange-100 bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="text-xs font-semibold text-orange-700">Корпоратив</div>
+              <div className="mt-1 text-sm font-medium text-gray-900">
+                Площадки и базы отдыха
+              </div>
+              <div className="mt-1 text-xs text-gray-600">
+                Логистика, требования площадки, сценарий под бюджет и гостей.
+              </div>
+              <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
+                Перейти →
+              </div>
             </Link>
-          </p>
+          </div>
         </div>
       </section>
 
@@ -198,19 +248,41 @@ export default function LaunchingServicePage({ videoReviews }: LaunchingServiceP
       <ServicesCTASection onConsultationClick={() => setIsDialogOpen(true)} />
 
       <section className="container mx-auto px-4 pb-12">
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
-          <h2 className="mb-3 text-xl font-semibold text-gray-900">Смотрите также</h2>
-          <p className="text-sm text-gray-700">
-            Для выбора пиротехники перейдите в{' '}
-            <Link href="/catalog" className="font-medium text-orange-700 underline hover:text-orange-900">
-              каталог
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-xl font-semibold text-gray-900">Смотрите также</h2>
+            <p className="text-sm text-gray-600">
+              Быстрые ссылки на разделы, которые чаще всего нужны перед запуском.
+            </p>
+          </div>
+
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
+            <Link
+              href="/catalog"
+              className="group rounded-xl border border-gray-200 bg-gradient-to-br from-white to-orange-50 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="text-sm font-semibold text-gray-900">Каталог пиротехники</div>
+              <div className="mt-1 text-xs text-gray-600">
+                Подберите салюты, фонтаны, ракеты и другие категории.
+              </div>
+              <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
+                Открыть каталог →
+              </div>
             </Link>
-            . Условия доставки и самовывоза смотрите на странице{' '}
-            <Link href="/delivery" className="font-medium text-orange-700 underline hover:text-orange-900">
-              доставка / самовывоз
+
+            <Link
+              href="/delivery"
+              className="group rounded-xl border border-gray-200 bg-gradient-to-br from-white to-green-50 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="text-sm font-semibold text-gray-900">Доставка и самовывоз</div>
+              <div className="mt-1 text-xs text-gray-600">
+                Условия, расчёт стоимости и адрес самовывоза.
+              </div>
+              <div className="mt-3 text-sm font-medium text-orange-700 underline underline-offset-2 group-hover:text-orange-900">
+                Условия доставки →
+              </div>
             </Link>
-            .
-          </p>
+          </div>
         </div>
       </section>
 
