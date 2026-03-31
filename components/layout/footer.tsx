@@ -1,11 +1,21 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, Mail, MapPin, MessageCircle, Send } from 'lucide-react';
+import { db } from '@/lib/db';
+import { categories } from '@/db/schema';
 import { filterVisibleCategories } from '@/lib/schema-constants';
-import { getVisibleCategories } from '@/lib/page-data';
 
 export async function Footer() {
-  const categoriesData = await getVisibleCategories();
+  // Загружаем категории из БД с обработкой ошибок
+  let categoriesData: any[] = [];
+
+  try {
+    categoriesData = await db.select().from(categories);
+    // Фильтруем скрытые категории
+    categoriesData = filterVisibleCategories(categoriesData);
+  } catch (error) {
+    console.error('Error loading categories in footer:', error);
+  }
   return (
     <footer className="border-t bg-gray-50">
       <div className="container mx-auto px-4 py-12">

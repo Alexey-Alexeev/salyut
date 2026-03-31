@@ -4,9 +4,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Menu, Phone, ShoppingCart } from 'lucide-react';
+import { Menu, Phone, Shield, ShoppingCart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+import { useAuth } from '@/hooks/use-auth';
 import { useCartStore } from '@/lib/cart-store';
 
 import { ConsultationDialog } from '../consultation-dialog';
@@ -21,6 +22,7 @@ export function Header() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
+  const { role } = useAuth();
 
   // Hydration check to prevent server-client mismatch
   useEffect(() => {
@@ -89,6 +91,15 @@ export function Header() {
                   </Link>
                 )
               ))}
+              {role === 'admin' && (
+                <Link
+                  href="/admin"
+                  className="hover:text-primary flex items-center text-sm font-medium transition-colors"
+                >
+                  <Shield className="mr-1 size-4" />
+                  Админ
+                </Link>
+              )}
             </nav>
 
             <div className="flex items-center space-x-4">
@@ -162,6 +173,16 @@ export function Header() {
                         </Link>
                       )
                     ))}
+                    {role === 'admin' && (
+                      <Link
+                        href="/admin"
+                        className="hover:text-primary flex items-center text-sm font-medium transition-colors"
+                        onClick={() => setIsSheetOpen(false)}
+                      >
+                        <Shield className="mr-2 size-4" />
+                        Админ-панель
+                      </Link>
+                    )}
                     <Button
                       variant="outline"
                       className="justify-start"

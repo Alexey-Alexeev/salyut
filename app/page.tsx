@@ -1,3 +1,7 @@
+import { db } from '@/lib/db';
+import { categories, products, reviews } from '@/db/schema';
+import { desc } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { ConsultationCTA } from '@/components/consultation-cta';
 import { Metadata } from 'next';
 import { HeroSection } from '@/components/sections/hero-section';
@@ -8,15 +12,10 @@ import { EventCollectionsSection } from '@/components/sections/event-collections
 import { PopularProductsSection } from '@/components/sections/popular-products-section';
 import { ProfessionalServicesSection } from '@/components/sections/professional-services-section';
 import { VideoReviewsSection } from '@/components/sections/video-reviews-section';
+import { HomeScrollRestore } from '@/components/home-scroll-restore';
 import dynamic from 'next/dynamic';
-import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL } from '@/lib/schema-constants';
+import { BUSINESS_INFO, CATEGORY_PRICES, PRICE_VALID_UNTIL, filterVisibleCategories } from '@/lib/schema-constants';
 import { QuizSection } from '@/components/quiz-section';
-import {
-  getEventCounts,
-  getPopularProducts,
-  getVideoReviews,
-  getVisibleCategories,
-} from '@/lib/page-data';
 
 // Динамические импорты для тяжелых компонентов
 const DynamicVideoReviewsSection = dynamic(() => import('@/components/sections/video-reviews-section').then(mod => ({ default: mod.VideoReviewsSection })), {
@@ -25,11 +24,11 @@ const DynamicVideoReviewsSection = dynamic(() => import('@/components/sections/v
 });
 
 export const metadata: Metadata = {
-  title: 'Купить салют и фейерверк в Москве и МО | СалютГрад',
+  title: 'Фейерверки и салюты в Москве и МО | СалютГрад',
   description: 'Купить фейерверки в Москве и МО с доставкой. Безопасный запуск салюта на свадьбу и другие праздники! Лучшие салюты и пиротехника от проверенных производителей!',
   keywords: 'купить фейерверки в москве с доставкой, безопасный запуск салюта на свадьбу, салюты на день рождения, пиротехника москва, петарды, ракеты, фонтаны, новый год, качественные фейерверки',
   openGraph: {
-    title: 'Купить салют и фейерверк в Москве и МО | СалютГрад',
+    title: 'Фейерверки и салюты в Москве и МО | СалютГрад',
     description: 'Купить фейерверки в Москве с доставкой. Безопасный запуск салюта на свадьбу и другие праздники! Лучшие салюты и пиротехника!',
     url: 'https://salutgrad.ru',
     siteName: 'СалютГрад',
@@ -46,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Купить салют и фейерверк в Москве и МО | СалютГрад',
+    title: 'Фейерверки и салюты в Москве и МО | СалютГрад',
     description: 'Купить фейерверки в Москве и МО с доставкой. Безопасный запуск салюта на свадьбу и другие праздники!',
     images: ['https://salutgrad.ru/images/hero-bg.webp'],
   },
@@ -71,14 +70,73 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [categoriesData, popularProductsRaw, videoReviewsRaw, eventCounts] = await Promise.all([
-    getVisibleCategories(),
-    getPopularProducts(),
-    getVideoReviews(),
-    getEventCounts(),
-  ]);
-  const popularProducts: any[] = popularProductsRaw as any[];
-  const videoReviews: any[] = videoReviewsRaw as any[];
+  let categoriesData: any[] = [];
+  let popularProducts: any[] = [];
+  let videoReviews: any[] = [];
+  let eventCounts = {
+    wedding: 0,
+    birthday: 0,
+    new_year: 0,
+  };
+
+  // Оптимизированная загрузка всех данных параллельно
+  try {
+    const [categoriesResult, popularProductsResult, videoReviewsResult, allProductsForEvents] = await Promise.all([
+      // Категории
+      db.select().from(categories),
+      // Популярные товары
+      db
+        .select({
+          id: products.id,
+          name: products.name,
+          slug: products.slug,
+          price: products.price,
+          old_price: products.old_price,
+          category_id: products.category_id,
+          category_name: categories.name,
+          category_slug: categories.slug,
+          images: products.images,
+          video_url: products.video_url,
+          is_popular: products.is_popular,
+          short_description: products.short_description,
+          characteristics: products.characteristics,
+          created_at: products.created_at,
+        })
+        .from(products)
+        .leftJoin(categories, eq(products.category_id, categories.id))
+        .where(and(eq(products.is_popular, true), eq(products.is_active, true)))
+        .limit(4),
+      // Видео отзывы
+      db
+        .select()
+        .from(reviews)
+        .orderBy(desc(reviews.created_at))
+        .limit(4),
+      // Только event_types для подсчета (оптимизированный запрос)
+      db
+        .select({
+          event_types: products.event_types,
+        })
+        .from(products)
+        .where(eq(products.is_active, true)),
+    ]);
+
+    categoriesData = filterVisibleCategories(categoriesResult);
+    popularProducts = popularProductsResult;
+    videoReviews = videoReviewsResult;
+
+    // Подсчитываем количество салютов для каждого события
+    allProductsForEvents.forEach((product) => {
+      const eventTypes = product.event_types as string[] | null;
+      if (eventTypes && Array.isArray(eventTypes)) {
+        if (eventTypes.includes('wedding')) eventCounts.wedding++;
+        if (eventTypes.includes('birthday')) eventCounts.birthday++;
+        if (eventTypes.includes('new_year')) eventCounts.new_year++;
+      }
+    });
+  } catch (error) {
+    console.error('Error loading page data:', error);
+  }
 
   return (
     <div className="space-y-8">
@@ -179,7 +237,7 @@ export default async function HomePage() {
                   "@type": "OfferShippingDetails",
                   "shippingRate": {
                     "@type": "MonetaryAmount",
-                    "value": "700",
+                    "value": "500",
                     "currency": "RUB"
                   },
                   "deliveryTime": {
