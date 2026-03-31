@@ -342,7 +342,43 @@ export default function ProductClient({
   }, [mediaItems.length]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div
+      className="container mx-auto px-4 py-8"
+      itemScope
+      itemType="https://schema.org/Product"
+    >
+      <meta itemProp="name" content={product.name || 'Фейерверк'} />
+      <meta
+        itemProp="description"
+        content={
+          product.short_description ||
+          product.description ||
+          `Качественный ${product.name || 'фейерверк'} для праздников`
+        }
+      />
+      <meta
+        itemProp="brand"
+        content={manufacturer?.name || 'СалютГрад'}
+      />
+      <meta
+        itemProp="image"
+        content={product.images?.[0] || 'https://salutgrad.ru/icons/icon_192.png'}
+      />
+      <meta itemProp="sku" content={product.id} />
+      <meta itemProp="url" content={`https://salutgrad.ru/product/${product.slug}`} />
+      <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
+        <meta itemProp="price" content={String(product.price)} />
+        <meta itemProp="priceCurrency" content="RUB" />
+        <meta
+          itemProp="availability"
+          content={
+            product.is_active !== false
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock'
+          }
+        />
+        <meta itemProp="url" content={`https://salutgrad.ru/product/${product.slug}`} />
+      </div>
       <div className="mb-8">
         <div className="flex items-center gap-4">
           <button
