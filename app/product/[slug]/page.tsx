@@ -5,8 +5,11 @@ import { and, eq, ne } from 'drizzle-orm';
 import ProductClient from '@/app/product/[slug]/product-client';
 import slugify from 'slugify';
 import { cache } from 'react';
+import { PRICE_VALID_UNTIL } from '@/lib/schema-constants';
 
 type PageProps = { params: { slug: string } };
+const SITE_URL = 'https://salutgrad.ru';
+const PRODUCT_IMAGE_FALLBACK = `${SITE_URL}/icons/icon_192.png`;
 
 const getCleanSlug = (originalSlug: string): string => {
   // Если slug содержит пробелы или спецсимволы
@@ -156,13 +159,87 @@ export default async function ProductPage({ params }: PageProps) {
       productData.product.category_id
     );
 
+    const productUrl = `${SITE_URL}/product/${productData.product.slug}`;
+    const productImages =
+      productData.product.images && productData.product.images.length > 0
+        ? productData.product.images
+        : [PRODUCT_IMAGE_FALLBACK];
+
+    const productStructuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: productData.product.name,
+      description:
+        productData.product.short_description ||
+        productData.product.description ||
+        `Качественный ${productData.product.name} для праздников`,
+      brand: {
+        '@type': 'Brand',
+        name: productData.manufacturer?.name || 'СалютГрад',
+      },
+      image: productImages,
+      sku: productData.product.id,
+      category: productData.category?.name || 'Пиротехника',
+      url: productUrl,
+      offers: {
+        '@type': 'Offer',
+        url: productUrl,
+        price: productData.product.price,
+        priceCurrency: 'RUB',
+        priceValidUntil: PRICE_VALID_UNTIL,
+        availability:
+          productData.product.is_active !== false
+            ? 'https://schema.org/InStock'
+            : 'https://schema.org/OutOfStock',
+      },
+    };
+
+    const breadcrumbStructuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Главная', item: `${SITE_URL}/` },
+        { '@type': 'ListItem', position: 2, name: 'Каталог', item: `${SITE_URL}/catalog/` },
+        ...(productData.category
+          ? [
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: productData.category.name,
+                item: `${SITE_URL}/catalog?category=${productData.category.slug}`,
+              },
+            ]
+          : []),
+        {
+          '@type': 'ListItem',
+          position: productData.category ? 4 : 3,
+          name: productData.product.name,
+          item: `${productUrl}/`,
+        },
+      ],
+    };
+
     return (
-      <ProductClient
-        product={productData.product}
-        category={productData.category}
-        manufacturer={productData.manufacturer}
-        relatedProducts={relatedProducts}
-      />
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(productStructuredData),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbStructuredData),
+          }}
+        />
+        <ProductClient
+          product={productData.product}
+          category={productData.category}
+          manufacturer={productData.manufacturer}
+          relatedProducts={relatedProducts}
+        />
+      </>
     );
   } catch (error) {
     console.error('Error loading product:', error);
