@@ -40,6 +40,8 @@ export async function GET() {
         manufacturer_id: products.manufacturer_id,
         images: products.images,
         description: products.description,
+        seo_title: products.seo_title,
+        seo_description: products.seo_description,
         characteristics: products.characteristics,
         is_active: products.is_active,
       })
@@ -112,8 +114,12 @@ export async function GET() {
           ? `\n        <vendor>${escapeXml(manufacturer.name)}</vendor>`
           : '';
 
-        const descriptionXml = product.description
-          ? `\n        <description>${escapeXml(product.description)}</description>`
+        const offerName = (product.seo_title?.trim() || product.name).trim();
+        const offerDescription = (product.seo_description?.trim() || product.description?.trim() || '')
+          .trim();
+
+        const descriptionXml = offerDescription
+          ? `\n        <description>${escapeXml(offerDescription)}</description>`
           : '';
 
         const picturesBlock = pictureXml ? `\n${pictureXml}` : '';
@@ -121,7 +127,7 @@ export async function GET() {
 
         return [
           `      <offer id="${escapeXml(product.id)}" available="${product.is_active ? 'true' : 'false'}">`,
-          `        <name>${escapeXml(product.name)}</name>`,
+          `        <name>${escapeXml(offerName)}</name>`,
           `${vendorXml}`,
           `        <url>${SITE_URL}/product/${escapeXml(product.slug)}</url>`,
           `        <price>${product.price}</price>${oldPriceXml}`,
