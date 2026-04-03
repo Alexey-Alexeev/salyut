@@ -71,6 +71,13 @@ export async function GET() {
     const categoriesById = new Map(categoryRows.map((row) => [row.id, row]));
     const manufacturersById = new Map(manufacturerRows.map((row) => [row.id, row]));
 
+    // Яндекс.Товары: id категории — только цифры, не более 18 символов (UUID отклоняется).
+    const sortedCategoryRows = [...categoryRows].sort((a, b) => a.id.localeCompare(b.id));
+    const yandexCategoryIdByUuid = new Map<string, string>();
+    sortedCategoryRows.forEach((row, index) => {
+      yandexCategoryIdByUuid.set(row.id, String(index + 1));
+    });
+
     const offersXml = activeProducts
       .filter((product) => product.category_id && categoriesById.has(product.category_id))
       .map((product) => {
@@ -119,7 +126,7 @@ export async function GET() {
           `        <url>${SITE_URL}/product/${escapeXml(product.slug)}</url>`,
           `        <price>${product.price}</price>${oldPriceXml}`,
           `        <currencyId>${SHOP_CURRENCY}</currencyId>`,
-          `        <categoryId>${escapeXml(category!.id)}</categoryId>${picturesBlock}`,
+          `        <categoryId>${yandexCategoryIdByUuid.get(category!.id)!}</categoryId>${picturesBlock}`,
           `${descriptionXml}${paramsBlock}`,
           '      </offer>',
         ]
@@ -128,8 +135,11 @@ export async function GET() {
       })
       .join('\n');
 
-    const categoriesXml = categoryRows
-      .map((category) => `      <category id="${escapeXml(category.id)}">${escapeXml(category.name)}</category>`)
+    const categoriesXml = sortedCategoryRows
+      .map(
+        (category) =>
+          `      <category id="${yandexCategoryIdByUuid.get(category.id)!}">${escapeXml(category.name)}</category>`
+      )
       .join('\n');
 
     const generatedAt = new Date().toISOString().slice(0, 19);
