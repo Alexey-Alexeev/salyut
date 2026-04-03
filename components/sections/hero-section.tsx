@@ -34,8 +34,7 @@ export function HeroSection({ cityName }: HeroSectionProps) {
                         </>
                     ) : (
                         <>
-                            Купить незабываемые <span className="text-orange-400">салюты и фейерверки</span> для
-                            ваших праздников
+                            Купить <span className="text-orange-400">салют и фейерверк</span> в Москве и области
                         </>
                     )}
                 </h1>
