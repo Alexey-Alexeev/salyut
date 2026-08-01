@@ -86,8 +86,12 @@ export function useCatalogProducts({
                     : null;
                 const urlPage = urlPageParam ? parseInt(urlPageParam, 10) : null;
                 
-                // Используем страницу из URL, если она есть, иначе из состояния
-                const targetPage = (urlPage && !isNaN(urlPage) && urlPage > 0) ? urlPage : currentPage;
+                // Во время инициализации из URL (deep-link) берём страницу из URL;
+                // при обычной навигации — из состояния, т.к. URL обновляется асинхронно
+                // через роутер и может отставать, вызывая откат на предыдущую страницу.
+                const targetPage = (isInitializingFromUrlRef.current && urlPage && !isNaN(urlPage) && urlPage > 0)
+                    ? urlPage
+                    : currentPage;
                 
                 // Если целевая страница > 1, загружаем данные для этой страницы
                 if (targetPage > 1) {
@@ -149,11 +153,14 @@ export function useCatalogProducts({
                     .map(cat => cat.id);
 
                 // Проверяем, есть ли параметр page в URL, если нет - используем текущую страницу из состояния
-                const urlPageParam = typeof window !== 'undefined' 
+                const urlPageParam = typeof window !== 'undefined'
                     ? new URLSearchParams(window.location.search).get('page')
                     : null;
                 const urlPage = urlPageParam ? parseInt(urlPageParam, 10) : null;
-                const targetPage = (urlPage && !isNaN(urlPage) && urlPage > 0) ? urlPage : pagination.page;
+                // Только при инициализации из URL доверяем странице из URL; иначе — состоянию
+                const targetPage = (isInitializingFromUrlRef.current && urlPage && !isNaN(urlPage) && urlPage > 0)
+                    ? urlPage
+                    : pagination.page;
 
                 const data = await fetchProducts({
                     search: filters.search.trim() || undefined,
