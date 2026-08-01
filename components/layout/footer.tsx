@@ -1,21 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, Mail, MapPin, MessageCircle, Send } from 'lucide-react';
-import { db } from '@/lib/db';
-import { categories } from '@/db/schema';
+import { getVisibleCategories } from '@/lib/page-data';
 import { filterVisibleCategories } from '@/lib/schema-constants';
 
 export async function Footer() {
-  // Загружаем категории из БД с обработкой ошибок
-  let categoriesData: any[] = [];
-
-  try {
-    categoriesData = await db.select().from(categories);
-    // Фильтруем скрытые категории
-    categoriesData = filterVisibleCategories(categoriesData);
-  } catch (error) {
-    console.error('Error loading categories in footer:', error);
-  }
+  // Загружаем категории (из catalog.php)
+  const categoriesData: any[] = await getVisibleCategories();
   return (
     <footer className="border-t bg-gray-50">
       <div className="container mx-auto px-4 py-12">
@@ -158,7 +149,7 @@ export async function Footer() {
                   { slug: 'roman-candles', name: 'Римские свечи' },
                   { slug: 'sparklers', name: 'Бенгальские огни' },
                 ])
-              ).map(cat => (
+              ).map((cat: { slug: string; name: string }) => (
                 <li key={cat.slug}>
                   <Link
                     href={`/catalog?category=${cat.slug}`}

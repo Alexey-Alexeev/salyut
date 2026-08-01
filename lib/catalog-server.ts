@@ -1,23 +1,5 @@
-import { db } from '@/lib/db';
-import { products, categories } from '@/db/schema';
-import { eq, sql, desc, asc } from 'drizzle-orm';
+import { getCatalog, withCategory } from '@/lib/catalog-data';
 import { filterVisibleCategories } from '@/lib/schema-constants';
-
-// Кэш для server-side функций
-const serverCache = new Map<string, { data: any; timestamp: number }>();
-const SERVER_CACHE_TTL = 5 * 60 * 1000; // 5 минут
-
-function getCachedServerData(key: string) {
-    const cached = serverCache.get(key);
-    if (cached && Date.now() - cached.timestamp < SERVER_CACHE_TTL) {
-        return cached.data;
-    }
-    return null;
-}
-
-function setCachedServerData(key: string, data: any) {
-    serverCache.set(key, { data, timestamp: Date.now() });
-}
 
 // Тип для категории
 export interface CategoryData {
@@ -26,110 +8,40 @@ export interface CategoryData {
     slug: string;
 }
 
-// Прямые функции для получения данных на сервере
+// Прямые функции для получения данных на сервере (из catalog.php)
 export async function getCategoriesData(): Promise<CategoryData[]> {
-    const cacheKey = 'categories';
-    const cached = getCachedServerData(cacheKey);
-    if (cached) {
-        // Фильтруем скрытые категории даже из кэша
-        return filterVisibleCategories(cached as CategoryData[]);
-    }
-
     try {
-        const result = await db
-            .select({
-                id: categories.id,
-                name: categories.name,
-                slug: categories.slug,
-            })
-            .from(categories)
-            .orderBy(asc(categories.name));
-
-        // Фильтруем скрытые категории
-        const filteredResult = filterVisibleCategories(result);
-
-        setCachedServerData(cacheKey, filteredResult);
-        return filteredResult;
+        const { categories } = await getCatalog();
+        const mapped = categories
+            .map((c) => ({ id: c.id, name: c.name, slug: c.slug }))
+            .sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+        return filterVisibleCategories(mapped);
     } catch (error) {
         console.error('Error fetching categories:', error);
         return [];
     }
 }
 
-// Функция для очистки кэша категорий (полезно при изменении списка скрытых категорий)
-export function clearCategoriesCache() {
-    serverCache.delete('categories');
-}
+// Сохранено для совместимости (кэш теперь на уровне модуля catalog-data)
+export function clearCategoriesCache() {}
 
 export async function getProductsData(page: number = 1, limit: number = 20, sortBy: string = 'name') {
-    const cacheKey = `products:${page}:${limit}:${sortBy}`;
-    const cached = getCachedServerData(cacheKey);
-    if (cached) {
-        return cached;
-    }
-
     try {
-        const offset = (page - 1) * limit;
+        const { products, categories } = await getCatalog();
 
-        // Определяем сортировку
-        // ВАЖНО: должна совпадать с сортировкой в lib/api-client.ts для консистентности
-        // Добавляем id в конец всех сортировок для детерминированности
-        let orderBy;
-        switch (sortBy) {
-            case 'price-asc':
-                orderBy = [asc(products.price), asc(products.name), asc(products.id)];
-                break;
-            case 'price-desc':
-                orderBy = [desc(products.price), asc(products.name), asc(products.id)];
-                break;
-            case 'popular':
-                // Сортировка: популярные сначала (is_popular DESC), затем по алфавиту (name ASC), 
-                // и наконец по id для детерминированности
-                orderBy = [desc(products.is_popular), asc(products.name), asc(products.id)];
-                break;
-            case 'newest':
-                orderBy = [desc(products.created_at), asc(products.name), asc(products.id)];
-                break;
-            default:
-                orderBy = [asc(products.name), asc(products.id)];
-        }
+        const list = products
+            .filter((p) => p.is_active)
+            .map((p) => withCategory(p, categories));
 
-        // Получаем общее количество товаров
-        const totalCountResult = await db
-            .select({ count: sql<number>`count(*)` })
-            .from(products)
-            .where(eq(products.is_active, true));
+        sortProducts(list, sortBy);
 
-        // Получаем товары с пагинацией и информацией о категориях
-        const productsData = await db
-            .select({
-                id: products.id,
-                name: products.name,
-                slug: products.slug,
-                price: products.price,
-                old_price: products.old_price,
-                category_id: products.category_id,
-                category_name: categories.name,
-                category_slug: categories.slug,
-                images: products.images,
-                video_url: products.video_url,
-                is_popular: products.is_popular,
-                short_description: products.short_description,
-                characteristics: products.characteristics,
-                created_at: products.created_at,
-            })
-            .from(products)
-            .leftJoin(categories, eq(products.category_id, categories.id))
-            .where(eq(products.is_active, true))
-            .orderBy(...orderBy)
-            .limit(limit)
-            .offset(offset);
-
-        const totalCount = totalCountResult[0]?.count || 0;
+        const totalCount = list.length;
         const totalPages = Math.ceil(totalCount / limit);
+        const from = (page - 1) * limit;
+        const pageItems = list.slice(from, from + limit);
 
-        const result = {
-            products: productsData,
+        return {
+            products: pageItems,
             pagination: {
                 page,
                 limit,
@@ -139,9 +51,6 @@ export async function getProductsData(page: number = 1, limit: number = 20, sort
                 hasPrevPage: page > 1,
             },
         };
-
-        setCachedServerData(cacheKey, result);
-        return result;
     } catch (error) {
         console.error('Error fetching products:', error);
         return {
@@ -159,33 +68,51 @@ export async function getProductsData(page: number = 1, limit: number = 20, sort
 }
 
 export async function getProductsStatsData() {
-    const cacheKey = 'products-stats';
-    const cached = getCachedServerData(cacheKey);
-    if (cached) {
-        return cached;
-    }
-
     try {
-        const result = await db
-            .select({
-                minPrice: sql<number>`min(${products.price})`,
-                maxPrice: sql<number>`max(${products.price})`,
-            })
-            .from(products)
-            .where(eq(products.is_active, true));
-
-        const stats = {
-            minPrice: result[0]?.minPrice || 0,
-            maxPrice: result[0]?.maxPrice || 10000,
+        const { products } = await getCatalog();
+        const active = products.filter((p) => p.is_active);
+        if (active.length === 0) {
+            return { minPrice: 0, maxPrice: 10000 };
+        }
+        const prices = active.map((p) => p.price);
+        return {
+            minPrice: Math.min(...prices),
+            maxPrice: Math.max(...prices),
         };
-
-        setCachedServerData(cacheKey, stats);
-        return stats;
     } catch (error) {
         console.error('Error fetching products stats:', error);
-        return {
-            minPrice: 0,
-            maxPrice: 10000,
-        };
+        return { minPrice: 0, maxPrice: 10000 };
+    }
+}
+
+// Сортировка товаров — должна совпадать с клиентской в lib/api-client.ts
+export function sortProducts<
+    T extends { price: number; name: string; id: string; is_popular: boolean | null; created_at: string | null }
+>(list: T[], sortBy: string): void {
+    const byName = (a: T, b: T) =>
+        a.name.localeCompare(b.name, 'ru') || a.id.localeCompare(b.id);
+    switch (sortBy) {
+        case 'price-asc':
+        case 'price_asc':
+            list.sort((a, b) => a.price - b.price || byName(a, b));
+            break;
+        case 'price-desc':
+        case 'price_desc':
+            list.sort((a, b) => b.price - a.price || byName(a, b));
+            break;
+        case 'popular':
+            list.sort(
+                (a, b) => Number(!!b.is_popular) - Number(!!a.is_popular) || byName(a, b)
+            );
+            break;
+        case 'newest':
+            list.sort(
+                (a, b) =>
+                    String(b.created_at || '').localeCompare(String(a.created_at || '')) ||
+                    byName(a, b)
+            );
+            break;
+        default:
+            list.sort(byName);
     }
 }

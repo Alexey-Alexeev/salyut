@@ -1,11 +1,19 @@
 /**
- * Клиентские функции для работы с Supabase
- * Используются для замены API routes в режиме static export
+ * Клиентские функции каталога, заказа и заявки.
+ *
+ * - fetchProducts: поиск/фильтрация/сортировка/пагинация каталога ЦЕЛИКОМ в
+ *   браузере по данным из salutgrad.ru/api/catalog.php (81 товар — грузим один
+ *   раз и кэшируем). Заменяет прежние прямые запросы к Supabase.
+ * - createOrder / createConsultation: POST на PHP-обработчики reg.ru.
+ *
+ * База API — NEXT_PUBLIC_API_BASE (для локальной разработки можно указать
+ * https://salutgrad.ru/api), по умолчанию относительный '/api'.
  */
 
-import { supabase } from '@/lib/supabase';
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') || '/api';
 
-// ================== PRODUCTS ==================
+// ================== PRODUCTS (клиентская фильтрация) ==================
 
 export interface ProductFilters {
     search?: string;
@@ -18,6 +26,53 @@ export interface ProductFilters {
     sortBy?: string;
     page?: number;
     limit?: number;
+}
+
+interface CatalogItem {
+    id: string;
+    name: string;
+    slug: string;
+    price: number;
+    old_price: number | null;
+    category_id: string | null;
+    category_name: string | null;
+    category_slug: string | null;
+    images: string[];
+    video_url: string | null;
+    is_popular: boolean;
+    is_active: boolean;
+    short_description: string | null;
+    characteristics: Record<string, any> | null;
+    event_types: string[];
+    created_at: string | null;
+    [key: string]: any;
+}
+
+// Кэш каталога в памяти вкладки (грузим один раз)
+let catalogCache: { products: CatalogItem[]; categories: any[] } | null = null;
+let catalogInflight: Promise<{ products: CatalogItem[]; categories: any[] }> | null = null;
+
+async function loadCatalog() {
+    if (catalogCache) return catalogCache;
+    if (!catalogInflight) {
+        catalogInflight = (async () => {
+            const res = await fetch(`${API_BASE}/catalog.php`);
+            if (!res.ok) throw new Error(`catalog.php HTTP ${res.status}`);
+            const data = await res.json();
+            const categories = data.categories || [];
+            const catById = new Map<string, any>(categories.map((c: any) => [c.id, c]));
+            const products: CatalogItem[] = (data.products || [])
+                .filter((p: any) => p.is_active)
+                .map((p: any) => ({
+                    ...p,
+                    category_name: catById.get(p.category_id)?.name ?? null,
+                    category_slug: catById.get(p.category_id)?.slug ?? null,
+                }));
+            catalogCache = { products, categories };
+            return catalogCache;
+        })();
+    }
+    return catalogInflight;
 }
 
 export async function fetchProducts(filters: ProductFilters = {}) {
@@ -35,188 +90,97 @@ export async function fetchProducts(filters: ProductFilters = {}) {
             limit = 20,
         } = filters;
 
-        // Начинаем с базового запроса с информацией о категориях
-        // В Supabase для foreign key relationships используется синтаксис: table_name(columns)
-        // Если связь настроена автоматически, можно использовать просто: categories(name, slug)
-        let query = supabase
-            .from('products')
-            .select('*, categories(name, slug)', { count: 'exact' })
-            .eq('is_active', true);
+        const { products, categories } = await loadCatalog();
+        let list = products.slice();
 
-        // Применяем фильтры
+        // Поиск: по названию товара, а также по названию категории
         if (search && search.trim()) {
-            const term = search.trim();
+            const term = search.trim().toLowerCase();
+            const matchedCategoryIds = categories
+                .filter((c: any) => (c.name || '').toLowerCase().includes(term))
+                .map((c: any) => c.id);
 
-            // Если пользователь ввел поисковый запрос, дополнительно попробуем найти совпадение по названию категории
-            // и включим такие товары, как будто пользователь выбрал найденные категории
-            try {
-                const { data: matchedCategories } = await supabase
-                    .from('categories')
-                    .select('id, name')
-                    .ilike('name', `%${term}%`);
-
-                const matchedCategoryIds = (matchedCategories || []).map(c => c.id);
-
-                // Если пользователь НЕ выбрал категории вручную, расширяем поиск: (name ILIKE term) OR (category_id IN matchedCategoryIds)
-                if ((!categoryId || categoryId.length === 0) && matchedCategoryIds.length > 0) {
-                    const idsList = matchedCategoryIds.join(',');
-                    // Используем OR в Supabase: name.ilike.%term% OR category_id.in.(ids)
-                    query = query.or(`name.ilike.%${term}%,category_id.in.(${idsList})`);
-                } else {
-                    // Обычный поиск по названию
-                    query = query.ilike('name', `%${term}%`);
-                }
-            } catch {
-                // fallback к обычному поиску
-                query = query.ilike('name', `%${term}%`);
+            if ((!categoryId || categoryId.length === 0) && matchedCategoryIds.length > 0) {
+                list = list.filter(
+                    (p) =>
+                        p.name.toLowerCase().includes(term) ||
+                        matchedCategoryIds.includes(p.category_id)
+                );
+            } else {
+                list = list.filter((p) => p.name.toLowerCase().includes(term));
             }
         }
 
+        // Категории
         if (categoryId && categoryId.length > 0) {
-            query = query.in('category_id', categoryId);
+            list = list.filter((p) => p.category_id && categoryId.includes(p.category_id));
         }
 
+        // Цена
         if (minPrice !== undefined && minPrice > 0) {
-            query = query.gte('price', minPrice);
+            list = list.filter((p) => p.price >= minPrice);
         }
-
         if (maxPrice !== undefined && maxPrice > 0) {
-            query = query.lte('price', maxPrice);
+            list = list.filter((p) => p.price <= maxPrice);
         }
 
-        // Фильтрация по типу события (из JSONB поля event_types)
-        // В Supabase JS SDK фильтрация по JSONB массиву требует специального подхода
-        // Используем фильтрацию на клиенте после получения данных
-        // (альтернатива - создать RPC функцию в Supabase)
+        // Тип события
+        if (eventType) {
+            list = list.filter(
+                (p) => Array.isArray(p.event_types) && p.event_types.includes(eventType)
+            );
+        }
 
-        // Фильтрация по количеству залпов (из JSONB поля characteristics)
-        // В Supabase JS SDK фильтрация по JSONB требует специального подхода
-        // Используем фильтрацию на клиенте после получения данных
-        // (альтернатива - создать RPC функцию в Supabase)
+        // Количество залпов (из characteristics)
+        if (minShots !== undefined || maxShots !== undefined) {
+            list = list.filter((p) => {
+                const shotsStr = p.characteristics?.['Кол-во залпов'];
+                if (!shotsStr) return false;
+                const shots = parseInt(String(shotsStr), 10);
+                if (isNaN(shots)) return false;
+                if (minShots !== undefined && shots < minShots) return false;
+                if (maxShots !== undefined && shots > maxShots) return false;
+                return true;
+            });
+        }
 
-        // Сортировка
-        // ВАЖНО: должна совпадать с сортировкой в lib/catalog-server.ts для консистентности
+        // Сортировка (должна совпадать с серверной в lib/catalog-server.ts)
+        const byName = (a: CatalogItem, b: CatalogItem) =>
+            a.name.localeCompare(b.name, 'ru') || a.id.localeCompare(b.id);
         switch (sortBy) {
             case 'price-asc':
             case 'price_asc':
-                query = query.order('price', { ascending: true })
-                             .order('name', { ascending: true })
-                             .order('id', { ascending: true }); // Добавляем id для детерминированности
+                list.sort((a, b) => a.price - b.price || byName(a, b));
                 break;
             case 'price-desc':
             case 'price_desc':
-                query = query.order('price', { ascending: false })
-                             .order('name', { ascending: true })
-                             .order('id', { ascending: true }); // Добавляем id для детерминированности
+                list.sort((a, b) => b.price - a.price || byName(a, b));
                 break;
             case 'popular':
-                // Должно совпадать с серверной сортировкой: популярные сначала, затем по алфавиту
-                query = query.order('is_popular', { ascending: false }) // Популярные сначала
-                             .order('name', { ascending: true }) // Затем по алфавиту
-                             .order('id', { ascending: true }); // Добавляем id для детерминированности
+                list.sort(
+                    (a, b) => Number(!!b.is_popular) - Number(!!a.is_popular) || byName(a, b)
+                );
                 break;
             case 'newest':
-                query = query.order('created_at', { ascending: false })
-                             .order('name', { ascending: true })
-                             .order('id', { ascending: true }); // Добавляем id для детерминированности
+                list.sort(
+                    (a, b) =>
+                        String(b.created_at || '').localeCompare(String(a.created_at || '')) ||
+                        byName(a, b)
+                );
                 break;
             case 'name':
             default:
-                query = query.order('name', { ascending: true })
-                             .order('id', { ascending: true }); // Добавляем id для детерминированности
+                list.sort(byName);
                 break;
         }
 
-        // Если есть фильтр по залпам или типу события, получаем все данные для фильтрации на клиенте
-        // (так как Supabase JS SDK не поддерживает напрямую фильтрацию по JSONB с преобразованием типов)
-        const needsClientSideFiltering = minShots !== undefined || maxShots !== undefined || eventType !== undefined;
-        
-        let data: any[] = [];
-        let error: any = null;
-        let count: number | null = null;
-
-        if (needsClientSideFiltering) {
-            // Получаем все данные без пагинации для фильтрации
-            const { data: allProducts, error: allError, count: allCount } = await query;
-            data = allProducts || [];
-            error = allError;
-            
-            // Фильтруем по количеству залпов и типу события на клиенте
-            data = data.filter((product: any) => {
-                // Фильтрация по типу события
-                if (eventType) {
-                    const eventTypes = product.event_types || [];
-                    if (!Array.isArray(eventTypes) || !eventTypes.includes(eventType)) {
-                        return false;
-                    }
-                }
-                
-                // Фильтрация по количеству залпов
-                if (minShots !== undefined || maxShots !== undefined) {
-                    const characteristics = product.characteristics || {};
-                    const shotsStr = characteristics['Кол-во залпов'];
-                    
-                    if (!shotsStr) {
-                        // Если нет значения "Кол-во залпов", пропускаем товар
-                        return false;
-                    }
-                    
-                    const shots = parseInt(shotsStr, 10);
-                    if (isNaN(shots)) {
-                        return false;
-                    }
-                    
-                    if (minShots !== undefined && shots < minShots) {
-                        return false;
-                    }
-                    
-                    if (maxShots !== undefined && shots > maxShots) {
-                        return false;
-                    }
-                }
-                
-                return true;
-            });
-            
-            count = data.length;
-            
-            // Применяем пагинацию после фильтрации
-            const from = (page - 1) * limit;
-            const to = from + limit;
-            data = data.slice(from, to);
-        } else {
-            // Обычная пагинация на сервере
-            const from = (page - 1) * limit;
-            const to = from + limit - 1;
-            query = query.range(from, to);
-            
-            const result = await query;
-            data = result.data || [];
-            error = result.error;
-            count = result.count;
-        }
-
-        if (error) {
-            console.error('Supabase query error:', error);
-            throw error;
-        }
-
-        // Преобразуем данные: извлекаем информацию о категориях из объекта categories
-        const transformedData = (data || []).map((product: any) => {
-            const category = product.categories;
-            return {
-                ...product,
-                category_name: category?.name || null,
-                category_slug: category?.slug || null,
-                categories: undefined, // Удаляем исходный объект categories
-            };
-        });
-
-        const totalCount = count || 0;
+        const totalCount = list.length;
         const totalPages = Math.ceil(totalCount / limit);
+        const from = (page - 1) * limit;
+        const pageItems = list.slice(from, from + limit);
 
         return {
-            products: transformedData,
+            products: pageItems,
             pagination: {
                 page,
                 limit,
@@ -256,93 +220,27 @@ export interface CreateOrderData {
 
 export async function createOrder(orderData: CreateOrderData) {
     try {
-        // Используем Supabase для создания заказа
-        const { data: order, error: orderError } = await supabase
-            .from('orders')
-            .insert({
-                customer_name: orderData.customer_name,
-                customer_contact: orderData.customer_contact,
-                contact_method: orderData.contact_method,
-                comment: orderData.comment,
-                total_amount: orderData.total_amount,
-                delivery_cost: orderData.delivery_cost,
-                discount_amount: orderData.discount_amount,
-                age_confirmed: orderData.age_confirmed,
-                professional_launch_requested: orderData.professional_launch_requested || false,
-                delivery_method: orderData.delivery_method,
-                delivery_address: orderData.delivery_address,
-                distance_from_mkad: orderData.distance_from_mkad,
-                status: 'created',
-            })
-            .select()
-            .single();
-
-        if (orderError) throw orderError;
-
-        // Создаем items заказа
-        const orderItemsData = orderData.items.map(item => ({
-            order_id: order.id,
-            product_id: item.product_id,
-            quantity: item.quantity,
-            price_at_time: item.price_at_time,
-        }));
-
-        const { error: itemsError } = await supabase
-            .from('order_items')
-            .insert(orderItemsData);
-
-        if (itemsError) throw itemsError;
-
-        // Получаем названия товаров для Telegram уведомления
-        const productIds = orderData.items.map(item => item.product_id);
-        const { data: products } = await supabase
-            .from('products')
-            .select('id, name')
-            .in('id', productIds);
-
-        // Создаем массив товаров с названиями
-        const itemsWithNames = orderData.items.map(item => {
-            const product = products?.find(p => p.id === item.product_id);
-            return {
-                product_id: item.product_id,
-                name: product?.name || 'Товар',
-                quantity: item.quantity,
-                price: item.price_at_time,
-            };
+        const res = await fetch(`${API_BASE}/create-order.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData),
         });
 
-        // Отправляем уведомление в Telegram (если настроено)
+        let data: any = null;
         try {
-            await sendTelegramNotification(order, itemsWithNames);
-        } catch (telegramError) {
-            console.error('Failed to send telegram notification:', telegramError);
-            // Не прерываем выполнение, если Telegram не отправился
+            data = await res.json();
+        } catch {
+            // тело не JSON
         }
 
-        return { success: true, order };
+        if (!res.ok || !data?.success) {
+            throw new Error(data?.error || 'Не удалось оформить заказ');
+        }
+
+        return data; // { success: true, order: { id } }
     } catch (error) {
         console.error('Error creating order:', error);
         throw error;
-    }
-}
-
-// Вспомогательная функция для отправки уведомлений в Telegram через Supabase Edge Function
-async function sendTelegramNotification(order: any, items: any[]) {
-    try {
-        const { data, error } = await supabase.functions.invoke('send-telegram-notification', {
-            body: {
-                type: 'order',
-                data: { order, items }
-            }
-        });
-
-        if (error) {
-            console.error('Failed to send Telegram notification:', error);
-        } else {
-            console.log('Telegram notification sent successfully');
-        }
-    } catch (error) {
-        console.error('Error sending Telegram notification:', error);
     }
 }
 
@@ -357,49 +255,26 @@ export interface CreateConsultationData {
 
 export async function createConsultation(data: CreateConsultationData) {
     try {
-        const { data: consultation, error } = await supabase
-            .from('consultations')
-            .insert({
-                name: data.name,
-                contact_method: data.contactMethod,
-                contact_info: data.contactInfo,
-                message: data.message || null,
-                status: 'new',
-            })
-            .select()
-            .single();
+        const res = await fetch(`${API_BASE}/create-consultation.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
 
-        if (error) throw error;
-
-        // Отправляем уведомление в Telegram
+        let json: any = null;
         try {
-            await sendConsultationTelegramNotification(consultation);
-        } catch (telegramError) {
-            console.error('Failed to send telegram notification:', telegramError);
+            json = await res.json();
+        } catch {
+            // тело не JSON
         }
 
-        return { success: true, consultation };
+        if (!res.ok || !json?.success) {
+            throw new Error(json?.error || 'Не удалось отправить заявку');
+        }
+
+        return json; // { success: true, consultation: { id } }
     } catch (error) {
         console.error('Error creating consultation:', error);
         throw error;
-    }
-}
-
-async function sendConsultationTelegramNotification(consultation: any) {
-    try {
-        const { data, error } = await supabase.functions.invoke('send-telegram-notification', {
-            body: {
-                type: 'consultation',
-                data: { consultation }
-            }
-        });
-
-        if (error) {
-            console.error('Failed to send Telegram notification:', error);
-        } else {
-            console.log('Telegram notification sent successfully');
-        }
-    } catch (error) {
-        console.error('Error sending Telegram notification:', error);
     }
 }

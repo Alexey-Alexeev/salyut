@@ -1,7 +1,4 @@
-import { db } from '@/lib/db';
-import { categories, products, reviews } from '@/db/schema';
-import { desc } from 'drizzle-orm';
-import { eq, and } from 'drizzle-orm';
+import { getVisibleCategories, getPopularProducts, getVideoReviews, getEventCounts } from '@/lib/page-data';
 import { ConsultationCTA } from '@/components/consultation-cta';
 import { Metadata } from 'next';
 import { HeroSection } from '@/components/sections/hero-section';
@@ -79,61 +76,20 @@ export default async function HomePage() {
     new_year: 0,
   };
 
-  // Оптимизированная загрузка всех данных параллельно
+  // Оптимизированная загрузка всех данных параллельно (из catalog.php)
   try {
-    const [categoriesResult, popularProductsResult, videoReviewsResult, allProductsForEvents] = await Promise.all([
-      // Категории
-      db.select().from(categories),
-      // Популярные товары
-      db
-        .select({
-          id: products.id,
-          name: products.name,
-          slug: products.slug,
-          price: products.price,
-          old_price: products.old_price,
-          category_id: products.category_id,
-          category_name: categories.name,
-          category_slug: categories.slug,
-          images: products.images,
-          video_url: products.video_url,
-          is_popular: products.is_popular,
-          short_description: products.short_description,
-          characteristics: products.characteristics,
-          created_at: products.created_at,
-        })
-        .from(products)
-        .leftJoin(categories, eq(products.category_id, categories.id))
-        .where(and(eq(products.is_popular, true), eq(products.is_active, true)))
-        .limit(4),
-      // Видео отзывы
-      db
-        .select()
-        .from(reviews)
-        .orderBy(desc(reviews.created_at))
-        .limit(4),
-      // Только event_types для подсчета (оптимизированный запрос)
-      db
-        .select({
-          event_types: products.event_types,
-        })
-        .from(products)
-        .where(eq(products.is_active, true)),
-    ]);
+    const [categoriesResult, popularProductsResult, videoReviewsResult, eventCountsResult] =
+      await Promise.all([
+        getVisibleCategories(),
+        getPopularProducts(),
+        getVideoReviews(),
+        getEventCounts(),
+      ]);
 
-    categoriesData = filterVisibleCategories(categoriesResult);
+    categoriesData = categoriesResult;
     popularProducts = popularProductsResult;
     videoReviews = videoReviewsResult;
-
-    // Подсчитываем количество салютов для каждого события
-    allProductsForEvents.forEach((product) => {
-      const eventTypes = product.event_types as string[] | null;
-      if (eventTypes && Array.isArray(eventTypes)) {
-        if (eventTypes.includes('wedding')) eventCounts.wedding++;
-        if (eventTypes.includes('birthday')) eventCounts.birthday++;
-        if (eventTypes.includes('new_year')) eventCounts.new_year++;
-      }
-    });
+    eventCounts = eventCountsResult;
   } catch (error) {
     console.error('Error loading page data:', error);
   }

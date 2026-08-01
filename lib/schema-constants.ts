@@ -223,9 +223,9 @@ export const EVENT_TYPE_NAMES: Record<EventType, string> = {
  * Можно использовать URL из public/images или внешние ссылки
  */
 export const EVENT_TYPE_IMAGES: Record<EventType, string> = {
-  [EVENT_TYPES.WEDDING]: 'https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/category-images/podborka-svadba.webp',
-  [EVENT_TYPES.BIRTHDAY]: 'https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/category-images/podborka-happy-birthday.webp',
-  [EVENT_TYPES.NEW_YEAR]: 'https://gqnwyyinswqoustiqtpk.supabase.co/storage/v1/object/public/category-images/podvorka-new-year.webp',
+  [EVENT_TYPES.WEDDING]: 'https://salutgrad.ru/uploads/category-images/podborka-svadba.webp',
+  [EVENT_TYPES.BIRTHDAY]: 'https://salutgrad.ru/uploads/category-images/podborka-happy-birthday.webp',
+  [EVENT_TYPES.NEW_YEAR]: 'https://salutgrad.ru/uploads/category-images/podvorka-new-year.webp',
 };
 
 /**

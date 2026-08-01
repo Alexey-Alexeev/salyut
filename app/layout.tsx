@@ -58,8 +58,7 @@ export default function RootLayout({
     <html lang="ru">
       <head>
         {/* DNS prefetch и preconnect для внешних ресурсов */}
-        <link rel="dns-prefetch" href="https://gqnwyyinswqoustiqtpk.supabase.co" />
-        <link rel="preconnect" href="https://gqnwyyinswqoustiqtpk.supabase.co" crossOrigin="anonymous" />
+        {/* Фото теперь на том же домене (salutgrad.ru/uploads) — отдельный preconnect не нужен */}
         
         {/* Основной favicon для всех браузеров и поисковых систем */}
         <link rel="icon" href="/favicon.ico" sizes="any" />

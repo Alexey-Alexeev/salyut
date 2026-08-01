@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import { eq, inArray } from 'drizzle-orm';
-import { db } from '@/lib/db';
-import { categories, manufacturers, products } from '@/db/schema';
+import { getCatalog } from '@/lib/catalog-data';
 
 const SITE_URL = 'https://salutgrad.ru';
 const SHOP_NAME = 'СалютГрад';
@@ -29,46 +27,23 @@ function toObject(value: unknown): Record<string, unknown> {
 
 export async function GET() {
   try {
-    const activeProducts = await db
-      .select({
-        id: products.id,
-        name: products.name,
-        slug: products.slug,
-        price: products.price,
-        old_price: products.old_price,
-        category_id: products.category_id,
-        manufacturer_id: products.manufacturer_id,
-        images: products.images,
-        description: products.description,
-        seo_title: products.seo_title,
-        seo_description: products.seo_description,
-        characteristics: products.characteristics,
-        is_active: products.is_active,
-      })
-      .from(products)
-      .where(eq(products.is_active, true));
+    const catalog = await getCatalog();
+    const activeProducts = catalog.products.filter((p) => p.is_active);
 
-    const categoryIds = Array.from(
-      new Set(activeProducts.map((item) => item.category_id).filter((id): id is string => Boolean(id)))
+    const categoryIds = new Set(
+      activeProducts.map((item) => item.category_id).filter((id): id is string => Boolean(id))
+    );
+    const manufacturerIds = new Set(
+      activeProducts.map((item) => item.manufacturer_id).filter((id): id is string => Boolean(id))
     );
 
-    const manufacturerIds = Array.from(
-      new Set(activeProducts.map((item) => item.manufacturer_id).filter((id): id is string => Boolean(id)))
-    );
+    const categoryRows = catalog.categories
+      .filter((c) => categoryIds.has(c.id))
+      .map((c) => ({ id: c.id, name: c.name }));
 
-    const categoryRows = categoryIds.length
-      ? await db
-          .select({ id: categories.id, name: categories.name })
-          .from(categories)
-          .where(inArray(categories.id, categoryIds))
-      : [];
-
-    const manufacturerRows = manufacturerIds.length
-      ? await db
-          .select({ id: manufacturers.id, name: manufacturers.name })
-          .from(manufacturers)
-          .where(inArray(manufacturers.id, manufacturerIds))
-      : [];
+    const manufacturerRows = catalog.manufacturers
+      .filter((m) => manufacturerIds.has(m.id))
+      .map((m) => ({ id: m.id, name: m.name }));
 
     const categoriesById = new Map(categoryRows.map((row) => [row.id, row]));
     const manufacturersById = new Map(manufacturerRows.map((row) => [row.id, row]));

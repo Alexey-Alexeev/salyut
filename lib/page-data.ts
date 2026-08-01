@@ -1,13 +1,11 @@
 import { cache } from 'react';
-import { and, desc, eq } from 'drizzle-orm';
-import { db } from '@/lib/db';
-import { categories, products, reviews } from '@/db/schema';
+import { getCatalog, withCategory } from '@/lib/catalog-data';
 import { filterVisibleCategories } from '@/lib/schema-constants';
 
 export const getVisibleCategories = cache(async () => {
   try {
-    const categoriesData = await db.select().from(categories);
-    return filterVisibleCategories(categoriesData);
+    const { categories } = await getCatalog();
+    return filterVisibleCategories(categories);
   } catch (error) {
     console.error('Error loading categories:', error);
     return [];
@@ -16,27 +14,11 @@ export const getVisibleCategories = cache(async () => {
 
 export const getPopularProducts = cache(async () => {
   try {
-    return await db
-      .select({
-        id: products.id,
-        name: products.name,
-        slug: products.slug,
-        price: products.price,
-        old_price: products.old_price,
-        category_id: products.category_id,
-        category_name: categories.name,
-        category_slug: categories.slug,
-        images: products.images,
-        video_url: products.video_url,
-        is_popular: products.is_popular,
-        short_description: products.short_description,
-        characteristics: products.characteristics,
-        created_at: products.created_at,
-      })
-      .from(products)
-      .leftJoin(categories, eq(products.category_id, categories.id))
-      .where(and(eq(products.is_popular, true), eq(products.is_active, true)))
-      .limit(4);
+    const { products, categories } = await getCatalog();
+    return products
+      .filter((p) => p.is_popular && p.is_active)
+      .slice(0, 4)
+      .map((p) => withCategory(p, categories));
   } catch (error) {
     console.error('Error loading popular products:', error);
     return [];
@@ -45,7 +27,12 @@ export const getPopularProducts = cache(async () => {
 
 export const getVideoReviews = cache(async () => {
   try {
-    return await db.select().from(reviews).orderBy(desc(reviews.created_at)).limit(4);
+    const { reviews } = await getCatalog();
+    return [...reviews]
+      .sort((a, b) =>
+        String(b.created_at || '').localeCompare(String(a.created_at || ''))
+      )
+      .slice(0, 4);
   } catch (error) {
     console.error('Error loading video reviews:', error);
     return [];
@@ -60,21 +47,17 @@ export const getEventCounts = cache(async () => {
   };
 
   try {
-    const allProductsForEvents = await db
-      .select({
-        event_types: products.event_types,
-      })
-      .from(products)
-      .where(eq(products.is_active, true));
-
-    allProductsForEvents.forEach((product) => {
-      const eventTypes = product.event_types as string[] | null;
-      if (eventTypes && Array.isArray(eventTypes)) {
-        if (eventTypes.includes('wedding')) eventCounts.wedding++;
-        if (eventTypes.includes('birthday')) eventCounts.birthday++;
-        if (eventTypes.includes('new_year')) eventCounts.new_year++;
-      }
-    });
+    const { products } = await getCatalog();
+    products
+      .filter((p) => p.is_active)
+      .forEach((product) => {
+        const eventTypes = product.event_types;
+        if (Array.isArray(eventTypes)) {
+          if (eventTypes.includes('wedding')) eventCounts.wedding++;
+          if (eventTypes.includes('birthday')) eventCounts.birthday++;
+          if (eventTypes.includes('new_year')) eventCounts.new_year++;
+        }
+      });
   } catch (error) {
     console.error('Error loading event counts:', error);
   }

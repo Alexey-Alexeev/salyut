@@ -1,7 +1,5 @@
 import { Metadata } from 'next';
-import { db } from '@/lib/db';
-import { reviews } from '@/db/schema';
-import { desc } from 'drizzle-orm';
+import { getVideoReviews } from '@/lib/page-data';
 import LaunchingServicePage from './LaunchingServicePage';
 
 // Metadata должен быть экспортирован на уровне модуля, не внутри компонента
@@ -59,18 +57,8 @@ export const metadata: Metadata = {
 
 // Удалите "use client" если он есть в файле
 export default async function LaunchingPage() {
-  // Загружаем видео-отзывы
-  let videoReviews: any[] = [];
+  // Загружаем видео-отзывы (из catalog.php)
+  const videoReviews = await getVideoReviews();
 
-  try {
-    videoReviews = await db
-      .select()
-      .from(reviews)
-      .orderBy(desc(reviews.created_at))
-      .limit(4);
-  } catch (error) {
-    console.error('Error loading reviews:', error);
-  }
-
-  return <LaunchingServicePage videoReviews={videoReviews} />;
+  return <LaunchingServicePage videoReviews={videoReviews as any} />;
 }

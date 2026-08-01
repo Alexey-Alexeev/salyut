@@ -41,6 +41,13 @@ next-env.d.ts
 *.swp
 *.swo
 
+# Миграция на reg.ru: рабочие данные (выгрузка БД с ПДн клиентов, дампы, фото) — только локально
+/regru/
+/public/uploads/
+
+# Секреты PHP-обработчиков (пароль БД, токен Telegram) — только на сервере
+/public/api/config.php
+
 # Database migrations (auto-generated)
 # Only commit the base schema and important migrations
 db/migrations/*_snapshot.json

@@ -61,9 +61,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'gqnwyyinswqoustiqtpk.supabase.co',
+        hostname: 'salutgrad.ru',
         port: '',
-        pathname: '/storage/v1/object/public/**',
+        pathname: '/uploads/**',
       },
     ],
     // Агрессивная оптимизация изображений

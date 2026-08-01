@@ -1,0 +1,7 @@
+# Запрещаем прямой доступ к секретам из браузера
+<FilesMatch "^config(\.sample)?\.php$">
+    Require all denied
+</FilesMatch>
+
+# На всякий случай — не выводим листинг директории
+Options -Indexes

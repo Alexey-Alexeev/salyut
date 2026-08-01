@@ -1,10 +1,8 @@
 import { Metadata } from 'next';
-import { db } from '@/lib/db';
-import { products, categories, manufacturers } from '@/db/schema';
-import { and, eq, ne } from 'drizzle-orm';
-import ProductClient from '@/app/product/[slug]/product-client';
-import slugify from 'slugify';
 import { cache } from 'react';
+import slugify from 'slugify';
+import ProductClient from '@/app/product/[slug]/product-client';
+import { getCatalog, getProductBySlug } from '@/lib/catalog-data';
 
 type PageProps = { params: { slug: string } };
 
@@ -18,13 +16,14 @@ const getCleanSlug = (originalSlug: string): string => {
 
 export async function generateStaticParams() {
   try {
-    const rows = await db.select({ slug: products.slug }).from(products);
-    return rows.map(r => ({ slug: r.slug })); // ✅ просто slug
+    const { products } = await getCatalog();
+    return products.map((p) => ({ slug: p.slug }));
   } catch (error) {
     console.error('Error generating static params:', error);
     return [];
   }
 }
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
@@ -61,63 +60,34 @@ export async function generateMetadata({
 }
 
 const getProductWithRelations = cache(async (slug: string) => {
-  const rows = await db
-    .select({
-      product: products,
-      category: categories,
-      manufacturer: manufacturers,
-    })
-    .from(products)
-    .leftJoin(categories, eq(categories.id, products.category_id))
-    .leftJoin(manufacturers, eq(manufacturers.id, products.manufacturer_id))
-    .where(eq(products.slug, slug))
-    .limit(1);
-
-  return rows[0] || null;
+  return getProductBySlug(slug);
 });
 
 const getRelatedProducts = cache(async (productId: string, categoryId?: string | null) => {
+  const { products } = await getCatalog();
+  const active = products.filter((p) => p.is_active && p.id !== productId);
+
+  const pick = (p: (typeof active)[number]) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    price: p.price,
+    old_price: p.old_price,
+    images: p.images,
+    is_popular: p.is_popular,
+  });
+
   const sameCategory = categoryId
-    ? await db
-        .select({
-          id: products.id,
-          name: products.name,
-          slug: products.slug,
-          price: products.price,
-          old_price: products.old_price,
-          images: products.images,
-          is_popular: products.is_popular,
-        })
-        .from(products)
-        .where(
-          and(
-            eq(products.is_active, true),
-            eq(products.category_id, categoryId),
-            ne(products.id, productId)
-          )
-        )
-        .limit(12)
+    ? active.filter((p) => p.category_id === categoryId).slice(0, 12).map(pick)
     : [];
 
   if (sameCategory.length >= 3) {
     return sameCategory;
   }
 
-  const fallback = await db
-    .select({
-      id: products.id,
-      name: products.name,
-      slug: products.slug,
-      price: products.price,
-      old_price: products.old_price,
-      images: products.images,
-      is_popular: products.is_popular,
-    })
-    .from(products)
-    .where(and(eq(products.is_active, true), ne(products.id, productId)))
-    .limit(24);
+  const fallback = active.slice(0, 24).map(pick);
 
-  const unique = new Map<string, (typeof fallback)[number]>();
+  const unique = new Map<string, ReturnType<typeof pick>>();
   for (const item of [...sameCategory, ...fallback]) {
     unique.set(item.id, item);
   }
@@ -127,7 +97,6 @@ const getRelatedProducts = cache(async (productId: string, categoryId?: string |
 
 export default async function ProductPage({ params }: PageProps) {
   try {
-
     // ✅ Используем clean slug для поиска
     const cleanSlug = getCleanSlug(params.slug);
     const productData = await getProductWithRelations(cleanSlug);

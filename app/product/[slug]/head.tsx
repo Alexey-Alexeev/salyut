@@ -1,8 +1,6 @@
-import { db } from '@/lib/db';
-import { categories, manufacturers, products } from '@/db/schema';
-import { eq } from 'drizzle-orm';
 import slugify from 'slugify';
 import { PRICE_VALID_UNTIL } from '@/lib/schema-constants';
+import { getProductBySlug } from '@/lib/catalog-data';
 
 const SITE_URL = 'https://salutgrad.ru';
 const PRODUCT_IMAGE_FALLBACK = `${SITE_URL}/icons/icon_192.png`;
@@ -23,19 +21,7 @@ function getCleanSlug(originalSlug: string): string {
 export default async function Head({ params }: HeadProps) {
   const cleanSlug = getCleanSlug(params.slug);
 
-  const rows = await db
-    .select({
-      product: products,
-      category: categories,
-      manufacturer: manufacturers,
-    })
-    .from(products)
-    .leftJoin(categories, eq(categories.id, products.category_id))
-    .leftJoin(manufacturers, eq(manufacturers.id, products.manufacturer_id))
-    .where(eq(products.slug, cleanSlug))
-    .limit(1);
-
-  const row = rows[0];
+  const row = await getProductBySlug(cleanSlug);
   if (!row) return null;
 
   const productUrl = `${SITE_URL}/product/${row.product.slug}`;
