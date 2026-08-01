@@ -70,7 +70,7 @@ export interface Catalog {
 
 let catalogPromise: Promise<Catalog> | null = null;
 
-async function fetchCatalog(): Promise<Catalog> {
+async function fetchCatalogOnce(): Promise<Catalog> {
   const res = await fetch(CATALOG_URL, { cache: 'force-cache' });
   if (!res.ok) {
     throw new Error(`Не удалось загрузить каталог (${CATALOG_URL}): HTTP ${res.status}`);
@@ -84,10 +84,31 @@ async function fetchCatalog(): Promise<Catalog> {
   };
 }
 
+// Повторяем при обрывах сети (ECONNRESET и т.п.), чтобы одна флуктуация
+// во время сборки не «сорвала» страницы в client-side рендеринг.
+async function fetchCatalogWithRetry(attempts = 4): Promise<Catalog> {
+  let lastErr: unknown;
+  for (let i = 1; i <= attempts; i++) {
+    try {
+      return await fetchCatalogOnce();
+    } catch (e) {
+      lastErr = e;
+      if (i < attempts) {
+        await new Promise((r) => setTimeout(r, 500 * i));
+      }
+    }
+  }
+  throw lastErr;
+}
+
 /** Возвращает весь каталог (кэшируется на время сборки). */
 export function getCatalog(): Promise<Catalog> {
   if (!catalogPromise) {
-    catalogPromise = fetchCatalog();
+    catalogPromise = fetchCatalogWithRetry().catch((err) => {
+      // Не кэшируем неудачу — даём следующим страницам повторить попытку.
+      catalogPromise = null;
+      throw err;
+    });
   }
   return catalogPromise;
 }

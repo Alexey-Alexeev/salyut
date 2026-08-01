@@ -1,5 +1,6 @@
 import { getCatalog, withCategory } from '@/lib/catalog-data';
 import { filterVisibleCategories } from '@/lib/schema-constants';
+import { sortProducts } from '@/lib/product-sort';
 
 // Тип для категории
 export interface CategoryData {
@@ -21,9 +22,6 @@ export async function getCategoriesData(): Promise<CategoryData[]> {
         return [];
     }
 }
-
-// Сохранено для совместимости (кэш теперь на уровне модуля catalog-data)
-export function clearCategoriesCache() {}
 
 export async function getProductsData(page: number = 1, limit: number = 20, sortBy: string = 'name') {
     try {
@@ -82,37 +80,5 @@ export async function getProductsStatsData() {
     } catch (error) {
         console.error('Error fetching products stats:', error);
         return { minPrice: 0, maxPrice: 10000 };
-    }
-}
-
-// Сортировка товаров — должна совпадать с клиентской в lib/api-client.ts
-export function sortProducts<
-    T extends { price: number; name: string; id: string; is_popular: boolean | null; created_at: string | null }
->(list: T[], sortBy: string): void {
-    const byName = (a: T, b: T) =>
-        a.name.localeCompare(b.name, 'ru') || a.id.localeCompare(b.id);
-    switch (sortBy) {
-        case 'price-asc':
-        case 'price_asc':
-            list.sort((a, b) => a.price - b.price || byName(a, b));
-            break;
-        case 'price-desc':
-        case 'price_desc':
-            list.sort((a, b) => b.price - a.price || byName(a, b));
-            break;
-        case 'popular':
-            list.sort(
-                (a, b) => Number(!!b.is_popular) - Number(!!a.is_popular) || byName(a, b)
-            );
-            break;
-        case 'newest':
-            list.sort(
-                (a, b) =>
-                    String(b.created_at || '').localeCompare(String(a.created_at || '')) ||
-                    byName(a, b)
-            );
-            break;
-        default:
-            list.sort(byName);
     }
 }

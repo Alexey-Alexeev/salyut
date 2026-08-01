@@ -10,6 +10,8 @@
  * https://salutgrad.ru/api), по умолчанию относительный '/api'.
  */
 
+import { sortProducts } from '@/lib/product-sort';
+
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') || '/api';
 
@@ -144,35 +146,8 @@ export async function fetchProducts(filters: ProductFilters = {}) {
             });
         }
 
-        // Сортировка (должна совпадать с серверной в lib/catalog-server.ts)
-        const byName = (a: CatalogItem, b: CatalogItem) =>
-            a.name.localeCompare(b.name, 'ru') || a.id.localeCompare(b.id);
-        switch (sortBy) {
-            case 'price-asc':
-            case 'price_asc':
-                list.sort((a, b) => a.price - b.price || byName(a, b));
-                break;
-            case 'price-desc':
-            case 'price_desc':
-                list.sort((a, b) => b.price - a.price || byName(a, b));
-                break;
-            case 'popular':
-                list.sort(
-                    (a, b) => Number(!!b.is_popular) - Number(!!a.is_popular) || byName(a, b)
-                );
-                break;
-            case 'newest':
-                list.sort(
-                    (a, b) =>
-                        String(b.created_at || '').localeCompare(String(a.created_at || '')) ||
-                        byName(a, b)
-                );
-                break;
-            case 'name':
-            default:
-                list.sort(byName);
-                break;
-        }
+        // Сортировка — единая с серверной (см. lib/product-sort.ts)
+        sortProducts(list, sortBy);
 
         const totalCount = list.length;
         const totalPages = Math.ceil(totalCount / limit);
